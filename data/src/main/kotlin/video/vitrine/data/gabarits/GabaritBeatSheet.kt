@@ -203,34 +203,12 @@ object GabaritBeatSheet {
         }
 
         /**
-         * Segmentation d'affichage : les langues a espaces restent intactes ;
-         * une chaine longue SANS espace (japonais, ou nom de commerce colle)
-         * est decoupee en morceaux d'au plus [CJK_SEGMENT] caracteres.
+         * Segmentation d'affichage. D42.4 : la logique vit dans
+         * [TexteCommerce.segmenter] (proprietes Unicode, aucun reecriture du
+         * texte source). Les langues a espaces restent d'un bloc ; une chaine
+         * SANS espace n'est coupee que sur une position typographique valide.
          */
-        /** Ecriture a chasse pleine (CJK, kana, hangul) — aligne sur
-         *  OverlayTextLayout.isWide, duplique pour ne pas inverser la
-         *  dependance data -> ins-effects. */
-        private fun estCaractereLarge(c: Char): Boolean {
-            val code = c.code
-            return code in 0x1100..0x11FF || code in 0x2E80..0xA4CF ||
-                code in 0xAC00..0xD7A3 || code in 0xF900..0xFAFF ||
-                code in 0xFE30..0xFE4F || code in 0xFF00..0xFF60 ||
-                code in 0xFFE0..0xFFE6
-        }
-
-        private fun segmenter(texte: String): List<String> {
-            val propre = texte.trim()
-            if (propre.isEmpty()) return emptyList()
-            if (propre.any { it == ' ' || it == '\n' }) return listOf(propre)
-            if (propre.length <= CJK_SEGMENT) return listOf(propre)
-            // D42.3 : ce decoupage par longueur ne vise que les ecritures SANS
-            // espaces ou chaque caractere est une unite (CJK). Il s'appliquait
-            // aussi au latin : « CONTACTEZ-NOUS » sortait en « CONTACT » puis
-            // « EZ-NOUS » dans le MP4. Une suite latine reste entiere ; c'est
-            // le rendu qui reduit la taille pour la faire tenir (sizeForWidth).
-            if (propre.none { estCaractereLarge(it) }) return listOf(propre)
-            return propre.chunked(CJK_SEGMENT)
-        }
+        private fun segmenter(texte: String): List<String> = TexteCommerce.segmenter(texte)
 
         /** Point d'entree : consommation sequentielle du rush avec repli cyclique
          *  (jamais de debord de clipping) ; sans durees connues -> 0.0 (historique). */
@@ -274,7 +252,6 @@ object GabaritBeatSheet {
     private const val BADGE_DELAI_S = 0.15
 
     /** Longueur maximale d'un segment sans espaces (japonais). */
-    private const val CJK_SEGMENT = 7
 
     /** Repere SFX : audio.sfx_scenes (source indexee, cf. SceneIndexCoverageTest),
      *  repli scenes[].sfx. Instant = debut de la scene concernee. */
@@ -341,19 +318,10 @@ object GabaritBeatSheet {
             if (cle == "prix") grouperMilliers(valeur) else valeur
         }
 
-    /** « 25000 » -> « 25 000 » ; toute autre valeur est rendue telle quelle. */
-    private fun grouperMilliers(valeur: String): String {
-        val chiffres = valeur.trim()
-        if (chiffres.length < 4 || !chiffres.all { it.isDigit() }) return valeur
-        val sb = StringBuilder()
-        var compte = 0
-        for (i in chiffres.indices.reversed()) {
-            if (compte > 0 && compte % 3 == 0) sb.append(' ')
-            sb.append(chiffres[i])
-            compte++
-        }
-        return sb.reverse().toString()
-    }
+    /** « 25000 » -> « 25 000 » ; toute autre valeur est rendue telle quelle.
+     *  D42.4 : implementation unique dans [TexteCommerce] (testee a part,
+     *  sans dependance Android). */
+    private fun grouperMilliers(valeur: String): String = TexteCommerce.grouperMilliers(valeur)
 
     private fun round3(v: Double): Double = Math.round(v * 1000.0) / 1000.0
 }
