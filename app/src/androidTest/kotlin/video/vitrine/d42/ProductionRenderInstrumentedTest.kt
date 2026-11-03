@@ -78,7 +78,10 @@ class ProductionRenderInstrumentedTest {
     )
 
     private val echantillons = mapOf(
-        "fr" to Echantillon("Chez Chantal", "Menu du jour", "Akpakpa", "FCFA", "5000"),
+        // D42.2 — donnees commerciales de la porte A (synthetiques, aucun
+        // commercant reel, numero fictif). Le rendu doit les montrer TELLES
+        // QUELLES dans les frames extraites du MP4.
+        "fr" to Echantillon("Chez D42 Test", "OFFRE D42 DIAGNOSTIC", "COTONOU", "FCFA", "25000"),
         "en" to Echantillon("Chantal's Kitchen", "Daily special", "Akpakpa", "FCFA", "5000"),
         "es" to Echantillon("Cocina de Chantal", "Menú del día", "Akpakpa", "FCFA", "5000"),
         "ja" to Echantillon("シャンタル食堂", "本日の特別メニュー", "アキャクパ", "FCFA", "5000"),
