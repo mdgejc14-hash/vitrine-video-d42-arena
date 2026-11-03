@@ -180,12 +180,6 @@ object KineticTypography {
             val base = yPx - metriques.ascent
             canvas.drawText(ligne, largeur / 2f, base, contour)
             canvas.drawText(ligne, largeur / 2f, base, remplissage)
-            // MARQUEUR DE DIAGNOSTIC D42.2 (a retirer) : rectangle opaque dans le
-            // MEME bitmap que le texte. S'il apparait, le bitmap est bien affiche
-            // et seul le dessin des glyphes echoue.
-            val marqueur = Paint().apply { color = Color.MAGENTA }
-            val hautMarqueur = yPx.coerceIn(0f, hauteur.toFloat() - 24f)
-            canvas.drawRect(0f, hautMarqueur, 90f, hautMarqueur + 24f, marqueur)
             android.util.Log.i(
                 "D42-TRACE",
                 "8b.texte=\"$ligne\" taille=$sizePx yPx=$yPx base=$base " +

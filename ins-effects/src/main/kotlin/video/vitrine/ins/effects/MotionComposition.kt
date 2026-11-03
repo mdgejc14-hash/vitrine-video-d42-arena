@@ -40,19 +40,21 @@ object MotionComposition {
                 .setUri(rushUris[rushIndex])
                 .setClippingConfiguration(clipping)
                 .build()
-            val dureePlan = (plan.t1 - plan.t0).coerceAtLeast(0.0)
             val localWords = sheet.words
                 .filter { it.endS > plan.t0 && it.startS < plan.t1 }
-                // D42-F15 : un texte qui COMMENCE avant le plan (ou finit apres)
-                // donnait un horodatage NEGATIF apres rebasage -> TimestampWrapper
-                // levait « startTimeUs and endTimeUs must be non-negative » et
-                // TOUT rendu multi-rush echouait (constate au run 41591615084).
-                // On borne au plan : jamais negatif, jamais au-dela de sa duree.
-                .map {
-                    val debut = (it.startS - plan.t0).coerceIn(0.0, dureePlan)
-                    val fin = (it.endS - plan.t0).coerceIn(debut, dureePlan)
-                    it.copy(startS = debut, endS = fin)
-                }
+                // D42.2 — CAUSE RACINE DE « aucun texte » : le rebasage.
+                //
+                // Le code rebasait chaque mot sur son plan (t0 -> 0). Or Media3
+                // evalue les TimestampWrapper sur la timeline GLOBALE, pas sur
+                // le temps relatif de l'item : tous les mots de tous les plans
+                // tombaient donc dans la premiere seconde. Preuves visuelles :
+                //  - sonde a fenetres fixes 0-10 / 10-20 / 20-30 s : les trois
+                //    bandes apparaissent a 3 s, 13 s et 23 s => temps GLOBAL ;
+                //  - texte rebase : visible uniquement sur les frames 0 a 1,25 s
+                //    des 140 analysees (run 41711170058).
+                // On conserve donc les horodatages ABSOLUS, en les bornant a
+                // zero (D42-F15 : TimestampWrapper rejette les negatifs).
+                .map { it.copy(startS = it.startS.coerceAtLeast(0.0)) }
                 .filter { it.endS > it.startS + 1e-3 }
             // Audit D40 (B4) : les effets Media3 d'un EditedMediaItem recoivent des
             // horodatages RELATIFS a l'item — le plan est rebasé avant CameraMoves
