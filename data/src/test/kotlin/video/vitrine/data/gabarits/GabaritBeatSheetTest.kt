@@ -143,4 +143,25 @@ class GabaritBeatSheetTest {
             !doc.beatSheetJson.contains("25000"),
         )
     }
+
+    @Test
+    fun `un libelle latin sans espace reste entier`() {
+        // D42.3 : la segmentation par longueur (CJK) coupait « CONTACTEZ-NOUS »
+        // en « CONTACT » / « EZ-NOUS » dans le MP4.
+        val doc = GabaritBeatSheet.build(
+            fixture("restaurants_maquis_T1"),
+            mapOf(
+                "nom_commerce" to "Chez D42 Test",
+                "nom_offre" to "OFFRE D42 DIAGNOSTIC",
+                "prix" to "25000", "devise" to "FCFA",
+                "quartier_ville" to "COTONOU", "whatsapp" to "+22997000000",
+            ),
+            null,
+            localiser = { cle -> cle },
+        )
+        val mots = org.json.JSONObject(doc.beatSheetJson).getJSONArray("words")
+        val libelles = (0 until mots.length()).map { mots.getJSONObject(it).getString("word") }
+        assertTrue("CTA coupe en morceaux : $libelles", libelles.contains("CONTACTEZ-NOUS"))
+        assertTrue("offre absente : $libelles", libelles.contains("OFFRE D42 DIAGNOSTIC"))
+    }
 }
