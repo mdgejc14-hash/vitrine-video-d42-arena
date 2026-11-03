@@ -184,10 +184,8 @@ object KineticTypography {
             // MEME bitmap que le texte. S'il apparait, le bitmap est bien affiche
             // et seul le dessin des glyphes echoue.
             val marqueur = Paint().apply { color = Color.MAGENTA }
-            canvas.drawRect(
-                0f, yPx.coerceIn(0f, hauteur - 12f), 90f,
-                (yPx + 12f).coerceIn(0f, hauteur), marqueur
-            )
+            val hautMarqueur = yPx.coerceIn(0f, hauteur.toFloat() - 24f)
+            canvas.drawRect(0f, hautMarqueur, 90f, hautMarqueur + 24f, marqueur)
             android.util.Log.i(
                 "D42-TRACE",
                 "8b.texte=\"$ligne\" taille=$sizePx yPx=$yPx base=$base " +
