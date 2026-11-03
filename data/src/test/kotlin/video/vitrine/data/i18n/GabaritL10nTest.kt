@@ -51,7 +51,13 @@ class GabaritL10nTest {
     fun lesClesCouvrentExactementLesTextesDesGabarits() {
         val donnees = dictionnaire()
         val canoniques = textesCanoniques()
-        assertEquals("51 textes distincts attendus", 51, canoniques.size)
+        // D42.3 : 53 depuis l'ajout de deux textes de scene a
+        // restaurants_maquis/T1 — « {nom_offre} » (l'offre du commercant
+        // n'etait affichee par aucune scene) et « CONTACTEZ-NOUS » (appel a
+        // l'action absent des 30 gabarits). Les deux sont traduits, donc
+        // l'intention du test (aucune cle orpheline, aucun texte untraduit)
+        // reste respectee.
+        assertEquals("53 textes distincts attendus", 53, canoniques.size)
         val absentes = canoniques.filter { donnees.textes[it] == null }
         assertTrue("textes canoniques sans traduction: $absentes", absentes.isEmpty())
         val orphelines = donnees.textes.keys.filter { it !in canoniques }

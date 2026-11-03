@@ -33,6 +33,16 @@
    "es": "{prix} {devise}",
    "ja": "{prix} {devise}"
   },
+  "{nom_offre}": {
+   "en": "{nom_offre}",
+   "es": "{nom_offre}",
+   "ja": "{nom_offre}"
+  },
+  "CONTACTEZ-NOUS": {
+   "en": "CONTACT US",
+   "es": "CONTÁCTENOS",
+   "ja": "お問い合わせ"
+  },
   "{nom_commerce} · {quartier_ville} · {whatsapp}": {
    "en": "{nom_commerce} · {quartier_ville} · {whatsapp}",
    "es": "{nom_commerce} · {quartier_ville} · {whatsapp}",
