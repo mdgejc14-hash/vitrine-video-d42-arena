@@ -63,23 +63,63 @@ object OverlayTextLayout {
      * plancher MIN_SIZE_PX) est coupe en lignes — le japonais (aucun espace)
      * ne deborde plus jamais du cadre.
      */
+    /**
+     * Cassage greedy, avec deux garde-fous ajoutes en D42.3.
+     *
+     * Constat sur le MP4 `restaurants_maquis_T1_fr_stock_limite` : la ligne de
+     * contact « Chez D42 Test · COTONOU · +22997000000 » etait coupee au milieu
+     * du numero, donnant « …+2299700 » puis « 0000 ». Un numero de telephone
+     * coupe en deux est illisible, donc inutilisable pour un commercant.
+     *
+     *  1. on ne coupe JAMAIS a l'interieur d'une suite de chiffres ;
+     *  2. on prefere couper sur un separateur (« · », virgule, barre oblique)
+     *     quand il en existe un dans la ligne.
+     */
     fun splitLines(word: String, sizePx: Int, maxWidthPx: Int): List<String> {
         if (word.isEmpty()) return listOf(word)
         val lignes = mutableListOf<String>()
         val courant = StringBuilder()
         var largeur = 0.0
-        for (c in word) {
+        val caracteres = word.toCharArray()
+        for ((i, c) in caracteres.withIndex()) {
             val w = charWidthPx(c, sizePx)
             if (courant.isNotEmpty() && largeur + w > maxWidthPx) {
-                lignes += courant.toString()
-                courant.setLength(0)
-                largeur = 0.0
+                val coupe = positionDeCoupe(courant, caracteres, i)
+                if (coupe in 1 until courant.length) {
+                    lignes += courant.substring(0, coupe).trimEnd()
+                    val reste = courant.substring(coupe).trimStart()
+                    courant.setLength(0)
+                    courant.append(reste)
+                    largeur = reste.sumOf { charWidthPx(it, sizePx) }
+                } else {
+                    lignes += courant.toString()
+                    courant.setLength(0)
+                    largeur = 0.0
+                }
             }
             courant.append(c)
             largeur += w
         }
         if (courant.isNotEmpty()) lignes += courant.toString()
         return lignes
+    }
+
+    /** Caracteres de coupure preferes : ils separent des champs, pas des mots. */
+    private const val SEPARATEURS = "\u00B7,/|"
+
+    /** Derniere position de coupure acceptable dans [courant], ou -1. */
+    private fun positionDeCoupe(courant: StringBuilder, source: CharArray, i: Int): Int {
+        // 1. jamais au milieu d'une suite de chiffres (numero de telephone).
+        if (i > 0 && source[i].isDigit() && source[i - 1].isDigit()) {
+            var k = courant.length
+            while (k > 0 && courant[k - 1].isDigit()) k--
+            return if (k > 0) k else -1
+        }
+        // 2. de preference apres un separateur de champs.
+        for (k in courant.length - 1 downTo 1) {
+            if (courant[k - 1] in SEPARATEURS) return k
+        }
+        return -1
     }
 
     /** Y (NDC, + vers le haut) de la ligne i (0 = haut), bloc centre sur BASE_NDC_Y. */

@@ -116,4 +116,31 @@ class GabaritBeatSheetTest {
         assertEquals(null, GabaritBeatSheet.build("{}", emptyMap()))
         assertEquals(null, GabaritBeatSheet.build("pas-du-json", emptyMap()))
     }
+
+    @Test
+    fun `le prix est groupe par milliers dans le texte affiche`() {
+        // D42.3 : « 25000 » s'affichait tel quel dans le MP4. Un commercant lit
+        // « 25 000 FCFA » — meme convention que le paywall (espace U+0020).
+        val doc = GabaritBeatSheet.build(
+            fixture("restaurants_maquis_T1"),
+            mapOf(
+                "nom_commerce" to "Chez D42 Test",
+                "nom_offre" to "OFFRE D42 DIAGNOSTIC",
+                "prix" to "25000",
+                "devise" to "FCFA",
+                "quartier_ville" to "COTONOU",
+                "whatsapp" to "+22997000000",
+            ),
+            null,
+            localiser = { cle -> cle },
+        )
+        assertTrue(
+            "prix non groupe dans le beat sheet",
+            doc.beatSheetJson.contains("25 000"),
+        )
+        assertTrue(
+            "prix brut encore present",
+            !doc.beatSheetJson.contains("25000"),
+        )
+    }
 }

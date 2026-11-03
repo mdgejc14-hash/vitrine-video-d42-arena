@@ -145,4 +145,24 @@ class OverlayTextLayoutTest {
         }
         assertTrue("hauteur nulle acceptee a tort", levee)
     }
+
+    @Test
+    fun `un numero de telephone n_est jamais coupe en deux`() {
+        val ligne = "Chez D42 Test · COTONOU · +22997000000"
+        val maxWidth = (540 * OverlayTextLayout.MAX_WIDTH_FRACTION).toInt()
+        val lignes = OverlayTextLayout.splitLines(ligne, 24, maxWidth)
+        assertEquals("le numero doit rester sur une seule ligne", 1,
+            lignes.count { it.contains("+22997000000") })
+        lignes.forEach { l ->
+            assertTrue("fragment de numero isole dans « $l »", !l.trim().matches(Regex("^\\d+$")))
+        }
+    }
+
+    @Test
+    fun `la coupure prefere un separateur de champs`() {
+        val maxWidth = (540 * OverlayTextLayout.MAX_WIDTH_FRACTION).toInt()
+        val lignes = OverlayTextLayout.splitLines("Chez D42 Test · COTONOU · +22997000000", 24, maxWidth)
+        assertTrue("au moins deux lignes attendues", lignes.size >= 2)
+        assertTrue("coupure hors separateur : $lignes", lignes.first().endsWith("·") || !lignes.first().last().isDigit())
+    }
 }

@@ -308,8 +308,35 @@ object GabaritBeatSheet {
         else -> "cut"
     }
 
+    /**
+     * Substitution des variables du brief.
+     *
+     * D42.3 : `{prix}` etait substitue BRUT, si bien qu'un prix saisi « 25000 »
+     * s'affichait « 25000 FCFA » dans le MP4. Un commercant lit « 25 000 FCFA ».
+     * Le groupement reprend exactement la regle du paywall (espace simple
+     * U+0020, cf. PaywallMapper.groupThousands) : une seule convention dans
+     * toute l'application.
+     */
     private fun substitute(text: String, values: Map<String, String>): String =
-        Regex("\\{(\\w+)\\}").replace(text) { m -> values[m.groupValues[1]].orEmpty() }
+        Regex("\\{(\\w+)\\}").replace(text) { m ->
+            val cle = m.groupValues[1]
+            val valeur = values[cle].orEmpty()
+            if (cle == "prix") grouperMilliers(valeur) else valeur
+        }
+
+    /** « 25000 » -> « 25 000 » ; toute autre valeur est rendue telle quelle. */
+    private fun grouperMilliers(valeur: String): String {
+        val chiffres = valeur.trim()
+        if (chiffres.length < 4 || !chiffres.all { it.isDigit() }) return valeur
+        val sb = StringBuilder()
+        var compte = 0
+        for (i in chiffres.indices.reversed()) {
+            if (compte > 0 && compte % 3 == 0) sb.append(' ')
+            sb.append(chiffres[i])
+            compte++
+        }
+        return sb.reverse().toString()
+    }
 
     private fun round3(v: Double): Double = Math.round(v * 1000.0) / 1000.0
 }
