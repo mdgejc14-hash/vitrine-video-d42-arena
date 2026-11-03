@@ -5,12 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
-import android.text.Layout
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.StaticLayout
-import android.text.TextPaint
-import android.text.style.ForegroundColorSpan
+import android.graphics.Typeface
 import androidx.media3.common.Effect
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.effect.BitmapOverlay
@@ -126,13 +121,12 @@ object KineticTypography {
                 )
             }
         }
-        val sonde = sondeDiagnostic(outputWidthPx, outputHeightPx)
         android.util.Log.i(
             "D42-TRACE",
             "8.typographie mots_recus=${words.size} mots_retenus=${retenus.size} " +
                 "overlays=$produits taille=$base geo=${outputWidthPx}x$outputHeightPx"
         )
-        return sonde + produits
+        return produits
     }
 
     /**
@@ -164,46 +158,30 @@ object KineticTypography {
             val canvas = Canvas(bitmap)
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
 
-            val paint = TextPaint(Paint.ANTI_ALIAS_FLAG)
-            paint.textSize = sizePx.toFloat()
-            val largeurTexte = minOf(
-                OverlayTextLayout.estimateWidthPx(ligne, sizePx) + (sizePx * 0.30f).toInt() + 8,
-                largeur
-            )
-            // Ordonnee en pixels du haut de la ligne, convertie depuis l'ancrage
-            // NDC par OverlayTextLayout (aucune duplication de la logique).
+            // Choix de x : centre du cadre. Choix de y : ancrage NDC converti en
+            // pixels par OverlayTextLayout (aucune duplication de la logique).
             val yPx = OverlayTextLayout.lineAnchorYPx(index, totalLignes, sizePx, hauteur)
 
-            val plein = SpannableString(ligne)
-            plein.setSpan(
-                ForegroundColorSpan(if (surligne) KEYWORD_COLOR else BASE_COLOR),
-                0,
-                ligne.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            val layoutContour = layout(SpannableString(ligne), paint, largeurTexte)
-            val layoutPlein = layout(plein, paint, largeurTexte)
-
-            canvas.save()
-            canvas.translate((largeur - largeurTexte) / 2f, yPx)
-            // Passe 1 : contour noir (texte brut, couleur du paint).
-            paint.style = Paint.Style.STROKE
-            paint.strokeWidth = (sizePx / 8f).coerceAtLeast(2f)
-            paint.color = STROKE_COLOR
-            layoutContour.draw(canvas)
-            // Passe 2 : remplissage (ForegroundColorSpan impose blanc/orange).
-            paint.style = Paint.Style.FILL
-            layoutPlein.draw(canvas)
-            canvas.restore()
+            val remplissage = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                textSize = sizePx.toFloat()
+                color = if (surligne) KEYWORD_COLOR else BASE_COLOR
+                typeface = Typeface.DEFAULT_BOLD
+                textAlign = Paint.Align.CENTER
+                style = Paint.Style.FILL
+            }
+            val contour = Paint(remplissage).apply {
+                style = Paint.Style.STROKE
+                strokeWidth = (sizePx / 8f).coerceAtLeast(2f)
+                strokeJoin = Paint.Join.ROUND
+                color = STROKE_COLOR
+            }
+            // Ligne de base : le haut du texte se pose a yPx.
+            val metriques = remplissage.fontMetrics
+            val base = yPx - metriques.ascent
+            canvas.drawText(ligne, largeur / 2f, base, contour)
+            canvas.drawText(ligne, largeur / 2f, base, remplissage)
             return bitmap
         }
-
-        private fun layout(texte: SpannableString, paint: TextPaint, largeur: Int): StaticLayout =
-            StaticLayout.Builder.obtain(texte, 0, texte.length, paint, largeur)
-                .setAlignment(Layout.Alignment.ALIGN_CENTER)
-                .setLineSpacing(0f, 1f)
-                .setIncludePad(false)
-                .build()
     }
 
     /**
@@ -216,56 +194,6 @@ object KineticTypography {
             cache.clear()
             ordre.clear()
         }
-    }
-
-    /**
-     * SONDE DE DIAGNOSTIC D42.2 — a retirer une fois la cause etablie.
-     *
-     * Trois bandes opaques, pleine largeur, a trois positions differentes et
-     * sur trois fenetres differentes :
-     *   rouge  : 0-10 s, haut du cadre
-     *   verte  : 10-20 s, milieu
-     *   bleue  : 20-30 s, bas
-     * Si les bandes apparaissent, les overlays SONT composes : le defaut est
-     * dans le dessin ou le placement du texte. Si rien n'apparait, le chemin
-     * overlay est inactif dans la composition et le texte n'y changera rien.
-     */
-    private fun sondeDiagnostic(largeur: Int, hauteur: Int): List<Effect> =
-        listOf(
-            bandeSonde(Color.RED, 0.10f, 0.18f, largeur, hauteur, 0L, 10_000_000L),
-            bandeSonde(Color.GREEN, 0.46f, 0.54f, largeur, hauteur, 10_000_000L, 20_000_000L),
-            bandeSonde(Color.BLUE, 0.82f, 0.90f, largeur, hauteur, 20_000_000L, 30_000_000L)
-        )
-
-    private fun bandeSonde(
-        couleur: Int,
-        haut: Float,
-        bas: Float,
-        largeur: Int,
-        hauteur: Int,
-        debutUs: Long,
-        finUs: Long
-    ): Effect {
-        val overlay = object : BitmapOverlay() {
-            private val bitmap: Bitmap = Bitmap.createBitmap(
-                largeur, hauteur, Bitmap.Config.ARGB_8888
-            ).also { bmp ->
-                val c = Canvas(bmp)
-                val p = Paint()
-                p.color = couleur
-                c.drawRect(
-                    0f, haut * hauteur, largeur.toFloat(), bas * hauteur, p
-                )
-            }
-
-            override fun getBitmap(presentationTimeUs: Long): Bitmap = bitmap
-
-            override fun getOverlaySettings(presentationTimeUs: Long): StaticOverlaySettings =
-                StaticOverlaySettings.Builder().setScale(1f, 1f).build()
-        }
-        return TimestampWrapper(
-            OverlayEffect(ImmutableList.of<TextureOverlay>(overlay)), debutUs, finUs
-        )
     }
 
     private const val MICRO = 1_000_000.0
