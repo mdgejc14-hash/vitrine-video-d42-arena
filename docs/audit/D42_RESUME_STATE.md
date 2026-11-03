@@ -1,117 +1,57 @@
 # D42.2 — État de reprise
 
-> **Reprise : `cf26af5` (branche `audit-d41`).**
-> **Blocage actuel : aucun identifiant GitHub disponible.**
-> Ce fichier est conçu pour qu'un autre agent reprenne sans rien retrouver du
-> bac à sable. Tout ce qui est nécessaire est soit sur GitHub, soit dans
-> `/home/user/d422/`.
-
-Dernière mise à jour : 2026-11-03 (nuit).
+**Branche privée :** `d42.2` (tête `fe3200c`)
+**Miroir public :** `mdgejc14-hash/vitrine-video-d42-arena` (tête `57fc62f`)
+**Référence canonique :** `audit-d41` @ `cf26af5` · PR #2 ouverte, non fusionnée
+**`main` :** `74edd98` — intacte
 
 ---
 
-## 1. Où en est la mission
+## 1. Acquis de cette session
 
-| Élément | Valeur |
+| Élément | État |
 |---|---|
-| Branche de travail | `audit-d41` |
-| Commit de référence | `cf26af5` (D42-P12) |
-| Dépôt privé | `mdgejc14-hash/vitrine-video` — **privé**, `main` = `74edd98` |
-| PR #2 | **ouverte, non fusionnée** |
-| Miroir public | **non créé** |
-| Paiement | `501 billing_not_configured` — inchangé |
-| D42.1 | diagnostic racine **établi** (rapport livré) |
-| D42.2 | correctif **écrit, non compilé** ; audit d'exposition **écrit, non exécuté** |
+| Cause racine du texte absent | **établie et corrigée** : rebasage des mots sur le plan |
+| Texte visible dans le MP4 | **oui**, 100 % des frames (run 41714843343) |
+| Porte A | **partielle** — prix et nom visibles, 3 chaînes sur 5 non observées |
+| Miroir public | créé, 0 secret, historique aplati |
+| Traçabilité 10 maillons | 3 points instrumentés (`D42-TRACE`) |
+| Budget privé consommé | **0 minute** |
 
----
+## 2. Blocage immédiat
 
-## 2. Ce qui bloque, précisément
+L'entrée `templates` du workflow `virtual-render-validation.yml` **n'est pas
+honorée** : les rendus sortent en `batiment_travaux_T1/T2` quel que soit le
+gabarit demandé. Tant que ce point n'est pas réglé, les scènes « offre /
+localisation / badge » ne sont jamais rendues et la porte A ne peut pas être
+complétée.
 
-| Blocage | Conséquence | Déblocage |
-|---|---|---|
-| **PAT absent** | aucun clone, aucun push, aucun dispatch | fournir un PAT neuf (l'ancien a été exposé en clair, à révoquer) |
-| **Clone local perdu** | `.git` absent, modules vides dans `work/vv-d42` | re-cloner |
-| **Budget Actions privé à −7 min** | plus aucune minute facturable | miroir public (runners gratuits illimités) |
-| **49 MP4 sur 53 perdus** | preuves visuelles réduites à 9 planches | rejouer les portes après correctif |
-
----
-
-## 3. Livrables prêts dans `/home/user/d422/`
-
-| Fichier | Rôle | État |
-|---|---|---|
-| `scripts/scan-exposition.sh` | 33 motifs de secrets, refuse l'exposition | écrit, non exécuté |
-| `scripts/creer-miroir.sh` | snapshot aplati + scan + push | écrit, non exécuté |
-| `patches/KineticTypography.kt` | correctif du rendu commercial | écrit, **non compilé** |
-| `patches/OverlayTextLayout_ajouts.kt` | 3 fonctions pures, testables JVM | écrit |
-| `patches/OverlayTextLayoutTest_ajouts.kt` | 5 tests de non-régression | écrit |
-| `patches/SentinelRenderInstrumentedTest.kt` | test de pixels sur MP4 réel | écrit |
-| `patches/APPLIQUER.md` | procédure pas à pas + estimation de coût | écrit |
-| `docs/D42_PUBLIC_EXPOSURE_REVIEW.md` | revue d'exposition | écrit, audit à exécuter |
-| `docs/D42_RESUME_STATE.md` | ce fichier | — |
-
-Preuves conservées hors dépôt : `/home/user/preuves_d421/` (9 planches,
-3 MP4 de générations différentes, fixture sentinelle, 120 manifestes,
-40 mesures audio). **Ces preuves ne sont pas dans Git** : elles doivent être
-publiées comme artefacts Actions au prochain run, pas commitées.
-
----
-
-## 4. Diagnostic D42.1 — rappel de la cause racine
-
-`KineticTypography` est passé de `TextOverlay` (taille indépendante du bitmap) à
-`BitmapOverlay` + `StaticOverlaySettings` **sans échelle**. Preuve visuelle sur
-trois générations du même moteur :
-
-| Échantillon | Génération | Texte observé |
-|---|---|---|
-| `d42_art4` (7,04 s) | avant D42 | « Un nouveau plat chez », « À DÉCOUVRIR », « LES INGRÉDIENTS » — lisible |
-| `d42_art7` (35,04 s) | milieu D42 | « n nouveau plat chez Chez Chant » — timbre-poste, tronqué |
-| 9 planches + 40 MP4 | après D42 | **aucun texte** |
-
----
-
-## 5. Prochaine action exacte
+## 3. Prochaine action exacte
 
 ```
-1. Fournir un PAT (droits : repo).
-2. git clone https://github.com/mdgejc14-hash/vitrine-video.git ~/work/vv-d42
-   cd ~/work/vv-d42 && git checkout audit-d41 && git rev-parse --short HEAD   # cf26af5
-3. bash ~/d422/scripts/scan-exposition.sh ~/work/vv-d42
-   → lire la sortie EN ENTIER (revue manuelle)
-4. Appliquer d422/patches/APPLIQUER.md, étapes 1 à 3.
-5. ./gradlew :ins-effects:testDebugUnitTest --tests "*OverlayTextLayoutTest*"
-   → les tests de hauteur DOIVENT échouer avant correctif, passer après.
-6. Bash ~/d422/scripts/creer-miroir.sh ~/work/vv-d42 cf26af5 <compte> vitrine-video-d42-arena
-7. Sur le miroir : dispatch unique, 2 rendus FR (≈ 12 min).
-8. Inspecter 6 frames. PORTE A franchie ou retour au diagnostic.
+1. Lire .github/scripts/d42-render.sh : voir comment `templates` est transmis
+   à l'instrumentation (-e d42_templates ...). Corriger le passage.
+2. Dispatch unique : templates=restaurants_maquis_T1, langs=fr,
+   langs_lot=fr, profils=validation, shards=1, shards_json=[1], limite=1,
+   run_smoke=0.  (~11 min)
+3. Extraire 6 frames, vérifier les 5 chaînes de la porte A.
 ```
 
----
+## 4. Ce qui ne doit pas être refait
 
-## 6. Coût mesuré (D42, pour dimensionner D42.2)
+- Ne pas relancer la sonde : elle a rempli son rôle (preuve que les overlays
+  sont composés).
+- Ne pas re-suspecter `setScale` : le run 7 avait déjà le bitmap plein cadre et
+  le texte apparaissait — le défaut était temporel.
+- Ne pas échantillonner les frames à 2, 6, 10 s : un défaut confiné au début de
+  la vidéo est invisible à ces instants. Analyser à 4 im/s sur toute la durée.
+- Ne pas conclure depuis `mots_beat_sheet > 0` : ce compteur est recalculé par
+  le test, pas lu dans le worker.
 
-| Poste | Mesure |
-|---|---|
-| Rendu validation 540×960 | 220 s |
-| Rendu production 1080×1920 | 758 s |
-| Boot émulateur (KVM réel) | 63 s |
-| Chaîne fixe (checkout + install + collecte) | ≈ 5 min |
-| Compilation APK + tests | ≈ 5 min |
-| Total D42 consommé | 905 min |
+## 5. Reprise si le bac à sable est restauré
 
-Sur miroir public : ces durées ne sont pas décomptées du quota privé, mais les
-limites de concurrence (20 jobs) et de durée (6 h/job) restent.
-
----
-
-## 7. Règles de continuité (à respecter sans exception)
-
-1. **Pousser avant de continuer** : aucun lot de travail de plus d'une heure ne
-   doit vivre uniquement dans le bac à sable. C'est exactement ce qui a coûté la
-   perte du code D42.
-2. **Ne jamais stocker de MP4 dans Git** : artefacts Actions uniquement.
-3. **Le dépôt privé reste canonique** : le miroir ne reçoit jamais de commit
-   direct qui ne serait pas transféré ensuite.
-4. **Aucune matrice** tant que la porte A n'est pas franchie visuellement.
-5. **Aucun secret** dans un commit, un artefact, un log ou une réponse.
+```
+git clone https://github.com/mdgejc14-hash/vitrine-video.git ~/work/vv-d42
+cd ~/work/vv-d42 && git checkout d42.2 && git rev-parse --short HEAD   # fe3200c
+```
+Le miroir se reconstruit avec `docs/audit/d42_2_scripts/creer-miroir.sh`.

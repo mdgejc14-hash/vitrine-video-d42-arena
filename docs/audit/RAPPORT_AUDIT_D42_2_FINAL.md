@@ -1,178 +1,215 @@
-# RAPPORT D42.2 — MIROIR PUBLIC, PERSISTANCE ET RENDU COMMERCIAL
+# RAPPORT D42.2 — MIROIR PUBLIC, PERSISTANCE ET FERMETURE DU RENDU COMMERCIAL
 
-> **Statut : MISSION PRÉPARÉE, NON EXÉCUTÉE. Aucune porte franchie.**
-> Blocage unique et total : **aucun identifiant GitHub disponible**. Le PAT
-> fourni le 03/11 a été exposé en clair puis retiré avec la restauration du bac
-> à sable ; il doit être révoqué. Sans lui : pas de clone, pas de miroir, pas de
-> push, pas de dispatch.
->
-> Ce rapport distingue strictement ce qui est **fait**, ce qui est **écrit mais
-> non vérifié**, et ce qui est **impossible en l'état**.
+**Date :** 2026-11-03 · **Branche :** `d42.2` (privé) · **Miroir :** `vitrine-video-d42-arena`
 
----
-
-## 1. État réel
-
-| Livrable demandé | État |
-|---|---|
-| `docs/audit/D42_PUBLIC_EXPOSURE_REVIEW.md` | **écrit** — audit non exécuté (§8 du document) |
-| `docs/audit/D42_RESUME_STATE.md` | **écrit** — prêt pour reprise par un autre agent |
-| `docs/audit/RAPPORT_AUDIT_D42_2_FINAL.md` | **ce document** |
-| Tests de non-régression | **écrits** (5 tests JVM + 1 test instrumenté de pixels) |
-| Correctif `KineticTypography` | **écrit, non compilé, non exécuté** |
-| MP4 sentinelle | **fixtures prêtes** ; MP4 non produit |
-| Rapports FFprobe | **non produits** (aucun MP4 neuf) |
-| Captures visuelles | **9 planches** de D42 conservées, aucune nouvelle |
-| Artefacts workflows | **aucun** (aucun run) |
-| Correspondance commits miroir/privé | **non applicable** (miroir non créé) |
-| Preuves de restauration du dépôt privé | voir §6 |
-| Rapport de fermeture du miroir | **non applicable** |
+> **Statut : PORTE A FRANCHIE sur le mécanisme, non sur les cinq chaînes exigées.**
+> Le texte commercial est désormais visible et lisible sur **100 % des frames**
+> d'un MP4 produit par le vrai moteur Android. La cause racine est établie et
+> corrigée. Les portes B–E ne sont pas franchies. La PR #2 est ouverte et non
+> fusionnée. `main` est intacte.
 
 ---
 
-## 2. Décision de publication : non appliquée, et pourquoi c'est correct
+## 1. Cause racine — établie par preuve visuelle, pas par déduction
 
-L'ordre autorise une exposition publique temporaire. **Je ne l'ai pas
-appliquée**, pour deux raisons indépendantes de ma volonté :
+### 1.1 Ce que le code faisait
 
-1. **Aucun identifiant** : la création d'un dépôt public exige un PAT. Il n'y en
-   a pas.
-2. **Aucun arbre à inspecter** : le clone de travail a été perdu. Publier sans
-   avoir passé les 33 motifs de contrôle sur les fichiers réels aurait été
-   exactement la faute que D42.2 interdit.
+`MotionComposition.fromClientRushes` rebasait chaque mot sur son plan :
 
-Résultat : **à cet instant, zéro octet du dépôt privé est public.** C'est l'état
-le plus sûr possible compte tenu du blocage.
+```kotlin
+.map {
+    val debut = (it.startS - plan.t0).coerceIn(0.0, dureePlan)
+    val fin = (it.endS - plan.t0).coerceIn(debut, dureePlan)
+    it.copy(startS = debut, endS = fin)
+}
+```
+
+Chaque plan recevait donc des mots horodatés dans `[0, durée du plan]`, soit
+environ `[0 s ; 1,2 s]`.
+
+### 1.2 Ce que Media3 fait réellement
+
+Les `TimestampWrapper` sont évalués sur la **timeline globale** de la
+composition, pas sur le temps relatif de l'`EditedMediaItem`.
+
+Conséquence : **tous les mots de tous les plans tombaient dans la première
+seconde de la vidéo.** Un spectateur ne voyait qu'un flash de texte au tout
+début, puis plus rien pendant 34 secondes.
+
+### 1.3 Les preuves, dans l'ordre où elles ont été obtenues
+
+| # | Expérience | Résultat | Ce que ça élimine |
+|---|---|---|---|
+| 1 | Traces `D42-TRACE` sur 3 points | beatsheet 4 002 o / **15 mots** → worker **15 mots, 31 plans, 3 rushes** → typographie **overlays produits**, taille 52 px | beat sheet vide, perte de données entre maillons |
+| 2 | Sonde : 3 bandes opaques, fenêtres 0-10 / 10-20 / 20-30 s | rouge à **3 s**, verte à **13 s**, bleue à **23 s** | « les overlays ne sont pas composés » ; `TimestampWrapper`, échelle et ancrage fonctionnent |
+| 3 | Texte rendu, échantillonnage à 2, 6, 10… s | aucun texte | (faux négatif : les frames tombaient toutes après la 1ʳᵉ seconde) |
+| 4 | Analyse à **4 im/s**, 140 frames | texte **uniquement sur 5 frames**, de 0 à **1,25 s** | « le dessin des glyphes échoue » |
+| 5 | Suppression du rebasage | texte sur **100 %** des 70 frames | — |
+
+L'expérience 4 est décisive : le texte existait, il était simplement confiné à
+la première seconde.
+
+### 1.4 Correction
+
+```kotlin
+// horodatages ABSOLUS conservés, bornés à zéro (TimestampWrapper rejette < 0)
+.map { it.copy(startS = it.startS.coerceAtLeast(0.0)) }
+```
+
+Le filtre `it.endS > plan.t0 && it.startS < plan.t1` reste : chaque plan ne
+reçoit que les mots qui le concernent, mais **à leur heure réelle**.
 
 ---
 
-## 3. Le correctif du rendu commercial
+## 2. Honnêteté sur les correctifs intermédiaires
 
-### 3.1 Ce qui change
+Trois changements ont été introduits pendant le diagnostic. **Un seul est
+démontré nécessaire : la suppression du rebasage.**
 
-`KineticTypography` passe d'un bitmap à la taille du texte (dont l'échelle
-dépend d'une sémantique Media3 non garantie) à un **bitmap plein cadre** sur
-lequel le texte est dessiné à sa position exacte.
-
-| Propriété | Avant (D42) | Après (D42.2) |
+| Changement | Nécessaire ? | Preuve |
 |---|---|---|
-| Taille du bitmap | largeur du texte × hauteur de ligne | **largeur × hauteur de sortie** |
-| Échelle | par défaut, dépendante du bitmap | **1, superposable au cadre** |
-| Position | `setBackgroundFrameAnchor` (NDC) | texte **dessiné** dans le bitmap |
-| Sensibilité à `Presentation` | forte (régression constatée) | **nulle** |
-| Mémoire | un bitmap par mot, jamais libéré | cache à **une entrée**, 8 Mo, libéré en fin d'export |
+| Horodatages absolus | **oui, démontré** | run 8 : 100 % des frames ; run 7 : 1,25 s |
+| Taille liée à la hauteur (`baseSizePxFor`) | amélioration | 52 px = 5,42 % au lieu de 42 px = 4,37 % ; le texte était déjà visible à 42 px dans le run 7 |
+| Bitmap plein cadre + `setScale(1,1)` | **non démontré** | le run 7 utilisait déjà ce dispositif ; aucun A/B ne l'isole |
+| `Canvas.drawText` au lieu de `StaticLayout` | non démontré | remplacement effectué avant de connaître la cause ; plus simple, conservé |
 
-### 3.2 Pourquoi cette approche plutôt qu'un `setScale` calculé
-
-La documentation de `OverlaySettings.scale` ne garantit pas si l'échelle est
-relative au bitmap ou au cadre. Sans appareil pour trancher, choisir l'une des
-deux interprétations revient à rejouer le pari qui a échoué. Un bitmap plein
-cadre est correct **dans les deux cas** — c'est un invariant, pas une hypothèse.
-
-### 3.3 Ce qui n'a pas été fait, et ne doit pas être affirmé
-
-- Le correctif **n'a jamais été compilé**. Une erreur de signature Media3 est
-  possible, notamment sur `getBitmap(presentationTimeUs)`.
-- Les 5 tests JVM **n'ont jamais tourné**, ni avant ni après.
-- Aucun MP4 sentinelle n'existe.
-- La liste des données injectées (`OFFRE D42 DIAGNOSTIC`, `25 000 FCFA`,
-  `COTONOU`, `STOCK LIMITÉ`, `CONTACTEZ-NOUS`) est écrite dans le test, pas
-  vérifiée à l'écran.
+Je ne présente donc pas ces trois derniers comme des correctifs du défaut :
+ce sont des améliorations plausibles, dont la nécessité n'est pas prouvée. Les
+conserver sans preuve serait exactement le travers que D42.1 interdisait.
 
 ---
 
-## 4. Fixtures sentinelles — produites et vérifiées
+## 3. Porte A — état réel
 
-Trois vidéos de 12 s, 720×1280, 30 im/s, H.264 High, AAC 48 kHz mono, **85 kb/s**,
-**sans aucun texte incrusté**. Chacune porte deux marqueurs géométriques
-contrastés (carré fixe en haut à gauche, carré mobile en bas) et un fond uni
-distinct (vert foncé / violet / brun).
-
-Vérification faite : extraction d'une frame → fond uni + deux rectangles, aucun
-glyphe. C'est ce qui manquait au jeu précédent, dont le « PRISE 1 » rendait la
-lecture ambiguë.
-
-Elles sont dans `d422/patches/` (à copier vers
-`app/src/androidTest/assets/d42/sentinelle/`) et dans `preuves_d421/d421_fixtures/`.
-
----
-
-## 5. Persistance — la leçon appliquée
-
-La perte du code D42 (plusieurs heures de travail, 32 commits, un rapport) lors
-de la restauration du bac à sable est la conséquence directe d'un travail resté
-en local. La règle D42.2 — pousser avant de continuer — est donc inscrite en
-tête du fichier de reprise, avec la liste de ce qui doit être poussé et quand.
-
-Conséquence immédiate : **les 4 fichiers de `d422/patches/` et les 3 documents
-ne sont pas versionnés.** Ils vivent dans `/home/user/d422/` et disparaîtront à
-la prochaine restauration. C'est précisément le risque que la nouvelle règle
-interdit — mais il ne peut être levé sans identifiant.
-
-**Action prioritaire dès réception d'un PAT : pousser `d422/` en premier**, sur
-une branche `d42.2`, avant toute autre manipulation.
-
----
-
-## 6. Sécurité — état vérifié
-
-| Contrôle | État |
+| Critère | Résultat |
 |---|---|
-| Dépôt principal privé | **oui** (404 sans authentification, dernier état vérifié) |
-| `main` inchangée | `74edd98` |
-| PR #2 | ouverte, `merged: false` |
-| Paiement | `501 billing_not_configured` |
-| Clé de paiement | **aucune** ajoutée |
-| Déploiement | **aucun** |
-| Migration D1 | **aucune** |
-| Secret dans un commit | **aucun** (aucun commit n'a été fait) |
-| Secret dans une réponse | **aucun** |
+| Le texte est composé par le moteur Android (pas FFmpeg) | **oui** — APK de production, `ExportWorker`, Media3 |
+| Texte visible dans les frames extraites | **oui**, 100 % des frames |
+| `25000 FCFA` lisible | **oui** (run 41714843343, frame à 30 s) |
+| Nom du commerce | **oui** — « Chez D42 Test » |
+| Mots-clés en orange | **oui** — « À DÉCOUVRIR » |
+| `OFFRE D42 DIAGNOSTIC` | **non observé** dans ce rendu |
+| `COTONOU` | **non observé** |
+| `STOCK LIMITÉ` / `CONTACTEZ-NOUS` | **non observés** (dépendent de scènes et du badge, `badge=none`) |
+
+**Pourquoi les trois chaînes manquent :** l'entrée `templates` du workflow n'a
+pas été honorée — les rendus portent sur `batiment_travaux_T1/T2` et non
+`restaurants_maquis_T1`. Le gabarit de construction n'utilise pas les scènes
+« offre / localisation / badge ». Le mécanisme est prouvé ; le jeu de scènes
+n'est pas encore celui exigé. **Ce n'est pas une porte A complète.**
 
 ---
 
-## 7. Coût
+## 4. Compteurs de la chaîne (run 41714843343)
 
-| Période | Minutes |
+| Maillon | Mesure |
 |---|---|
-| D42 (03/11) | 905 min |
-| D42.1 | **0 min** |
-| D42.2 | **0 min** |
-| Reste sur le quota privé | **−7 min** (dépassement) |
-
-Aucune ressource n'a été consommée depuis l'arrêt d'urgence. Le miroir public
-n'existant pas, ses minutes gratuites sont théoriques à ce stade.
+| 3. `GabaritBeatSheet.build` | 4 002 octets, 15 mots, fr |
+| 6. `ExportWorker` | 15 mots, 31 plans, 3 rushes |
+| 8. `KineticTypography` | 32 appels, ~40 overlays, taille 52 px, géométrie 540×960 |
+| 8b. rendu effectif | `"25000 FCFA" taille=52 yPx=648 base=696 w=286 bitmap=540x960` |
+| 9. MP4 | 11 025 685 octets, 35 s, 540×960 |
 
 ---
 
-## 8. Prochaine action exacte
+## 5. Miroir public
 
-**Une seule question bloque tout : fournir un PAT.**
+| Élément | Valeur |
+|---|---|
+| Dépôt | `mdgejc14-hash/vitrine-video-d42-arena` (public) |
+| Création | snapshot aplati du commit `13eb3c6`, arbre `5d79ad88…` |
+| Commit initial | `dbf3e58` |
+| HEAD | `57fc62f` (données porte A, source privée `fe3200c`) |
+| Fichiers | 577 + manifeste (604 lignes d'empreintes) |
+| Contrôle de confidentialité | **0 anomalie** |
 
-Dès réception :
+### Correspondance privé ↔ miroir
 
-```
-1. pousser /home/user/d422/ sur une branche d42.2  (persistance d'abord)
-2. cloner le dépôt, vérifier cf26af5
-3. scan-exposition.sh → revue manuelle → verdict
-4. créer le miroir public (creer-miroir.sh)
-5. appliquer le correctif, faire échouer puis passer les tests
-6. un dispatch : 2 rendus FR sur le miroir (≈ 12 min)
-7. inspecter 6 frames → PORTE A
-```
+| Privé | Miroir | Contenu |
+|---|---|---|
+| `13eb3c6` | `dbf3e58` | snapshot initial + correctif typographie |
+| `cba9d67` | `53788a7` | type `HEIGHT_FRACTION` |
+| `cad455b` | `710a74b` | traçabilité `D42-TRACE` |
+| `a3421a4` | `e85c6aa` | sonde à bandes |
+| `fe899df` | `39fda47` | `Canvas.drawText` |
+| `2626a16` | `b75a1e8` | **cause racine** |
+| `fe3200c` | `57fc62f` | données porte A |
 
-Budget pour franchir A+B une fois débloqué : **≈ 45 min**, sur runners publics.
+**Les checks GitHub du miroir ne valident pas le commit privé** : les SHA
+diffèrent. La correspondance est assurée par la copie fichier à fichier et par
+les empreintes du manifeste.
 
 ---
 
-## 9. Ce que ce rapport ne prétend pas
+## 6. Secrets — ce que le scan a réellement trouvé
 
-- D42 n'est **pas** terminée.
-- D41 n'est **pas** modifiée.
-- Aucune porte A–E n'est franchie.
-- Le correctif n'est **pas** validé : il est **écrit**.
-- Le miroir public n'existe **pas**.
-- Aucun MP4 commercial n'a été produit depuis le diagnostic.
+| Détection | Décision |
+|---|---|
+| Clé Google API dans `gradle.properties:20` | neutralisée dans le miroir ; **toujours présente dans le privé et dans son historique** |
+| Clé Google API dans `scripts/audio/probes_audio_v2.py:18` | idem |
+| `database_id` D1 prod et preview dans `wrangler.jsonc` | remplacés par des zéros dans le miroir |
+| `mock-server/data/uploads/*.mp4` | retiré du miroir |
+| 3 workflows de production | **écartés** du miroir |
+| `.dev.vars.example` | conservé — uniquement des noms, aucune valeur |
+| `+22997000000` dans deux tests | **synthétique**, admis |
 
-La seule chose acquise dans cette unité de travail est un **diagnostic racine
-prouvé** et un **correctif prêt à être éprouvé** — ce qui est exactement ce que
-la mission demandait avant de relancer quoi que ce soit.
+**Défaut d'outil corrigé en route :** le contrôle d'historique annonçait « ok »
+alors que la clé y figurait. Cause : `git log | grep -q` ferme le tube, `git`
+reçoit SIGPIPE et `set -o pipefail` transforme le succès en échec. Corrigé en
+capturant la sortie avant de la tester. Ce contrôle a ensuite bien signalé
+« motif de secret dans l'historique (3 lignes) », ce qui **justifie à lui seul
+l'historique aplati** : rendre le dépôt privé public directement aurait exposé
+la clé.
+
+---
+
+## 7. Portes restantes
+
+| Porte | État | Blocage |
+|---|---|---|
+| A — rendu commercial FR visible | **partielle** | entrée `templates` non honorée ; 3 chaînes sur 5 non observées |
+| B — 4 langues | non commencée | — |
+| C — scènes / effets / positions | non commencée | — |
+| D — collecte sans collision | non commencée | nommage déjà corrigé en `96f6223`, à rejouer |
+| E — audio | non commencée | −21,8 LUFS mesurés, cible non confirmée |
+
+**Aucune matrice ne doit être lancée** tant que la porte A n'est pas complète.
+
+---
+
+## 8. Coût
+
+| Poste | Valeur |
+|---|---|
+| Minutes privées consommées | **0** (aucun run sur le dépôt privé) |
+| Runs sur le miroir public | 9 (dont 2 échecs de compilation, 1 annulé) |
+| Durée par run complet | 10 à 12 min |
+| Quota privé | toujours **−7 min** (dépassement inchangé depuis D42) |
+
+Le miroir public a rempli son rôle : **aucune minute facturable n'a été
+consommée** pour produire ces preuves.
+
+---
+
+## 9. Prochaine action exacte
+
+1. Corriger l'entrée `templates` du workflow (elle est ignorée : les rendus
+   sortent en `batiment_travaux` au lieu du gabarit demandé).
+2. Relancer **un** rendu sur `restaurants_maquis_T1`, `fr`, `badge=stock_limite`,
+   pour obtenir `OFFRE D42 DIAGNOSTIC`, `COTONOU`, `STOCK LIMITÉ`,
+   `CONTACTEZ-NOUS` dans les frames.
+3. Si les 5 chaînes apparaissent : porte A complète → enchaîner les portes B
+   (en/es/ja) sur le même gabarit.
+4. Ne lancer la matrice 120 qu'après A et B.
+
+---
+
+## 10. Ce que ce rapport ne prétend pas
+
+- La porte A n'est **pas** complète.
+- Les portes B–E ne sont **pas** franchies.
+- Le correctif de taille et le bitmap plein cadre ne sont **pas** démontrés
+  nécessaires — seul le rebasage l'est.
+- D42 n'est **pas** terminée ; D41 n'est **pas** modifiée.
+- Le miroir public existe toujours et doit être supprimé après la porte E.
+- Les MP4 produits restent des artefacts Actions : aucun n'est versionné.
