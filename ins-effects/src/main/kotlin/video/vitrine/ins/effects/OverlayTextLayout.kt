@@ -109,10 +109,13 @@ object OverlayTextLayout {
 
     /** Derniere position de coupure acceptable dans [courant], ou -1. */
     private fun positionDeCoupe(courant: StringBuilder, source: CharArray, i: Int): Int {
-        // 1. jamais au milieu d'une suite de chiffres (numero de telephone).
-        if (i > 0 && source[i].isDigit() && source[i - 1].isDigit()) {
+        // 1. jamais au milieu d'une suite de chiffres (numero de telephone),
+        //    et le « + » international reste colle a ses chiffres.
+        if (i > 0 && source[i].isDigit() &&
+            (source[i - 1].isDigit() || source[i - 1] == '+')
+        ) {
             var k = courant.length
-            while (k > 0 && courant[k - 1].isDigit()) k--
+            while (k > 0 && (courant[k - 1].isDigit() || courant[k - 1] == '+')) k--
             return if (k > 0) k else -1
         }
         // 2. de preference apres un separateur de champs.

@@ -165,4 +165,12 @@ class OverlayTextLayoutTest {
         assertTrue("au moins deux lignes attendues", lignes.size >= 2)
         assertTrue("coupure hors separateur : $lignes", lignes.first().endsWith("·") || !lignes.first().last().isDigit())
     }
+
+    @Test
+    fun `le plus international reste avec les chiffres`() {
+        val maxWidth = (540 * OverlayTextLayout.MAX_WIDTH_FRACTION).toInt()
+        val lignes = OverlayTextLayout.splitLines("Chez D42 Test · COTONOU · +22997000000", 24, maxWidth)
+        assertTrue("le « + » est reste seul en fin de ligne : $lignes", lignes.none { it.trim().endsWith("+") })
+        assertTrue("numero introuvable : $lignes", lignes.any { it.contains("+22997000000") })
+    }
 }
