@@ -291,6 +291,13 @@ class ExportWorker(
         geometry: ExportSpec.ExportGeometry
     ): Composition? {
         val rushes = inputData.getStringArray(KEY_CLIENT_RUSHES)
+        // D42.2 — tracabilite : ce que le MOTEUR recoit reellement, et non ce
+        // qu'un test recalcule de son cote (piege de mots_beat_sheet > 0).
+        android.util.Log.i(
+            "D42-TRACE",
+            "6.worker mots=${sheet?.words?.size ?: -1} plans=${sheet?.plans?.size ?: -1} " +
+                "rushes=${rushes?.size ?: 0}"
+        )
         if (rushes.isNullOrEmpty() || sheet == null) return null
         val alignes = video.vitrine.ins.effects.RushSlots.resolve(rushes.toList())
         if (alignes.isEmpty()) return null

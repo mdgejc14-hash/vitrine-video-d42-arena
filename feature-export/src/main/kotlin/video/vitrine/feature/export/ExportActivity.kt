@@ -207,6 +207,14 @@ class ExportActivity : VitrineActivity() {
                 badgeTexte = l10n?.badge(badgeCode, langue)
             )
         }.getOrNull() ?: return
+        // D42.2 — tracabilite : compteur du maillon 3 (GabaritBeatSheet.build).
+        val motsJson = runCatching {
+            org.json.JSONObject(doc.beatSheetJson).optJSONArray("words")?.length() ?: 0
+        }.getOrDefault(-1)
+        android.util.Log.i(
+            "D42-TRACE",
+            "3.beatsheet octets=${doc.beatSheetJson.length} mots=$motsJson langue=$langue"
+        )
         pendingBeatSheet = doc.beatSheetJson
         pendingSfxJson = doc.sfxEventsJson.takeIf { doc.sfxEvents.isNotEmpty() }
         // D41 (F59) : profondeur de ducking lue dans audio.mix du gabarit.

@@ -96,7 +96,7 @@ object KineticTypography {
         val retenus = words
             .filter { it.word.isNotBlank() && it.endS > it.startS + 1e-3 }
             .map { stamp -> stamp.copy(startS = stamp.startS.coerceAtLeast(0.0)) }
-        return retenus.flatMap { stamp ->
+        val produits = retenus.flatMap { stamp ->
             val size = OverlayTextLayout.sizeForWidth(stamp.word, base, maxWidth)
             val lignes = OverlayTextLayout.splitLines(stamp.word, size, maxWidth)
             val surligne = KeywordMatching.isKeyword(stamp.word, tokens)
@@ -126,6 +126,12 @@ object KineticTypography {
                 )
             }
         }
+        android.util.Log.i(
+            "D42-TRACE",
+            "8.typographie mots_recus=${words.size} mots_retenus=${retenus.size} " +
+                "overlays=$produits taille=$base geo=${outputWidthPx}x$outputHeightPx"
+        )
+        return produits
     }
 
     /**

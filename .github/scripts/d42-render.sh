@@ -95,7 +95,7 @@ fi
 # indispensable quand le rendu ne rend pas la main.
 adb exec-out run-as video.vitrine.app cat cache/export-1.mp4 > "${SORTIE}/cache-export-1.mp4" 2>/dev/null || true
 echo "cache-export-1.mp4 : $(stat -c%s "${SORTIE}/cache-export-1.mp4" 2>/dev/null || echo 0) octets" 
-adb logcat -d | grep -E "D42-RENDER|D42-VERIF|ExportWorker|Transformer" > "${SORTIE}/logcat.txt" || true
+adb logcat -d | grep -E "D42-RENDER|D42-VERIF|D42-TRACE|ExportWorker|Transformer" > "${SORTIE}/logcat.txt" || true
 mv instrumentation.txt "${SORTIE}/" 2>/dev/null || true
 
 echo "== contenu récupéré =="
