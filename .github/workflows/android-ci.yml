@@ -26,7 +26,10 @@ jobs:
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
 
+      # D42.4 : signature/steps conditionnels. Sans secrets (miroir public, fork),
+      # ces etapes sont SAUTEES au lieu de faire echouer le job avant les tests.
       - name: Restauration keystore officiel (P0 — secrets obligatoires)
+        if: ${{ secrets.VV_KEYSTORE_B64 != '' && secrets.VV_STORE_PASSWORD != '' }}
         env:
           VV_KEYSTORE_B64: ${{ secrets.VV_KEYSTORE_B64 }}
           VV_STORE_PASSWORD: ${{ secrets.VV_STORE_PASSWORD }}
@@ -47,6 +50,7 @@ jobs:
           chmod 600 vv-signing/vitrine.keystore vv-signing/signing.properties
 
       - name: Empreinte officielle SHA-256 (porte d'intégrité V2.0 §22)
+        if: ${{ secrets.VV_KEYSTORE_B64 != '' && secrets.VV_STORE_PASSWORD != '' }}
         id: apksha
         run: |
           set -euo pipefail
@@ -83,9 +87,11 @@ jobs:
         run: ./gradlew :app:assembleDebug :app:bundleDebug --stacktrace
 
       - name: Assemblage APK release (signé officiel + R8 full + porte d'intégrité ACTIVE)
+        if: ${{ secrets.VV_KEYSTORE_B64 != '' && secrets.VV_STORE_PASSWORD != '' }}
         run: ./gradlew :app:assembleRelease -PvvApkSha256=${{ steps.apksha.outputs.sha256 }} --stacktrace
 
       - name: Contrôle de la signature de l'artifact (P0 — clé debug interdite)
+        if: ${{ secrets.VV_KEYSTORE_B64 != '' && secrets.VV_STORE_PASSWORD != '' }}
         run: |
           set -euo pipefail
           APK=$(ls app/build/outputs/apk/release/*.apk | head -1)
@@ -105,6 +111,7 @@ jobs:
           echo "PASS : APK release signé keystore officiel (alias vitrine)"
 
       - name: Publication APK release (artifact zip, retention 30 j)
+        if: ${{ secrets.VV_KEYSTORE_B64 != '' && secrets.VV_STORE_PASSWORD != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: vitrine-video-apk-release
