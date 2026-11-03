@@ -126,12 +126,13 @@ object KineticTypography {
                 )
             }
         }
+        val sonde = sondeDiagnostic(outputWidthPx, outputHeightPx)
         android.util.Log.i(
             "D42-TRACE",
             "8.typographie mots_recus=${words.size} mots_retenus=${retenus.size} " +
                 "overlays=$produits taille=$base geo=${outputWidthPx}x$outputHeightPx"
         )
-        return produits
+        return sonde + produits
     }
 
     /**
@@ -215,6 +216,56 @@ object KineticTypography {
             cache.clear()
             ordre.clear()
         }
+    }
+
+    /**
+     * SONDE DE DIAGNOSTIC D42.2 — a retirer une fois la cause etablie.
+     *
+     * Trois bandes opaques, pleine largeur, a trois positions differentes et
+     * sur trois fenetres differentes :
+     *   rouge  : 0-10 s, haut du cadre
+     *   verte  : 10-20 s, milieu
+     *   bleue  : 20-30 s, bas
+     * Si les bandes apparaissent, les overlays SONT composes : le defaut est
+     * dans le dessin ou le placement du texte. Si rien n'apparait, le chemin
+     * overlay est inactif dans la composition et le texte n'y changera rien.
+     */
+    private fun sondeDiagnostic(largeur: Int, hauteur: Int): List<Effect> =
+        listOf(
+            bandeSonde(Color.RED, 0.10f, 0.18f, largeur, hauteur, 0L, 10_000_000L),
+            bandeSonde(Color.GREEN, 0.46f, 0.54f, largeur, hauteur, 10_000_000L, 20_000_000L),
+            bandeSonde(Color.BLUE, 0.82f, 0.90f, largeur, hauteur, 20_000_000L, 30_000_000L)
+        )
+
+    private fun bandeSonde(
+        couleur: Int,
+        haut: Float,
+        bas: Float,
+        largeur: Int,
+        hauteur: Int,
+        debutUs: Long,
+        finUs: Long
+    ): Effect {
+        val overlay = object : BitmapOverlay() {
+            private val bitmap: Bitmap = Bitmap.createBitmap(
+                largeur, hauteur, Bitmap.Config.ARGB_8888
+            ).also { bmp ->
+                val c = Canvas(bmp)
+                val p = Paint()
+                p.color = couleur
+                c.drawRect(
+                    0f, haut * hauteur, largeur.toFloat(), bas * hauteur, p
+                )
+            }
+
+            override fun getBitmap(presentationTimeUs: Long): Bitmap = bitmap
+
+            override fun getOverlaySettings(presentationTimeUs: Long): StaticOverlaySettings =
+                StaticOverlaySettings.Builder().setScale(1f, 1f).build()
+        }
+        return TimestampWrapper(
+            OverlayEffect(ImmutableList.of<TextureOverlay>(overlay)), debutUs, finUs
+        )
     }
 
     private const val MICRO = 1_000_000.0
