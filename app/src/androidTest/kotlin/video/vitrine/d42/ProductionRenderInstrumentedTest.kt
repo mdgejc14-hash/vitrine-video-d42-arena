@@ -9,6 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import java.io.File
 import java.util.concurrent.TimeUnit
 import org.json.JSONObject
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -390,6 +391,25 @@ class ProductionRenderInstrumentedTest {
 
     // ------------------------------------------------------------------ test
 
+    /** Indice du lot, 1-based (vide = pas de découpage). */
+    private val shardArg = args.getString("d42_shard") ?: ""
+
+    /** Nombre total de lots (vide = pas de découpage). */
+    private val shardsTotalArg = args.getString("d42_shards") ?: ""
+
+    /**
+     * D42.3 — sélection des gabarits.
+     *
+     * Le défaut corrigé : le workflow passait « shard:1/8 » DANS l'argument des
+     * gabarits. Le motif shard l'emportait, la liste restait les 30 gabarits, et
+     * `limite` ne gardait que le premier venu — un rendu était donc produit,
+     * vert, mais pour `batiment_travaux_T1` au lieu du gabarit demandé.
+     *
+     * Désormais trois notions distinctes :
+     *   - FILTRE  (`d42_templates`) : all | ref | T1 | id1,id2 | restaurants_maquis_T1 ;
+     *   - LOT     (`d42_shard` / `d42_shards`) : découpage appliqué APRÈS le filtre ;
+     *   - PLAFOND (`d42_limite`) : appliqué en dernier, par l'appelant.
+     */
     private fun cibles(): List<Triple<String, String, String>> {
         val tous = mutableListOf<Triple<String, String, String>>()
         target.assets.list("gabarits").orEmpty().sorted().forEach { secteur ->
@@ -401,31 +421,68 @@ class ProductionRenderInstrumentedTest {
                     tous += Triple("${secteur}_$tpl", secteur, tpl)
                 }
         }
-        // "shard:3/8" = decoupage deterministe de la matrice (30 gabarits) en
-        // 8 tranches contigues : chaque job d'emulateur produit un lot borne.
-        val shard = Regex("^shard:(\\d+)/(\\d+)$").find(templatesArg)
-        if (shard != null) {
-            val index = shard.groupValues[1].toInt().coerceAtLeast(1) - 1
-            val total = shard.groupValues[2].toInt().coerceAtLeast(1)
-            return tous.filterIndexed { i, _ -> i % total == index }
+
+        val filtre = templatesArg.trim()
+        val demandes = when {
+            filtre.isEmpty() || filtre == "all" || filtre == "ref" -> emptyList()
+            else -> filtre.split(',').map { it.trim() }.filter { it.isNotEmpty() }
         }
-        // "ref" = les 12 rendus de reference pleine qualite (plan de couverture
-        // documente : 6 secteurs, 2 chacun ; 4 langues, 3 chacune).
-        if (templatesArg == "ref") return tous.filter { (id, _, _) -> id in reference() }
-        val demandes = templatesArg.split(',').map { it.trim() }.filter { it.isNotEmpty() }
-        if (templatesArg == "all" || demandes.contains("all")) return tous
-        // "T1" = le T1 de chacun des 6 secteurs ; "restaurants_maquis_T1" = precis.
-        return tous.filter { (id, _, tpl) ->
-            demandes.any { d -> d == tpl || d == id }
+        val selection = when {
+            filtre.isEmpty() || filtre == "all" -> tous
+            filtre == "ref" -> tous.filter { (id, _, _) -> id in reference() }
+            else -> tous.filter { (id, _, tpl) -> demandes.any { d -> d == tpl || d == id } }
         }
+
+        // Contrôle explicite : un gabarit demandé doit être servi, ou le test
+        // échoue immédiatement — plus de sélection silencieuse du premier venu.
+        if (demandes.isNotEmpty()) {
+            val manquants = demandes.filter { d -> selection.none { it.first == d || it.third == d } }
+            assertTrue(
+                "GABARIT DEMANDE INTROUVABLE : $manquants (demande=${demandes.joinToString()})",
+                manquants.isEmpty(),
+            )
+            assertEquals(
+                "GABARIT DEMANDE=${demandes.joinToString()} mais selection=" +
+                    selection.joinToString { it.first },
+                demandes.size,
+                selection.size,
+            )
+        }
+
+        // Découpage en lots : appliqué à la sélection FILTRÉE, jamais à la liste
+        // complète — sinon un filtre d'un seul gabarit retomberait sur 30 cibles.
+        val (index, total) = decoupage()
+        val lot = if (total > 0) {
+            selection.filterIndexed { i, _ -> i % total == index }
+        } else {
+            selection
+        }
+        Log.i(
+            TAG,
+            "D42-SELECTION filtre=$filtre demandes=${demandes.size} " +
+                "selectionnes=${lot.size} ids=${lot.joinToString { it.first }} " +
+                "lots=$total indice=${index + 1}",
+        )
+        return lot
     }
 
-    /**
-     * D42 — 12 rendus de reference en qualite de production. Chaque secteur est
-     * represente deux fois, chaque langue trois fois ; T4 (cartes commerciales,
-     * 17 scenes, textes longs) et T5 (le plus court) sont inclus, ainsi que le
-     * japonais (segmentation CJK).
-     */
+    /** (indice 0-based, total) du découpage ; (0, 0) si aucun lot demandé. */
+    private fun decoupage(): Pair<Int, Int> {
+        if (shardArg.isNotBlank() && shardsTotalArg.isNotBlank()) {
+            val index = shardArg.toIntOrNull()?.coerceAtLeast(1) ?: 1
+            val total = shardsTotalArg.toIntOrNull()?.coerceAtLeast(1) ?: 1
+            return (index - 1) to total
+        }
+        // Compatibilité : ancien format « shard:3/8 » encore accepté.
+        val ancien = Regex("^shard:(\\d+)/(\\d+)$").find(templatesArg.trim())
+        if (ancien != null) {
+            val index = ancien.groupValues[1].toInt().coerceAtLeast(1)
+            val total = ancien.groupValues[2].toInt().coerceAtLeast(1)
+            return (index - 1) to total
+        }
+        return 0 to 0
+    }
+
     private fun reference(): Set<String> = when (lang) {
         "fr" -> setOf("restaurants_maquis_T1", "vetements_mode_T3", "batiment_travaux_T2")
         "ja" -> setOf("restaurants_maquis_T4", "vetements_mode_T5", "batiment_travaux_T3")

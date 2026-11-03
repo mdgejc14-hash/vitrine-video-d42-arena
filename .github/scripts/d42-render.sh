@@ -5,7 +5,8 @@
 # Appelé par android-emulator-runner, qui exécute chaque LIGNE du `script:`
 # dans un shell distinct : d'où ce fichier, unique ligne de commande.
 #
-#   bash .github/scripts/d42-render.sh <mode> <langue> <gabarits> <sortie> [timeout] [badge] [profil]
+#   bash .github/scripts/d42-render.sh <mode> <langue> <gabarits> <sortie> \
+#        [timeout] [badge] [profil] [limite] [shard] [shards_total]
 #
 #   mode      smoke | matrix
 #   langue    fr | en | es | ja
@@ -14,6 +15,13 @@
 #   badge     none | stock_limite | places_limitees | qualite_garantie
 #   profil    production (1080x1920) | validation (540x960, meme chaine)
 #   limite    plafond de rendus pour ce job (0 = aucun)
+#   shard      indice du lot, 1-based (vide = pas de decoupage)
+#   shards_tot nombre total de lots (vide = pas de decoupage)
+#
+# D42.3 — SEPARATION DES NOTIONS : le filtre de gabarit (3e argument) et le
+# decoupage en lots (9e et 10e) sont independants. Le workflow passait
+# « shard:1/8 » dans l'argument des gabarits : le filtre etait perdu, les 30
+# gabarits restaient candidats et le premier venu etait rendu.
 #
 # Aucun moteur de test : l'APK PUBLIÉ est instrumenté tel quel, le rendu passe
 # par ExportActivity → ExportWorker → Transformer (Media3).
@@ -28,8 +36,11 @@ TIMEOUT_S="${5:-900}"
 BADGE="${6:-none}"
 PROFIL="${7:-production}"
 LIMITE="${8:-0}"
+SHARD="${9:-}"
+SHARDS_TOTAL="${10:-}"
 
 echo "== D42 rendu : mode=$MODE langue=$LANGUE gabarits=$GABARITS badge=$BADGE profil=$PROFIL =="
+echo "== D42 lot : indice=${SHARD:-aucun} total=${SHARDS_TOTAL:-aucun} limite=$LIMITE =="
 df -h . | tail -1
 
 # --- package de l'APK de test (jamais deviné quand aapt est disponible) ------
@@ -63,6 +74,8 @@ adb shell am instrument -w -r \
   -e d42_badge "${BADGE}" \
   -e d42_profile "${PROFIL}" \
   -e d42_limite "${LIMITE}" \
+  -e d42_shard "${SHARD}" \
+  -e d42_shards "${SHARDS_TOTAL}" \
   "${TEST_PKG}/androidx.test.runner.AndroidJUnitRunner" 2>&1 | tee instrumentation.txt
 STATUT_INSTRUMENTATION=$?
 set -e

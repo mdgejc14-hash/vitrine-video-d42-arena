@@ -54,6 +54,10 @@ on:
         description: "1 = exécuter le robot UI (chaque écran, chaque clic)"
         required: false
         default: "0"
+      badge:
+        description: "Badge à rendre : none | stock_limite | places_limitees | qualite_garantie"
+        required: false
+        default: "none"
       run_smoke:
         description: "1 = smoke obligatoire ; 0 = APK app déjà prouvé par un smoke vert"
         required: false
@@ -451,11 +455,16 @@ jobs:
             -no-window -gpu swiftshader_indirect -no-snapshot -no-snapshot-save
             -noaudio -no-boot-anim -camera-back none -camera-front none -accel on
             -cores 4 -memory 4096
+          # D42.3 — le 3e argument est le FILTRE de gabarit, jamais le lot.
+          # Le lot passe par les arguments 9 et 10, transmis a l'instrumentation
+          # sous d42_shard / d42_shards.
           script: >-
             bash .github/scripts/d42-render.sh matrix ${{ matrix.lang }}
-            "shard:${{ matrix.shard }}/${{ github.event.inputs.shards || '8' }}"
-            "renders-${{ matrix.lang }}-${{ matrix.shard }}" 1800 none validation
+            "${{ github.event.inputs.templates || 'all' }}"
+            "renders-${{ matrix.lang }}-${{ matrix.shard }}" 1800
+            "${{ github.event.inputs.badge || 'none' }}" validation
             "${{ github.event.inputs.limite || '0' }}"
+            "${{ matrix.shard }}" "${{ github.event.inputs.shards || '8' }}"
 
       - name: Manifeste SHA-256 du lot (aucune preuve supprimée silencieusement)
         if: always()
@@ -881,6 +890,17 @@ jobs:
             echo "push : build seul jugé (rendus déclenchés uniquement)"
             exit 0
           fi
-          if [ "${{ needs.smoke.result }}" != "success" ]; then
-            echo "::error title=D42 BLOQUE::le smoke n'a pas prouvé l'exécution du moteur (BLOCKED_ENVIRONMENT si l'émulateur n'a pas démarré)"; exit 1
+          # D42.3 — un smoke volontairement ignoré ne doit pas faire échouer le
+          # récapitulatif, MAIS il faut alors qu'un autre maillon ait réellement
+          # exécuté le moteur : validation ciblée verte. Un rendu en échec, un job
+          # manquant ou une validation non exécutée restent rouges.
+          if [ "${{ needs.smoke.result }}" = "success" ]; then
+            echo "smoke vert : moteur prouvé"
+          elif [ "${{ needs.smoke.result }}" = "skipped" ] && [ "${{ github.event.inputs.run_smoke || '1' }}" = "0" ]; then
+            if [ "${{ needs.validation.result }}" != "success" ]; then
+              echo "::error title=D42 BLOQUE::smoke ignoré ET validation=${{ needs.validation.result }} — aucun maillon n'a prouvé le moteur"; exit 1
+            fi
+            echo "smoke volontairement ignoré (run_smoke=0) — validation ciblée verte, moteur prouvé"
+          else
+            echo "::error title=D42 BLOQUE::smoke=${{ needs.smoke.result }} (ni vert, ni ignoré volontairement)"; exit 1
           fi
