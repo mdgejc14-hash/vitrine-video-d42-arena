@@ -46,7 +46,7 @@
   "{nom_commerce} · {quartier_ville} · {whatsapp}": {
    "en": "{nom_commerce} · {quartier_ville} · {whatsapp}",
    "es": "{nom_commerce} · {quartier_ville} · {whatsapp}",
-   "ja": "{nom_commerce}・{quartier_ville}・{whatsapp}"
+   "ja": "{nom_commerce} · {quartier_ville} · {whatsapp}"
   },
   "DE PRÈS": {
    "en": "CLOSE UP",
@@ -141,7 +141,7 @@
   "{prenom_client} · {quartier_ville}": {
    "en": "{prenom_client} · {quartier_ville}",
    "es": "{prenom_client} · {quartier_ville}",
-   "ja": "{prenom_client}・{quartier_ville}"
+   "ja": "{prenom_client} · {quartier_ville}"
   },
   "INFORMATIONS": {
    "en": "INFORMATION",
