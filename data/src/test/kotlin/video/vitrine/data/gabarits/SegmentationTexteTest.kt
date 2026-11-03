@@ -128,6 +128,28 @@ class SegmentationTexteTest {
     }
 
     @Test
+    fun `japonais - aucune ligne ne commence par une ponctuation interdite`() {
+        // Regle kinsoku : « ・ », « 、 », « 」 » ou un petit kana ne peuvent pas
+        // ouvrir une ligne. Le run porte B produisait « ・アキャクパ・ ».
+        val source = "シャンタル食堂・アキャクパ・22997000000"
+        verifierConservation(source)
+        for (segment in TexteCommerce.segmenter(source)) {
+            assertTrue(
+                "segment ouvert par une ponctuation interdite : « $segment »",
+                !TexteCommerce.estInterditEnDebut(segment.first().code),
+            )
+        }
+        val autre = "本日の特別メニュー、ぜひご覧ください。"
+        verifierConservation(autre)
+        for (segment in TexteCommerce.segmenter(autre)) {
+            assertTrue(
+                "segment ouvert par une ponctuation interdite : « $segment »",
+                !TexteCommerce.estInterditEnDebut(segment.first().code),
+            )
+        }
+    }
+
+    @Test
     fun `emoji - la paire de substitution n'est jamais coupee`() {
         val source = "PROMO🎉D42"
         verifierConservation(source)

@@ -34,6 +34,14 @@ internal object TexteCommerce {
     private const val COUPE_APRES = "-\u2010\u2013\u2014"
     private val CODES_DE_COUPE: Set<Int> = COUPE_APRES.map { it.code }.toSet()
 
+    /** Ponctuation et petits kana qui ne doivent jamais ouvrir une ligne
+     *  (regle japonaise de kinsoku). */
+    private const val INTERDIT_EN_DEBUT =
+        "、。，．・：；？！）〕］｝〉》」』】〗〙ー々ゝゞヽヾ" +
+            "ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮヵヶ"
+
+    private val CODES_INTERDITS: Set<Int> = INTERDIT_EN_DEBUT.map { it.code }.toSet()
+
     /** Separateur insecable (espace fine insecable incluse). */
     private const val ESPACE_INSECABLE = '\u00A0'
 
@@ -69,11 +77,25 @@ internal object TexteCommerce {
         var debut = 0
         while (debut < texte.length) {
             var fin = -1
+            var frontiereForte = -1
             for (p in bornes) {
                 if (p <= debut) continue
-                if (largeurEnColonnes(texte, debut, p) <= largeurMax) fin = p else break
+                if (largeurEnColonnes(texte, debut, p) <= largeurMax) {
+                    fin = p
+                    // Un changement d'ecriture (kanji -> kana, kana -> latin)
+                    // est une coupure plus lisible qu'une coupe au milieu d'un
+                    // mot japonais : on la prefere si elle remplit assez la ligne.
+                    if (estFrontiereForte(texte, p)) frontiereForte = p
+                } else {
+                    break
+                }
             }
             if (fin < 0) fin = bornes.first { it > debut }
+            if (frontiereForte > debut &&
+                largeurEnColonnes(texte, debut, frontiereForte) * 10 >= largeurMax * 6
+            ) {
+                fin = frontiereForte
+            }
             morceaux += texte.substring(debut, fin)
             debut = fin
         }
@@ -90,6 +112,7 @@ internal object TexteCommerce {
             if (!estFrontiereDeGrapheme(texte, i)) continue
             val avant = codePointAvant(texte, i)
             val apres = codePointA(texte, i)
+            if (apres in CODES_INTERDITS) continue // jamais en debut de ligne
             if (estPleineChasse(avant) || estPleineChasse(apres)) {
                 out += i // le CJK se coupe entre caracteres : c'est sa regle
             } else if (avant in CODES_DE_COUPE) {
@@ -168,6 +191,26 @@ internal object TexteCommerce {
             else -> false
         }
     }
+
+    /** Classe d'ecriture d'un point de code : 0 latin/chiffres, 1 hiragana,
+     *  2 katakana, 3 ideogrammes, 4 autre (ponctuation, emoji…). */
+    private fun classeEcriture(codePoint: Int): Int = when {
+        codePoint < 0x0300 -> 0
+        codePoint in 0x3040..0x309F -> 1
+        codePoint in 0x30A0..0x30FF || codePoint in 0xFF66..0xFF9D -> 2
+        codePoint in 0x3400..0x4DBF || codePoint in 0x4E00..0x9FFF -> 3
+        codePoint in 0xF900..0xFAFF -> 3
+        else -> 4
+    }
+
+    /** Coupure qui separe deux ecritures differentes : la plus lisible. */
+    fun estFrontiereForte(texte: String, i: Int): Boolean {
+        if (i <= 0 || i >= texte.length) return false
+        return classeEcriture(codePointAvant(texte, i)) != classeEcriture(codePointA(texte, i))
+    }
+
+    /** Vrai si [codePoint] ne peut pas ouvrir une ligne (kinsoku japonais). */
+    fun estInterditEnDebut(codePoint: Int): Boolean = codePoint in CODES_INTERDITS
 
     private fun estSelecteurDeVariante(codePoint: Int): Boolean =
         codePoint in 0xFE00..0xFE0F || codePoint in 0xE0100..0xE01EF
