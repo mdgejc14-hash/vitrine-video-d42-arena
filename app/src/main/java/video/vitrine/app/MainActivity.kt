@@ -1,0 +1,213 @@
+package video.vitrine.app
+
+import video.vitrine.core.designsystem.VitrineActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import android.content.Intent
+import android.os.Bundle
+import video.vitrine.core.designsystem.VitrineLocale
+import video.vitrine.feature.catalog.CatalogActivity
+import video.vitrine.feature.onboarding.LanguageActivity
+import video.vitrine.feature.onboarding.OnboardingActivity
+import video.vitrine.feature.onboarding.auth.AuthActivity
+
+/**
+ * Navigateur du parcours demo (JSON ecrans 3.7) :
+ * 1 auth -> 2 onboarding -> 3 catalogue -> 4 brief -> 5 camera guidee -> 6 export.
+ * Orchestration centrale : la regle de graphe interdit feature -> feature (checkModuleGraph).
+ * Chaque ecran rend un resultat ; aucun bouton sans listener, aucun ecran bloquant.
+ */
+class MainActivity : VitrineActivity() {
+
+    private var briefScript: String? = null
+    private var briefDuration: Int = 30
+    private var briefRushs: Array<String>? = null
+    private var authToken: String? = null
+    private var authUid: String? = null
+    private var refCode: String? = null
+    private var sectorCode: String? = null
+    private var welcomeCredits: Int = 0
+    private var gabaritId: String? = null
+    private val briefValues = mutableMapOf<String, String>()
+    private var skinId: String? = null
+    private var skinName: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+        super.onCreate(savedInstanceState)
+        // Audit D41 (F34/F63) : le deep-link de parrainage https://vitrine.video/r/CODE
+        // arrive ICI (seule activite exportee) ; le code est transmis a l'auth puis
+        // a l'onboarding. Avant, le filtre etait sur AuthActivity (exportee) : le
+        // jeton Firebase etait recuperable par n'importe quelle app lancante et le
+        // parcours s'arretait au retour navigateur.
+        intent?.data?.let { uri ->
+            video.vitrine.feature.onboarding.auth.RefCodeParser.fromDeepLink(uri.toString())
+                ?.let { refCode = it }
+        }
+        nettoyageFichiersPerimes()
+        if (VitrineLocale.saved(this) == null) {
+            startActivityForResult(Intent(this, LanguageActivity::class.java), REQ_LANGUAGE)
+        } else {
+            startActivityForResult(authIntent(), REQ_AUTH)
+        }
+    }
+
+    private fun authIntent(): Intent =
+        Intent(this, AuthActivity::class.java).putExtra("ref_code", refCode)
+
+    /**
+     * Audit D41 (F51) : les rushs (filesDir/rushes) et exports (cacheDir/export-*.mp4)
+     * n'etaient JAMAIS purges — remplissage progressif du stockage commerçant
+     * (contexte : telephones a petit stockage). Purge au lancement des fichiers de
+     * plus de 24 h (un export partage reste valide pendant toute la session).
+     */
+    private fun nettoyageFichiersPerimes() {
+        val cutoff = System.currentTimeMillis() - PERIME_AGE_MS
+        Thread {
+            runCatching {
+                java.io.File(filesDir, "rushes").listFiles()?.forEach { f ->
+                    if (f.lastModified() < cutoff) f.delete()
+                }
+                cacheDir.listFiles { file -> file.name.startsWith("export-") && file.name.endsWith(".mp4") }
+                    ?.forEach { f -> if (f.lastModified() < cutoff) f.delete() }
+            }
+        }.start()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode != RESULT_OK) {
+            stepBack(requestCode)
+            return
+        }
+        when (requestCode) {
+            REQ_LANGUAGE -> startActivityForResult(authIntent(), REQ_AUTH)
+            REQ_AUTH -> {
+                authToken = data?.getStringExtra("firebase_token")
+                authUid = data?.getStringExtra("firebase_uid")
+                refCode = data?.getStringExtra("ref_code")
+                launchOnboarding()
+            }
+            REQ_ONBOARDING -> {
+                sectorCode = data?.getStringExtra("sector")
+                welcomeCredits = data?.getIntExtra("welcome_credits", 0) ?: 0
+                launchCatalog()
+            }
+            REQ_CATALOG -> {
+                skinId = data?.getStringExtra("skin_id")
+                skinName = data?.getStringExtra("skin_name")
+                gabaritId = data?.getStringExtra("gabarit_id") ?: skinId
+                launchBrief()
+            }
+            REQ_BRIEF -> {
+                briefScript = data?.getStringExtra("script")
+                briefDuration = data?.getIntExtra("duration_s", 30) ?: 30
+                briefRushs = data?.getStringArrayExtra("client_rushes")
+                collectBriefValues(data)
+                startActivityForResult(
+                    Intent(this, video.vitrine.feature.camera.CameraGuideActivity::class.java)
+                        .putExtra("script", briefScript)
+                        .putExtra("gabarit_id", gabaritId)
+                        .putExtra("duration_s", briefDuration),
+                    REQ_CAMERA
+                )
+            }
+            REQ_CAMERA -> {
+                val rush = data?.getStringExtra("input") ?: return
+                launchExport(rush, data?.getStringArrayExtra("client_rushes"))
+            }
+        }
+    }
+
+    /**
+     * Lancement de l'export (audit D40, A5) : les prises filmees au guide E6
+     * deviennent les rushs du moteur (rushIndex du beat sheet gabarit) ; le
+     * token suit pour quota/consume + BGM (routes authentifiees). Extrait
+     * d'onActivityResult pour la complexite cyclomatique (detekt <= 15).
+     */
+    private fun launchExport(rush: String, camRushes: Array<String>?) {
+        val rushes = ((briefRushs ?: emptyArray()) + (camRushes ?: emptyArray()))
+            .takeIf { it.isNotEmpty() }
+        startActivity(
+            Intent(ACTION_EXPORT)
+                .setPackage(packageName)
+                .putExtra("input", rush)
+                .putExtra("script", briefScript)
+                .putExtra("duration_s", briefDuration)
+                .putExtra("client_rushes", rushes)
+                .putExtra("firebase_token", authToken)
+                .putExtra("gabarit_id", gabaritId)
+                .also { intent ->
+                    briefValues.forEach { (k, v) -> intent.putExtra("brief_$k", v) }
+                    intent.putExtra("brief_keys", briefValues.keys.toTypedArray())
+                }
+        )
+        finish()
+    }
+
+    /**
+     * Retour natif Android : revenir a l'ecran precedent pour corriger un choix,
+     * sans crash ni ejection vers l'accueil. Seul le premier ecran (langue) quitte.
+     */
+    private fun stepBack(requestCode: Int) {
+        when (requestCode) {
+            REQ_LANGUAGE -> finish()
+            REQ_AUTH -> startActivityForResult(
+                Intent(this, LanguageActivity::class.java),
+                REQ_LANGUAGE
+            )
+            REQ_ONBOARDING -> startActivityForResult(authIntent(), REQ_AUTH)
+            REQ_CATALOG -> launchOnboarding()
+            REQ_BRIEF -> launchCatalog()
+            REQ_CAMERA -> launchBrief()
+            else -> finish()
+        }
+    }
+
+    private fun launchOnboarding() {
+        startActivityForResult(
+            Intent(this, OnboardingActivity::class.java)
+                .putExtra("firebase_token", authToken)
+                .putExtra("firebase_uid", authUid)
+                .putExtra("ref_code", refCode),
+            REQ_ONBOARDING
+        )
+    }
+
+    private fun launchCatalog() {
+        startActivityForResult(
+            Intent(this, CatalogActivity::class.java)
+                .putExtra("sector", sectorCode)
+                .putExtra("welcome_credits", welcomeCredits)
+                .putExtra("firebase_token", authToken),
+            REQ_CATALOG
+        )
+    }
+
+    /** Recueil des reponses brief (extras brief_*) pour apercu E7 et export. */
+    private fun collectBriefValues(data: Intent?) {
+        data?.getStringArrayExtra("brief_keys")?.forEach { k ->
+            briefValues[k] = data.getStringExtra("brief_$k").orEmpty()
+        }
+    }
+
+    private fun launchBrief() {
+        startActivityForResult(
+            Intent(this, video.vitrine.feature.brief.BriefActivity::class.java)
+                .putExtra("skin_id", skinId)
+                .putExtra("skin_name", skinName)
+                .putExtra("gabarit_id", gabaritId),
+            REQ_BRIEF
+        )
+    }
+
+    private companion object {
+        const val REQ_LANGUAGE = 9
+        const val REQ_AUTH = 10
+        const val REQ_ONBOARDING = 11
+        const val REQ_CATALOG = 12
+        const val REQ_BRIEF = 13
+        const val REQ_CAMERA = 14
+        const val ACTION_EXPORT = "video.vitrine.action.START_EXPORT"
+        const val PERIME_AGE_MS = 24L * 3600L * 1000L
+    }
+}

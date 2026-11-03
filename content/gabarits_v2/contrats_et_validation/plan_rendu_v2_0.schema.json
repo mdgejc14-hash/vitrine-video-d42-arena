@@ -1,0 +1,688 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Plan local minimal prêt au rendu – V2.0",
+  "description": "Structure issue du plan V1.3, avec contrôles commerciaux V2. La forme ne prouve aucune autorisation : vérifier crypto, temps, quotas, sources et fidélité.",
+  "type": "object",
+  "required": [
+    "schema",
+    "statut",
+    "gabarit_id",
+    "gabarit_sha256",
+    "profil_style_id",
+    "profil_style_sha256",
+    "profil_style_approbation_id",
+    "sortie",
+    "medias_locaux",
+    "scenes",
+    "voix",
+    "musique",
+    "sfx",
+    "regles_mix",
+    "accord_avant_montage",
+    "securite_commerciale"
+  ],
+  "properties": {
+    "schema": {
+      "const": "plan_rendu_v2_0"
+    },
+    "statut": {
+      "const": "PRET"
+    },
+    "gabarit_id": {
+      "type": "string",
+      "pattern": "^(vetements_mode|restaurants_maquis|immo_auto|coiffure_beaute|shops_small_business|batiment_travaux)_T[1-5]$"
+    },
+    "gabarit_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "profil_style_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "profil_style_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "profil_style_approbation_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "sortie": {
+      "type": "object",
+      "required": [
+        "largeur",
+        "hauteur",
+        "fps_num",
+        "fps_den",
+        "audio_hz"
+      ],
+      "properties": {
+        "largeur": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "hauteur": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "fps_num": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "fps_den": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "audio_hz": {
+          "const": 48000
+        }
+      },
+      "additionalProperties": false
+    },
+    "medias_locaux": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "prise_id",
+          "fichier_local_id",
+          "type_media",
+          "sha256"
+        ],
+        "properties": {
+          "prise_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "fichier_local_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "type_media": {
+            "enum": [
+              "VIDEO",
+              "PHOTO"
+            ]
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "numero",
+          "role_json",
+          "frames",
+          "source_type",
+          "source_id",
+          "source_in_us",
+          "source_out_us",
+          "recadrage_json",
+          "effet_json",
+          "transition_demandee",
+          "transition_effective",
+          "animation_json",
+          "condition_resultat",
+          "vitesse_effective",
+          "repli_accepte"
+        ],
+        "properties": {
+          "numero": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "role_json": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "frames": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "integer",
+                "minimum": 0
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "source_type": {
+            "enum": [
+              "PRISE_VIDEO",
+              "PRISE_PHOTO",
+              "CARTE",
+              "REPLI_APPROUVE"
+            ]
+          },
+          "source_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "source_in_us": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "integer",
+                "minimum": 0
+              }
+            ]
+          },
+          "source_out_us": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "integer",
+                "minimum": 0
+              }
+            ]
+          },
+          "recadrage_json": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "effet_json": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "transition_demandee": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "transition_effective": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "animation_json": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "condition_resultat": {
+            "enum": [
+              "SANS_CONDITION",
+              "VRAIE",
+              "FAUSSE_REPLI_APPROUVE"
+            ]
+          },
+          "vitesse_effective": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "repli_accepte": {
+            "type": "boolean"
+          },
+          "raison_repli": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "texte_rendu": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "params_style": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "source_type": {
+                  "const": "PRISE_VIDEO"
+                }
+              },
+              "required": [
+                "source_type"
+              ]
+            },
+            "then": {
+              "properties": {
+                "source_in_us": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "source_out_us": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "voix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "scene",
+          "prise_id",
+          "segment_id",
+          "source_debut_us",
+          "source_fin_us",
+          "timeline_debut_sample",
+          "timeline_fin_sample",
+          "vitesse"
+        ],
+        "properties": {
+          "scene": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "prise_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "segment_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "source_debut_us": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "source_fin_us": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "timeline_debut_sample": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "timeline_fin_sample": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "vitesse": {
+            "const": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "musique": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "mode",
+            "piste_id",
+            "asset_sha256",
+            "source_sha256",
+            "preuve_id",
+            "preuve_sha256",
+            "bpm",
+            "offset_asset_samples",
+            "riser_timeline_sample",
+            "drop_timeline_sample",
+            "mode_lecture",
+            "boucle"
+          ],
+          "properties": {
+            "mode": {
+              "const": "MUSIQUE"
+            },
+            "piste_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            "asset_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "source_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "preuve_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            "preuve_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "bpm": {
+              "type": "number",
+              "minimum": 1
+            },
+            "offset_asset_samples": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "riser_timeline_sample": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "drop_timeline_sample": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "mode_lecture": {
+              "enum": [
+                "LINEAIRE",
+                "BOUCLE_APPROUVEE"
+              ]
+            },
+            "boucle": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "start_sample",
+                    "end_sample",
+                    "crossfade_samples",
+                    "approbation_id"
+                  ],
+                  "properties": {
+                    "start_sample": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "end_sample": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "crossfade_samples": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "approbation_id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "pattern": "^[A-Za-z0-9_-]+$"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "mode_lecture": {
+                    "const": "LINEAIRE"
+                  }
+                },
+                "required": [
+                  "mode_lecture"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "boucle": {
+                    "type": "null"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "boucle": {
+                    "type": "object",
+                    "required": [
+                      "start_sample",
+                      "end_sample",
+                      "crossfade_samples",
+                      "approbation_id"
+                    ],
+                    "properties": {
+                      "start_sample": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "end_sample": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "crossfade_samples": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "approbation_id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "pattern": "^[A-Za-z0-9_-]+$"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "required": [
+            "mode",
+            "raison",
+            "accord_utilisateur"
+          ],
+          "properties": {
+            "mode": {
+              "const": "SANS_MUSIQUE"
+            },
+            "raison": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "accord_utilisateur": {
+              "const": true
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "sfx": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "scene",
+          "categorie_json",
+          "asset_sha256",
+          "preuve_id",
+          "preuve_sha256",
+          "sample_debut",
+          "sample_impact_fichier",
+          "sample_impact_timeline"
+        ],
+        "properties": {
+          "scene": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "categorie_json": {
+            "enum": [
+              "whoosh_soft",
+              "whoosh_fast",
+              "caisse_enregistreuse",
+              "clic_appareil",
+              "impact_drop",
+              "pop_badge",
+              "amb_chantier",
+              "sizzle_grill",
+              "vapeur_plat"
+            ]
+          },
+          "asset_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "preuve_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "preuve_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "sample_debut": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sample_impact_fichier": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sample_impact_timeline": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "regles_mix": {
+      "type": "object",
+      "required": [
+        "gain_voix",
+        "duck_musique_db",
+        "attaque_ms",
+        "relache_ms",
+        "cible_lufs",
+        "plafond_dbtp"
+      ],
+      "properties": {
+        "gain_voix": {
+          "const": 1
+        },
+        "duck_musique_db": {
+          "const": -14
+        },
+        "attaque_ms": {
+          "type": "number",
+          "minimum": 50,
+          "maximum": 100
+        },
+        "relache_ms": {
+          "type": "number",
+          "minimum": 250,
+          "maximum": 400
+        },
+        "cible_lufs": {
+          "const": -14
+        },
+        "plafond_dbtp": {
+          "const": -1
+        }
+      },
+      "additionalProperties": false
+    },
+    "accord_avant_montage": {
+      "const": true,
+      "description": "OK explicite avant le montage."
+    },
+    "securite_commerciale": {
+      "type": "object",
+      "description": "Références locales, sans jeton en clair. Ne remplacent pas la vérification de la licence signée.",
+      "required": [
+        "grant_id",
+        "installation_id",
+        "permit_serial",
+        "licence_sha256",
+        "time_anchor_sha256",
+        "clock_state",
+        "server_time_upper_ms",
+        "mode_export"
+      ],
+      "properties": {
+        "grant_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "installation_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "permit_serial": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "licence_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "time_anchor_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "clock_state": {
+          "const": "FIABLE"
+        },
+        "server_time_upper_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mode_export": {
+          "const": "SANS_FILIGRANE"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

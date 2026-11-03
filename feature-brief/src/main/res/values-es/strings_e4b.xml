@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="e4b_title">Antes de comenzar</string>
+    <string name="e4b_sub">Mira lo que preparamos para ti.</string>
+    <string name="e4b_badge">VERIFICACIÓN</string>
+    <string name="e4b_card">Tu vídeo</string>
+    <string name="e4b_format">Formato</string>
+    <string name="e4b_job">Oficio</string>
+    <string name="e4b_shots">Tomas</string>
+    <string name="e4b_shots_value">%d tomas previstas</string>
+    <string name="e4b_infos">Datos</string>
+    <string name="e4b_clear">¿Todo claro?</string>
+    <string name="e4b_clear_body">Estudiamos los vídeos que dan ganas de comprar. Haz lo que la pantalla dice, paso a paso.</string>
+    <string name="e4b_reassure">No tienes nada que aprender. Tendrás un bello vídeo de tu producto.</string>
+    <string name="e4b_check">Es tu elección. Puedes comenzar.</string>
+    <string name="e4b_ok">OK, comienzo</string>
+</resources>

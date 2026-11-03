@@ -1,0 +1,307 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fiche de style liée à un gabarit – V1.3",
+  "description": "Le schéma ne prouve pas la fidélité. Un brouillon ne peut jamais être présenté comme approuvé ; contrôler chaque scène et les dix axes avec le JSON et la référence.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "profil_id",
+    "gabarit_id",
+    "gabarit_sha256",
+    "statut",
+    "approbation_id",
+    "reference_visuelle_sha256",
+    "axes_signature_source",
+    "style_visuel_source",
+    "etalonnage_source",
+    "scenes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.3"
+    },
+    "profil_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "gabarit_id": {
+      "type": "string",
+      "pattern": "^(vetements_mode|restaurants_maquis|immo_auto|coiffure_beaute|shops_small_business|batiment_travaux)_T[1-5]$"
+    },
+    "gabarit_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "statut": {
+      "enum": [
+        "A_APPROUVER",
+        "APPROUVE"
+      ]
+    },
+    "approbation_id": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        }
+      ]
+    },
+    "reference_visuelle_sha256": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    },
+    "axes_signature_source": {
+      "type": "object",
+      "minProperties": 10
+    },
+    "style_visuel_source": {
+      "type": "object"
+    },
+    "etalonnage_source": {
+      "type": "object"
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "numero",
+          "role_json",
+          "source_type",
+          "prise_id",
+          "carte_id",
+          "transition_json",
+          "effet_json",
+          "animation_json",
+          "position_texte_json",
+          "transition_parametres",
+          "effet_parametres",
+          "animation_parametres",
+          "carte_layout",
+          "sfx_json",
+          "ancre_sfx",
+          "condition_json"
+        ],
+        "properties": {
+          "numero": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "role_json": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "source_type": {
+            "enum": [
+              "prise",
+              "generee"
+            ]
+          },
+          "prise_id": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[A-Za-z0-9_-]+$"
+              }
+            ]
+          },
+          "carte_id": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[A-Za-z0-9_-]+$"
+              }
+            ]
+          },
+          "transition_json": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "effet_json": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "animation_json": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "position_texte_json": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "transition_parametres": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "effet_parametres": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "animation_parametres": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "carte_layout": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "sfx_json": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "enum": [
+                  "whoosh_soft",
+                  "whoosh_fast",
+                  "caisse_enregistreuse",
+                  "clic_appareil",
+                  "impact_drop",
+                  "pop_badge",
+                  "amb_chantier",
+                  "sizzle_grill",
+                  "vapeur_plat"
+                ]
+              }
+            ]
+          },
+          "ancre_sfx": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "condition_json": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "statut": {
+            "const": "APPROUVE"
+          }
+        },
+        "required": [
+          "statut"
+        ]
+      },
+      "then": {
+        "properties": {
+          "approbation_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "reference_visuelle_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "scenes": {
+            "items": {
+              "properties": {
+                "transition_parametres": {
+                  "type": "object"
+                },
+                "effet_parametres": {
+                  "type": "object"
+                },
+                "animation_parametres": {
+                  "type": "object"
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "source_type": {
+                        "const": "generee"
+                      }
+                    },
+                    "required": [
+                      "source_type"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "carte_layout": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "sfx_json": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "sfx_json"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "ancre_sfx": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "vv-mock-staging",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "Mock staging local VV Remote QA (zero dependance)",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" }
+}

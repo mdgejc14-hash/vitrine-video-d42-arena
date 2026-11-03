@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera_guide">商品を中央に・昼光または店頭光・撮影中は話さない</string>
+    <string name="camera_record">ロックして録画</string>
+    <string name="camera_consent_title">顧客の同意</string>
+    <string name="camera_consent_body">この方は撮影と動画の公開に同意しますか？</string>
+    <string name="camera_consent_ok">はい、同意を確認</string>
+    <string name="camera_consent_ko">いいえ、公開しない</string>
+    <string name="camera_recording">録画中…タップで終了して続行</string>
+    <string name="camera_stop">停止して続行</string>
+    <string name="camera_blocked">同意不足のため撮影ブロック(R4)</string>
+    <string name="camera_scene_counter">シーン %1$d/%2$d</string>
+    <string name="camera_scene_front">商品を正面からゆっくり撮影</string>
+    <string name="camera_scene_detail">クローズアップ：質感と詳細</string>
+    <string name="camera_scene_use">実際の使用シーンを見せる</string>
+    <string name="camera_faces_ok">検出された顔：%1$d · R4ゲート：問題なし</string>
+    <string name="camera_faces_ko">検出された顔：%1$d · R4ゲート：同意が必要</string>
+    <string name="camera_take_failed">撮影に失敗しました（ファイル不完全）。このテイクを撮り直してください。データは失われていません。</string>
+    <string name="camera_permission_needed">カメラの許可が必要です</string>
+    <string name="camera_permission_body">カメラがないとテイクを録画できません。続行するには許可してください。</string>
+    <string name="camera_permission_grant">許可する</string>
+    <string name="camera_permission_later">後で</string>
+</resources>

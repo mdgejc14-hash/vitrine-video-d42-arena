@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="brief_title">Describe your ad</string>
+    <string name="brief_script">Your text (becomes the subtitles)</string>
+    <string name="brief_duration">Duration (seconds)</string>
+    <string name="brief_objective">Goal: visits | sales | awareness</string>
+    <string name="brief_rushs">📁 Add my video rushes</string>
+    <string name="brief_rushs_count">%1$d rush(es) ready for editing</string>
+    <string name="brief_validate">Validate the brief</string>
+    <string name="brief_err_min">Describe your business in at least %1$d characters: this text becomes your subtitles.</string>
+    <string name="brief_err_max">Script too long (max %1$d characters): a short ad sells better.</string>
+    <string name="brief_err_duration">Recommended duration: %1$d to %2$d seconds.</string>
+    <string name="brief_err_objective">Choose an objective (visits, sales, awareness).</string>
+    <string name="brief_g_continue">Continue</string>
+    <string name="brief_g_my_video">My video</string>
+    <string name="brief_g_step_badge">%1$d / %2$d</string>
+    <string name="brief_err_number">Enter a number, without letters (e.g. 15000).</string>
+    <string name="brief_err_phone">International format expected: +229 97 00 00 00.</string>
+    <string name="brief_g_type_here">Type here…</string>
+    <string name="brief_badge_stock_limite">Limited stock</string>
+    <string name="brief_badge_places_limitees">Limited spots</string>
+    <string name="brief_badge_qualite_garantie">Guaranteed quality</string>
+</resources>

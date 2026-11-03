@@ -1,0 +1,3004 @@
+{
+  "schema_version": "2.0",
+  "profil_id": "profil_restaurants_maquis_T2_v2_0_propose",
+  "gabarit_id": "restaurants_maquis_T2",
+  "gabarit_sha256": "1ca26a9a5e96a6197f78f5231fa4e3414df1eaffce1e6c9a2287999390ab71a3",
+  "statut": "A_APPROUVER",
+  "production_autorisee": false,
+  "validation": {
+    "reglages": "PROPOSES_NON_APPROUVES",
+    "reference_visuelle": "NON_FOURNIE",
+    "pistes_et_sfx": "NON_FOURNIS",
+    "moteur": "NON_TESTE"
+  },
+  "cadre": {
+    "ratio": "9:16",
+    "largeur_proposee_px": 720,
+    "hauteur_proposee_px": 1280,
+    "fps_num": 30,
+    "fps_den": 1,
+    "origine_coordonnees": "HAUT_GAUCHE",
+    "coordonnees": "FRACTIONS_DE_LA_TOILE",
+    "zone_sure_norm": {
+      "x0": 0.06,
+      "y0": 0.07,
+      "x1": 0.94,
+      "y1": 0.85
+    },
+    "arrondi_frames": "ARRONDIR_CUMUL_DE_DUREE_AU_PLUS_PROCHE_DEMI_VERS_LE_HAUT",
+    "texte_min_px_720": 28,
+    "contraste_min_wcag_propose": 4.5
+  },
+  "axes_signature_source": {
+    "sequence_roles": [
+      "hook_assiette_finale",
+      "ingredients_bruts_vue_haut",
+      "texture_epice_macro",
+      "mise_feu_grill",
+      "cuisson_acceleree",
+      "retournement_grill",
+      "glaçage_sizzle",
+      "dressage_ordre_reel",
+      "garniture_dernier_geste",
+      "reveal_assiette_fumante",
+      "hero_plat_ralenti",
+      "main_tourne_ingredient",
+      "cuisson_texture_macro",
+      "plat_dresse_contrechamp",
+      "prix_plat",
+      "carte_contact"
+    ],
+    "nombre_scenes": 16,
+    "courbe_rythme": [
+      2.5,
+      1.324,
+      2.078,
+      2.791,
+      1.744,
+      1.333,
+      2.286,
+      2.953,
+      1.844,
+      1.416,
+      2.282,
+      2.546,
+      1.757,
+      1.456,
+      2.19,
+      4.5
+    ],
+    "transitions": [
+      "whip_pan_directionnel",
+      "fondu_noir",
+      "fondu_croise_temps",
+      "flash_chaleur",
+      "cut_sec",
+      "cut_sur_action",
+      "fondu_croise_temps",
+      "cut_sec",
+      "cut_sec",
+      "flash_chaleur",
+      "cut_sur_action",
+      "fondu_croise_temps",
+      "cut_sec",
+      "whip_pan_directionnel",
+      "flash_chaleur",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "freeze_0.3s",
+      "recadrage_macro_160",
+      "ralenti_0.5x",
+      "speed_ramp_x5",
+      "accelere_x3",
+      "freeze_0.3s",
+      "speed_ramp_x5",
+      "ralenti_0.5x",
+      "ralenti_0.4x",
+      "ralenti_0.4x",
+      "freeze_0.3s",
+      "speed_ramp_x5",
+      "ralenti_0.5x",
+      "ken_burns_detail",
+      "aucun_effet"
+    ],
+    "decoupage_prises": [
+      "prise_4",
+      "prise_1",
+      "prise_1",
+      "prise_2",
+      "prise_2",
+      "prise_2",
+      "prise_2",
+      "prise_3",
+      "prise_3",
+      "prise_4",
+      "prise_4",
+      "prise_2",
+      "prise_2",
+      "prise_4",
+      "carte:carte_prix_geant",
+      "carte:carte_whatsapp_finale"
+    ],
+    "cartes_generees": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "carte_prix_geant",
+      "carte_whatsapp_finale"
+    ],
+    "texte_animation_position": [
+      "side_tag_animate|centre_haut",
+      "kinetic_number|tiers_gauche",
+      "typing_price_roll|tiers_droit",
+      "wipe_label|centre",
+      "lower_third_glide|tiers_gauche",
+      "badge_slide_snap|tiers_droit",
+      "price_shake_impact|centre",
+      "line_draw_spec|tiers_gauche",
+      "caption_breath_fade|tiers_droit",
+      "split_label_track|centre",
+      "reveal_mask_text|tiers_gauche",
+      "pulse_cta_soft|tiers_droit",
+      "countdown_tick|centre",
+      "side_tag_animate|tiers_gauche",
+      "compteur_countup|tiers_droit",
+      "whatsapp_pulsant|centre_bas"
+    ],
+    "preset_etalonnage": "grade_restaurants_maquis_t2",
+    "structure_audio": "audio_structure_restaurants_maquis_t2"
+  },
+  "style_visuel_source": {
+    "typographie": {
+      "preset": "sans_serif_bold_condensee",
+      "graisse": "900",
+      "couleur_texte": "#FFFFFF",
+      "contour": "#000000",
+      "fond_texte": "#FF5500"
+    },
+    "palette": "palette_T1_chaude",
+    "badges": [
+      "avant",
+      "apres"
+    ],
+    "badges_optionnels_actives_par_commercant": [
+      "stock_limite",
+      "places_limitees",
+      "qualite_garantie"
+    ],
+    "engagements_optionnels_actifs_par_defaut": false
+  },
+  "etalonnage_source": {
+    "preset": "grade_restaurants_maquis_t2",
+    "preset_avant": "avant_froid",
+    "preset_apres": "apres_eclatant",
+    "exposition_ev": 0.2,
+    "contraste": 1.08,
+    "saturation": 1.12,
+    "temperature_k": 5600,
+    "vignettage": 0.1,
+    "nettete": 0.18,
+    "protection_peau": true,
+    "protection_peau_detail": "Peaux foncées incluses : préserver les hautes lumières du visage et vérifier l’exposition; fidélité textile/carrosserie et nourriture avant stylisation.",
+    "denoise_faible_lumiere": true,
+    "stabilisation": true,
+    "consigne_lumiere": "Filmez à 45° près d’une fenêtre; gardez la lumière latérale et capture l’action réelle, sans ajouter de vapeur artificielle.",
+    "preset_avant_ref": "avant_froid",
+    "preset_apres_ref": "apres_eclatant"
+  },
+  "etalonnage_champs_non_applicables": [],
+  "palette_couleurs_source": [
+    "#0B1C2C",
+    "#FF5500",
+    "#FFCC00",
+    "#FFFFFF"
+  ],
+  "audio": {
+    "genre_source": "highlife chaleureux instrumental",
+    "bpm_min_source": 96,
+    "bpm_max_source": 110,
+    "categorie_audio_source": "musique_t2_restaurants_maquis",
+    "structure_id_source": "audio_structure_restaurants_maquis_t2",
+    "direction_ecoute_proposee": "Highlife chaleureux instrumental",
+    "energie_proposee": "2→4",
+    "riser": {
+      "role_source": "dressage_ordre_reel",
+      "scene": 8,
+      "fenetre_frames": [
+        422,
+        510
+      ],
+      "frame_cible_candidate": 422,
+      "sample_cible_candidate": 675200
+    },
+    "drop": {
+      "scene_source": 10,
+      "fenetre_frames": [
+        566,
+        608
+      ],
+      "frame_cible_candidate": 566,
+      "sample_cible_candidate": 905600
+    },
+    "statut_piste": "A_ACQUERIR_ET_ECOUTER",
+    "pistes_reelles_validees": [],
+    "regle_cues": "LA_PISTE_MESUREE_DOIT_PLACER_SES_REPERES_DANS_LES_FENETRES_SANS_DEPLACER_LES_SCENES",
+    "ancrages_sont_des_propositions_non_mesurees": true,
+    "mix": {
+      "sample_rate_hz": 48000,
+      "ducking_musique_sous_voix_db": -14,
+      "attaque_ms": 75,
+      "relache_ms": 325,
+      "cible_lufs": -14,
+      "tolerance_lufs": 0.5,
+      "plafond_true_peak_dbtp": -1,
+      "voix_prioritaire": true,
+      "vitesse_voix": 1.0,
+      "mesurer_apres_aac": true,
+      "licence_autorisee": [
+        "CC0-1.0",
+        "DOMAINE_PUBLIC_VERIFIE"
+      ],
+      "un_seul_sfx_par_indication_source": true,
+      "ne_pas_normaliser_sfx_courts_seuls_a_lufs": true
+    }
+  },
+  "scenes": [
+    {
+      "numero": 1,
+      "acte_source": "hook",
+      "role_source": "hook_assiette_finale",
+      "duree_source_ms": 2500,
+      "frame_debut": 0,
+      "frame_fin_exclusive": 75,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_4",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "Des ingrédients au plat terminé.",
+        "position": "centre_haut",
+        "animation": "side_tag_animate",
+        "apparition_s": 0.0,
+        "disparition_s": 2.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "whip_pan_directionnel",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "WHIP",
+        "duree_ms": 180,
+        "duree_frames_proposee": 5,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 73,
+        "fenetre_frame_fin_exclusive": 78,
+        "marge_b_avant_frames": 2,
+        "marge_a_apres_frames": 3,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "GEL",
+        "duree_ms": 500,
+        "position": "DEBUT_DU_PLAN",
+        "visage_parlant": "NE_PAS_GELER",
+        "id_source": "freeze_0.5s",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.6
+      },
+      "animation_parametres": {
+        "id_source": "side_tag_animate",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "ETIQUETTE",
+        "position_source": "centre_haut",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.09,
+          "x1": 0.92,
+          "y1": 0.27
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 62,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0.1,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.09,
+          "x1": 0.92,
+          "y1": 0.27
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_4",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "impact_drop",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 8,
+        "sample_cible_48khz": 12800,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 2,
+      "acte_source": "preuve",
+      "role_source": "ingredients_bruts_vue_haut",
+      "duree_source_ms": 1324,
+      "frame_debut": 75,
+      "frame_fin_exclusive": 115,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "AU DÉBUT",
+        "position": "tiers_gauche",
+        "animation": "kinetic_number",
+        "apparition_s": 0.0,
+        "disparition_s": 1.324
+      },
+      "voix": {
+        "active": true,
+        "source_audio_prise_id": "prise_1",
+        "segment_audio_id": "T2_scene_02_voix",
+        "audio_separe_de_image": true,
+        "vitesse_audio": 1.0
+      },
+      "transition_parametres": {
+        "id_source": "fondu_noir",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "FONDU_NOIR",
+        "duree_ms": 300,
+        "duree_frames_proposee": 9,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 111,
+        "fenetre_frame_fin_exclusive": 120,
+        "marge_b_avant_frames": 4,
+        "marge_a_apres_frames": 5,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "GEL",
+        "duree_ms": 300,
+        "position": "DEBUT_DU_PLAN",
+        "visage_parlant": "NE_PAS_GELER",
+        "id_source": "freeze_0.3s",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.0
+      },
+      "animation_parametres": {
+        "id_source": "kinetic_number",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "CHIFFRE_COMPLET",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 6,
+        "sortie_frames": 4,
+        "pleine_lisibilite_min_frames": 30,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0.02,
+            "scale": 0.9,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.8,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1.03,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_1",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": false,
+        "raison": "AUCUN_SFX_DANS_LA_SOURCE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 3,
+      "acte_source": "preuve",
+      "role_source": "texture_epice_macro",
+      "duree_source_ms": 2078,
+      "frame_debut": 115,
+      "frame_fin_exclusive": 177,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "DE PRÈS",
+        "position": "tiers_droit",
+        "animation": "typing_price_roll",
+        "apparition_s": 0.0,
+        "disparition_s": 2.078
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "fondu_croise_temps",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "FONDU_AB_LINEAIRE",
+        "duree_ms": 300,
+        "duree_frames_proposee": 9,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 173,
+        "fenetre_frame_fin_exclusive": 182,
+        "marge_b_avant_frames": 4,
+        "marge_a_apres_frames": 5,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "FONDU_COULEUR_OU_COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "RECADRAGE",
+        "zoom_indicatif_nom": 1.6,
+        "priorite": "RECADRAGE_SOURCE_SANS_DOUBLE_MULTIPLICATION",
+        "id_source": "recadrage_macro_160",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.3
+      },
+      "animation_parametres": {
+        "id_source": "typing_price_roll",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "REVELATION_VALEUR",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 49,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_1",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": false,
+        "raison": "AUCUN_SFX_DANS_LA_SOURCE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 4,
+      "acte_source": "preuve",
+      "role_source": "mise_feu_grill",
+      "duree_source_ms": 2791,
+      "frame_debut": 177,
+      "frame_fin_exclusive": 261,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "160%",
+        "vitesse": 0.5
+      },
+      "texte": {
+        "contenu": "À LA CUISSON",
+        "position": "centre",
+        "animation": "wipe_label",
+        "apparition_s": 0.0,
+        "disparition_s": 2.791
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "flash_chaleur",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "FLASH_CHAUD",
+        "duree_ms": 120,
+        "duree_frames_proposee": 4,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 259,
+        "fenetre_frame_fin_exclusive": 263,
+        "marge_b_avant_frames": 2,
+        "marge_a_apres_frames": 2,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFD6A0",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE_OU_FONDU_DOUX",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "VITESSE",
+        "coefficient_nom": 0.5,
+        "priorite_video": "SOURCE_VITESSE",
+        "application_carte": "ANIMATION_SEULE",
+        "id_source": "ralenti_0.5x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 0.5,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.6
+      },
+      "animation_parametres": {
+        "id_source": "wipe_label",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "BALAYAGE_ETIQUETTE",
+        "position_source": "centre",
+        "boite_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 71,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_2",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "sizzle_grill",
+        "repere_visuel": "DEBUT_SCENE_CANDIDAT",
+        "frame_cible_30fps": 177,
+        "sample_cible_48khz": 283200,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 5,
+      "acte_source": "preuve",
+      "role_source": "cuisson_acceleree",
+      "duree_source_ms": 1744,
+      "frame_debut": 261,
+      "frame_fin_exclusive": 313,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "100%",
+        "vitesse": 5.0
+      },
+      "texte": {
+        "contenu": "À LA CUISSON",
+        "position": "tiers_gauche",
+        "animation": "lower_third_glide",
+        "apparition_s": 0.0,
+        "disparition_s": 1.744
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "cut_sec",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 313,
+        "fenetre_frame_fin_exclusive": 313,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "AUCUN",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "RAMPE_PROPOSEE",
+        "coefficient_nom": 5.0,
+        "courbe": {
+          "temps_normalise": [
+            0.0,
+            0.2,
+            0.8,
+            1.0
+          ],
+          "vitesse_relative": [
+            1.0,
+            5.0,
+            5.0,
+            1.0
+          ],
+          "interpolation_segments": "SMOOTHSTEP_3",
+          "plancher": 1.0,
+          "pic": 5.0,
+          "integration_sur_sortie": "u=(t-t_debut)/duree; f=1+4*smoothstep(u/.2) pour u<.2; f=5 pour .2<=u<=.8; f=1+4*smoothstep((1-u)/.2) pour u>.8",
+          "integrale_normalisee": 4.2,
+          "application_video": "NON_AUTORISEE_SANS_ARBITRAGE_SOURCE_VITESSE",
+          "application_carte": "COURBE_CANDIDATE_POUR_ANIMATION_GRAPHIQUE_SEULE",
+          "composition": "NE_PAS_CUMULER_RAMPE_ET_AUTRE_RETIMING_SANS_APPROBATION"
+        },
+        "priorite_video": "SOURCE_VITESSE_CONSTANTE",
+        "repli_video": "RAMPE_NON_DEFINIE",
+        "id_source": "speed_ramp_x5",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 5.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.0,
+        "execution_actuelle": "SOURCE_VITESSE_CONSTANTE_ET_REPLI_DECLARE"
+      },
+      "animation_parametres": {
+        "id_source": "lower_third_glide",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "BANDEAU",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 39,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": -0.12,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_2",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "sizzle_grill",
+        "repere_visuel": "DEBUT_SCENE_CANDIDAT",
+        "frame_cible_30fps": 261,
+        "sample_cible_48khz": 417600,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 6,
+      "acte_source": "preuve",
+      "role_source": "retournement_grill",
+      "duree_source_ms": 1333,
+      "frame_debut": 313,
+      "frame_fin_exclusive": 353,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "À LA CUISSON",
+        "position": "tiers_droit",
+        "animation": "badge_slide_snap",
+        "apparition_s": 0.0,
+        "disparition_s": 1.333
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "cut_sur_action",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE_ACTION",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 353,
+        "fenetre_frame_fin_exclusive": 353,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "REPERES_REELS_OU_REPLI",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "VITESSE",
+        "coefficient_nom": 3.0,
+        "priorite_video": "SOURCE_VITESSE",
+        "application_carte": "ANIMATION_SEULE",
+        "id_source": "accelere_x3",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.3
+      },
+      "animation_parametres": {
+        "id_source": "badge_slide_snap",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "BADGE",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 6,
+        "sortie_frames": 4,
+        "pleine_lisibilite_min_frames": 30,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0.12,
+            "dy": 0,
+            "scale": 0.96,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.8,
+            "dx": -0.006,
+            "dy": 0,
+            "scale": 1.03,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_2",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "sizzle_grill",
+        "repere_visuel": "DEBUT_SCENE_CANDIDAT",
+        "frame_cible_30fps": 313,
+        "sample_cible_48khz": 500800,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 7,
+      "acte_source": "preuve",
+      "role_source": "glaçage_sizzle",
+      "duree_source_ms": 2286,
+      "frame_debut": 353,
+      "frame_fin_exclusive": 422,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "À LA CUISSON",
+        "position": "centre",
+        "animation": "price_shake_impact",
+        "apparition_s": 0.0,
+        "disparition_s": 2.286
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "fondu_croise_temps",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "FONDU_AB_LINEAIRE",
+        "duree_ms": 300,
+        "duree_frames_proposee": 9,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 418,
+        "fenetre_frame_fin_exclusive": 427,
+        "marge_b_avant_frames": 4,
+        "marge_a_apres_frames": 5,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "FONDU_COULEUR_OU_COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "GEL",
+        "duree_ms": 300,
+        "position": "DEBUT_DU_PLAN",
+        "visage_parlant": "NE_PAS_GELER",
+        "id_source": "freeze_0.3s",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.6
+      },
+      "animation_parametres": {
+        "id_source": "price_shake_impact",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "IMPACT",
+        "position_source": "centre",
+        "boite_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 56,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.92,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.6,
+            "dx": 0.008,
+            "dy": 0,
+            "scale": 1.04,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.8,
+            "dx": -0.005,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_2",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "sizzle_grill",
+        "repere_visuel": "DEBUT_SCENE_CANDIDAT",
+        "frame_cible_30fps": 353,
+        "sample_cible_48khz": 564800,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 8,
+      "acte_source": "preuve",
+      "role_source": "dressage_ordre_reel",
+      "duree_source_ms": 2953,
+      "frame_debut": 422,
+      "frame_fin_exclusive": 510,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 5.0
+      },
+      "texte": {
+        "contenu": "ON DRESSE LE PLAT",
+        "position": "tiers_gauche",
+        "animation": "line_draw_spec",
+        "apparition_s": 0.0,
+        "disparition_s": 2.953
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "cut_sec",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 510,
+        "fenetre_frame_fin_exclusive": 510,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "AUCUN",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "RAMPE_PROPOSEE",
+        "coefficient_nom": 5.0,
+        "courbe": {
+          "temps_normalise": [
+            0.0,
+            0.2,
+            0.8,
+            1.0
+          ],
+          "vitesse_relative": [
+            1.0,
+            5.0,
+            5.0,
+            1.0
+          ],
+          "interpolation_segments": "SMOOTHSTEP_3",
+          "plancher": 1.0,
+          "pic": 5.0,
+          "integration_sur_sortie": "u=(t-t_debut)/duree; f=1+4*smoothstep(u/.2) pour u<.2; f=5 pour .2<=u<=.8; f=1+4*smoothstep((1-u)/.2) pour u>.8",
+          "integrale_normalisee": 4.2,
+          "application_video": "NON_AUTORISEE_SANS_ARBITRAGE_SOURCE_VITESSE",
+          "application_carte": "COURBE_CANDIDATE_POUR_ANIMATION_GRAPHIQUE_SEULE",
+          "composition": "NE_PAS_CUMULER_RAMPE_ET_AUTRE_RETIMING_SANS_APPROBATION"
+        },
+        "priorite_video": "SOURCE_VITESSE_CONSTANTE",
+        "repli_video": "RAMPE_NON_DEFINIE",
+        "id_source": "speed_ramp_x5",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 5.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.0,
+        "execution_actuelle": "SOURCE_VITESSE_CONSTANTE_ET_REPLI_DECLARE"
+      },
+      "animation_parametres": {
+        "id_source": "line_draw_spec",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "REVELATION_TRAIT",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 75,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_3",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": false,
+        "raison": "AUCUN_SFX_DANS_LA_SOURCE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 9,
+      "acte_source": "preuve",
+      "role_source": "garniture_dernier_geste",
+      "duree_source_ms": 1844,
+      "frame_debut": 510,
+      "frame_fin_exclusive": 566,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "130%",
+        "vitesse": 0.5
+      },
+      "texte": {
+        "contenu": "ON DRESSE LE PLAT",
+        "position": "tiers_droit",
+        "animation": "caption_breath_fade",
+        "apparition_s": 0.0,
+        "disparition_s": 1.844
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "cut_sec",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 566,
+        "fenetre_frame_fin_exclusive": 566,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "AUCUN",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "VITESSE",
+        "coefficient_nom": 0.5,
+        "priorite_video": "SOURCE_VITESSE",
+        "application_carte": "ANIMATION_SEULE",
+        "id_source": "ralenti_0.5x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 0.5,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.3
+      },
+      "animation_parametres": {
+        "id_source": "caption_breath_fade",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "FONDU_TEXTE",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 43,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "pulse_amplitude": 0.015,
+        "pulse_period_frames": 60,
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_3",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": false,
+        "raison": "AUCUN_SFX_DANS_LA_SOURCE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 10,
+      "acte_source": "preuve",
+      "role_source": "reveal_assiette_fumante",
+      "duree_source_ms": 1416,
+      "frame_debut": 566,
+      "frame_fin_exclusive": 608,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_4",
+        "recadrage": "160%",
+        "vitesse": 0.5
+      },
+      "texte": {
+        "contenu": "LE RÉSULTAT",
+        "position": "centre",
+        "animation": "split_label_track",
+        "apparition_s": 0.0,
+        "disparition_s": 1.416
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "flash_chaleur",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "FLASH_CHAUD",
+        "duree_ms": 120,
+        "duree_frames_proposee": 4,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 606,
+        "fenetre_frame_fin_exclusive": 610,
+        "marge_b_avant_frames": 2,
+        "marge_a_apres_frames": 2,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFD6A0",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE_OU_FONDU_DOUX",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "VITESSE",
+        "coefficient_nom": 0.4,
+        "priorite_video": "SOURCE_VITESSE",
+        "application_carte": "ANIMATION_SEULE",
+        "id_source": "ralenti_0.4x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 0.5,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.6
+      },
+      "animation_parametres": {
+        "id_source": "split_label_track",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "ETIQUETTE_SPLIT",
+        "position_source": "centre",
+        "boite_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "entree_frames": 7,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 30,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": -0.08,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_4",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "vapeur_plat",
+        "repere_visuel": "DEBUT_SCENE_CANDIDAT",
+        "frame_cible_30fps": 566,
+        "sample_cible_48khz": 905600,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 11,
+      "acte_source": "preuve",
+      "role_source": "hero_plat_ralenti",
+      "duree_source_ms": 2282,
+      "frame_debut": 608,
+      "frame_fin_exclusive": 677,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_4",
+        "recadrage": "100%",
+        "vitesse": 0.5
+      },
+      "texte": {
+        "contenu": "LE PLAT TERMINÉ",
+        "position": "tiers_gauche",
+        "animation": "reveal_mask_text",
+        "apparition_s": 0.0,
+        "disparition_s": 2.282
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "cut_sur_action",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE_ACTION",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 677,
+        "fenetre_frame_fin_exclusive": 677,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "REPERES_REELS_OU_REPLI",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "VITESSE",
+        "coefficient_nom": 0.4,
+        "priorite_video": "SOURCE_VITESSE",
+        "application_carte": "ANIMATION_SEULE",
+        "id_source": "ralenti_0.4x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 0.5,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.0
+      },
+      "animation_parametres": {
+        "id_source": "reveal_mask_text",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "MASQUE_TEXTE",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 56,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_4",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "vapeur_plat",
+        "repere_visuel": "DEBUT_SCENE_CANDIDAT",
+        "frame_cible_30fps": 608,
+        "sample_cible_48khz": 972800,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 12,
+      "acte_source": "preuve",
+      "role_source": "main_tourne_ingredient",
+      "duree_source_ms": 2546,
+      "frame_debut": 677,
+      "frame_fin_exclusive": 753,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "LES INGRÉDIENTS",
+        "position": "tiers_droit",
+        "animation": "pulse_cta_soft",
+        "apparition_s": 0.0,
+        "disparition_s": 2.546
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "fondu_croise_temps",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "FONDU_AB_LINEAIRE",
+        "duree_ms": 300,
+        "duree_frames_proposee": 9,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 749,
+        "fenetre_frame_fin_exclusive": 758,
+        "marge_b_avant_frames": 4,
+        "marge_a_apres_frames": 5,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "FONDU_COULEUR_OU_COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "GEL",
+        "duree_ms": 300,
+        "position": "DEBUT_DU_PLAN",
+        "visage_parlant": "NE_PAS_GELER",
+        "id_source": "freeze_0.3s",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.3
+      },
+      "animation_parametres": {
+        "id_source": "pulse_cta_soft",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "PULSATION",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 63,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.96,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "pulse_amplitude": 0.035,
+        "pulse_period_frames": 45,
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_2",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": false,
+        "raison": "AUCUN_SFX_DANS_LA_SOURCE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 13,
+      "acte_source": "preuve",
+      "role_source": "cuisson_texture_macro",
+      "duree_source_ms": 1757,
+      "frame_debut": 753,
+      "frame_fin_exclusive": 806,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "160%",
+        "vitesse": 5.0
+      },
+      "texte": {
+        "contenu": "DE PRÈS",
+        "position": "centre",
+        "animation": "countdown_tick",
+        "apparition_s": 0.0,
+        "disparition_s": 1.757
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "cut_sec",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 806,
+        "fenetre_frame_fin_exclusive": 806,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "AUCUN",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "RAMPE_PROPOSEE",
+        "coefficient_nom": 5.0,
+        "courbe": {
+          "temps_normalise": [
+            0.0,
+            0.2,
+            0.8,
+            1.0
+          ],
+          "vitesse_relative": [
+            1.0,
+            5.0,
+            5.0,
+            1.0
+          ],
+          "interpolation_segments": "SMOOTHSTEP_3",
+          "plancher": 1.0,
+          "pic": 5.0,
+          "integration_sur_sortie": "u=(t-t_debut)/duree; f=1+4*smoothstep(u/.2) pour u<.2; f=5 pour .2<=u<=.8; f=1+4*smoothstep((1-u)/.2) pour u>.8",
+          "integrale_normalisee": 4.2,
+          "application_video": "NON_AUTORISEE_SANS_ARBITRAGE_SOURCE_VITESSE",
+          "application_carte": "COURBE_CANDIDATE_POUR_ANIMATION_GRAPHIQUE_SEULE",
+          "composition": "NE_PAS_CUMULER_RAMPE_ET_AUTRE_RETIMING_SANS_APPROBATION"
+        },
+        "priorite_video": "SOURCE_VITESSE_CONSTANTE",
+        "repli_video": "RAMPE_NON_DEFINIE",
+        "id_source": "speed_ramp_x5",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 5.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.6,
+        "execution_actuelle": "SOURCE_VITESSE_CONSTANTE_ET_REPLI_DECLARE"
+      },
+      "animation_parametres": {
+        "id_source": "countdown_tick",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "BATTEMENT_DATE_REELLE",
+        "position_source": "centre",
+        "boite_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 40,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.95,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "pulse_amplitude": 0.025,
+        "pulse_period_frames": 30,
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_2",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "sizzle_grill",
+        "repere_visuel": "DEBUT_SCENE_CANDIDAT",
+        "frame_cible_30fps": 753,
+        "sample_cible_48khz": 1204800,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 14,
+      "acte_source": "preuve",
+      "role_source": "plat_dresse_contrechamp",
+      "duree_source_ms": 1456,
+      "frame_debut": 806,
+      "frame_fin_exclusive": 849,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_4",
+        "recadrage": "100%",
+        "vitesse": 0.5
+      },
+      "texte": {
+        "contenu": "LE PLAT TERMINÉ",
+        "position": "tiers_gauche",
+        "animation": "side_tag_animate",
+        "apparition_s": 0.0,
+        "disparition_s": 1.456
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "whip_pan_directionnel",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "WHIP",
+        "duree_ms": 180,
+        "duree_frames_proposee": 5,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 847,
+        "fenetre_frame_fin_exclusive": 852,
+        "marge_b_avant_frames": 2,
+        "marge_a_apres_frames": 3,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "VITESSE",
+        "coefficient_nom": 0.5,
+        "priorite_video": "SOURCE_VITESSE",
+        "application_carte": "ANIMATION_SEULE",
+        "id_source": "ralenti_0.5x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 0.5,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.0
+      },
+      "animation_parametres": {
+        "id_source": "side_tag_animate",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "ETIQUETTE",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 30,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0.1,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_4",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "impact_drop",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 814,
+        "sample_cible_48khz": 1302400,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 15,
+      "acte_source": "offre",
+      "role_source": "prix_plat",
+      "duree_source_ms": 2190,
+      "frame_debut": 849,
+      "frame_fin_exclusive": 915,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_geant"
+      },
+      "texte": {
+        "contenu": "{prix} {devise}",
+        "position": "tiers_droit",
+        "animation": "compteur_countup",
+        "apparition_s": 0.0,
+        "disparition_s": 2.19
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "flash_chaleur",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "FLASH_CHAUD",
+        "duree_ms": 120,
+        "duree_frames_proposee": 4,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 913,
+        "fenetre_frame_fin_exclusive": 917,
+        "marge_b_avant_frames": 2,
+        "marge_a_apres_frames": 2,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFD6A0",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE_OU_FONDU_DOUX",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "KEN_BURNS",
+        "debut": 1.0,
+        "fin": 1.06,
+        "dx": 0.0,
+        "dy": -0.01,
+        "courbe": "SMOOTHSTEP_3",
+        "id_source": "ken_burns_detail",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "compteur_countup",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "REVELATION_VALEUR",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 53,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.9,
+            "opacite": 0,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.75,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1.04,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_prix_geant",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "prix": {
+          "valeur_zone_norm": {
+            "x0": 0.52,
+            "y0": 0.3,
+            "x1": 0.92,
+            "y1": 0.69
+          },
+          "valeur_intermediaire_visible": false,
+          "seulement_valeur_reelle_et_devise_confirmee": true,
+          "si_texte_source_sans_prix": "NE_PAS_AJOUTER_DE_PRIX_SANS_DECISION_EXPLICITE"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "caisse_enregistreuse",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 857,
+        "sample_cible_48khz": 1371200,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 16,
+      "acte_source": "cta",
+      "role_source": "carte_contact",
+      "duree_source_ms": 4500,
+      "frame_debut": 915,
+      "frame_fin_exclusive": 1050,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_whatsapp_finale"
+      },
+      "texte": {
+        "contenu": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+        "position": "centre_bas",
+        "animation": "whatsapp_pulsant",
+        "apparition_s": 0.0,
+        "disparition_s": 4.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "fondu_enchaine",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "FONDU_AB_LINEAIRE",
+        "duree_ms": 300,
+        "duree_frames_proposee": 9,
+        "mode_temps": "SORTIE_DANS_DERNIERE_SCENE",
+        "fenetre_frame_debut": 1041,
+        "fenetre_frame_fin_exclusive": 1050,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "FOND_NOIR_PROPOSE_A_APPROUVER",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "FONDU_COULEUR_OU_COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "AUCUN",
+        "regle": "AUCUNE_TRANSFORMATION_SUPPLEMENTAIRE",
+        "id_source": "aucun_effet",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "whatsapp_pulsant",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "PULSATION_CONTACT",
+        "position_source": "centre_bas",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.66,
+          "x1": 0.92,
+          "y1": 0.84
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 122,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.96,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "pulse_amplitude": 0.035,
+        "pulse_period_frames": 45,
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.66,
+          "x1": 0.92,
+          "y1": 0.84
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_whatsapp_finale",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "contact": {
+          "nom_norm": {
+            "x0": 0.08,
+            "y0": 0.15,
+            "x1": 0.92,
+            "y1": 0.3
+          },
+          "lieu_norm": {
+            "x0": 0.08,
+            "y0": 0.34,
+            "x1": 0.92,
+            "y1": 0.48
+          },
+          "whatsapp_norm": {
+            "x0": 0.08,
+            "y0": 0.66,
+            "x1": 0.92,
+            "y1": 0.84
+          },
+          "donnees": "UNIQUEMENT_SAISIES_ET_VALIDEES"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "whoosh_soft",
+        "repere_visuel": "PREMIERE_PULSATION_CONTACT_CANDIDATE",
+        "frame_cible_30fps": 923,
+        "sample_cible_48khz": 1476800,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    }
+  ]
+}

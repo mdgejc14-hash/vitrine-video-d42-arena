@@ -1,0 +1,370 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Piste réellement approuvée – V1.3",
+  "description": "Contrat de forme uniquement ; droits, écoute, BPM, repères et unicité sont contrôlés séparément.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "piste_id",
+    "secteur_id",
+    "format_principal",
+    "titre",
+    "artiste",
+    "genre_revu",
+    "bpm",
+    "bpm_source",
+    "bpm_confiance",
+    "energie_1_5",
+    "audio_hz",
+    "duree_samples_decodes",
+    "source_sha256",
+    "asset_sha256",
+    "licence_code",
+    "preuve_id",
+    "preuve_sha256",
+    "instrumental_confirme",
+    "origine_humaine_documentee",
+    "revision_humaine_approuvee",
+    "statut",
+    "distribution",
+    "pack_id",
+    "chemin_logique",
+    "fallback_track_id",
+    "associations_gabarit"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.3"
+    },
+    "piste_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "secteur_id": {
+      "enum": [
+        "vetements_mode",
+        "restaurants_maquis",
+        "immo_auto",
+        "coiffure_beaute",
+        "shops_small_business",
+        "batiment_travaux"
+      ]
+    },
+    "format_principal": {
+      "enum": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5"
+      ]
+    },
+    "titre": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "artiste": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "genre_revu": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "bpm": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 300
+    },
+    "bpm_source": {
+      "enum": [
+        "EDITEUR_VERIFIE",
+        "ANALYSE_REVUE",
+        "MESURE_MANUELLE_REVUE"
+      ]
+    },
+    "bpm_confiance": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "energie_1_5": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "audio_hz": {
+      "const": 48000
+    },
+    "duree_samples_decodes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "asset_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "licence_code": {
+      "enum": [
+        "CC0-1.0",
+        "DOMAINE_PUBLIC_VERIFIE"
+      ]
+    },
+    "preuve_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "preuve_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "instrumental_confirme": {
+      "const": true
+    },
+    "origine_humaine_documentee": {
+      "const": true
+    },
+    "revision_humaine_approuvee": {
+      "const": true
+    },
+    "statut": {
+      "const": "APPROUVEE"
+    },
+    "distribution": {
+      "enum": [
+        "STARTER",
+        "PACK"
+      ]
+    },
+    "pack_id": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        }
+      ]
+    },
+    "chemin_logique": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "fallback_track_id": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        }
+      ]
+    },
+    "associations_gabarit": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": [
+          "gabarit_id",
+          "gabarit_sha256",
+          "offset_asset_samples",
+          "riser_asset_sample",
+          "drop_asset_sample",
+          "riser_timeline_sample",
+          "drop_timeline_sample",
+          "mode_lecture",
+          "boucle",
+          "approbation_id"
+        ],
+        "properties": {
+          "gabarit_id": {
+            "type": "string",
+            "pattern": "^(vetements_mode|restaurants_maquis|immo_auto|coiffure_beaute|shops_small_business|batiment_travaux)_T[1-5]$"
+          },
+          "gabarit_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "offset_asset_samples": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "riser_asset_sample": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "drop_asset_sample": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "riser_timeline_sample": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "drop_timeline_sample": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "mode_lecture": {
+            "enum": [
+              "LINEAIRE",
+              "BOUCLE_APPROUVEE"
+            ]
+          },
+          "boucle": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "start_sample",
+                  "end_sample",
+                  "crossfade_samples",
+                  "approbation_id"
+                ],
+                "properties": {
+                  "start_sample": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "end_sample": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "crossfade_samples": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "approbation_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "pattern": "^[A-Za-z0-9_-]+$"
+                  }
+                },
+                "additionalProperties": false
+              }
+            ]
+          },
+          "approbation_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          }
+        },
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "mode_lecture": {
+                  "const": "LINEAIRE"
+                }
+              },
+              "required": [
+                "mode_lecture"
+              ]
+            },
+            "then": {
+              "properties": {
+                "boucle": {
+                  "type": "null"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "boucle": {
+                  "type": "object",
+                  "required": [
+                    "start_sample",
+                    "end_sample",
+                    "crossfade_samples",
+                    "approbation_id"
+                  ],
+                  "properties": {
+                    "start_sample": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "end_sample": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "crossfade_samples": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "approbation_id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "pattern": "^[A-Za-z0-9_-]+$"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "distribution": {
+            "const": "STARTER"
+          }
+        },
+        "required": [
+          "distribution"
+        ]
+      },
+      "then": {
+        "properties": {
+          "pack_id": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "pack_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    }
+  ]
+}

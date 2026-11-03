@@ -1,0 +1,148 @@
+{
+  "schema": "banque_sfx_v2_0_proposition",
+  "statut_general": "A_ACQUERIR_ET_VERIFIER",
+  "format_cible": {
+    "conteneur": "WAV_PCM",
+    "sample_rate_hz": 48000,
+    "canaux": 1,
+    "bits": 16
+  },
+  "mix": {
+    "sample_rate_hz": 48000,
+    "ducking_musique_sous_voix_db": -14,
+    "attaque_ms": 75,
+    "relache_ms": 325,
+    "cible_lufs": -14,
+    "tolerance_lufs": 0.5,
+    "plafond_true_peak_dbtp": -1,
+    "voix_prioritaire": true,
+    "vitesse_voix": 1.0,
+    "mesurer_apres_aac": true,
+    "licence_autorisee": [
+      "CC0-1.0",
+      "DOMAINE_PUBLIC_VERIFIE"
+    ],
+    "un_seul_sfx_par_indication_source": true,
+    "ne_pas_normaliser_sfx_courts_seuls_a_lufs": true
+  },
+  "categories": [
+    {
+      "categorie": "whoosh_soft",
+      "code": "WS",
+      "fichier_cible": "assets/audio/sfx/whoosh_soft.wav",
+      "occurrences_source": 85,
+      "duree_cible_ms": 350,
+      "gain_initial_db": -14,
+      "etat_fichier": "A_ACQUERIR",
+      "etat_licence": "A_VERIFIER",
+      "etat_sha256": "A_CALCULER_SUR_FICHIER_REEL",
+      "sample_impact": "A_MESURER_SUR_FICHIER_REEL",
+      "mode_ancre_propose": "TRANSITION_OU_CONTACT"
+    },
+    {
+      "categorie": "whoosh_fast",
+      "code": "WF",
+      "fichier_cible": "assets/audio/sfx/whoosh_fast.wav",
+      "occurrences_source": 15,
+      "duree_cible_ms": 220,
+      "gain_initial_db": -14,
+      "etat_fichier": "A_ACQUERIR",
+      "etat_licence": "A_VERIFIER",
+      "etat_sha256": "A_CALCULER_SUR_FICHIER_REEL",
+      "sample_impact": "A_MESURER_SUR_FICHIER_REEL",
+      "mode_ancre_propose": "TRANSITION_OU_CONTACT"
+    },
+    {
+      "categorie": "caisse_enregistreuse",
+      "code": "CA",
+      "fichier_cible": "assets/audio/sfx/caisse_enregistreuse.wav",
+      "occurrences_source": 50,
+      "duree_cible_ms": 550,
+      "gain_initial_db": -13,
+      "etat_fichier": "A_ACQUERIR",
+      "etat_licence": "A_VERIFIER",
+      "etat_sha256": "A_CALCULER_SUR_FICHIER_REEL",
+      "sample_impact": "A_MESURER_SUR_FICHIER_REEL",
+      "mode_ancre_propose": "VALEUR_VISIBLE"
+    },
+    {
+      "categorie": "clic_appareil",
+      "code": "CL",
+      "fichier_cible": "assets/audio/sfx/clic_appareil.wav",
+      "occurrences_source": 40,
+      "duree_cible_ms": 120,
+      "gain_initial_db": -16,
+      "etat_fichier": "A_ACQUERIR",
+      "etat_licence": "A_VERIFIER",
+      "etat_sha256": "A_CALCULER_SUR_FICHIER_REEL",
+      "sample_impact": "A_MESURER_SUR_FICHIER_REEL",
+      "mode_ancre_propose": "FIN_ENTREE"
+    },
+    {
+      "categorie": "impact_drop",
+      "code": "IM",
+      "fichier_cible": "assets/audio/sfx/impact_drop.wav",
+      "occurrences_source": 31,
+      "duree_cible_ms": 220,
+      "gain_initial_db": -13,
+      "etat_fichier": "A_ACQUERIR",
+      "etat_licence": "A_VERIFIER",
+      "etat_sha256": "A_CALCULER_SUR_FICHIER_REEL",
+      "sample_impact": "A_MESURER_SUR_FICHIER_REEL",
+      "mode_ancre_propose": "FIN_ENTREE"
+    },
+    {
+      "categorie": "pop_badge",
+      "code": "PB",
+      "fichier_cible": "assets/audio/sfx/pop_badge.wav",
+      "occurrences_source": 28,
+      "duree_cible_ms": 160,
+      "gain_initial_db": -16,
+      "etat_fichier": "A_ACQUERIR",
+      "etat_licence": "A_VERIFIER",
+      "etat_sha256": "A_CALCULER_SUR_FICHIER_REEL",
+      "sample_impact": "A_MESURER_SUR_FICHIER_REEL",
+      "mode_ancre_propose": "FIN_ENTREE"
+    },
+    {
+      "categorie": "amb_chantier",
+      "code": "CH",
+      "fichier_cible": "assets/audio/sfx/amb_chantier.wav",
+      "occurrences_source": 17,
+      "duree_cible_ms": 2500,
+      "gain_initial_db": -20,
+      "etat_fichier": "A_ACQUERIR",
+      "etat_licence": "A_VERIFIER",
+      "etat_sha256": "A_CALCULER_SUR_FICHIER_REEL",
+      "sample_impact": "A_MESURER_SUR_FICHIER_REEL",
+      "mode_ancre_propose": "DEBUT_SCENE"
+    },
+    {
+      "categorie": "sizzle_grill",
+      "code": "GR",
+      "fichier_cible": "assets/audio/sfx/sizzle_grill.wav",
+      "occurrences_source": 8,
+      "duree_cible_ms": 1000,
+      "gain_initial_db": -20,
+      "etat_fichier": "A_ACQUERIR",
+      "etat_licence": "A_VERIFIER",
+      "etat_sha256": "A_CALCULER_SUR_FICHIER_REEL",
+      "sample_impact": "A_MESURER_SUR_FICHIER_REEL",
+      "mode_ancre_propose": "DEBUT_SCENE"
+    },
+    {
+      "categorie": "vapeur_plat",
+      "code": "VA",
+      "fichier_cible": "assets/audio/sfx/vapeur_plat.wav",
+      "occurrences_source": 6,
+      "duree_cible_ms": 1000,
+      "gain_initial_db": -20,
+      "etat_fichier": "A_ACQUERIR",
+      "etat_licence": "A_VERIFIER",
+      "etat_sha256": "A_CALCULER_SUR_FICHIER_REEL",
+      "sample_impact": "A_MESURER_SUR_FICHIER_REEL",
+      "mode_ancre_propose": "DEBUT_SCENE"
+    }
+  ],
+  "poids_total_cible_octets_max_exclusif": 2000000
+}

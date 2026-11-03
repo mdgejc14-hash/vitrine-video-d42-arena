@@ -1,0 +1,1516 @@
+{
+  "id": "restaurants_maquis_T3",
+  "secteur": "restaurants_maquis",
+  "secteur_libelle": "Restaurants & Maquis",
+  "format": "T3_presentation_produit",
+  "version": "2.0_theorique",
+  "duree_totale_secondes": 40,
+  "nombre_scenes": 14,
+  "ratio": "9:16",
+  "notes_adaptation": "On montre le plat de plusieurs côtés, sa taille et ses détails. Le prix arrive après les images.",
+  "champs_saisie": [
+    {
+      "id": "nom_commerce",
+      "label": "Nom de votre commerce",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Maquis Chez Maman",
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "groupe_ui": "commerce_contact",
+      "aide_simple": "Écrivez le nom que les clients doivent voir."
+    },
+    {
+      "id": "nom_offre",
+      "label": "Nom du plat",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Poisson braisé",
+      "source": "saisie_video",
+      "scenes": [
+        1
+      ],
+      "groupe_ui": "offre",
+      "aide_simple": "Écrivez le nom du plat, du produit ou du travail."
+    },
+    {
+      "id": "prix",
+      "label": "Prix du plat",
+      "type": "nombre",
+      "obligatoire": true,
+      "exemple": "15000",
+      "source": "saisie_video",
+      "scenes": [
+        13
+      ],
+      "groupe_ui": "prix",
+      "aide_simple": "Écrivez le vrai prix. La monnaie FCFA est choisie par défaut."
+    },
+    {
+      "id": "devise",
+      "label": "Monnaie",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "FCFA",
+      "source": "saisie_video",
+      "scenes": [
+        13
+      ],
+      "defaut": "FCFA",
+      "groupe_ui": "prix",
+      "affichage_ui": "sélecteur compact; FCFA proposé par défaut pour cette vidéo",
+      "aide_simple": "FCFA est déjà choisi. Change-le seulement si besoin."
+    },
+    {
+      "id": "quartier_ville",
+      "label": "Quartier et ville",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Akpakpa, Cotonou",
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "groupe_ui": "lieu",
+      "aide_simple": "Écrivez le quartier et la ville où les clients peuvent venir."
+    },
+    {
+      "id": "whatsapp",
+      "label": "votre numéro WhatsApp",
+      "type": "telephone",
+      "obligatoire": true,
+      "exemple": "+229 97 00 00 00",
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "validation": "format_international",
+      "groupe_ui": "commerce_contact",
+      "aide_simple": "Écrivez le numéro sur lequel les clients peuvent vous écrire, avec le + et le code du pays."
+    },
+    {
+      "id": "badge_engagement_actif",
+      "label": "Afficher un message spécial (facultatif)",
+      "type": "case_a_cocher",
+      "obligatoire": false,
+      "exemple": false,
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "defaut": false,
+      "choix": [
+        "stock_limite",
+        "places_limitees",
+        "qualite_garantie"
+      ],
+      "groupe_ui": "options_avancees",
+      "afficher_par_defaut": false,
+      "aide_simple": "Laissez désactivé, sauf si le message est vrai."
+    }
+  ],
+  "politique_saisie": {
+    "mode": "saisie_video",
+    "recollecter_a_chaque_video": true,
+    "enregistrer_dans_profil": false,
+    "pre_remplissage_automatique": false,
+    "numero_whatsapp_obligatoire": true,
+    "prix_obligatoire_sauf_T5": true,
+    "format_prix": "15 000 FCFA",
+    "badge_engagement_actif_par_defaut": false
+  },
+  "prises": [
+    {
+      "id": "prise_1",
+      "libelle": "Le plat de côté",
+      "duree_cible_s": 12,
+      "consigne_camera": "Commencez par montrer le plat de côté. Tenez votre téléphone debout et reste assez immobile. Filmez près d’une fenêtre. Montrez le plat et les gestes réels.",
+      "type_plan": "plan_moyen",
+      "mouvement": "travelling_avant",
+      "lumiere": "plat_proche_fenetre",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        1,
+        2,
+        8
+      ],
+      "guide_parole_scenes": [
+        2
+      ],
+      "segments_guide_parole": [
+        {
+          "scene": 2,
+          "quoi_raconter": "Parlez de la portion ou d’un ingrédient.",
+          "quoi_montrer": "Montrez le plat de près.",
+          "exemple": "Voici le plat de près.",
+          "note_exemple": "Exemple pour comprendre, pas à répéter.",
+          "duree_conseillee_s": 2.0,
+          "segment_audio_id": "T3_scene_02_voix"
+        }
+      ]
+    },
+    {
+      "id": "prise_2",
+      "libelle": "Le plat vu du dessus",
+      "duree_cible_s": 12,
+      "consigne_camera": "Ensuite, montrez le plat vu du dessus. Tenez votre téléphone debout et reste assez immobile. Filmez près d’une fenêtre. Montrez le plat et les gestes réels.",
+      "type_plan": "plan_moyen",
+      "mouvement": "travelling_avant",
+      "lumiere": "plat_proche_fenetre",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        3,
+        11
+      ],
+      "guide_parole_scenes": [],
+      "segments_guide_parole": []
+    },
+    {
+      "id": "prise_3",
+      "libelle": "La taille et les détails du plat",
+      "duree_cible_s": 12,
+      "consigne_camera": "Puis, montrez la taille et les détails du plat. Tenez votre téléphone debout et reste assez immobile. Filmez près d’une fenêtre. Montrez le plat et les gestes réels.",
+      "type_plan": "gros_plan",
+      "mouvement": "travelling_avant",
+      "lumiere": "plat_proche_fenetre",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        4,
+        5,
+        6,
+        7,
+        10,
+        12
+      ],
+      "guide_parole_scenes": [],
+      "segments_guide_parole": []
+    }
+  ],
+  "scenes": [
+    {
+      "numero": 1,
+      "acte": "hook",
+      "role": "hook_plat_signature",
+      "duree_secondes": 2.5,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "Voici le plat {nom_offre}.",
+        "position": "centre_haut",
+        "animation": "kinetic_number",
+        "apparition_s": 0.0,
+        "disparition_s": 2.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "fondu_croise_temps",
+      "effet": "freeze_0.5s",
+      "sfx": "impact_drop",
+      "action_montage": "La vidéo commence par « voici le plat {nom_offre} ». Ça donne envie de regarder.",
+      "sfx_libelle_simple": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 2,
+      "acte": "preuve",
+      "role": "angle_assiette_45",
+      "duree_secondes": 4.108,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "130%",
+        "vitesse": 0.5
+      },
+      "texte_ecran": {
+        "contenu": "LE PLAT TERMINÉ",
+        "position": "tiers_droit",
+        "animation": "typing_price_roll",
+        "apparition_s": 0.0,
+        "disparition_s": 4.108
+      },
+      "voix": {
+        "active": true,
+        "source_audio_prise_id": "prise_1",
+        "segment_audio_id": "T3_scene_02_voix",
+        "audio_separe_de_image": true,
+        "vitesse_audio": 1.0
+      },
+      "transition_sortie": "fondu_croise_temps",
+      "effet": "ralenti_0.5x",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le plat de côté ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "duree_affichee_s": 2.0,
+        "idee": "Montrez le plat de près. Parlez de la portion ou d’un ingrédient.",
+        "quoi_raconter": "Parlez de la portion ou d’un ingrédient.",
+        "quoi_montrer": "Montrez le plat de près.",
+        "exemple": "Voici le plat de près.",
+        "exemple_langue_libre": "Dites cette idée avec vos mots, en français ou dans la langue que vous voulez.",
+        "theme": "detail_qualite",
+        "conseil": "Montrez bien la portion.",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 1,
+          "segment_audio_id": "T3_scene_02_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez le plat de près.",
+          "quoi_raconter": "Parlez de la portion ou d’un ingrédient."
+        },
+        "cles": {
+          "idee": "guide.restaurants_maquis.T3.scene_02.idee",
+          "quoi_raconter": "guide.restaurants_maquis.T3.scene_02.quoi_raconter",
+          "quoi_montrer": "guide.restaurants_maquis.T3.scene_02.quoi_montrer",
+          "exemple": "guide.restaurants_maquis.T3.scene_02.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.restaurants_maquis.T3.scene_02.conseil"
+        }
+      }
+    },
+    {
+      "numero": 3,
+      "acte": "preuve",
+      "role": "vue_dessus_ingredients",
+      "duree_secondes": 1.928,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "LES INGRÉDIENTS",
+        "position": "centre",
+        "animation": "wipe_label",
+        "apparition_s": 0.0,
+        "disparition_s": 1.928
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "flash_chaleur",
+      "effet": "ken_burns_detail",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le plat vu du dessus ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 4,
+      "acte": "preuve",
+      "role": "macro_croute_sauce",
+      "duree_secondes": 2.882,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "DE PRÈS",
+        "position": "tiers_gauche",
+        "animation": "lower_third_glide",
+        "apparition_s": 0.0,
+        "disparition_s": 2.882
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "recadrage_macro_160",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « La taille et les détails du plat ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 5,
+      "acte": "preuve",
+      "role": "fourchette_texture",
+      "duree_secondes": 1.437,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "DE PRÈS",
+        "position": "tiers_droit",
+        "animation": "badge_slide_snap",
+        "apparition_s": 0.0,
+        "disparition_s": 1.437
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sur_action",
+      "effet": "recadrage_macro_160",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « La taille et les détails du plat ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 6,
+      "acte": "preuve",
+      "role": "portion_et_accompagnement",
+      "duree_secondes": 3.624,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "160%",
+        "vitesse": 5.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "price_shake_impact",
+        "apparition_s": 0.0,
+        "disparition_s": 3.624
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "whip_pan_directionnel",
+      "effet": "speed_ramp_x5",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « La taille et les détails du plat ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 7,
+      "acte": "preuve",
+      "role": "angle_cote_hauteur",
+      "duree_secondes": 3.614,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 0.5
+      },
+      "texte_ecran": {
+        "contenu": "DE CÔTÉ",
+        "position": "tiers_gauche",
+        "animation": "line_draw_spec",
+        "apparition_s": 0.0,
+        "disparition_s": 3.614
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "flash_chaleur",
+      "effet": "ralenti_0.5x",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « La taille et les détails du plat ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 8,
+      "acte": "preuve",
+      "role": "vapeur_plat_hero",
+      "duree_secondes": 1.907,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "130%",
+        "vitesse": 0.5
+      },
+      "texte_ecran": {
+        "contenu": "LE PLAT TERMINÉ",
+        "position": "tiers_droit",
+        "animation": "caption_breath_fade",
+        "apparition_s": 0.0,
+        "disparition_s": 1.907
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sur_action",
+      "effet": "ralenti_0.4x",
+      "sfx": "vapeur_plat",
+      "action_montage": "L’application montre « Le plat de côté » plus lentement pour laisser voir le résultat.",
+      "sfx_libelle_simple": "Petit son de vapeur",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 9,
+      "acte": "reassurance",
+      "role": "carte_dispo_service",
+      "duree_secondes": 2.863,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t3_restaurants_maquis"
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "split_label_track",
+        "apparition_s": 0.0,
+        "disparition_s": 2.863
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "accelere_x3",
+      "sfx": null,
+      "action_montage": "L’application affiche les mots « À DÉCOUVRIR » à l’écran.",
+      "carte_generee_id": "carte_signature_t3_restaurants_maquis",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 10,
+      "acte": "preuve",
+      "role": "rappel_maquis",
+      "duree_secondes": 1.494,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_gauche",
+        "animation": "reveal_mask_text",
+        "apparition_s": 0.0,
+        "disparition_s": 1.494
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "freeze_0.3s",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « La taille et les détails du plat ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 11,
+      "acte": "preuve",
+      "role": "ingredient_inclus_verifiable",
+      "duree_secondes": 3.636,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 5.0
+      },
+      "texte_ecran": {
+        "contenu": "LES INGRÉDIENTS",
+        "position": "tiers_droit",
+        "animation": "pulse_cta_soft",
+        "apparition_s": 0.0,
+        "disparition_s": 3.636
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "whip_pan_directionnel",
+      "effet": "speed_ramp_x5",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le plat vu du dessus ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 12,
+      "acte": "preuve",
+      "role": "portion_main_echelle",
+      "duree_secondes": 3.67,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "160%",
+        "vitesse": 0.5
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "countdown_tick",
+        "apparition_s": 0.0,
+        "disparition_s": 3.67
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "flash_chaleur",
+      "effet": "ralenti_0.5x",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « La taille et les détails du plat ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 13,
+      "acte": "offre",
+      "role": "prix_countup_final",
+      "duree_secondes": 1.837,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_geant"
+      },
+      "texte_ecran": {
+        "contenu": "{prix} {devise}",
+        "position": "tiers_gauche",
+        "animation": "compteur_countup",
+        "apparition_s": 0.0,
+        "disparition_s": 1.837
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "ken_burns_detail",
+      "sfx": "caisse_enregistreuse",
+      "action_montage": "L’application affiche le vrai prix que vous avez entré.",
+      "carte_generee_id": "carte_prix_geant",
+      "sfx_libelle_simple": "Petit son au moment du prix",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 14,
+      "acte": "cta",
+      "role": "carte_contact",
+      "duree_secondes": 4.5,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_whatsapp_finale"
+      },
+      "texte_ecran": {
+        "contenu": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+        "position": "centre_bas",
+        "animation": "whatsapp_pulsant",
+        "apparition_s": 0.0,
+        "disparition_s": 4.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "fondu_enchaine",
+      "effet": "aucun_effet",
+      "sfx": "whoosh_soft",
+      "action_montage": "À la fin, la vidéo garde le nom de votre commerce, le quartier et le numéro WhatsApp à l’écran.",
+      "carte_generee_id": "carte_whatsapp_finale",
+      "sfx_libelle_simple": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    }
+  ],
+  "montage_signature": {
+    "nom": "T3_restaurants_maquis",
+    "id_unique": "T3_restaurants_maquis",
+    "rythme_moyen_coupe_s": 2.75,
+    "courbe_rythme": [
+      2.5,
+      4.108,
+      1.928,
+      2.882,
+      1.437,
+      3.624,
+      3.614,
+      1.907,
+      2.863,
+      1.494,
+      3.636,
+      3.67,
+      1.837,
+      4.5
+    ],
+    "transitions": [
+      "fondu_croise_temps",
+      "flash_chaleur",
+      "cut_sec",
+      "cut_sur_action",
+      "whip_pan_directionnel",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "ralenti_0.5x",
+      "ken_burns_detail",
+      "recadrage_macro_160",
+      "speed_ramp_x5",
+      "ralenti_0.4x",
+      "accelere_x3",
+      "freeze_0.3s",
+      "aucun_effet"
+    ],
+    "zoom": {
+      "type": "recadrages_roles_et_sujet",
+      "min": 1.0,
+      "max": 1.6
+    },
+    "signature_detail": "On montre le plat de plusieurs côtés, sa taille et ses détails. Le prix arrive après les images."
+  },
+  "etalonnage": {
+    "preset": "grade_restaurants_maquis_t3",
+    "preset_avant": null,
+    "preset_apres": null,
+    "exposition_ev": 0.2,
+    "contraste": 1.08,
+    "saturation": 1.12,
+    "temperature_k": 5600,
+    "vignettage": 0.1,
+    "nettete": 0.18,
+    "protection_peau": true,
+    "protection_peau_detail": "Peaux foncées incluses : préserver les hautes lumières du visage et vérifier l’exposition; fidélité textile/carrosserie et nourriture avant stylisation.",
+    "denoise_faible_lumiere": true,
+    "stabilisation": true,
+    "consigne_lumiere": "Filmez à 45° près d’une fenêtre; gardez la lumière latérale et capture l’action réelle, sans ajouter de vapeur artificielle.",
+    "preset_avant_ref": null,
+    "preset_apres_ref": null
+  },
+  "style_visuel": {
+    "typographie": {
+      "preset": "sans_serif_bold_condensee",
+      "graisse": "900",
+      "couleur_texte": "#FFFFFF",
+      "contour": "#000000",
+      "fond_texte": "#FF5500"
+    },
+    "palette": "palette_T1_chaude",
+    "badges": [
+      "1_sur_3",
+      "2_sur_3",
+      "3_sur_3"
+    ],
+    "badges_optionnels_actives_par_commercant": [
+      "stock_limite",
+      "places_limitees",
+      "qualite_garantie"
+    ],
+    "engagements_optionnels_actifs_par_defaut": false
+  },
+  "audio": {
+    "musique": {
+      "genre": "coupé-décalé instrumental",
+      "bpm_min": 90,
+      "bpm_max": 106,
+      "structure": "hook court, progression accordée aux rôles, accent sur preuve/révélation, sortie propre sous carte CTA",
+      "structure_id": "audio_structure_restaurants_maquis_t3",
+      "categorie_audio": "musique_t3_restaurants_maquis",
+      "cue_roles": {
+        "riser_role": "vapeur_plat_hero",
+        "drop_scene": 8,
+        "voice_ducking": "VAD; aucun ASR"
+      }
+    },
+    "sfx_scenes": [
+      {
+        "scene": 1,
+        "categorie": "impact_drop"
+      },
+      {
+        "scene": 8,
+        "categorie": "vapeur_plat"
+      },
+      {
+        "scene": 13,
+        "categorie": "caisse_enregistreuse"
+      },
+      {
+        "scene": 14,
+        "categorie": "whoosh_soft"
+      }
+    ],
+    "mix": {
+      "cible_lufs": -14,
+      "ducking_musique_sous_voix_db": -14,
+      "voix_prioritaire": true,
+      "limiteur_true_peak_dbtp": -1.0
+    },
+    "mode_sans_voix": {
+      "actif_par_defaut": false,
+      "compense_par": "texte_ecran_et_pictogrammes",
+      "calage": "BPM et temps forts, sans dépendance ASR"
+    },
+    "interface_commercant": {
+      "genre_en_mots_simples": "Musique chaleureuse qui accompagne le plat.",
+      "message": "La musique doit rester moins forte que votre voix. Sans voix, les mots à l’écran racontent la vidéo.",
+      "note": "La musique et les petits sons doivent être autorisés pour une vidéo de commerce."
+    }
+  },
+  "copywriting": {
+    "hooks": [
+      "Voici le plat {nom_offre}.",
+      "Regardez le produit de près.",
+      "Voici ce qu’il faut savoir.",
+      "On vous le montre de plusieurs côtés.",
+      "Le prix arrive à la fin."
+    ],
+    "formules_prix": [
+      "Prix : {prix} {devise}.",
+      "{nom_offre} coûte {prix} {devise}.",
+      "Demandez le prix à {nom_commerce}."
+    ],
+    "formules_urgence": [
+      "Demandez si le produit est disponible.",
+      "Passe à {quartier_ville} pour le voir.",
+      "Écrivez-nous pour en savoir plus."
+    ],
+    "formules_cta": [
+      "Écrivez-nous sur WhatsApp : {whatsapp}.",
+      "Viens à {quartier_ville}.",
+      "Contacte {nom_commerce} sur WhatsApp."
+    ],
+    "regles_affichage": {
+      "format_prix": "15 000 FCFA, si c’est le vrai prix saisi",
+      "max_lignes": 2,
+      "max_caracteres_par_ligne": 28,
+      "zone_securite_ref": "zone_securite",
+      "pourcentage_reduction": "calculé automatiquement avec les deux prix saisis",
+      "note": "Phrases courtes. N’affiche pas une offre ou un stock limité si ce n’est pas vrai."
+    }
+  },
+  "variables_calculees": [],
+  "confiance_analyse": {
+    "methode": "theorique",
+    "validation_terrain": "a_faire",
+    "hypotheses_a_valider": [
+      "Lisibilité du hook sur petit écran",
+      "Compréhension du rythme et du vocabulaire local",
+      "Acceptation d’une durée 40 s",
+      "Performance du montage sans voix"
+    ],
+    "aucune_statistique_de_performance_affirmee": true
+  },
+  "signature_montage": {
+    "id_unique": "T3_restaurants_maquis",
+    "famille_format": "T3",
+    "empreinte_sequence": [
+      "hook_plat_signature|fondu_croise_temps|freeze_0.5s",
+      "angle_assiette_45|fondu_croise_temps|ralenti_0.5x",
+      "vue_dessus_ingredients|flash_chaleur|ken_burns_detail",
+      "macro_croute_sauce|cut_sec|recadrage_macro_160",
+      "fourchette_texture|cut_sur_action|recadrage_macro_160",
+      "portion_et_accompagnement|whip_pan_directionnel|speed_ramp_x5",
+      "angle_cote_hauteur|flash_chaleur|ralenti_0.5x",
+      "vapeur_plat_hero|cut_sur_action|ralenti_0.4x",
+      "carte_dispo_service|cut_sec|accelere_x3",
+      "rappel_maquis|cut_sec|freeze_0.3s",
+      "ingredient_inclus_verifiable|whip_pan_directionnel|speed_ramp_x5",
+      "portion_main_echelle|flash_chaleur|ralenti_0.5x",
+      "prix_countup_final|cut_sec|ken_burns_detail",
+      "carte_contact|fondu_enchaine|aucun_effet"
+    ],
+    "courbe_rythme": [
+      2.5,
+      4.108,
+      1.928,
+      2.882,
+      1.437,
+      3.624,
+      3.614,
+      1.907,
+      2.863,
+      1.494,
+      3.636,
+      3.67,
+      1.837,
+      4.5
+    ],
+    "justification_sectorielle": "On montre le plat de plusieurs côtés, sa taille et ses détails. Le prix arrive après les images."
+  },
+  "etapes_montage": [
+    {
+      "etape": 1,
+      "temps_s": 2.5,
+      "role": "Au début",
+      "action": "La vidéo commence par « voici le plat {nom_offre} ». Ça donne envie de regarder.",
+      "texte": "Voici le plat {nom_offre}.",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 2,
+      "temps_s": 4.108,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le plat de côté ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "LE PLAT TERMINÉ",
+      "voix": "Montrez le plat de près. Parlez de la portion ou d’un ingrédient.",
+      "audio": "votre voix reste devant la musique.",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "theme": "detail_qualite",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 1,
+          "segment_audio_id": "T3_scene_02_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez le plat de près.",
+          "quoi_raconter": "Parlez de la portion ou d’un ingrédient."
+        },
+        "cles": {
+          "idee": "guide.restaurants_maquis.T3.scene_02.idee",
+          "quoi_raconter": "guide.restaurants_maquis.T3.scene_02.quoi_raconter",
+          "quoi_montrer": "guide.restaurants_maquis.T3.scene_02.quoi_montrer",
+          "exemple": "guide.restaurants_maquis.T3.scene_02.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.restaurants_maquis.T3.scene_02.conseil"
+        }
+      }
+    },
+    {
+      "etape": 3,
+      "temps_s": 1.928,
+      "role": "Les ingrédients",
+      "action": "L’application reprend une partie de « Le plat vu du dessus ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "LES INGRÉDIENTS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 4,
+      "temps_s": 2.882,
+      "role": "De près",
+      "action": "L’application reprend une partie de « La taille et les détails du plat ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "DE PRÈS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 5,
+      "temps_s": 1.437,
+      "role": "De près",
+      "action": "L’application reprend une partie de « La taille et les détails du plat ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "DE PRÈS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 6,
+      "temps_s": 3.624,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « La taille et les détails du plat ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 7,
+      "temps_s": 3.614,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « La taille et les détails du plat ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "DE CÔTÉ",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 8,
+      "temps_s": 1.907,
+      "role": "Le résultat",
+      "action": "L’application montre « Le plat de côté » plus lentement pour laisser voir le résultat.",
+      "texte": "LE PLAT TERMINÉ",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son de vapeur",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 9,
+      "temps_s": 2.863,
+      "role": "Un message à l’écran",
+      "action": "L’application affiche les mots « À DÉCOUVRIR » à l’écran.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 10,
+      "temps_s": 1.494,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « La taille et les détails du plat ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 11,
+      "temps_s": 3.636,
+      "role": "Les ingrédients",
+      "action": "L’application reprend une partie de « Le plat vu du dessus ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "LES INGRÉDIENTS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 12,
+      "temps_s": 3.67,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « La taille et les détails du plat ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 13,
+      "temps_s": 1.837,
+      "role": "Le prix",
+      "action": "L’application affiche le vrai prix que vous avez entré.",
+      "texte": "{prix} {devise}",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son au moment du prix",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 14,
+      "temps_s": 4.5,
+      "role": "vos coordonnées",
+      "action": "À la fin, la vidéo garde le nom de votre commerce, le quartier et le numéro WhatsApp à l’écran.",
+      "texte": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    }
+  ],
+  "axes_signature": {
+    "sequence_roles": [
+      "hook_plat_signature",
+      "angle_assiette_45",
+      "vue_dessus_ingredients",
+      "macro_croute_sauce",
+      "fourchette_texture",
+      "portion_et_accompagnement",
+      "angle_cote_hauteur",
+      "vapeur_plat_hero",
+      "carte_dispo_service",
+      "rappel_maquis",
+      "ingredient_inclus_verifiable",
+      "portion_main_echelle",
+      "prix_countup_final",
+      "carte_contact"
+    ],
+    "nombre_scenes": 14,
+    "courbe_rythme": [
+      2.5,
+      4.108,
+      1.928,
+      2.882,
+      1.437,
+      3.624,
+      3.614,
+      1.907,
+      2.863,
+      1.494,
+      3.636,
+      3.67,
+      1.837,
+      4.5
+    ],
+    "transitions": [
+      "fondu_croise_temps",
+      "fondu_croise_temps",
+      "flash_chaleur",
+      "cut_sec",
+      "cut_sur_action",
+      "whip_pan_directionnel",
+      "flash_chaleur",
+      "cut_sur_action",
+      "cut_sec",
+      "cut_sec",
+      "whip_pan_directionnel",
+      "flash_chaleur",
+      "cut_sec",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "ralenti_0.5x",
+      "ken_burns_detail",
+      "recadrage_macro_160",
+      "recadrage_macro_160",
+      "speed_ramp_x5",
+      "ralenti_0.5x",
+      "ralenti_0.4x",
+      "accelere_x3",
+      "freeze_0.3s",
+      "speed_ramp_x5",
+      "ralenti_0.5x",
+      "ken_burns_detail",
+      "aucun_effet"
+    ],
+    "decoupage_prises": [
+      "prise_1",
+      "prise_1",
+      "prise_2",
+      "prise_3",
+      "prise_3",
+      "prise_3",
+      "prise_3",
+      "prise_1",
+      "carte:carte_signature_t3_restaurants_maquis",
+      "prise_3",
+      "prise_2",
+      "prise_3",
+      "carte:carte_prix_geant",
+      "carte:carte_whatsapp_finale"
+    ],
+    "cartes_generees": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "carte_signature_t3_restaurants_maquis",
+      "",
+      "",
+      "",
+      "carte_prix_geant",
+      "carte_whatsapp_finale"
+    ],
+    "texte_animation_position": [
+      "kinetic_number|centre_haut",
+      "typing_price_roll|tiers_droit",
+      "wipe_label|centre",
+      "lower_third_glide|tiers_gauche",
+      "badge_slide_snap|tiers_droit",
+      "price_shake_impact|centre",
+      "line_draw_spec|tiers_gauche",
+      "caption_breath_fade|tiers_droit",
+      "split_label_track|centre",
+      "reveal_mask_text|tiers_gauche",
+      "pulse_cta_soft|tiers_droit",
+      "countdown_tick|centre",
+      "compteur_countup|tiers_gauche",
+      "whatsapp_pulsant|centre_bas"
+    ],
+    "preset_etalonnage": "grade_restaurants_maquis_t3",
+    "structure_audio": "audio_structure_restaurants_maquis_t3"
+  },
+  "formulaire_ui": {
+    "titre": "Faire ma vidéo",
+    "message": "Suis les étapes. L’application prépare la vidéo pour vous.",
+    "nombre_sections_principales": 4,
+    "limite_sections_principales": 5,
+    "sections_principales": [
+      {
+        "id": "commerce_contact",
+        "titre": "votre commerce et votre WhatsApp",
+        "champs": [
+          "nom_commerce",
+          "whatsapp"
+        ],
+        "aide": "Écrivez le nom de votre commerce et le numéro où les clients peuvent vous écrire.",
+        "ordre": 1,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "offre",
+        "titre": "Ce que vous proposez",
+        "champs": [
+          "nom_offre"
+        ],
+        "aide": "Écrivez le nom du plat, du produit, du soin ou du travail.",
+        "ordre": 2,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "prix",
+        "titre": "Le prix",
+        "champs": [
+          "prix",
+          "devise"
+        ],
+        "aide": "Écrivez le vrai prix. FCFA est déjà choisi si vous ne changes rien.",
+        "ordre": 3,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "lieu",
+        "titre": "Où vous trouver",
+        "champs": [
+          "quartier_ville"
+        ],
+        "aide": "Écrivez le quartier et la ville.",
+        "ordre": 4,
+        "visible_par_defaut": true
+      }
+    ],
+    "options_facultatives_repliees": {
+      "id": "options_avancees",
+      "titre": "Autres options (facultatif)",
+      "champs": [
+        "badge_engagement_actif"
+      ],
+      "visible_par_defaut": false,
+      "aide": "Laissez vide si vous n’êtes pas sûr que le message est vrai."
+    },
+    "devise_defaut": "FCFA",
+    "devise_saisie_par_video": true,
+    "enregistrer_ou_pre_remplir_depuis_profil": false,
+    "note": "vos réponses servent pour cette vidéo seulement. Elles ne sont pas gardées dans un profil."
+  },
+  "guide_tournage": {
+    "message_principal": "Filmez les courtes vidéos demandées. L’application prépare la vidéo pour vous.",
+    "nombre_prises_a_filmer": 3,
+    "duree_brute_cible_par_prise_s": "8–20",
+    "etapes_capture": [
+      {
+        "etape": 1,
+        "prise_id": "prise_1",
+        "quoi_filmer": "Le plat de côté",
+        "consigne": "Commencez par montrer le plat de côté. Tenez votre téléphone debout et reste assez immobile. Filmez près d’une fenêtre. Montrez le plat et les gestes réels.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [
+          2
+        ],
+        "guide_parole_segments": [
+          {
+            "scene": 2,
+            "quoi_raconter": "Parlez de la portion ou d’un ingrédient.",
+            "quoi_montrer": "Montrez le plat de près.",
+            "exemple": "Voici le plat de près.",
+            "note_exemple": "Exemple pour comprendre, pas à répéter.",
+            "duree_conseillee_s": 2.0,
+            "segment_audio_id": "T3_scene_02_voix"
+          }
+        ],
+        "guide_parole_segmentage": "Dans la même prise, afficher les consignes l’une après l’autre. Le bouton Suivant marque la fin de chaque extrait de voix."
+      },
+      {
+        "etape": 2,
+        "prise_id": "prise_2",
+        "quoi_filmer": "Le plat vu du dessus",
+        "consigne": "Ensuite, montrez le plat vu du dessus. Tenez votre téléphone debout et reste assez immobile. Filmez près d’une fenêtre. Montrez le plat et les gestes réels.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [],
+        "guide_parole_segments": [],
+        "guide_parole_segmentage": "Aucune consigne de parole dans cette prise."
+      },
+      {
+        "etape": 3,
+        "prise_id": "prise_3",
+        "quoi_filmer": "La taille et les détails du plat",
+        "consigne": "Puis, montrez la taille et les détails du plat. Tenez votre téléphone debout et reste assez immobile. Filmez près d’une fenêtre. Montrez le plat et les gestes réels.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [],
+        "guide_parole_segments": [],
+        "guide_parole_segmentage": "Aucune consigne de parole dans cette prise."
+      }
+    ],
+    "pas_de_montage_manuel": true,
+    "le_moteur_reutilise_les_rushs": true,
+    "le_commercant_ne_filme_pas_une_scene_par_etape_montage": true,
+    "titre": "Ce que vous devez filmer",
+    "note": "Tenez votre téléphone debout. Filmez près d’une fenêtre ou dehors à l’ombre. Évitez d’avoir la lumière derrière le sujet.",
+    "guide_parole": {
+      "visible_avant_et_pendant_la_prise": true,
+      "consignes_regroupees_par_prise": true,
+      "segments_voix_marques_dans_la_prise": true,
+      "voix_separee_de_la_vitesse_image": true,
+      "titre": "De quoi parler ?",
+      "introduction": "Pour chaque scène parlée, vous voyez quoi montrer, quoi raconter avec vos mots, le temps conseillé et un exemple. L’exemple aide à comprendre; ne le répétez pas mot pour mot.",
+      "langue": "Parlez en français ou dans la langue que vous voulez, par exemple en fon, yoruba ou bariba.",
+      "temps": "Le temps conseillé vous aide à parler brièvement. Il ne coupe pas votre voix de force; vous pouvez continuer pendant l’image suivante.",
+      "pas_une_prise": "Filmez seulement les prises déjà demandées. Pas besoin de filmer une scène à part pour parler.",
+      "sans_voix": "Vous pouvez ne pas parler. Choisissez musique seule; la vidéo reste complète.",
+      "sous_titres": "Les mots à l’écran viennent des informations que vous avez données. Ils ne reprennent pas votre voix.",
+      "cles": {
+        "titre": "guide.commun.titre",
+        "introduction": "guide.commun.introduction",
+        "langue": "guide.commun.langue",
+        "temps": "guide.commun.temps",
+        "pas_une_prise": "guide.commun.pas_une_prise",
+        "sans_voix": "guide.commun.sans_voix",
+        "sous_titres": "guide.commun.sous_titres"
+      }
+    },
+    "sous_titres_voix": {
+      "sous_titres_automatiques": false,
+      "paroles_transcrites": false,
+      "texte_ecran_actuel": "Le nom, le prix, le lieu et les mots affichés viennent des informations saisies; ils ne reprennent pas votre voix.",
+      "voix_langue_locale": "Vous pouvez parler dans votre langue. Pour écrire vos paroles à l’écran, une personne qui connaît cette langue doit les écrire et les vérifier.",
+      "cles": {
+        "texte_ecran_actuel": "guide.commun.sous_titres",
+        "voix_langue_locale": "guide.commun.sous_titres_locale"
+      }
+    },
+    "parole_dans_prises_existantes": true,
+    "pas_une_prise_par_scene_finale": true,
+    "marqueurs_audio_sans_transcription": "Le bouton Suivant marque les extraits de voix; aucun mot n’est reconnu ou écrit automatiquement."
+  },
+  "nom_format_affiche": "Montrer un produit",
+  "interface_commercant": {
+    "visible": true,
+    "nom_format": "Montrer un produit",
+    "secteur": "Restaurants et maquis",
+    "phrase_courte": "On montre le plat de plusieurs côtés, sa taille et ses détails.",
+    "ne_pas_afficher_cles_internes": [
+      "id",
+      "secteur",
+      "format",
+      "signature_montage.id_unique"
+    ],
+    "ton": "français simple, phrases courtes, vouvoiement respectueux",
+    "promesse": "Vous filmez les vidéos demandées. L’application prépare la vidéo pour vous."
+  }
+}

@@ -1,0 +1,6 @@
+OK — 40 fichiers source conformes au manifest ; 30 gabarits / profils uniques ; 448 scènes.
+OK — 30 BPM/roles/drop source ; 280 SFX proposés, 9 catégories ; 168 absences ; 6 prix conditionnels.
+OK — 12 cartes parlées, 4 avant/après ; 30 copies identiques ; durées, zones et conditions contrôlées.
+OK — T5 bloqué pour arbitrage ; 7 points T4 signalés ; validateur historique intact.
+JSON Schema V2 + correspondance V1.3 en mémoire : OK (bibliothèque jsonschema)
+Rappel : cela ne prouve ni un rendu, ni une licence, ni une approbation artistique.

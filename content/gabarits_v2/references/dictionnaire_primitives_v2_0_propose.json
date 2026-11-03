@@ -1,0 +1,779 @@
+{
+  "schema": "dictionnaire_primitives_v2_0",
+  "statut": "PROPOSE_NON_APPROUVE",
+  "transition_durees_ms": {
+    "cut_sec": 0,
+    "cut_sur_action": 0,
+    "hard_cut_rythmique": 0,
+    "match_cut_mouvement": 0,
+    "raccord_forme": 0,
+    "fondu_enchaine": 300,
+    "fondu_croise_temps": 300,
+    "fondu_noir": 300,
+    "panoramique_raccord": 220,
+    "raccord_panorama": 220,
+    "slide_doux": 240,
+    "slide_specifications": 240,
+    "split_screen_glissant": 300,
+    "swipe_gauche": 220,
+    "whip_pan": 180,
+    "whip_pan_directionnel": 180,
+    "wipe_lateral_produit": 240,
+    "wipe_rideau_vertical": 240,
+    "zoom_snap": 180,
+    "zoom_through": 240,
+    "flash_blanc": 120,
+    "flash_chaleur": 120
+  },
+  "transitions": {
+    "cut_sec": {
+      "duree_ms": 0,
+      "type": "COUPE",
+      "repli": "AUCUN"
+    },
+    "cut_sur_action": {
+      "duree_ms": 0,
+      "type": "COUPE_ACTION",
+      "repli": "REPERES_REELS_OU_REPLI"
+    },
+    "hard_cut_rythmique": {
+      "duree_ms": 0,
+      "type": "COUPE_RYTHMIQUE",
+      "repli": "ACCENT_REEL_OU_REPLI"
+    },
+    "match_cut_mouvement": {
+      "duree_ms": 0,
+      "type": "COUPE_RACCORD",
+      "repli": "REPERES_REELS_OU_REPLI"
+    },
+    "raccord_forme": {
+      "duree_ms": 0,
+      "type": "COUPE_FORME",
+      "repli": "REPERES_REELS_OU_REPLI"
+    },
+    "fondu_enchaine": {
+      "duree_ms": 300,
+      "type": "FONDU_AB_LINEAIRE",
+      "repli": "FONDU_COULEUR_OU_COUPE"
+    },
+    "fondu_croise_temps": {
+      "duree_ms": 300,
+      "type": "FONDU_AB_LINEAIRE",
+      "repli": "FONDU_COULEUR_OU_COUPE"
+    },
+    "fondu_noir": {
+      "duree_ms": 300,
+      "type": "FONDU_NOIR",
+      "repli": "COUPE"
+    },
+    "panoramique_raccord": {
+      "duree_ms": 220,
+      "type": "PANORAMIQUE",
+      "repli": "COUPE"
+    },
+    "raccord_panorama": {
+      "duree_ms": 220,
+      "type": "PANORAMIQUE",
+      "repli": "COUPE"
+    },
+    "slide_doux": {
+      "duree_ms": 240,
+      "type": "GLISSEMENT",
+      "repli": "FONDU_COULEUR_OU_COUPE"
+    },
+    "slide_specifications": {
+      "duree_ms": 240,
+      "type": "GLISSEMENT",
+      "repli": "COUPE"
+    },
+    "split_screen_glissant": {
+      "duree_ms": 300,
+      "type": "SPLIT_ANIME",
+      "repli": "GLISSEMENT_OU_COUPE"
+    },
+    "swipe_gauche": {
+      "duree_ms": 220,
+      "type": "BALAYAGE_GAUCHE",
+      "repli": "COUPE"
+    },
+    "whip_pan": {
+      "duree_ms": 180,
+      "type": "WHIP",
+      "repli": "COUPE"
+    },
+    "whip_pan_directionnel": {
+      "duree_ms": 180,
+      "type": "WHIP",
+      "repli": "COUPE"
+    },
+    "wipe_lateral_produit": {
+      "duree_ms": 240,
+      "type": "MASQUE_LATERAL",
+      "repli": "COUPE"
+    },
+    "wipe_rideau_vertical": {
+      "duree_ms": 240,
+      "type": "MASQUE_VERTICAL",
+      "repli": "COUPE"
+    },
+    "zoom_snap": {
+      "duree_ms": 180,
+      "type": "ZOOM_SNAP",
+      "repli": "COUPE"
+    },
+    "zoom_through": {
+      "duree_ms": 240,
+      "type": "ZOOM_THROUGH",
+      "repli": "COUPE"
+    },
+    "flash_blanc": {
+      "duree_ms": 120,
+      "type": "FLASH_BLANC",
+      "repli": "COUPE_OU_FONDU_DOUX"
+    },
+    "flash_chaleur": {
+      "duree_ms": 120,
+      "type": "FLASH_CHAUD",
+      "repli": "COUPE_OU_FONDU_DOUX"
+    }
+  },
+  "animations": {
+    "lower_third_glide": {
+      "primitive": "BANDEAU",
+      "frames": [
+        {
+          "t": 0,
+          "dx": -0.12,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 0,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ]
+    },
+    "badge_slide_snap": {
+      "primitive": "BADGE",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0.12,
+          "dy": 0,
+          "scale": 0.96,
+          "opacite": 0,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 0.8,
+          "dx": -0.006,
+          "dy": 0,
+          "scale": 1.03,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ]
+    },
+    "side_tag_animate": {
+      "primitive": "ETIQUETTE",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0.1,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 0,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ]
+    },
+    "split_label_track": {
+      "primitive": "ETIQUETTE_SPLIT",
+      "frames": [
+        {
+          "t": 0,
+          "dx": -0.08,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 0,
+          "masque": 0,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ]
+    },
+    "price_shake_impact": {
+      "primitive": "IMPACT",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0,
+          "dy": 0,
+          "scale": 0.92,
+          "opacite": 0,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 0.6,
+          "dx": 0.008,
+          "dy": 0,
+          "scale": 1.04,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 0.8,
+          "dx": -0.005,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ]
+    },
+    "pulse_cta_soft": {
+      "primitive": "PULSATION",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0,
+          "dy": 0,
+          "scale": 0.96,
+          "opacite": 0,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ],
+      "pulse_amplitude": 0.035,
+      "pulse_period_frames": 45
+    },
+    "whatsapp_pulsant": {
+      "primitive": "PULSATION_CONTACT",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0,
+          "dy": 0,
+          "scale": 0.96,
+          "opacite": 0,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ],
+      "pulse_amplitude": 0.035,
+      "pulse_period_frames": 45
+    },
+    "line_draw_spec": {
+      "primitive": "REVELATION_TRAIT",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 0,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ]
+    },
+    "reveal_mask_text": {
+      "primitive": "MASQUE_TEXTE",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 0,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ]
+    },
+    "wipe_label": {
+      "primitive": "BALAYAGE_ETIQUETTE",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 0,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ]
+    },
+    "rayure_animee": {
+      "primitive": "TRAIT_PRIX_BARRE",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 0,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ],
+      "epaisseur_px_720": 4
+    },
+    "caption_breath_fade": {
+      "primitive": "FONDU_TEXTE",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 0,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ],
+      "pulse_amplitude": 0.015,
+      "pulse_period_frames": 60
+    },
+    "countdown_tick": {
+      "primitive": "BATTEMENT_DATE_REELLE",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0,
+          "dy": 0,
+          "scale": 0.95,
+          "opacite": 0,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ],
+      "pulse_amplitude": 0.025,
+      "pulse_period_frames": 30
+    },
+    "kinetic_number": {
+      "primitive": "CHIFFRE_COMPLET",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0,
+          "dy": 0.02,
+          "scale": 0.9,
+          "opacite": 0,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 0.8,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1.03,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ]
+    },
+    "typing_price_roll": {
+      "primitive": "REVELATION_VALEUR",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 0,
+          "masque": 0,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ]
+    },
+    "compteur_countup": {
+      "primitive": "REVELATION_VALEUR",
+      "frames": [
+        {
+          "t": 0,
+          "dx": 0,
+          "dy": 0,
+          "scale": 0.9,
+          "opacite": 0,
+          "masque": 0,
+          "rotation_deg": 0
+        },
+        {
+          "t": 0.75,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1.04,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        },
+        {
+          "t": 1,
+          "dx": 0,
+          "dy": 0,
+          "scale": 1,
+          "opacite": 1,
+          "masque": 1,
+          "rotation_deg": 0
+        }
+      ]
+    }
+  },
+  "effets": {
+    "freeze_0.3s": {
+      "type": "GEL",
+      "duree_ms": 300,
+      "position": "DEBUT_DU_PLAN",
+      "visage_parlant": "NE_PAS_GELER"
+    },
+    "freeze_0.5s": {
+      "type": "GEL",
+      "duree_ms": 500,
+      "position": "DEBUT_DU_PLAN",
+      "visage_parlant": "NE_PAS_GELER"
+    },
+    "freeze_1s": {
+      "type": "GEL",
+      "duree_ms": 1000,
+      "position": "DEBUT_DU_PLAN",
+      "visage_parlant": "NE_PAS_GELER"
+    },
+    "recadrage_plan_100": {
+      "type": "RECADRAGE",
+      "zoom_indicatif_nom": 1.0,
+      "priorite": "RECADRAGE_SOURCE_SANS_DOUBLE_MULTIPLICATION"
+    },
+    "recadrage_macro_160": {
+      "type": "RECADRAGE",
+      "zoom_indicatif_nom": 1.6,
+      "priorite": "RECADRAGE_SOURCE_SANS_DOUBLE_MULTIPLICATION"
+    },
+    "accelere_x2": {
+      "type": "VITESSE",
+      "coefficient_nom": 2.0,
+      "priorite_video": "SOURCE_VITESSE",
+      "application_carte": "ANIMATION_SEULE"
+    },
+    "accelere_x3": {
+      "type": "VITESSE",
+      "coefficient_nom": 3.0,
+      "priorite_video": "SOURCE_VITESSE",
+      "application_carte": "ANIMATION_SEULE"
+    },
+    "accelere_x4": {
+      "type": "VITESSE",
+      "coefficient_nom": 4.0,
+      "priorite_video": "SOURCE_VITESSE",
+      "application_carte": "ANIMATION_SEULE"
+    },
+    "ralenti_0.4x": {
+      "type": "VITESSE",
+      "coefficient_nom": 0.4,
+      "priorite_video": "SOURCE_VITESSE",
+      "application_carte": "ANIMATION_SEULE"
+    },
+    "ralenti_0.5x": {
+      "type": "VITESSE",
+      "coefficient_nom": 0.5,
+      "priorite_video": "SOURCE_VITESSE",
+      "application_carte": "ANIMATION_SEULE"
+    },
+    "ralenti_0.7x": {
+      "type": "VITESSE",
+      "coefficient_nom": 0.7,
+      "priorite_video": "SOURCE_VITESSE",
+      "application_carte": "ANIMATION_SEULE"
+    },
+    "ralenti_reveal_0.6x": {
+      "type": "VITESSE",
+      "coefficient_nom": 0.6,
+      "priorite_video": "SOURCE_VITESSE",
+      "application_carte": "ANIMATION_SEULE"
+    },
+    "speed_ramp_x5": {
+      "type": "RAMPE_PROPOSEE",
+      "coefficient_nom": 5.0,
+      "courbe": {
+        "temps_normalise": [
+          0.0,
+          0.2,
+          0.8,
+          1.0
+        ],
+        "vitesse_relative": [
+          1.0,
+          5.0,
+          5.0,
+          1.0
+        ],
+        "interpolation_segments": "SMOOTHSTEP_3",
+        "plancher": 1.0,
+        "pic": 5.0,
+        "integration_sur_sortie": "u=(t-t_debut)/duree; f=1+4*smoothstep(u/.2) pour u<.2; f=5 pour .2<=u<=.8; f=1+4*smoothstep((1-u)/.2) pour u>.8",
+        "integrale_normalisee": 4.2,
+        "application_video": "NON_AUTORISEE_SANS_ARBITRAGE_SOURCE_VITESSE",
+        "application_carte": "COURBE_CANDIDATE_POUR_ANIMATION_GRAPHIQUE_SEULE",
+        "composition": "NE_PAS_CUMULER_RAMPE_ET_AUTRE_RETIMING_SANS_APPROBATION"
+      },
+      "priorite_video": "SOURCE_VITESSE_CONSTANTE",
+      "repli_video": "RAMPE_NON_DEFINIE"
+    },
+    "punch_in_progressif": {
+      "type": "ZOOM_PROGRESSIF",
+      "debut": 1.0,
+      "fin": 1.06,
+      "centre_x": 0.5,
+      "centre_y": 0.5,
+      "courbe": "SMOOTHSTEP_3"
+    },
+    "zoom_push_1.25x": {
+      "type": "ZOOM_PROGRESSIF",
+      "debut": 1.0,
+      "fin": 1.25,
+      "centre_x": 0.5,
+      "centre_y": 0.5,
+      "courbe": "SMOOTHSTEP_3"
+    },
+    "ken_burns_lent": {
+      "type": "KEN_BURNS",
+      "debut": 1.0,
+      "fin": 1.04,
+      "dx": 0.01,
+      "dy": 0.0,
+      "courbe": "SMOOTHSTEP_3"
+    },
+    "ken_burns_detail": {
+      "type": "KEN_BURNS",
+      "debut": 1.0,
+      "fin": 1.06,
+      "dx": 0.0,
+      "dy": -0.01,
+      "courbe": "SMOOTHSTEP_3"
+    },
+    "ken_burns_rapide": {
+      "type": "KEN_BURNS",
+      "debut": 1.0,
+      "fin": 1.08,
+      "dx": 0.015,
+      "dy": 0.0,
+      "courbe": "SMOOTHSTEP_3"
+    },
+    "pan_scan_spec": {
+      "type": "PAN_SCAN",
+      "dx_debut": -0.02,
+      "dx_fin": 0.02,
+      "dy": 0.0,
+      "courbe": "SMOOTHSTEP_3",
+      "si_hors_image": "REPLI_SANS_DEPLACEMENT"
+    },
+    "stabilisation_auto": {
+      "type": "STABILISATION_CONDITIONNELLE",
+      "translation_max_fraction": 0.02,
+      "fenetre_images": 5,
+      "si_algorithme_absent": "IMAGE_NON_STABILISEE_REPLI_DECLARE"
+    },
+    "stabilisation_hero": {
+      "type": "STABILISATION_CONDITIONNELLE",
+      "translation_max_fraction": 0.03,
+      "fenetre_images": 7,
+      "si_algorithme_absent": "IMAGE_NON_STABILISEE_REPLI_DECLARE"
+    },
+    "boucle_2x": {
+      "type": "BOUCLE",
+      "repetitions": 2,
+      "longueur_portion_fraction_scene": 0.5,
+      "interdire_si_visage_parlant": true
+    },
+    "aucun_effet": {
+      "type": "AUCUN",
+      "regle": "AUCUNE_TRANSFORMATION_SUPPLEMENTAIRE"
+    }
+  },
+  "zones_texte_norm": {
+    "centre_haut": {
+      "x0": 0.08,
+      "y0": 0.09,
+      "x1": 0.92,
+      "y1": 0.27
+    },
+    "centre": {
+      "x0": 0.12,
+      "y0": 0.36,
+      "x1": 0.88,
+      "y1": 0.64
+    },
+    "tiers_gauche": {
+      "x0": 0.08,
+      "y0": 0.3,
+      "x1": 0.48,
+      "y1": 0.69
+    },
+    "tiers_droit": {
+      "x0": 0.52,
+      "y0": 0.3,
+      "x1": 0.92,
+      "y1": 0.69
+    },
+    "centre_bas": {
+      "x0": 0.08,
+      "y0": 0.66,
+      "x1": 0.92,
+      "y1": 0.84
+    }
+  },
+  "zone_sure_norm": {
+    "x0": 0.06,
+    "y0": 0.07,
+    "x1": 0.94,
+    "y1": 0.85
+  },
+  "easing_smoothstep3": "E(u)=3*u*u-2*u*u*u pour u dans [0,1]",
+  "regle_interpolation": "normaliser chaque segment entre ses deux keyframes, puis appliquer E",
+  "regle_pulsation": "scale = 1 + amplitude * sin(pi * (frame_modulo_periode/periode))^2",
+  "regle_masque": "dans la boite locale, x<=progression pour balayage horizontal, y<=progression pour vertical ; adoucir sur 2px a 720p",
+  "regle_fondu": "pour N>1, alpha_B=k/(N-1), alpha_A=1-alpha_B ; N<2 donne coupe",
+  "retiming": "la vitesse source reste autoritaire ; ne pas multiplier par l effet de meme nom",
+  "valeur_prix": "valeur finale vraie seulement, aucune valeur intermediaire pouvant tromper"
+}

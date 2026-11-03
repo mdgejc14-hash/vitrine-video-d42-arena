@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fichier pack.json interne – V1.3",
+  "description": "Le hash ZIP est dans le manifeste externe pour éviter une dépendance circulaire ; contrôler aussi les noms, tailles, doublons, licences et hashes.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "pack_id",
+    "sequence_release",
+    "secteur_id",
+    "pistes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.3"
+    },
+    "pack_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "sequence_release": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "secteur_id": {
+      "enum": [
+        "vetements_mode",
+        "restaurants_maquis",
+        "immo_auto",
+        "coiffure_beaute",
+        "shops_small_business",
+        "batiment_travaux"
+      ]
+    },
+    "pistes": {
+      "type": "array",
+      "minItems": 30,
+      "maxItems": 30,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": [
+          "piste_id",
+          "chemin",
+          "sha256",
+          "taille_octets"
+        ],
+        "properties": {
+          "piste_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "chemin": {
+            "type": "string",
+            "pattern": "^tracks/[A-Za-z0-9_-]+\\.m4a$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "taille_octets": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

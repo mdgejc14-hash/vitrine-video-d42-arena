@@ -1,0 +1,344 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Reçu local signé distinct de la licence serveur – V2.0",
+  "description": "Reçu local ECDSA P-256 DER sur JSON RFC 8785 sans signature. Ne démontre pas le paiement, les droits ni un temps certain.",
+  "type": "object",
+  "required": [
+    "statut",
+    "schema_version",
+    "hash_mp4_sha256",
+    "manifest_version",
+    "manifest_sha256",
+    "manifest_signature_verified",
+    "registry_sha256",
+    "preuve_complete_disponible_hors_ligne",
+    "track_id",
+    "source_sha256",
+    "track_sha256",
+    "musique_absente",
+    "raison_musique_absente",
+    "licence",
+    "preuve_id",
+    "preuve_sha256",
+    "sfx",
+    "empreinte_gabarit_sha256",
+    "application_version",
+    "created_at_device",
+    "device_clock_verified",
+    "canonicalisation",
+    "signature_alg",
+    "signature_format",
+    "signing_public_key_spki_b64url",
+    "signing_public_key_id_sha256",
+    "signature",
+    "grant_id",
+    "installation_id",
+    "permit_serial",
+    "licence_sha256",
+    "time_anchor_sha256",
+    "plan_sha256",
+    "server_time_upper_ms",
+    "export_mode"
+  ],
+  "properties": {
+    "statut": {
+      "const": "SIGNE"
+    },
+    "schema_version": {
+      "const": "2.0"
+    },
+    "hash_mp4_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "manifest_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "manifest_signature_verified": {
+      "const": true
+    },
+    "registry_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "preuve_complete_disponible_hors_ligne": {
+      "type": "boolean"
+    },
+    "track_id": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        }
+      ]
+    },
+    "source_sha256": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    },
+    "track_sha256": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    },
+    "musique_absente": {
+      "type": "boolean"
+    },
+    "raison_musique_absente": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "licence": {
+      "enum": [
+        "CC0-1.0",
+        "DOMAINE_PUBLIC_VERIFIE",
+        null
+      ]
+    },
+    "preuve_id": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        }
+      ]
+    },
+    "preuve_sha256": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    },
+    "sfx": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "categorie_json",
+          "asset_sha256",
+          "preuve_id",
+          "preuve_sha256"
+        ],
+        "properties": {
+          "categorie_json": {
+            "enum": [
+              "whoosh_soft",
+              "whoosh_fast",
+              "caisse_enregistreuse",
+              "clic_appareil",
+              "impact_drop",
+              "pop_badge",
+              "amb_chantier",
+              "sizzle_grill",
+              "vapeur_plat"
+            ]
+          },
+          "asset_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "preuve_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "preuve_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "empreinte_gabarit_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "application_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "created_at_device": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "device_clock_verified": {
+      "const": true,
+      "description": "Ancre et bornes acceptées par l’application ; ce booléen ne prouve pas une horloge inviolable."
+    },
+    "canonicalisation": {
+      "const": "RFC8785"
+    },
+    "signature_alg": {
+      "const": "ECDSA-P256-SHA256"
+    },
+    "signature_format": {
+      "const": "base64url-der"
+    },
+    "signing_public_key_spki_b64url": {
+      "type": "string",
+      "minLength": 40,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "signing_public_key_id_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 40,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "grant_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "installation_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "permit_serial": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "licence_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "time_anchor_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "plan_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "server_time_upper_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "export_mode": {
+      "const": "SANS_FILIGRANE"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "musique_absente": {
+            "const": true
+          }
+        },
+        "required": [
+          "musique_absente"
+        ]
+      },
+      "then": {
+        "properties": {
+          "track_id": {
+            "type": "null"
+          },
+          "source_sha256": {
+            "type": "null"
+          },
+          "track_sha256": {
+            "type": "null"
+          },
+          "licence": {
+            "type": "null"
+          },
+          "preuve_id": {
+            "type": "null"
+          },
+          "preuve_sha256": {
+            "type": "null"
+          },
+          "raison_musique_absente": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "track_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "source_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "track_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "licence": {
+            "enum": [
+              "CC0-1.0",
+              "DOMAINE_PUBLIC_VERIFIE"
+            ]
+          },
+          "preuve_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "preuve_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "raison_musique_absente": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

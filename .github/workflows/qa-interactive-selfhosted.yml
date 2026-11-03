@@ -1,0 +1,138 @@
+# VV Remote QA (s4/s5) : banc INTERACTIF sur runner self-hosted (machine operateur).
+# Couteau 0 FCFA : aucun service payant. Ne tourne QUE sur demande (workflow_dispatch).
+# Si aucun runner self-hosted enregistre, le job reste en file d'attente : c'est le
+# comportement honnete attendu (jamais de faux PASS sur runner GitHub mutualise).
+name: QA interactive (self-hosted)
+on:
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: "Portee des tests instruments"
+        type: choice
+        default: all
+        options: [all, authority, pricing, smoke, inventory, camera]
+      device_type:
+        description: "Cible : emulateur headless ou appareil physique (adb WiFi)"
+        type: choice
+        default: emulator
+        options: [emulator, physical]
+      device_ip:
+        description: "IP LAN de l'appareil physique (adb tcpip 5555 deja active)"
+        type: string
+        default: ""
+      host_lan_ip:
+        description: "IP LAN de la machine hote (mock) pour appareil physique"
+        type: string
+        default: ""
+concurrency:
+  group: qa-interactive
+  cancel-in-progress: false
+jobs:
+  instrumented-qa:
+    runs-on: [self-hosted, linux, android-qa]
+    timeout-minutes: 90
+    env:
+      ANDROID_HOME: ${{ github.workspace }}/../android-sdk
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Choix de la base mock (emulateur = 10.0.2.2, physique = IP LAN hote)
+        id: mock
+        run: |
+          if [ "${{ inputs.device_type }}" = "physical" ]; then
+            if [ -z "${{ inputs.host_lan_ip }}" ]; then
+              echo "::error::device_type=physical exige host_lan_ip (IP LAN de la machine hote)"; exit 1
+            fi
+            echo "base=http://${{ inputs.host_lan_ip }}:3200" >> "$GITHUB_OUTPUT"
+          else
+            echo "base=http://10.0.2.2:3200" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Demarrage du mock staging local (Node pur, port 3200)
+        run: |
+          node mock-server/server.js > /tmp/vv-mock.log 2>&1 &
+          for i in $(seq 1 20); do
+            curl -sf http://localhost:3200/health && break
+            sleep 1
+          done
+          curl -sf http://localhost:3200/health || { cat /tmp/vv-mock.log; exit 1; }
+
+      - name: KVM requis (emulateur) — verite materielle, jamais masquee
+        if: inputs.device_type == 'emulator'
+        run: |
+          if [ ! -e /dev/kvm ]; then
+            echo "::error::/dev/kvm absent : l'emulateur x86_64 ne peut pas tourner sur cette machine."
+            echo "Verifiez la virtualisation BIOS (VT-x/AMD-V) ou passez device_type=physical."
+            exit 1
+          fi
+
+      - name: Boot emulateur headless (swiftshader, sans GPU hote)
+        if: inputs.device_type == 'emulator'
+        run: |
+          "$ANDROID_HOME/emulator/emulator" -avd VitrineVideo_AVD \
+            -no-window -no-audio -no-snapshot -no-boot-anim \
+            -gpu swiftshader_indirect -memory 4096 > /tmp/vv-emulator.log 2>&1 &
+          adb wait-for-device
+          timeout 600 adb shell 'while [ "$(getprop sys.boot_completed)" != "1" ]; do sleep 3; done'
+
+      - name: Connexion appareil physique (adb WiFi)
+        if: inputs.device_type == 'physical'
+        run: |
+          adb connect "${{ inputs.device_ip }}:5555"
+          adb wait-for-device
+          adb devices | grep -q "${{ inputs.device_ip }}" || { echo "::error::appareil physique introuvable"; exit 1; }
+
+      - name: Permissions runtime accordees (variante qa)
+        run: |
+          for pkg in video.vitrine.app.qa video.vitrine.app.qacam; do
+            for perm in android.permission.CAMERA android.permission.RECORD_AUDIO; do
+              adb shell pm grant "$pkg" "$perm" 2>/dev/null || true
+            done
+          done
+
+      - name: Filtre de tests selon test_type
+        id: filter
+        run: |
+          case "${{ inputs.test_type }}" in
+            authority) echo "arg=-Pandroid.testInstrumentationRunnerArguments.class=video.vitrine.app.qa.AuthorityC10Test,video.vitrine.app.qa.WelcomeGrantTest" >> "$GITHUB_OUTPUT" ;;
+            pricing)   echo "arg=-Pandroid.testInstrumentationRunnerArguments.class=video.vitrine.app.qa.PricingMirrorTest" >> "$GITHUB_OUTPUT" ;;
+            smoke)     echo "arg=-Pandroid.testInstrumentationRunnerArguments.class=video.vitrine.app.qa.AppLaunchSmokeTest" >> "$GITHUB_OUTPUT" ;;
+            inventory) echo "arg=-Pandroid.testInstrumentationRunnerArguments.class=video.vitrine.app.qa.DeviceInventoryTest" >> "$GITHUB_OUTPUT" ;;
+            camera)    echo "arg=-Pandroid.testInstrumentationRunnerArguments.class=video.vitrine.app.qa.DeviceInventoryTest" >> "$GITHUB_OUTPUT" ;;
+            *)         echo "arg=" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Tests instruments — flavor selon test_type (camera = qaRealCamera, sinon qaDeterministic)
+        run: |
+          chmod +x gradlew
+          if [ "${{ inputs.test_type }}" = "camera" ]; then
+            TASK=":app:connectedQaRealCameraDebugAndroidTest"
+          else
+            TASK=":app:connectedQaDeterministicDebugAndroidTest"
+          fi
+          ./gradlew "$TASK" \
+            -PvvApiBaseUrl="${{ steps.mock.outputs.base }}" \
+            -Pandroid.testInstrumentationRunnerArguments.mockBaseUrl="${{ steps.mock.outputs.base }}" \
+            ${{ steps.filter.outputs.arg }} \
+            --no-daemon --stacktrace
+
+      - name: Capture d'ecran finale (preuve visuelle)
+        if: always()
+        run: adb exec-out screencap -p > /tmp/vv-qa-screen.png || true
+
+      - name: Artifacts (rapports XML + capture + logs mock)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-interactive-${{ inputs.test_type }}-${{ inputs.device_type }}
+          path: |
+            app/build/outputs/androidTest-results/
+            /tmp/vv-qa-screen.png
+            /tmp/vv-mock.log
+          if-no-files-found: warn
+
+      - name: Nettoyage (emulateur + mock)
+        if: always()
+        run: |
+          adb emu kill 2>/dev/null || true
+          pkill -f "mock-server/server.js" || true

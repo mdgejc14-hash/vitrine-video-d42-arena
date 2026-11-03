@@ -1,0 +1,31 @@
+﻿gabarit;secteur;format;genre_source;bpm_min_source;bpm_max_source;style_propose_a_ecouter;energie_proposee;riser_role_source;riser_scene;riser_frame_debut;riser_frame_fin_exclusive;riser_frame_cible_candidate;drop_scene_source;drop_frame_debut;drop_frame_fin_exclusive;drop_frame_cible_candidate;etat_piste;pistes_reelles_validees
+batiment_travaux_T1;batiment_travaux;T1;afro-house percussif instrumental;100;112;Afro-house percussive stable;3–4;plan_large_site;3;160;242;160;4;242;319;242;A_ACQUERIR_ET_ECOUTER;0
+batiment_travaux_T2;batiment_travaux;T2;afrobeats chantier instrumental;94;108;Afrobeats chantier instrumental;2→4;plan_large_livraison_stabilise;11;657;698;667;11;657;698;687;A_ACQUERIR_ET_ECOUTER;0
+batiment_travaux_T3;batiment_travaux;T3;percussions afro industrielles;88;104;Percussions afro industrielles mesurées;3;etape_1_preparation;3;196;248;196;4;248;348;248;A_ACQUERIR_ET_ECOUTER;0
+batiment_travaux_T4;batiment_travaux;T4;highlife énergique instrumental;110;126;Highlife énergique instrumental;4;carte_prix_devis;3;100;160;100;4;160;237;160;A_ACQUERIR_ET_ECOUTER;0
+batiment_travaux_T5;batiment_travaux;T5;afro-soul confiance instrumental;76;94;Afro-soul de confiance;1–2;identite_client_quartier;3;251;327;251;4;327;448;327;A_ACQUERIR_ET_ECOUTER;0
+coiffure_beaute_T1;coiffure_beaute;T1;afro-R&B doux instrumental;101;113;Afro-R&B doux instrumental;2–3;reveal_resultat_cheveux;8;483;527;494;8;483;527;516;A_ACQUERIR_ET_ECOUTER;0
+coiffure_beaute_T2;coiffure_beaute;T2;afrobeats lumineux instrumental;95;109;Afrobeats lumineux sans voix;2→3;reveal_face_apres;7;377;445;394;7;377;445;428;A_ACQUERIR_ET_ECOUTER;0
+coiffure_beaute_T3;coiffure_beaute;T3;afro-house minimal instrumental;89;105;Afro-house minimale;2–3;carte_entretien_apres_soin;12;856;955;880;12;856;955;930;A_ACQUERIR_ET_ECOUTER;0
+coiffure_beaute_T4;coiffure_beaute;T4;highlife doux instrumental;111;127;Highlife doux à tempo vivant;3;carte_ancien_tarif;3;128;194;128;4;194;256;194;A_ACQUERIR_ET_ECOUTER;0
+coiffure_beaute_T5;coiffure_beaute;T5;percussions afro feutrées;77;95;Percussions afro feutrées;1–2;cutaway_avant_apres_reel;4;337;494;376;4;337;494;454;A_ACQUERIR_ET_ECOUTER;0
+immo_auto_T1;immo_auto;T1;afro-house premium instrumental;101;113;Afro-house sobre et premium;2–3;panorama_exterieur;3;133;192;133;4;192;254;192;A_ACQUERIR_ET_ECOUTER;0
+immo_auto_T2;immo_auto;T2;afrobeats sobre instrumental;95;109;Afrobeats sobre instrumental;2→3;reveal_interieur_propre;7;337;396;351;7;337;396;381;A_ACQUERIR_ET_ECOUTER;0
+immo_auto_T3;immo_auto;T3;amapiano instrumental;89;105;Amapiano instrumental épuré;2–3;badge_specification_1;3;176;272;176;4;272;364;272;A_ACQUERIR_ET_ECOUTER;0
+immo_auto_T4;immo_auto;T4;highlife calme instrumental;111;127;Highlife calme à pulsation claire;3;panorama_rapide_hero;2;66;116;78;2;66;116;103;A_ACQUERIR_ET_ECOUTER;0
+immo_auto_T5;immo_auto;T5;afro-soul confiance instrumental;77;95;Afro-soul de confiance;1–2;identite_client_localite;3;237;307;237;4;307;449;307;A_ACQUERIR_ET_ECOUTER;0
+restaurants_maquis_T1;restaurants_maquis;T1;afrobeats percussif instrumental;102;114;Afrobeats chaud et percussif;3–4;dressage_mains;7;384;450;384;8;450;518;450;A_ACQUERIR_ET_ECOUTER;0
+restaurants_maquis_T2;restaurants_maquis;T2;highlife chaleureux instrumental;96;110;Highlife chaleureux instrumental;2→4;dressage_ordre_reel;8;422;510;422;10;566;608;566;A_ACQUERIR_ET_ECOUTER;0
+restaurants_maquis_T3;restaurants_maquis;T3;coupé-décalé instrumental;90;106;Coupé-décalé instrumental mesuré;3;vapeur_plat_hero;8;603;660;617;8;603;660;645;A_ACQUERIR_ET_ECOUTER;0
+restaurants_maquis_T4;restaurants_maquis;T4;afro-house cuisine groove;112;128;Afro-house cuisine festive;4;portion_hero;9;436;476;446;9;436;476;466;A_ACQUERIR_ET_ECOUTER;0
+restaurants_maquis_T5;restaurants_maquis;T5;afro-soul maquis instrumental;78;96;Afro-soul chaleureuse de maquis;1–2;identite_client_maquis;3;161;243;161;4;243;332;243;A_ACQUERIR_ET_ECOUTER;0
+shops_small_business_T1;shops_small_business;T1;afrobeats commercial instrumental;102;114;Afrobeats commercial instrumental;3–4;produit_hero_face;4;194;283;216;4;194;283;260;A_ACQUERIR_ET_ECOUTER;0
+shops_small_business_T2;shops_small_business;T2;coupé-décalé instrumental;96;110;Coupé-décalé instrumental souple;2→4;reveal_composition_finale;7;390;487;414;7;390;487;462;A_ACQUERIR_ET_ECOUTER;0
+shops_small_business_T3;shops_small_business;T3;amapiano groove instrumental;90;106;Amapiano groove léger;2–3;indicateur_angle_un;3;175;247;175;4;247;325;247;A_ACQUERIR_ET_ECOUTER;0
+shops_small_business_T4;shops_small_business;T4;highlife léger instrumental;112;128;Highlife léger et rythmé;3–4;carte_ancien_prix;3;106;147;106;4;147;190;147;A_ACQUERIR_ET_ECOUTER;0
+shops_small_business_T5;shops_small_business;T5;afro-house dynamique instrumental;78;96;Afro-house dynamique et aérée;3–4;identite_client_shop;3;239;369;239;4;369;509;369;A_ACQUERIR_ET_ECOUTER;0
+vetements_mode_T1;vetements_mode;T1;afrobeats élégant instrumental;100;112;Afrobeats élégant, léger rebond amapiano;3–4;portant_entree_large;3;118;164;118;4;164;213;164;A_ACQUERIR_ET_ECOUTER;0
+vetements_mode_T2;vetements_mode;T2;afro-house runway instrumental;94;108;Afro-house runway instrumentale;2→4;revele_silhouette_apres;7;457;530;475;7;457;530;511;A_ACQUERIR_ET_ECOUTER;0
+vetements_mode_T3;vetements_mode;T3;highlife moderne instrumental;88;104;Highlife moderne minimal;2–3;indicateur_angle_un;3;159;263;159;4;263;378;263;A_ACQUERIR_ET_ECOUTER;0
+vetements_mode_T4;vetements_mode;T4;afro-soul doux instrumental;110;126;Afro-soul doux à pulsation vive;2–3;look_hero_flash;2;66;137;83;2;66;137;119;A_ACQUERIR_ET_ECOUTER;0
+vetements_mode_T5;vetements_mode;T5;amapiano léger instrumental;76;94;Amapiano léger et feutré;1–2;reaction_apres_essayage;12;1199;1350;1236;12;1199;1350;1312;A_ACQUERIR_ET_ECOUTER;0

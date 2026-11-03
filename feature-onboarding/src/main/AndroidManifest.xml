@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- Audit D41 (F63, P1 securite) : exported="false" — avant, N'IMPORTE
+             QUELLE app pouvait lancer AuthActivity via startActivityForResult et
+             RECEVOIR le jeton Firebase du compte en result (vol de session).
+             Le deep-link de parrainage /r/CODE est route par MainActivity
+             (seule activite exportee, launcher), qui transmet le code en extra. -->
+        <activity
+            android:name=".auth.AuthActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LanguageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OnboardingActivity"
+            android:exported="false" />
+    </application>
+</manifest>

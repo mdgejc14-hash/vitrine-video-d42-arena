@@ -1,0 +1,1603 @@
+{
+  "id": "shops_small_business_T1",
+  "secteur": "shops_small_business",
+  "secteur_libelle": "Shops & Small Business",
+  "format": "T1_nouvel_arrivage",
+  "version": "2.0_theorique",
+  "duree_totale_secondes": 35,
+  "nombre_scenes": 15,
+  "ratio": "9:16",
+  "notes_adaptation": "On ouvre le colis ou on montre le rayon, puis le produit et ses détails. On ne montre que ce qui est vraiment vendu avec le produit.",
+  "champs_saisie": [
+    {
+      "id": "nom_commerce",
+      "label": "Nom de votre commerce",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Chez Awa",
+      "source": "saisie_video",
+      "scenes": [
+        15
+      ],
+      "groupe_ui": "commerce_contact",
+      "aide_simple": "Écrivez le nom que les clients doivent voir."
+    },
+    {
+      "id": "nom_offre",
+      "label": "Nom du produit",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Mixeur compact",
+      "source": "saisie_video",
+      "scenes": [
+        1
+      ],
+      "groupe_ui": "offre",
+      "aide_simple": "Écrivez le nom du plat, du produit ou du travail."
+    },
+    {
+      "id": "prix",
+      "label": "Prix du produit",
+      "type": "nombre",
+      "obligatoire": true,
+      "exemple": "15000",
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "groupe_ui": "prix",
+      "aide_simple": "Écrivez le vrai prix. La monnaie FCFA est choisie par défaut."
+    },
+    {
+      "id": "devise",
+      "label": "Monnaie",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "FCFA",
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "defaut": "FCFA",
+      "groupe_ui": "prix",
+      "affichage_ui": "sélecteur compact; FCFA proposé par défaut pour cette vidéo",
+      "aide_simple": "FCFA est déjà choisi. Change-le seulement si besoin."
+    },
+    {
+      "id": "quartier_ville",
+      "label": "Quartier et ville",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Akpakpa, Cotonou",
+      "source": "saisie_video",
+      "scenes": [
+        15
+      ],
+      "groupe_ui": "lieu",
+      "aide_simple": "Écrivez le quartier et la ville où les clients peuvent venir."
+    },
+    {
+      "id": "whatsapp",
+      "label": "votre numéro WhatsApp",
+      "type": "telephone",
+      "obligatoire": true,
+      "exemple": "+229 97 00 00 00",
+      "source": "saisie_video",
+      "scenes": [
+        15
+      ],
+      "validation": "format_international",
+      "groupe_ui": "commerce_contact",
+      "aide_simple": "Écrivez le numéro sur lequel les clients peuvent vous écrire, avec le + et le code du pays."
+    },
+    {
+      "id": "badge_engagement_actif",
+      "label": "Afficher un message spécial (facultatif)",
+      "type": "case_a_cocher",
+      "obligatoire": false,
+      "exemple": false,
+      "source": "saisie_video",
+      "scenes": [
+        15
+      ],
+      "defaut": false,
+      "choix": [
+        "stock_limite",
+        "places_limitees",
+        "qualite_garantie"
+      ],
+      "groupe_ui": "options_avancees",
+      "afficher_par_defaut": false,
+      "aide_simple": "Laissez désactivé, sauf si le message est vrai."
+    }
+  ],
+  "politique_saisie": {
+    "mode": "saisie_video",
+    "recollecter_a_chaque_video": true,
+    "enregistrer_dans_profil": false,
+    "pre_remplissage_automatique": false,
+    "numero_whatsapp_obligatoire": true,
+    "prix_obligatoire_sauf_T5": true,
+    "format_prix": "15 000 FCFA",
+    "badge_engagement_actif_par_defaut": false
+  },
+  "prises": [
+    {
+      "id": "prise_1",
+      "libelle": "L’ouverture du colis ou le rayon",
+      "duree_cible_s": 12,
+      "consigne_camera": "Commencez par montrer l’ouverture du colis ou le rayon. Tenez votre téléphone debout et reste assez immobile. Montrez le produit et seulement les accessoires qui sont compris dans le prix.",
+      "type_plan": "plan_moyen",
+      "mouvement": "travelling_avant",
+      "lumiere": "face_fenetre",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        1,
+        3,
+        8
+      ],
+      "guide_parole_scenes": [
+        2
+      ],
+      "segments_guide_parole": [
+        {
+          "scene": 2,
+          "quoi_raconter": "Présentez-le avec vos mots.",
+          "quoi_montrer": "Gardez aussi à l’écran une image tirée de la prise « L’ouverture du colis ou le rayon », derrière ou à côté de la carte « Demandez si c’est disponible ».",
+          "exemple": "Voici le nouvel arrivage.",
+          "note_exemple": "Exemple pour comprendre, pas à répéter.",
+          "duree_conseillee_s": 2.0,
+          "segment_audio_id": "T1_scene_02_voix"
+        }
+      ]
+    },
+    {
+      "id": "prise_2",
+      "libelle": "Le produit",
+      "duree_cible_s": 12,
+      "consigne_camera": "Ensuite, montrez le produit. Tenez votre téléphone debout et reste assez immobile. Montrez le produit et seulement les accessoires qui sont compris dans le prix.",
+      "type_plan": "plan_moyen",
+      "mouvement": "travelling_avant",
+      "lumiere": "face_fenetre",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        4
+      ],
+      "guide_parole_scenes": [],
+      "segments_guide_parole": []
+    },
+    {
+      "id": "prise_3",
+      "libelle": "Le produit et ses détails",
+      "duree_cible_s": 12,
+      "consigne_camera": "Puis, montrez le produit et ses détails. Tenez votre téléphone debout et reste assez immobile. Montrez le produit et seulement les accessoires qui sont compris dans le prix.",
+      "type_plan": "plan_moyen",
+      "mouvement": "travelling_avant",
+      "lumiere": "face_fenetre",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        12
+      ],
+      "guide_parole_scenes": [],
+      "segments_guide_parole": []
+    }
+  ],
+  "scenes": [
+    {
+      "numero": 1,
+      "acte": "hook",
+      "role": "hook_colis_ouverture",
+      "duree_secondes": 2.5,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "Un nouveau produit est arrivé !",
+        "position": "centre_haut",
+        "animation": "kinetic_number",
+        "apparition_s": 0.0,
+        "disparition_s": 2.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "raccord_forme",
+      "effet": "freeze_0.5s",
+      "sfx": "whoosh_fast",
+      "action_montage": "La vidéo commence par « un nouveau produit est arrivé  ». Ça donne envie de regarder.",
+      "sfx_libelle_simple": "Petit souffle rapide",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 2,
+      "acte": "urgence",
+      "role": "carte_stock_frais",
+      "duree_secondes": 1.567,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t1_shops_small_business"
+      },
+      "texte_ecran": {
+        "contenu": "Demandez si c’est disponible",
+        "position": "centre",
+        "animation": "typing_price_roll",
+        "apparition_s": 0.0,
+        "disparition_s": 1.567
+      },
+      "voix": {
+        "active": true,
+        "source_audio_prise_id": "prise_1",
+        "segment_audio_id": "T1_scene_02_voix",
+        "audio_separe_de_image": true,
+        "vitesse_audio": 1.0
+      },
+      "transition_sortie": "raccord_forme",
+      "effet": "freeze_0.5s",
+      "sfx": "pop_badge",
+      "action_montage": "L’application affiche les mots « Demande si c’est disponible » à l’écran.",
+      "carte_generee_id": "carte_signature_t1_shops_small_business",
+      "sfx_libelle_simple": "Petit son pour le message",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "duree_affichee_s": 2.0,
+        "idee": "Montrez le produit qui vient d’arriver. Présentez-le avec vos mots.",
+        "quoi_raconter": "Présentez-le avec vos mots.",
+        "quoi_montrer": "Gardez aussi à l’écran une image tirée de la prise « L’ouverture du colis ou le rayon », derrière ou à côté de la carte « Demandez si c’est disponible ».",
+        "exemple": "Voici le nouvel arrivage.",
+        "exemple_langue_libre": "Dites cette idée avec vos mots, en français ou dans la langue que vous voulez.",
+        "theme": "accroche",
+        "conseil": "Montrez le produit que vous présentez.",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 1,
+          "segment_audio_id": "T1_scene_02_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Gardez aussi à l’écran une image tirée de la prise « L’ouverture du colis ou le rayon », derrière ou à côté de la carte « Demandez si c’est disponible ».",
+          "quoi_raconter": "Présentez-le avec vos mots."
+        },
+        "cles": {
+          "idee": "guide.shops_small_business.T1.scene_02.idee",
+          "quoi_raconter": "guide.shops_small_business.T1.scene_02.quoi_raconter",
+          "quoi_montrer": "guide.shops_small_business.T1.scene_02.quoi_montrer",
+          "exemple": "guide.shops_small_business.T1.scene_02.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.shops_small_business.T1.scene_02.conseil"
+        }
+      }
+    },
+    {
+      "numero": 3,
+      "acte": "preuve",
+      "role": "unboxing_action",
+      "duree_secondes": 2.408,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_gauche",
+        "animation": "wipe_label",
+        "apparition_s": 0.0,
+        "disparition_s": 2.408
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "whip_pan_directionnel",
+      "effet": "ken_burns_rapide",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « L’ouverture du colis ou le rayon ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 4,
+      "acte": "preuve",
+      "role": "produit_hero_face",
+      "duree_secondes": 2.961,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 0.5
+      },
+      "texte_ecran": {
+        "contenu": "DE FACE",
+        "position": "tiers_droit",
+        "animation": "lower_third_glide",
+        "apparition_s": 0.0,
+        "disparition_s": 2.961
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "wipe_lateral_produit",
+      "effet": "ralenti_0.7x",
+      "sfx": "impact_drop",
+      "action_montage": "L’application montre « Le produit » plus lentement pour laisser voir le résultat.",
+      "sfx_libelle_simple": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 5,
+      "acte": "preuve",
+      "role": "macro_fonctionnalite",
+      "duree_secondes": 1.945,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "DE PRÈS",
+        "position": "centre",
+        "animation": "badge_slide_snap",
+        "apparition_s": 0.0,
+        "disparition_s": 1.945
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "flash_blanc",
+      "effet": "recadrage_macro_160",
+      "sfx": "clic_appareil",
+      "action_montage": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 6,
+      "acte": "preuve",
+      "role": "prise_en_main",
+      "duree_secondes": 1.415,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "LE PRODUIT EN USAGE",
+        "position": "tiers_gauche",
+        "animation": "price_shake_impact",
+        "apparition_s": 0.0,
+        "disparition_s": 1.415
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "hard_cut_rythmique",
+      "effet": "boucle_2x",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 7,
+      "acte": "preuve",
+      "role": "variante_couleur",
+      "duree_secondes": 2.365,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "TAILLES ET COULEURS",
+        "position": "tiers_droit",
+        "animation": "line_draw_spec",
+        "apparition_s": 0.0,
+        "disparition_s": 2.365
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "whip_pan_directionnel",
+      "effet": "freeze_0.5s",
+      "sfx": "whoosh_soft",
+      "action_montage": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 8,
+      "acte": "preuve",
+      "role": "produit_sur_etagere",
+      "duree_secondes": 2.766,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "LE PRODUIT EN USAGE",
+        "position": "centre",
+        "animation": "caption_breath_fade",
+        "apparition_s": 0.0,
+        "disparition_s": 2.766
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "flash_blanc",
+      "effet": "ken_burns_rapide",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « L’ouverture du colis ou le rayon ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 9,
+      "acte": "preuve",
+      "role": "usage_en_contexte",
+      "duree_secondes": 2.053,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "LE PRODUIT EN USAGE",
+        "position": "tiers_gauche",
+        "animation": "split_label_track",
+        "apparition_s": 0.0,
+        "disparition_s": 2.053
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "zoom_push_1.25x",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 10,
+      "acte": "preuve",
+      "role": "mosaïque_articles",
+      "duree_secondes": 1.613,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_droit",
+        "animation": "reveal_mask_text",
+        "apparition_s": 0.0,
+        "disparition_s": 1.613
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "wipe_lateral_produit",
+      "effet": "recadrage_macro_160",
+      "sfx": "whoosh_soft",
+      "action_montage": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 11,
+      "acte": "preuve",
+      "role": "accessoire_vraiment_inclus",
+      "duree_secondes": 2.133,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "pulse_cta_soft",
+        "apparition_s": 0.0,
+        "disparition_s": 2.133
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "hard_cut_rythmique",
+      "effet": "boucle_2x",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 12,
+      "acte": "preuve",
+      "role": "demonstration_usage_courte",
+      "duree_secondes": 3.196,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "LE PRODUIT EN USAGE",
+        "position": "tiers_gauche",
+        "animation": "countdown_tick",
+        "apparition_s": 0.0,
+        "disparition_s": 3.196
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "whip_pan_directionnel",
+      "effet": "freeze_0.5s",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 13,
+      "acte": "reassurance",
+      "role": "carte_retrait_quartier",
+      "duree_secondes": 2.091,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t1_shops_small_business"
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_droit",
+        "animation": "side_tag_animate",
+        "apparition_s": 0.0,
+        "disparition_s": 2.091
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "ken_burns_rapide",
+      "sfx": "pop_badge",
+      "action_montage": "L’application affiche les mots « À DÉCOUVRIR » à l’écran.",
+      "carte_generee_id": "carte_signature_t1_shops_small_business",
+      "sfx_libelle_simple": "Petit son pour le message",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 14,
+      "acte": "offre",
+      "role": "prix_produit",
+      "duree_secondes": 1.487,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_geant"
+      },
+      "texte_ecran": {
+        "contenu": "{prix} {devise}",
+        "position": "centre",
+        "animation": "compteur_countup",
+        "apparition_s": 0.0,
+        "disparition_s": 1.487
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "raccord_forme",
+      "effet": "zoom_push_1.25x",
+      "sfx": "caisse_enregistreuse",
+      "action_montage": "L’application affiche le vrai prix que vous avez entré.",
+      "carte_generee_id": "carte_prix_geant",
+      "sfx_libelle_simple": "Petit son au moment du prix",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 15,
+      "acte": "cta",
+      "role": "carte_contact",
+      "duree_secondes": 4.5,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_whatsapp_finale"
+      },
+      "texte_ecran": {
+        "contenu": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+        "position": "centre_bas",
+        "animation": "whatsapp_pulsant",
+        "apparition_s": 0.0,
+        "disparition_s": 4.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "fondu_enchaine",
+      "effet": "aucun_effet",
+      "sfx": "whoosh_soft",
+      "action_montage": "À la fin, la vidéo garde le nom de votre commerce, le quartier et le numéro WhatsApp à l’écran.",
+      "carte_generee_id": "carte_whatsapp_finale",
+      "sfx_libelle_simple": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    }
+  ],
+  "montage_signature": {
+    "nom": "T1_shops_small_business",
+    "id_unique": "T1_shops_small_business",
+    "rythme_moyen_coupe_s": 2.15,
+    "courbe_rythme": [
+      2.5,
+      1.567,
+      2.408,
+      2.961,
+      1.945,
+      1.415,
+      2.365,
+      2.766,
+      2.053,
+      1.613,
+      2.133,
+      3.196,
+      2.091,
+      1.487,
+      4.5
+    ],
+    "transitions": [
+      "raccord_forme",
+      "whip_pan_directionnel",
+      "wipe_lateral_produit",
+      "flash_blanc",
+      "hard_cut_rythmique",
+      "cut_sec",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "ken_burns_rapide",
+      "ralenti_0.7x",
+      "recadrage_macro_160",
+      "boucle_2x",
+      "zoom_push_1.25x",
+      "aucun_effet"
+    ],
+    "zoom": {
+      "type": "recadrages_roles_et_sujet",
+      "min": 1.0,
+      "max": 1.6
+    },
+    "signature_detail": "On ouvre le colis ou on montre le rayon, puis le produit et ses détails. On ne montre que ce qui est vraiment vendu avec le produit."
+  },
+  "etalonnage": {
+    "preset": "grade_shops_small_business_t1",
+    "preset_avant": null,
+    "preset_apres": null,
+    "exposition_ev": 0.2,
+    "contraste": 1.05,
+    "saturation": 1.05,
+    "temperature_k": 5300,
+    "vignettage": 0.1,
+    "nettete": 0.18,
+    "protection_peau": true,
+    "protection_peau_detail": "Peaux foncées incluses : préserver les hautes lumières du visage et vérifier l’exposition; fidélité textile/carrosserie et nourriture avant stylisation.",
+    "denoise_faible_lumiere": true,
+    "stabilisation": true,
+    "consigne_lumiere": "Filmez le produit proprement, fonds rangés et couleurs fidèles; montrez les accessoires réellement inclus.",
+    "preset_avant_ref": null,
+    "preset_apres_ref": null
+  },
+  "style_visuel": {
+    "typographie": {
+      "preset": "sans_serif_bold_condensee",
+      "graisse": "900",
+      "couleur_texte": "#FFFFFF",
+      "contour": "#000000",
+      "fond_texte": "#FF5500"
+    },
+    "palette": "orange_cinetique_accent",
+    "badges": [
+      "nouveau",
+      "disponible_maintenant"
+    ],
+    "badges_optionnels_actives_par_commercant": [
+      "stock_limite",
+      "places_limitees",
+      "qualite_garantie"
+    ],
+    "engagements_optionnels_actifs_par_defaut": false
+  },
+  "audio": {
+    "musique": {
+      "genre": "afrobeats commercial instrumental",
+      "bpm_min": 102,
+      "bpm_max": 114,
+      "structure": "hook court, progression accordée aux rôles, accent sur preuve/révélation, sortie propre sous carte CTA",
+      "structure_id": "audio_structure_shops_small_business_t1",
+      "categorie_audio": "musique_t1_shops_small_business",
+      "cue_roles": {
+        "riser_role": "produit_hero_face",
+        "drop_scene": 4,
+        "voice_ducking": "VAD; aucun ASR"
+      }
+    },
+    "sfx_scenes": [
+      {
+        "scene": 1,
+        "categorie": "whoosh_fast"
+      },
+      {
+        "scene": 2,
+        "categorie": "pop_badge"
+      },
+      {
+        "scene": 4,
+        "categorie": "impact_drop"
+      },
+      {
+        "scene": 5,
+        "categorie": "clic_appareil"
+      },
+      {
+        "scene": 7,
+        "categorie": "whoosh_soft"
+      },
+      {
+        "scene": 10,
+        "categorie": "whoosh_soft"
+      },
+      {
+        "scene": 13,
+        "categorie": "pop_badge"
+      },
+      {
+        "scene": 14,
+        "categorie": "caisse_enregistreuse"
+      },
+      {
+        "scene": 15,
+        "categorie": "whoosh_soft"
+      }
+    ],
+    "mix": {
+      "cible_lufs": -14,
+      "ducking_musique_sous_voix_db": -14,
+      "voix_prioritaire": true,
+      "limiteur_true_peak_dbtp": -1.0
+    },
+    "mode_sans_voix": {
+      "actif_par_defaut": false,
+      "compense_par": "texte_ecran_et_pictogrammes",
+      "calage": "BPM et temps forts, sans dépendance ASR"
+    },
+    "interface_commercant": {
+      "genre_en_mots_simples": "Musique vive et simple.",
+      "message": "La musique doit rester moins forte que votre voix. Sans voix, les mots à l’écran racontent la vidéo.",
+      "note": "La musique et les petits sons doivent être autorisés pour une vidéo de commerce."
+    }
+  },
+  "copywriting": {
+    "hooks": [
+      "Un nouveau produit est arrivé !",
+      "Regardez ce qui vient d’arriver.",
+      "Voici les nouveautés.",
+      "Demandez si c’est disponible.",
+      "Écrivez à {nom_commerce} pour en savoir plus."
+    ],
+    "formules_prix": [
+      "{nom_offre} coûte {prix} {devise}.",
+      "Le prix est {prix} {devise}.",
+      "Demandez le prix à {nom_commerce}."
+    ],
+    "formules_urgence": [
+      "Demandez si le produit est encore disponible.",
+      "Passe voir les nouveautés à {quartier_ville}.",
+      "Écrivez-nous pour en savoir plus."
+    ],
+    "formules_cta": [
+      "Écrivez-nous sur WhatsApp : {whatsapp}.",
+      "Viens à {quartier_ville}.",
+      "Contacte {nom_commerce} sur WhatsApp."
+    ],
+    "regles_affichage": {
+      "format_prix": "15 000 FCFA, si c’est le vrai prix saisi",
+      "max_lignes": 2,
+      "max_caracteres_par_ligne": 28,
+      "zone_securite_ref": "zone_securite",
+      "pourcentage_reduction": "calculé automatiquement avec les deux prix saisis",
+      "note": "Phrases courtes. N’affiche pas une offre ou un stock limité si ce n’est pas vrai."
+    }
+  },
+  "variables_calculees": [],
+  "confiance_analyse": {
+    "methode": "theorique",
+    "validation_terrain": "a_faire",
+    "hypotheses_a_valider": [
+      "Lisibilité du hook sur petit écran",
+      "Compréhension du rythme et du vocabulaire local",
+      "Acceptation d’une durée 35 s",
+      "Performance du montage sans voix"
+    ],
+    "aucune_statistique_de_performance_affirmee": true
+  },
+  "signature_montage": {
+    "id_unique": "T1_shops_small_business",
+    "famille_format": "T1",
+    "empreinte_sequence": [
+      "hook_colis_ouverture|raccord_forme|freeze_0.5s",
+      "carte_stock_frais|raccord_forme|freeze_0.5s",
+      "unboxing_action|whip_pan_directionnel|ken_burns_rapide",
+      "produit_hero_face|wipe_lateral_produit|ralenti_0.7x",
+      "macro_fonctionnalite|flash_blanc|recadrage_macro_160",
+      "prise_en_main|hard_cut_rythmique|boucle_2x",
+      "variante_couleur|whip_pan_directionnel|freeze_0.5s",
+      "produit_sur_etagere|flash_blanc|ken_burns_rapide",
+      "usage_en_contexte|cut_sec|zoom_push_1.25x",
+      "mosaïque_articles|wipe_lateral_produit|recadrage_macro_160",
+      "accessoire_vraiment_inclus|hard_cut_rythmique|boucle_2x",
+      "demonstration_usage_courte|whip_pan_directionnel|freeze_0.5s",
+      "carte_retrait_quartier|cut_sec|ken_burns_rapide",
+      "prix_produit|raccord_forme|zoom_push_1.25x",
+      "carte_contact|fondu_enchaine|aucun_effet"
+    ],
+    "courbe_rythme": [
+      2.5,
+      1.567,
+      2.408,
+      2.961,
+      1.945,
+      1.415,
+      2.365,
+      2.766,
+      2.053,
+      1.613,
+      2.133,
+      3.196,
+      2.091,
+      1.487,
+      4.5
+    ],
+    "justification_sectorielle": "On ouvre le colis ou on montre le rayon, puis le produit et ses détails. On ne montre que ce qui est vraiment vendu avec le produit."
+  },
+  "etapes_montage": [
+    {
+      "etape": 1,
+      "temps_s": 2.5,
+      "role": "Au début",
+      "action": "La vidéo commence par « un nouveau produit est arrivé  ». Ça donne envie de regarder.",
+      "texte": "Un nouveau produit est arrivé !",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit souffle rapide",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 2,
+      "temps_s": 1.567,
+      "role": "Un message à l’écran",
+      "action": "L’application affiche les mots « Demande si c’est disponible » à l’écran.",
+      "texte": "Demandez si c’est disponible",
+      "voix": "Montrez le produit qui vient d’arriver. Présentez-le avec vos mots.",
+      "audio": "Petit son pour le message",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "theme": "accroche",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 1,
+          "segment_audio_id": "T1_scene_02_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Gardez aussi à l’écran une image tirée de la prise « L’ouverture du colis ou le rayon », derrière ou à côté de la carte « Demandez si c’est disponible ».",
+          "quoi_raconter": "Présentez-le avec vos mots."
+        },
+        "cles": {
+          "idee": "guide.shops_small_business.T1.scene_02.idee",
+          "quoi_raconter": "guide.shops_small_business.T1.scene_02.quoi_raconter",
+          "quoi_montrer": "guide.shops_small_business.T1.scene_02.quoi_montrer",
+          "exemple": "guide.shops_small_business.T1.scene_02.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.shops_small_business.T1.scene_02.conseil"
+        }
+      }
+    },
+    {
+      "etape": 3,
+      "temps_s": 2.408,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « L’ouverture du colis ou le rayon ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 4,
+      "temps_s": 2.961,
+      "role": "Le résultat",
+      "action": "L’application montre « Le produit » plus lentement pour laisser voir le résultat.",
+      "texte": "DE FACE",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 5,
+      "temps_s": 1.945,
+      "role": "De près",
+      "action": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "DE PRÈS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 6,
+      "temps_s": 1.415,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "LE PRODUIT EN USAGE",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 7,
+      "temps_s": 2.365,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "TAILLES ET COULEURS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 8,
+      "temps_s": 2.766,
+      "role": "Le produit en usage",
+      "action": "L’application reprend une partie de « L’ouverture du colis ou le rayon ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "LE PRODUIT EN USAGE",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 9,
+      "temps_s": 2.053,
+      "role": "Le produit en usage",
+      "action": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "LE PRODUIT EN USAGE",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 10,
+      "temps_s": 1.613,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 11,
+      "temps_s": 2.133,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 12,
+      "temps_s": 3.196,
+      "role": "Le produit en usage",
+      "action": "L’application reprend une partie de « Le produit et ses détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "LE PRODUIT EN USAGE",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 13,
+      "temps_s": 2.091,
+      "role": "Un message à l’écran",
+      "action": "L’application affiche les mots « À DÉCOUVRIR » à l’écran.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son pour le message",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 14,
+      "temps_s": 1.487,
+      "role": "Le prix",
+      "action": "L’application affiche le vrai prix que vous avez entré.",
+      "texte": "{prix} {devise}",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son au moment du prix",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 15,
+      "temps_s": 4.5,
+      "role": "vos coordonnées",
+      "action": "À la fin, la vidéo garde le nom de votre commerce, le quartier et le numéro WhatsApp à l’écran.",
+      "texte": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    }
+  ],
+  "axes_signature": {
+    "sequence_roles": [
+      "hook_colis_ouverture",
+      "carte_stock_frais",
+      "unboxing_action",
+      "produit_hero_face",
+      "macro_fonctionnalite",
+      "prise_en_main",
+      "variante_couleur",
+      "produit_sur_etagere",
+      "usage_en_contexte",
+      "mosaïque_articles",
+      "accessoire_vraiment_inclus",
+      "demonstration_usage_courte",
+      "carte_retrait_quartier",
+      "prix_produit",
+      "carte_contact"
+    ],
+    "nombre_scenes": 15,
+    "courbe_rythme": [
+      2.5,
+      1.567,
+      2.408,
+      2.961,
+      1.945,
+      1.415,
+      2.365,
+      2.766,
+      2.053,
+      1.613,
+      2.133,
+      3.196,
+      2.091,
+      1.487,
+      4.5
+    ],
+    "transitions": [
+      "raccord_forme",
+      "raccord_forme",
+      "whip_pan_directionnel",
+      "wipe_lateral_produit",
+      "flash_blanc",
+      "hard_cut_rythmique",
+      "whip_pan_directionnel",
+      "flash_blanc",
+      "cut_sec",
+      "wipe_lateral_produit",
+      "hard_cut_rythmique",
+      "whip_pan_directionnel",
+      "cut_sec",
+      "raccord_forme",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "freeze_0.5s",
+      "ken_burns_rapide",
+      "ralenti_0.7x",
+      "recadrage_macro_160",
+      "boucle_2x",
+      "freeze_0.5s",
+      "ken_burns_rapide",
+      "zoom_push_1.25x",
+      "recadrage_macro_160",
+      "boucle_2x",
+      "freeze_0.5s",
+      "ken_burns_rapide",
+      "zoom_push_1.25x",
+      "aucun_effet"
+    ],
+    "decoupage_prises": [
+      "prise_1",
+      "carte:carte_signature_t1_shops_small_business",
+      "prise_1",
+      "prise_2",
+      "prise_3",
+      "prise_3",
+      "prise_3",
+      "prise_1",
+      "prise_3",
+      "prise_3",
+      "prise_3",
+      "prise_3",
+      "carte:carte_signature_t1_shops_small_business",
+      "carte:carte_prix_geant",
+      "carte:carte_whatsapp_finale"
+    ],
+    "cartes_generees": [
+      "",
+      "carte_signature_t1_shops_small_business",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "carte_signature_t1_shops_small_business",
+      "carte_prix_geant",
+      "carte_whatsapp_finale"
+    ],
+    "texte_animation_position": [
+      "kinetic_number|centre_haut",
+      "typing_price_roll|centre",
+      "wipe_label|tiers_gauche",
+      "lower_third_glide|tiers_droit",
+      "badge_slide_snap|centre",
+      "price_shake_impact|tiers_gauche",
+      "line_draw_spec|tiers_droit",
+      "caption_breath_fade|centre",
+      "split_label_track|tiers_gauche",
+      "reveal_mask_text|tiers_droit",
+      "pulse_cta_soft|centre",
+      "countdown_tick|tiers_gauche",
+      "side_tag_animate|tiers_droit",
+      "compteur_countup|centre",
+      "whatsapp_pulsant|centre_bas"
+    ],
+    "preset_etalonnage": "grade_shops_small_business_t1",
+    "structure_audio": "audio_structure_shops_small_business_t1"
+  },
+  "formulaire_ui": {
+    "titre": "Faire ma vidéo",
+    "message": "Suis les étapes. L’application prépare la vidéo pour vous.",
+    "nombre_sections_principales": 4,
+    "limite_sections_principales": 5,
+    "sections_principales": [
+      {
+        "id": "commerce_contact",
+        "titre": "votre commerce et votre WhatsApp",
+        "champs": [
+          "nom_commerce",
+          "whatsapp"
+        ],
+        "aide": "Écrivez le nom de votre commerce et le numéro où les clients peuvent vous écrire.",
+        "ordre": 1,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "offre",
+        "titre": "Ce que vous proposez",
+        "champs": [
+          "nom_offre"
+        ],
+        "aide": "Écrivez le nom du plat, du produit, du soin ou du travail.",
+        "ordre": 2,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "prix",
+        "titre": "Le prix",
+        "champs": [
+          "prix",
+          "devise"
+        ],
+        "aide": "Écrivez le vrai prix. FCFA est déjà choisi si vous ne changes rien.",
+        "ordre": 3,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "lieu",
+        "titre": "Où vous trouver",
+        "champs": [
+          "quartier_ville"
+        ],
+        "aide": "Écrivez le quartier et la ville.",
+        "ordre": 4,
+        "visible_par_defaut": true
+      }
+    ],
+    "options_facultatives_repliees": {
+      "id": "options_avancees",
+      "titre": "Autres options (facultatif)",
+      "champs": [
+        "badge_engagement_actif"
+      ],
+      "visible_par_defaut": false,
+      "aide": "Laissez vide si vous n’êtes pas sûr que le message est vrai."
+    },
+    "devise_defaut": "FCFA",
+    "devise_saisie_par_video": true,
+    "enregistrer_ou_pre_remplir_depuis_profil": false,
+    "note": "vos réponses servent pour cette vidéo seulement. Elles ne sont pas gardées dans un profil."
+  },
+  "guide_tournage": {
+    "message_principal": "Filmez les courtes vidéos demandées. L’application prépare la vidéo pour vous.",
+    "nombre_prises_a_filmer": 3,
+    "duree_brute_cible_par_prise_s": "8–20",
+    "etapes_capture": [
+      {
+        "etape": 1,
+        "prise_id": "prise_1",
+        "quoi_filmer": "L’ouverture du colis ou le rayon",
+        "consigne": "Commencez par montrer l’ouverture du colis ou le rayon. Tenez votre téléphone debout et reste assez immobile. Montrez le produit et seulement les accessoires qui sont compris dans le prix.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [
+          2
+        ],
+        "guide_parole_segments": [
+          {
+            "scene": 2,
+            "quoi_raconter": "Présentez-le avec vos mots.",
+            "quoi_montrer": "Gardez aussi à l’écran une image tirée de la prise « L’ouverture du colis ou le rayon », derrière ou à côté de la carte « Demandez si c’est disponible ».",
+            "exemple": "Voici le nouvel arrivage.",
+            "note_exemple": "Exemple pour comprendre, pas à répéter.",
+            "duree_conseillee_s": 2.0,
+            "segment_audio_id": "T1_scene_02_voix"
+          }
+        ],
+        "guide_parole_segmentage": "Dans la même prise, afficher les consignes l’une après l’autre. Le bouton Suivant marque la fin de chaque extrait de voix."
+      },
+      {
+        "etape": 2,
+        "prise_id": "prise_2",
+        "quoi_filmer": "Le produit",
+        "consigne": "Ensuite, montrez le produit. Tenez votre téléphone debout et reste assez immobile. Montrez le produit et seulement les accessoires qui sont compris dans le prix.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [],
+        "guide_parole_segments": [],
+        "guide_parole_segmentage": "Aucune consigne de parole dans cette prise."
+      },
+      {
+        "etape": 3,
+        "prise_id": "prise_3",
+        "quoi_filmer": "Le produit et ses détails",
+        "consigne": "Puis, montrez le produit et ses détails. Tenez votre téléphone debout et reste assez immobile. Montrez le produit et seulement les accessoires qui sont compris dans le prix.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [],
+        "guide_parole_segments": [],
+        "guide_parole_segmentage": "Aucune consigne de parole dans cette prise."
+      }
+    ],
+    "pas_de_montage_manuel": true,
+    "le_moteur_reutilise_les_rushs": true,
+    "le_commercant_ne_filme_pas_une_scene_par_etape_montage": true,
+    "titre": "Ce que vous devez filmer",
+    "note": "Tenez votre téléphone debout. Filmez près d’une fenêtre ou dehors à l’ombre. Évitez d’avoir la lumière derrière le sujet.",
+    "guide_parole": {
+      "visible_avant_et_pendant_la_prise": true,
+      "consignes_regroupees_par_prise": true,
+      "segments_voix_marques_dans_la_prise": true,
+      "voix_separee_de_la_vitesse_image": true,
+      "titre": "De quoi parler ?",
+      "introduction": "Pour chaque scène parlée, vous voyez quoi montrer, quoi raconter avec vos mots, le temps conseillé et un exemple. L’exemple aide à comprendre; ne le répétez pas mot pour mot.",
+      "langue": "Parlez en français ou dans la langue que vous voulez, par exemple en fon, yoruba ou bariba.",
+      "temps": "Le temps conseillé vous aide à parler brièvement. Il ne coupe pas votre voix de force; vous pouvez continuer pendant l’image suivante.",
+      "pas_une_prise": "Filmez seulement les prises déjà demandées. Pas besoin de filmer une scène à part pour parler.",
+      "sans_voix": "Vous pouvez ne pas parler. Choisissez musique seule; la vidéo reste complète.",
+      "sous_titres": "Les mots à l’écran viennent des informations que vous avez données. Ils ne reprennent pas votre voix.",
+      "cles": {
+        "titre": "guide.commun.titre",
+        "introduction": "guide.commun.introduction",
+        "langue": "guide.commun.langue",
+        "temps": "guide.commun.temps",
+        "pas_une_prise": "guide.commun.pas_une_prise",
+        "sans_voix": "guide.commun.sans_voix",
+        "sous_titres": "guide.commun.sous_titres"
+      }
+    },
+    "sous_titres_voix": {
+      "sous_titres_automatiques": false,
+      "paroles_transcrites": false,
+      "texte_ecran_actuel": "Le nom, le prix, le lieu et les mots affichés viennent des informations saisies; ils ne reprennent pas votre voix.",
+      "voix_langue_locale": "Vous pouvez parler dans votre langue. Pour écrire vos paroles à l’écran, une personne qui connaît cette langue doit les écrire et les vérifier.",
+      "cles": {
+        "texte_ecran_actuel": "guide.commun.sous_titres",
+        "voix_langue_locale": "guide.commun.sous_titres_locale"
+      }
+    },
+    "parole_dans_prises_existantes": true,
+    "pas_une_prise_par_scene_finale": true,
+    "marqueurs_audio_sans_transcription": "Le bouton Suivant marque les extraits de voix; aucun mot n’est reconnu ou écrit automatiquement."
+  },
+  "nom_format_affiche": "Nouvel arrivage",
+  "interface_commercant": {
+    "visible": true,
+    "nom_format": "Nouvel arrivage",
+    "secteur": "Boutiques",
+    "phrase_courte": "On ouvre le colis ou on montre le rayon, puis le produit et ses détails.",
+    "ne_pas_afficher_cles_internes": [
+      "id",
+      "secteur",
+      "format",
+      "signature_montage.id_unique"
+    ],
+    "ton": "français simple, phrases courtes, vouvoiement respectueux",
+    "promesse": "Vous filmez les vidéos demandées. L’application prépare la vidéo pour vous."
+  }
+}

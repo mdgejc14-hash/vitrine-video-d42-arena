@@ -1,0 +1,2876 @@
+{
+  "schema_version": "2.0",
+  "profil_id": "profil_immo_auto_T1_v2_0_propose",
+  "gabarit_id": "immo_auto_T1",
+  "gabarit_sha256": "7de9c05c104f055408e708274f1b880c05a42d9132bc3334d24b42fe8131babb",
+  "statut": "A_APPROUVER",
+  "production_autorisee": false,
+  "validation": {
+    "reglages": "PROPOSES_NON_APPROUVES",
+    "reference_visuelle": "NON_FOURNIE",
+    "pistes_et_sfx": "NON_FOURNIS",
+    "moteur": "NON_TESTE"
+  },
+  "cadre": {
+    "ratio": "9:16",
+    "largeur_proposee_px": 720,
+    "hauteur_proposee_px": 1280,
+    "fps_num": 30,
+    "fps_den": 1,
+    "origine_coordonnees": "HAUT_GAUCHE",
+    "coordonnees": "FRACTIONS_DE_LA_TOILE",
+    "zone_sure_norm": {
+      "x0": 0.06,
+      "y0": 0.07,
+      "x1": 0.94,
+      "y1": 0.85
+    },
+    "arrondi_frames": "ARRONDIR_CUMUL_DE_DUREE_AU_PLUS_PROCHE_DEMI_VERS_LE_HAUT",
+    "texte_min_px_720": 28,
+    "contraste_min_wcag_propose": 4.5
+  },
+  "axes_signature_source": {
+    "sequence_roles": [
+      "hook_cle_bien",
+      "carte_bien_disponible",
+      "panorama_exterieur",
+      "badge_annee_carburant",
+      "vue_habitacle_ou_piece",
+      "detail_kilometrage_surface",
+      "panorama_lateral",
+      "equipement_utile",
+      "angle_coffre_piece",
+      "carte_disponibilite_visite",
+      "badge_options_verifiees",
+      "vue_coffre_ou_rangement",
+      "cle_et_visite",
+      "prix_bien",
+      "carte_contact"
+    ],
+    "nombre_scenes": 15,
+    "courbe_rythme": [
+      2.5,
+      1.934,
+      1.959,
+      2.088,
+      2.617,
+      1.747,
+      1.99,
+      2.398,
+      2.709,
+      1.766,
+      2.141,
+      2.469,
+      2.389,
+      1.793,
+      4.5
+    ],
+    "transitions": [
+      "match_cut_mouvement",
+      "match_cut_mouvement",
+      "slide_specifications",
+      "raccord_forme",
+      "zoom_snap",
+      "panoramique_raccord",
+      "slide_specifications",
+      "zoom_snap",
+      "cut_sec",
+      "raccord_forme",
+      "panoramique_raccord",
+      "slide_specifications",
+      "cut_sec",
+      "match_cut_mouvement",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "zoom_push_1.25x",
+      "pan_scan_spec",
+      "ken_burns_lent",
+      "stabilisation_hero",
+      "pan_scan_spec",
+      "zoom_push_1.25x",
+      "pan_scan_spec",
+      "ken_burns_lent",
+      "stabilisation_hero",
+      "recadrage_plan_100",
+      "zoom_push_1.25x",
+      "pan_scan_spec",
+      "ken_burns_lent",
+      "aucun_effet"
+    ],
+    "decoupage_prises": [
+      "prise_1",
+      "carte:carte_signature_t1_immo_auto",
+      "prise_1",
+      "carte:carte_signature_t1_immo_auto",
+      "prise_2",
+      "prise_3",
+      "prise_1",
+      "prise_3",
+      "prise_2",
+      "carte:carte_signature_t1_immo_auto",
+      "carte:carte_signature_t1_immo_auto",
+      "prise_3",
+      "prise_3",
+      "carte:carte_prix_geant",
+      "carte:carte_whatsapp_finale"
+    ],
+    "cartes_generees": [
+      "",
+      "carte_signature_t1_immo_auto",
+      "",
+      "carte_signature_t1_immo_auto",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "carte_signature_t1_immo_auto",
+      "carte_signature_t1_immo_auto",
+      "",
+      "",
+      "carte_prix_geant",
+      "carte_whatsapp_finale"
+    ],
+    "texte_animation_position": [
+      "split_label_track|centre_haut",
+      "reveal_mask_text|tiers_gauche",
+      "pulse_cta_soft|tiers_droit",
+      "countdown_tick|centre",
+      "side_tag_animate|tiers_gauche",
+      "kinetic_number|tiers_droit",
+      "typing_price_roll|centre",
+      "wipe_label|tiers_gauche",
+      "lower_third_glide|tiers_droit",
+      "badge_slide_snap|centre",
+      "price_shake_impact|tiers_gauche",
+      "line_draw_spec|tiers_droit",
+      "caption_breath_fade|centre",
+      "compteur_countup|tiers_gauche",
+      "whatsapp_pulsant|centre_bas"
+    ],
+    "preset_etalonnage": "grade_immo_auto_t1",
+    "structure_audio": "audio_structure_immo_auto_t1"
+  },
+  "style_visuel_source": {
+    "typographie": {
+      "preset": "sans_serif_bold_condensee",
+      "graisse": "900",
+      "couleur_texte": "#FFFFFF",
+      "contour": "#000000",
+      "fond_texte": "#FF5500"
+    },
+    "palette": "palette_T3_neutre",
+    "badges": [
+      "nouveau",
+      "disponible_maintenant"
+    ],
+    "badges_optionnels_actives_par_commercant": [
+      "stock_limite",
+      "places_limitees",
+      "qualite_garantie"
+    ],
+    "engagements_optionnels_actifs_par_defaut": false
+  },
+  "etalonnage_source": {
+    "preset": "grade_immo_auto_t1",
+    "exposition_ev": 0.2,
+    "contraste": 1.05,
+    "saturation": 1.01,
+    "temperature_k": 5400,
+    "vignettage": 0.1,
+    "nettete": 0.18,
+    "protection_peau": true,
+    "protection_peau_detail": "Peaux foncées incluses : préserver les hautes lumières du visage et vérifier l’exposition; fidélité textile/carrosserie et nourriture avant stylisation.",
+    "denoise_faible_lumiere": true,
+    "stabilisation": true,
+    "consigne_lumiere": "Filmez chaque spécification lisiblement; panorama lent à hauteur stable et lumière naturelle sans reflets écrêtés."
+  },
+  "etalonnage_champs_non_applicables": [
+    "preset_avant",
+    "preset_apres",
+    "preset_avant_ref",
+    "preset_apres_ref"
+  ],
+  "palette_couleurs_source": [
+    "#F5F5F0",
+    "#0B1C2C",
+    "#FF5500",
+    "#FFFFFF"
+  ],
+  "audio": {
+    "genre_source": "afro-house premium instrumental",
+    "bpm_min_source": 101,
+    "bpm_max_source": 113,
+    "categorie_audio_source": "musique_t1_immo_auto",
+    "structure_id_source": "audio_structure_immo_auto_t1",
+    "direction_ecoute_proposee": "Afro-house sobre et premium",
+    "energie_proposee": "2–3",
+    "riser": {
+      "role_source": "panorama_exterieur",
+      "scene": 3,
+      "fenetre_frames": [
+        133,
+        192
+      ],
+      "frame_cible_candidate": 133,
+      "sample_cible_candidate": 212800
+    },
+    "drop": {
+      "scene_source": 4,
+      "fenetre_frames": [
+        192,
+        254
+      ],
+      "frame_cible_candidate": 192,
+      "sample_cible_candidate": 307200
+    },
+    "statut_piste": "A_ACQUERIR_ET_ECOUTER",
+    "pistes_reelles_validees": [],
+    "regle_cues": "LA_PISTE_MESUREE_DOIT_PLACER_SES_REPERES_DANS_LES_FENETRES_SANS_DEPLACER_LES_SCENES",
+    "ancrages_sont_des_propositions_non_mesurees": true,
+    "mix": {
+      "sample_rate_hz": 48000,
+      "ducking_musique_sous_voix_db": -14,
+      "attaque_ms": 75,
+      "relache_ms": 325,
+      "cible_lufs": -14,
+      "tolerance_lufs": 0.5,
+      "plafond_true_peak_dbtp": -1,
+      "voix_prioritaire": true,
+      "vitesse_voix": 1.0,
+      "mesurer_apres_aac": true,
+      "licence_autorisee": [
+        "CC0-1.0",
+        "DOMAINE_PUBLIC_VERIFIE"
+      ],
+      "un_seul_sfx_par_indication_source": true,
+      "ne_pas_normaliser_sfx_courts_seuls_a_lufs": true
+    }
+  },
+  "scenes": [
+    {
+      "numero": 1,
+      "acte_source": "hook",
+      "role_source": "hook_cle_bien",
+      "duree_source_ms": 2500,
+      "frame_debut": 0,
+      "frame_fin_exclusive": 75,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "Un nouveau bien à découvrir !",
+        "position": "centre_haut",
+        "animation": "split_label_track",
+        "apparition_s": 0.0,
+        "disparition_s": 2.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "match_cut_mouvement",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE_RACCORD",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 75,
+        "fenetre_frame_fin_exclusive": 75,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "REPERES_REELS_OU_REPLI",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "GEL",
+        "duree_ms": 500,
+        "position": "DEBUT_DU_PLAN",
+        "visage_parlant": "NE_PAS_GELER",
+        "id_source": "freeze_0.5s",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.6
+      },
+      "animation_parametres": {
+        "id_source": "split_label_track",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "ETIQUETTE_SPLIT",
+        "position_source": "centre_haut",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.09,
+          "x1": 0.92,
+          "y1": 0.27
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 62,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": -0.08,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.09,
+          "x1": 0.92,
+          "y1": 0.27
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_1",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "whoosh_fast",
+        "repere_visuel": "DERNIERE_IMAGE_AVANT_COUPE_CANDIDATE",
+        "frame_cible_30fps": 74,
+        "sample_cible_48khz": 118400,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 2,
+      "acte_source": "reassurance",
+      "role_source": "carte_bien_disponible",
+      "duree_source_ms": 1934,
+      "frame_debut": 75,
+      "frame_fin_exclusive": 133,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t1_immo_auto"
+      },
+      "texte": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_gauche",
+        "animation": "reveal_mask_text",
+        "apparition_s": 0.0,
+        "disparition_s": 1.934
+      },
+      "voix": {
+        "active": true,
+        "source_audio_prise_id": "prise_1",
+        "segment_audio_id": "T1_scene_02_voix",
+        "audio_separe_de_image": true,
+        "vitesse_audio": 1.0
+      },
+      "transition_parametres": {
+        "id_source": "match_cut_mouvement",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE_RACCORD",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 133,
+        "fenetre_frame_fin_exclusive": 133,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "REPERES_REELS_OU_REPLI",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "ZOOM_PROGRESSIF",
+        "debut": 1.0,
+        "fin": 1.25,
+        "centre_x": 0.5,
+        "centre_y": 0.5,
+        "courbe": "SMOOTHSTEP_3",
+        "id_source": "zoom_push_1.25x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "reveal_mask_text",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "MASQUE_TEXTE",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 45,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_signature_t1_immo_auto",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "fond_image_obligatoire": {
+          "mode": "VIDEO_DE_LA_PRISE_LIEE_AU_GUIDE",
+          "prise_id": "prise_1",
+          "region_norm": {
+            "x0": 0.0,
+            "y0": 0.0,
+            "x1": 1.0,
+            "y1": 1.0
+          },
+          "assombrissement_opacite": 0.38,
+          "synchronisation_visage": "MEME_PRISE_ET_1X_SI_VISAGE_PARLANT",
+          "gel": "INTERDIT_SUR_VISAGE_PARLANT"
+        },
+        "signature": {
+          "secteur": "immo_auto",
+          "barre_norm": {
+            "x0": 0.08,
+            "y0": 0.75,
+            "x1": 0.92,
+            "y1": 0.79
+          },
+          "icone": "FORME_GEOMETRIQUE_NEUTRE_ASSOCIEE_AU_SECTEUR",
+          "texte": "UNIQUEMENT_TEXTE_SOURCE_ET_DONNEES_REELLES"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "pop_badge",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 83,
+        "sample_cible_48khz": 132800,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 3,
+      "acte_source": "preuve",
+      "role_source": "panorama_exterieur",
+      "duree_source_ms": 1959,
+      "frame_debut": 133,
+      "frame_fin_exclusive": 192,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_droit",
+        "animation": "pulse_cta_soft",
+        "apparition_s": 0.0,
+        "disparition_s": 1.959
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "slide_specifications",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "GLISSEMENT",
+        "duree_ms": 240,
+        "duree_frames_proposee": 7,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 189,
+        "fenetre_frame_fin_exclusive": 196,
+        "marge_b_avant_frames": 3,
+        "marge_a_apres_frames": 4,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "PAN_SCAN",
+        "dx_debut": -0.02,
+        "dx_fin": 0.02,
+        "dy": 0.0,
+        "courbe": "SMOOTHSTEP_3",
+        "si_hors_image": "REPLI_SANS_DEPLACEMENT",
+        "id_source": "pan_scan_spec",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.3
+      },
+      "animation_parametres": {
+        "id_source": "pulse_cta_soft",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "PULSATION",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 46,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.96,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "pulse_amplitude": 0.035,
+        "pulse_period_frames": 45,
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_1",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": false,
+        "raison": "AUCUN_SFX_DANS_LA_SOURCE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 4,
+      "acte_source": "reassurance",
+      "role_source": "badge_annee_carburant",
+      "duree_source_ms": 2088,
+      "frame_debut": 192,
+      "frame_fin_exclusive": 254,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t1_immo_auto"
+      },
+      "texte": {
+        "contenu": "CARBURANT",
+        "position": "centre",
+        "animation": "countdown_tick",
+        "apparition_s": 0.0,
+        "disparition_s": 2.088
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "raccord_forme",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE_FORME",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 254,
+        "fenetre_frame_fin_exclusive": 254,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "REPERES_REELS_OU_REPLI",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "KEN_BURNS",
+        "debut": 1.0,
+        "fin": 1.04,
+        "dx": 0.01,
+        "dy": 0.0,
+        "courbe": "SMOOTHSTEP_3",
+        "id_source": "ken_burns_lent",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "countdown_tick",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "BATTEMENT_DATE_REELLE",
+        "position_source": "centre",
+        "boite_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 49,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.95,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "pulse_amplitude": 0.025,
+        "pulse_period_frames": 30,
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_signature_t1_immo_auto",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "signature": {
+          "secteur": "immo_auto",
+          "barre_norm": {
+            "x0": 0.08,
+            "y0": 0.75,
+            "x1": 0.92,
+            "y1": 0.79
+          },
+          "icone": "FORME_GEOMETRIQUE_NEUTRE_ASSOCIEE_AU_SECTEUR",
+          "texte": "UNIQUEMENT_TEXTE_SOURCE_ET_DONNEES_REELLES"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "pop_badge",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 200,
+        "sample_cible_48khz": 320000,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 5,
+      "acte_source": "preuve",
+      "role_source": "vue_habitacle_ou_piece",
+      "duree_source_ms": 2617,
+      "frame_debut": 254,
+      "frame_fin_exclusive": 333,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_gauche",
+        "animation": "side_tag_animate",
+        "apparition_s": 0.0,
+        "disparition_s": 2.617
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "zoom_snap",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "ZOOM_SNAP",
+        "duree_ms": 180,
+        "duree_frames_proposee": 5,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 331,
+        "fenetre_frame_fin_exclusive": 336,
+        "marge_b_avant_frames": 2,
+        "marge_a_apres_frames": 3,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "STABILISATION_CONDITIONNELLE",
+        "translation_max_fraction": 0.03,
+        "fenetre_images": 7,
+        "si_algorithme_absent": "IMAGE_NON_STABILISEE_REPLI_DECLARE",
+        "id_source": "stabilisation_hero",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.0
+      },
+      "animation_parametres": {
+        "id_source": "side_tag_animate",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "ETIQUETTE",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 66,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0.1,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_2",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": false,
+        "raison": "AUCUN_SFX_DANS_LA_SOURCE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 6,
+      "acte_source": "preuve",
+      "role_source": "detail_kilometrage_surface",
+      "duree_source_ms": 1747,
+      "frame_debut": 333,
+      "frame_fin_exclusive": 385,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "DE FACE",
+        "position": "tiers_droit",
+        "animation": "kinetic_number",
+        "apparition_s": 0.0,
+        "disparition_s": 1.747
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "panoramique_raccord",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "PANORAMIQUE",
+        "duree_ms": 220,
+        "duree_frames_proposee": 7,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 382,
+        "fenetre_frame_fin_exclusive": 389,
+        "marge_b_avant_frames": 3,
+        "marge_a_apres_frames": 4,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "PAN_SCAN",
+        "dx_debut": -0.02,
+        "dx_fin": 0.02,
+        "dy": 0.0,
+        "courbe": "SMOOTHSTEP_3",
+        "si_hors_image": "REPLI_SANS_DEPLACEMENT",
+        "id_source": "pan_scan_spec",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.3
+      },
+      "animation_parametres": {
+        "id_source": "kinetic_number",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "CHIFFRE_COMPLET",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 39,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0.02,
+            "scale": 0.9,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.8,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1.03,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_3",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "clic_appareil",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 341,
+        "sample_cible_48khz": 545600,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 7,
+      "acte_source": "preuve",
+      "role_source": "panorama_lateral",
+      "duree_source_ms": 1990,
+      "frame_debut": 385,
+      "frame_fin_exclusive": 445,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "typing_price_roll",
+        "apparition_s": 0.0,
+        "disparition_s": 1.99
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "slide_specifications",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "GLISSEMENT",
+        "duree_ms": 240,
+        "duree_frames_proposee": 7,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 442,
+        "fenetre_frame_fin_exclusive": 449,
+        "marge_b_avant_frames": 3,
+        "marge_a_apres_frames": 4,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "ZOOM_PROGRESSIF",
+        "debut": 1.0,
+        "fin": 1.25,
+        "centre_x": 0.5,
+        "centre_y": 0.5,
+        "courbe": "SMOOTHSTEP_3",
+        "id_source": "zoom_push_1.25x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.6
+      },
+      "animation_parametres": {
+        "id_source": "typing_price_roll",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "REVELATION_VALEUR",
+        "position_source": "centre",
+        "boite_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 47,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_1",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "whoosh_soft",
+        "repere_visuel": "CENTRE_TRANSITION_DE_SORTIE_CANDIDAT",
+        "frame_cible_30fps": 445,
+        "sample_cible_48khz": 712000,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 8,
+      "acte_source": "preuve",
+      "role_source": "equipement_utile",
+      "duree_source_ms": 2398,
+      "frame_debut": 445,
+      "frame_fin_exclusive": 517,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_gauche",
+        "animation": "wipe_label",
+        "apparition_s": 0.0,
+        "disparition_s": 2.398
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "zoom_snap",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "ZOOM_SNAP",
+        "duree_ms": 180,
+        "duree_frames_proposee": 5,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 515,
+        "fenetre_frame_fin_exclusive": 520,
+        "marge_b_avant_frames": 2,
+        "marge_a_apres_frames": 3,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "PAN_SCAN",
+        "dx_debut": -0.02,
+        "dx_fin": 0.02,
+        "dy": 0.0,
+        "courbe": "SMOOTHSTEP_3",
+        "si_hors_image": "REPLI_SANS_DEPLACEMENT",
+        "id_source": "pan_scan_spec",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.0
+      },
+      "animation_parametres": {
+        "id_source": "wipe_label",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "BALAYAGE_ETIQUETTE",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 59,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_3",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": false,
+        "raison": "AUCUN_SFX_DANS_LA_SOURCE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 9,
+      "acte_source": "preuve",
+      "role_source": "angle_coffre_piece",
+      "duree_source_ms": 2709,
+      "frame_debut": 517,
+      "frame_fin_exclusive": 598,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_droit",
+        "animation": "lower_third_glide",
+        "apparition_s": 0.0,
+        "disparition_s": 2.709
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "cut_sec",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 598,
+        "fenetre_frame_fin_exclusive": 598,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "AUCUN",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "KEN_BURNS",
+        "debut": 1.0,
+        "fin": 1.04,
+        "dx": 0.01,
+        "dy": 0.0,
+        "courbe": "SMOOTHSTEP_3",
+        "id_source": "ken_burns_lent",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.3
+      },
+      "animation_parametres": {
+        "id_source": "lower_third_glide",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "BANDEAU",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 68,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": -0.12,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_2",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "clic_appareil",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 525,
+        "sample_cible_48khz": 840000,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 10,
+      "acte_source": "urgence",
+      "role_source": "carte_disponibilite_visite",
+      "duree_source_ms": 1766,
+      "frame_debut": 598,
+      "frame_fin_exclusive": 651,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t1_immo_auto"
+      },
+      "texte": {
+        "contenu": "Demandez si c’est disponible",
+        "position": "centre",
+        "animation": "badge_slide_snap",
+        "apparition_s": 0.0,
+        "disparition_s": 1.766
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "raccord_forme",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE_FORME",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 651,
+        "fenetre_frame_fin_exclusive": 651,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "REPERES_REELS_OU_REPLI",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "STABILISATION_CONDITIONNELLE",
+        "translation_max_fraction": 0.03,
+        "fenetre_images": 7,
+        "si_algorithme_absent": "IMAGE_NON_STABILISEE_REPLI_DECLARE",
+        "id_source": "stabilisation_hero",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "badge_slide_snap",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "BADGE",
+        "position_source": "centre",
+        "boite_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 40,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0.12,
+            "dy": 0,
+            "scale": 0.96,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.8,
+            "dx": -0.006,
+            "dy": 0,
+            "scale": 1.03,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_signature_t1_immo_auto",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "signature": {
+          "secteur": "immo_auto",
+          "barre_norm": {
+            "x0": 0.08,
+            "y0": 0.75,
+            "x1": 0.92,
+            "y1": 0.79
+          },
+          "icone": "FORME_GEOMETRIQUE_NEUTRE_ASSOCIEE_AU_SECTEUR",
+          "texte": "UNIQUEMENT_TEXTE_SOURCE_ET_DONNEES_REELLES"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "pop_badge",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 606,
+        "sample_cible_48khz": 969600,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 11,
+      "acte_source": "reassurance",
+      "role_source": "badge_options_verifiees",
+      "duree_source_ms": 2141,
+      "frame_debut": 651,
+      "frame_fin_exclusive": 715,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t1_immo_auto"
+      },
+      "texte": {
+        "contenu": "À RETENIR",
+        "position": "tiers_gauche",
+        "animation": "price_shake_impact",
+        "apparition_s": 0.0,
+        "disparition_s": 2.141
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "panoramique_raccord",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "PANORAMIQUE",
+        "duree_ms": 220,
+        "duree_frames_proposee": 7,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 712,
+        "fenetre_frame_fin_exclusive": 719,
+        "marge_b_avant_frames": 3,
+        "marge_a_apres_frames": 4,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "RECADRAGE",
+        "zoom_indicatif_nom": 1.0,
+        "priorite": "RECADRAGE_SOURCE_SANS_DOUBLE_MULTIPLICATION",
+        "id_source": "recadrage_plan_100",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "price_shake_impact",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "IMPACT",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 51,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.92,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.6,
+            "dx": 0.008,
+            "dy": 0,
+            "scale": 1.04,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.8,
+            "dx": -0.005,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_signature_t1_immo_auto",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "signature": {
+          "secteur": "immo_auto",
+          "barre_norm": {
+            "x0": 0.08,
+            "y0": 0.75,
+            "x1": 0.92,
+            "y1": 0.79
+          },
+          "icone": "FORME_GEOMETRIQUE_NEUTRE_ASSOCIEE_AU_SECTEUR",
+          "texte": "UNIQUEMENT_TEXTE_SOURCE_ET_DONNEES_REELLES"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "pop_badge",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 659,
+        "sample_cible_48khz": 1054400,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 12,
+      "acte_source": "preuve",
+      "role_source": "vue_coffre_ou_rangement",
+      "duree_source_ms": 2469,
+      "frame_debut": 715,
+      "frame_fin_exclusive": 790,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_droit",
+        "animation": "line_draw_spec",
+        "apparition_s": 0.0,
+        "disparition_s": 2.469
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "slide_specifications",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "GLISSEMENT",
+        "duree_ms": 240,
+        "duree_frames_proposee": 7,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 787,
+        "fenetre_frame_fin_exclusive": 794,
+        "marge_b_avant_frames": 3,
+        "marge_a_apres_frames": 4,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "ZOOM_PROGRESSIF",
+        "debut": 1.0,
+        "fin": 1.25,
+        "centre_x": 0.5,
+        "centre_y": 0.5,
+        "courbe": "SMOOTHSTEP_3",
+        "id_source": "zoom_push_1.25x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.3
+      },
+      "animation_parametres": {
+        "id_source": "line_draw_spec",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "REVELATION_TRAIT",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 62,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_3",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": false,
+        "raison": "AUCUN_SFX_DANS_LA_SOURCE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 13,
+      "acte_source": "preuve",
+      "role_source": "cle_et_visite",
+      "duree_source_ms": 2389,
+      "frame_debut": 790,
+      "frame_fin_exclusive": 861,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "caption_breath_fade",
+        "apparition_s": 0.0,
+        "disparition_s": 2.389
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "cut_sec",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 861,
+        "fenetre_frame_fin_exclusive": 861,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "AUCUN",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "PAN_SCAN",
+        "dx_debut": -0.02,
+        "dx_fin": 0.02,
+        "dy": 0.0,
+        "courbe": "SMOOTHSTEP_3",
+        "si_hors_image": "REPLI_SANS_DEPLACEMENT",
+        "id_source": "pan_scan_spec",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.6
+      },
+      "animation_parametres": {
+        "id_source": "caption_breath_fade",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "FONDU_TEXTE",
+        "position_source": "centre",
+        "boite_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 58,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "pulse_amplitude": 0.015,
+        "pulse_period_frames": 60,
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_3",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "whoosh_soft",
+        "repere_visuel": "DERNIERE_IMAGE_AVANT_COUPE_CANDIDATE",
+        "frame_cible_30fps": 860,
+        "sample_cible_48khz": 1376000,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 14,
+      "acte_source": "offre",
+      "role_source": "prix_bien",
+      "duree_source_ms": 1793,
+      "frame_debut": 861,
+      "frame_fin_exclusive": 915,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_geant"
+      },
+      "texte": {
+        "contenu": "{prix} {devise}",
+        "position": "tiers_gauche",
+        "animation": "compteur_countup",
+        "apparition_s": 0.0,
+        "disparition_s": 1.793
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "match_cut_mouvement",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE_RACCORD",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 915,
+        "fenetre_frame_fin_exclusive": 915,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "REPERES_REELS_OU_REPLI",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "KEN_BURNS",
+        "debut": 1.0,
+        "fin": 1.04,
+        "dx": 0.01,
+        "dy": 0.0,
+        "courbe": "SMOOTHSTEP_3",
+        "id_source": "ken_burns_lent",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "compteur_countup",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "REVELATION_VALEUR",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 41,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.9,
+            "opacite": 0,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.75,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1.04,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_prix_geant",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "prix": {
+          "valeur_zone_norm": {
+            "x0": 0.08,
+            "y0": 0.3,
+            "x1": 0.48,
+            "y1": 0.69
+          },
+          "valeur_intermediaire_visible": false,
+          "seulement_valeur_reelle_et_devise_confirmee": true,
+          "si_texte_source_sans_prix": "NE_PAS_AJOUTER_DE_PRIX_SANS_DECISION_EXPLICITE"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "caisse_enregistreuse",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 869,
+        "sample_cible_48khz": 1390400,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 15,
+      "acte_source": "cta",
+      "role_source": "carte_contact",
+      "duree_source_ms": 4500,
+      "frame_debut": 915,
+      "frame_fin_exclusive": 1050,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_whatsapp_finale"
+      },
+      "texte": {
+        "contenu": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+        "position": "centre_bas",
+        "animation": "whatsapp_pulsant",
+        "apparition_s": 0.0,
+        "disparition_s": 4.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "fondu_enchaine",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "FONDU_AB_LINEAIRE",
+        "duree_ms": 300,
+        "duree_frames_proposee": 9,
+        "mode_temps": "SORTIE_DANS_DERNIERE_SCENE",
+        "fenetre_frame_debut": 1041,
+        "fenetre_frame_fin_exclusive": 1050,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "FOND_NOIR_PROPOSE_A_APPROUVER",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "FONDU_COULEUR_OU_COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "AUCUN",
+        "regle": "AUCUNE_TRANSFORMATION_SUPPLEMENTAIRE",
+        "id_source": "aucun_effet",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "whatsapp_pulsant",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "PULSATION_CONTACT",
+        "position_source": "centre_bas",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.66,
+          "x1": 0.92,
+          "y1": 0.84
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 122,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.96,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "pulse_amplitude": 0.035,
+        "pulse_period_frames": 45,
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.66,
+          "x1": 0.92,
+          "y1": 0.84
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_whatsapp_finale",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "contact": {
+          "nom_norm": {
+            "x0": 0.08,
+            "y0": 0.15,
+            "x1": 0.92,
+            "y1": 0.3
+          },
+          "lieu_norm": {
+            "x0": 0.08,
+            "y0": 0.34,
+            "x1": 0.92,
+            "y1": 0.48
+          },
+          "whatsapp_norm": {
+            "x0": 0.08,
+            "y0": 0.66,
+            "x1": 0.92,
+            "y1": 0.84
+          },
+          "donnees": "UNIQUEMENT_SAISIES_ET_VALIDEES"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "whoosh_soft",
+        "repere_visuel": "PREMIERE_PULSATION_CONTACT_CANDIDATE",
+        "frame_cible_30fps": 923,
+        "sample_cible_48khz": 1476800,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    }
+  ]
+}

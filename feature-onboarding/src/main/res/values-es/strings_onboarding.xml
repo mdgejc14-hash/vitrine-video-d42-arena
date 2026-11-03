@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lang_title">Elige tu idioma</string>
+    <string name="carousel_next">Siguiente</string>
+    <string name="carousel_start">Empezar</string>
+    <string name="slide1_slogan">Filma. Vende. Listo.</string>
+    <string name="slide1_sub">La app de vídeo para tiendas y oficios</string>
+    <string name="slide2_title">Grabación guiada por IA</string>
+    <string name="slide2_sub">Cámara INS 30 FPS, bloqueo de exposición, protección de rostros</string>
+    <string name="slide3_slogan">Vídeos que venden en 30 segundos</string>
+    <string name="slide3_sub">Edición profesional automática, incluso sin conexión</string>
+    <string name="sector_title">Tu actividad principal</string>
+    <string name="sector_hint">Toca tu sector y continúa.</string>
+    <string name="action_continue">Continuar</string>
+    <string name="welcome_title">Bienvenido</string>
+    <string name="welcome_credits">Te regalamos %1$d créditos. ¡Disfruta!</string>
+    <string name="lang_change_later">Podrás cambiar esta elección más tarde</string>
+    <string name="refcode_title">Tu código de padrino</string>
+    <string name="refcode_subtitle">Puedes saltar este paso.</string>
+    <string name="refcode_chosen">Elegiste:</string>
+    <string name="refcode_label">Código de tu padrino (si tienes uno)</string>
+    <string name="refcode_hint">Escribe el código aquí</string>
+    <string name="refcode_continue">Continuar</string>
+    <string name="refcode_skip">No tengo código</string>
+</resources>

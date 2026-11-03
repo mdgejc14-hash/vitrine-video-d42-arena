@@ -1,0 +1,1541 @@
+{
+  "id": "immo_auto_T3",
+  "secteur": "immo_auto",
+  "secteur_libelle": "Immo & Auto",
+  "format": "T3_presentation_produit",
+  "version": "2.0_theorique",
+  "duree_totale_secondes": 40,
+  "nombre_scenes": 14,
+  "ratio": "9:16",
+  "notes_adaptation": "On fait visiter le bien ou la voiture, puis on montre les détails et les informations utiles. Le prix arrive à la fin.",
+  "champs_saisie": [
+    {
+      "id": "nom_commerce",
+      "label": "Nom de votre commerce",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Auto Immo Conseil",
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "groupe_ui": "commerce_contact",
+      "aide_simple": "Écrivez le nom que les clients doivent voir."
+    },
+    {
+      "id": "nom_offre",
+      "label": "Nom du bien ou de la voiture",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Toyota Corolla 2018",
+      "source": "saisie_video",
+      "scenes": [
+        1
+      ],
+      "groupe_ui": "offre",
+      "aide_simple": "Écrivez le nom du plat, du produit ou du travail."
+    },
+    {
+      "id": "prix",
+      "label": "Prix du bien ou de la voiture",
+      "type": "nombre",
+      "obligatoire": true,
+      "exemple": "15000",
+      "source": "saisie_video",
+      "scenes": [
+        13
+      ],
+      "groupe_ui": "prix",
+      "aide_simple": "Écrivez le vrai prix. La monnaie FCFA est choisie par défaut."
+    },
+    {
+      "id": "devise",
+      "label": "Monnaie",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "FCFA",
+      "source": "saisie_video",
+      "scenes": [
+        13
+      ],
+      "defaut": "FCFA",
+      "groupe_ui": "prix",
+      "affichage_ui": "sélecteur compact; FCFA proposé par défaut pour cette vidéo",
+      "aide_simple": "FCFA est déjà choisi. Change-le seulement si besoin."
+    },
+    {
+      "id": "quartier_ville",
+      "label": "Quartier et ville",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Akpakpa, Cotonou",
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "groupe_ui": "lieu",
+      "aide_simple": "Écrivez le quartier et la ville où les clients peuvent venir."
+    },
+    {
+      "id": "whatsapp",
+      "label": "votre numéro WhatsApp",
+      "type": "telephone",
+      "obligatoire": true,
+      "exemple": "+229 97 00 00 00",
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "validation": "format_international",
+      "groupe_ui": "commerce_contact",
+      "aide_simple": "Écrivez le numéro sur lequel les clients peuvent vous écrire, avec le + et le code du pays."
+    },
+    {
+      "id": "badge_engagement_actif",
+      "label": "Afficher un message spécial (facultatif)",
+      "type": "case_a_cocher",
+      "obligatoire": false,
+      "exemple": false,
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "defaut": false,
+      "choix": [
+        "stock_limite",
+        "places_limitees",
+        "qualite_garantie"
+      ],
+      "groupe_ui": "options_avancees",
+      "afficher_par_defaut": false,
+      "aide_simple": "Laissez désactivé, sauf si le message est vrai."
+    }
+  ],
+  "politique_saisie": {
+    "mode": "saisie_video",
+    "recollecter_a_chaque_video": true,
+    "enregistrer_dans_profil": false,
+    "pre_remplissage_automatique": false,
+    "numero_whatsapp_obligatoire": true,
+    "prix_obligatoire_sauf_T5": true,
+    "format_prix": "15 000 FCFA",
+    "badge_engagement_actif_par_defaut": false
+  },
+  "prises": [
+    {
+      "id": "prise_1",
+      "libelle": "Le bien ou la voiture de face",
+      "duree_cible_s": 12,
+      "consigne_camera": "Commencez par montrer le bien ou la voiture de face. Tenez votre téléphone debout et reste assez immobile. Filmez lentement et montre les détails qui sont vraiment présents.",
+      "type_plan": "plan_large",
+      "mouvement": "pano_lent",
+      "lumiere": "exterieur_ombre_douce",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        1,
+        2,
+        9
+      ],
+      "guide_parole_scenes": [
+        2
+      ],
+      "segments_guide_parole": [
+        {
+          "scene": 2,
+          "quoi_raconter": "Parlez d’un détail qu’on voit.",
+          "quoi_montrer": "Montrez {nom_offre} de près.",
+          "exemple": "Voici {nom_offre} de près.",
+          "note_exemple": "Exemple pour comprendre, pas à répéter.",
+          "duree_conseillee_s": 2.0,
+          "segment_audio_id": "T3_scene_02_voix"
+        }
+      ]
+    },
+    {
+      "id": "prise_2",
+      "libelle": "Le côté ou une pièce",
+      "duree_cible_s": 12,
+      "consigne_camera": "Ensuite, montrez le côté ou une pièce. Tenez votre téléphone debout et reste assez immobile. Filmez lentement et montre les détails qui sont vraiment présents.",
+      "type_plan": "plan_moyen",
+      "mouvement": "travelling_avant",
+      "lumiere": "exterieur_ombre_douce",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        4,
+        7
+      ],
+      "guide_parole_scenes": [],
+      "segments_guide_parole": []
+    },
+    {
+      "id": "prise_3",
+      "libelle": "L’intérieur et les détails",
+      "duree_cible_s": 12,
+      "consigne_camera": "Puis, montrez l’intérieur et les détails. Tenez votre téléphone debout et reste assez immobile. Filmez lentement et montre les détails qui sont vraiment présents.",
+      "type_plan": "plan_moyen",
+      "mouvement": "travelling_avant",
+      "lumiere": "exterieur_ombre_douce",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        5,
+        8,
+        11,
+        12
+      ],
+      "guide_parole_scenes": [],
+      "segments_guide_parole": []
+    }
+  ],
+  "scenes": [
+    {
+      "numero": 1,
+      "acte": "hook",
+      "role": "hook_fiche_bien",
+      "duree_secondes": 2.5,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "Découvre {nom_offre}, pièce par pièce.",
+        "position": "centre_haut",
+        "animation": "pulse_cta_soft",
+        "apparition_s": 0.0,
+        "disparition_s": 2.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "raccord_forme",
+      "effet": "freeze_0.5s",
+      "sfx": "whoosh_fast",
+      "action_montage": "La vidéo commence par « découvre {nom_offre}, pièce par pièce ». Ça donne envie de regarder.",
+      "sfx_libelle_simple": "Petit souffle rapide",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 2,
+      "acte": "preuve",
+      "role": "panorama_face",
+      "duree_secondes": 3.368,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "DE FACE",
+        "position": "centre",
+        "animation": "countdown_tick",
+        "apparition_s": 0.0,
+        "disparition_s": 3.368
+      },
+      "voix": {
+        "active": true,
+        "source_audio_prise_id": "prise_1",
+        "segment_audio_id": "T3_scene_02_voix",
+        "audio_separe_de_image": true,
+        "vitesse_audio": 1.0
+      },
+      "transition_sortie": "raccord_forme",
+      "effet": "recadrage_plan_100",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le bien ou la voiture de face ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "duree_affichee_s": 2.0,
+        "idee": "Montrez {nom_offre} de près. Parlez d’un détail qu’on voit.",
+        "quoi_raconter": "Parlez d’un détail qu’on voit.",
+        "quoi_montrer": "Montrez {nom_offre} de près.",
+        "exemple": "Voici {nom_offre} de près.",
+        "exemple_langue_libre": "Dites cette idée avec vos mots, en français ou dans la langue que vous voulez.",
+        "theme": "presenter_offre",
+        "conseil": "Laissez le temps de voir le détail.",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 1,
+          "segment_audio_id": "T3_scene_02_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez {nom_offre} de près.",
+          "quoi_raconter": "Parlez d’un détail qu’on voit."
+        },
+        "cles": {
+          "idee": "guide.immo_auto.T3.scene_02.idee",
+          "quoi_raconter": "guide.immo_auto.T3.scene_02.quoi_raconter",
+          "quoi_montrer": "guide.immo_auto.T3.scene_02.quoi_montrer",
+          "exemple": "guide.immo_auto.T3.scene_02.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.immo_auto.T3.scene_02.conseil"
+        }
+      }
+    },
+    {
+      "numero": 3,
+      "acte": "reassurance",
+      "role": "badge_specification_1",
+      "duree_secondes": 3.192,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_details_produit"
+      },
+      "texte_ecran": {
+        "contenu": "INFORMATIONS",
+        "position": "tiers_gauche",
+        "animation": "side_tag_animate",
+        "apparition_s": 0.0,
+        "disparition_s": 3.192
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "zoom_snap",
+      "effet": "pan_scan_spec",
+      "sfx": "clic_appareil",
+      "action_montage": "L’application affiche les mots « INFORMATIONS » à l’écran.",
+      "carte_generee_id": "carte_details_produit",
+      "sfx_libelle_simple": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 4,
+      "acte": "preuve",
+      "role": "angle_profil",
+      "duree_secondes": 3.059,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "DE CÔTÉ",
+        "position": "tiers_droit",
+        "animation": "kinetic_number",
+        "apparition_s": 0.0,
+        "disparition_s": 3.059
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "panoramique_raccord",
+      "effet": "pan_scan_spec",
+      "sfx": "clic_appareil",
+      "action_montage": "L’application reprend une partie de « Le côté ou une pièce ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 5,
+      "acte": "preuve",
+      "role": "detail_interieur_matiere",
+      "duree_secondes": 3.079,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "typing_price_roll",
+        "apparition_s": 0.0,
+        "disparition_s": 3.079
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "match_cut_mouvement",
+      "effet": "pan_scan_spec",
+      "sfx": "clic_appareil",
+      "action_montage": "L’application reprend une partie de « L’intérieur et les détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 6,
+      "acte": "reassurance",
+      "role": "badge_specification_2",
+      "duree_secondes": 3.244,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_details_produit"
+      },
+      "texte_ecran": {
+        "contenu": "INFORMATIONS",
+        "position": "tiers_gauche",
+        "animation": "wipe_label",
+        "apparition_s": 0.0,
+        "disparition_s": 3.244
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "slide_specifications",
+      "effet": "pan_scan_spec",
+      "sfx": "clic_appareil",
+      "action_montage": "L’application affiche les mots « INFORMATIONS » à l’écran.",
+      "carte_generee_id": "carte_details_produit",
+      "sfx_libelle_simple": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 7,
+      "acte": "preuve",
+      "role": "vue_arriere_ou_piece",
+      "duree_secondes": 2.748,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_droit",
+        "animation": "lower_third_glide",
+        "apparition_s": 0.0,
+        "disparition_s": 2.748
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "zoom_snap",
+      "effet": "recadrage_plan_100",
+      "sfx": "whoosh_soft",
+      "action_montage": "L’application reprend une partie de « Le côté ou une pièce ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 8,
+      "acte": "preuve",
+      "role": "fonctionnalite_essentielle",
+      "duree_secondes": 2.517,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "badge_slide_snap",
+        "apparition_s": 0.0,
+        "disparition_s": 2.517
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "match_cut_mouvement",
+      "effet": "zoom_push_1.25x",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « L’intérieur et les détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 9,
+      "acte": "preuve",
+      "role": "panorama_ambiance",
+      "duree_secondes": 2.666,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_gauche",
+        "animation": "price_shake_impact",
+        "apparition_s": 0.0,
+        "disparition_s": 2.666
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "pan_scan_spec",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le bien ou la voiture de face ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 10,
+      "acte": "reassurance",
+      "role": "badge_surface_annee",
+      "duree_secondes": 2.478,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t3_immo_auto"
+      },
+      "texte_ecran": {
+        "contenu": "DE FACE",
+        "position": "tiers_droit",
+        "animation": "line_draw_spec",
+        "apparition_s": 0.0,
+        "disparition_s": 2.478
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "panoramique_raccord",
+      "effet": "ken_burns_lent",
+      "sfx": "pop_badge",
+      "action_montage": "L’application affiche les mots « DE FACE » à l’écran.",
+      "carte_generee_id": "carte_signature_t3_immo_auto",
+      "sfx_libelle_simple": "Petit son pour le message",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 11,
+      "acte": "preuve",
+      "role": "vue_coffre_ou_rangement",
+      "duree_secondes": 2.458,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "caption_breath_fade",
+        "apparition_s": 0.0,
+        "disparition_s": 2.458
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "slide_specifications",
+      "effet": "stabilisation_hero",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « L’intérieur et les détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 12,
+      "acte": "reassurance",
+      "role": "specification_documentee",
+      "duree_secondes": 2.209,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "INFORMATIONS",
+        "position": "tiers_gauche",
+        "animation": "split_label_track",
+        "apparition_s": 0.0,
+        "disparition_s": 2.209
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "zoom_snap",
+      "effet": "pan_scan_spec",
+      "sfx": "clic_appareil",
+      "action_montage": "L’application reprend une partie de « L’intérieur et les détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 13,
+      "acte": "offre",
+      "role": "prix_countup_final",
+      "duree_secondes": 1.982,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_geant"
+      },
+      "texte_ecran": {
+        "contenu": "{prix} {devise}",
+        "position": "tiers_droit",
+        "animation": "compteur_countup",
+        "apparition_s": 0.0,
+        "disparition_s": 1.982
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "zoom_push_1.25x",
+      "sfx": "caisse_enregistreuse",
+      "action_montage": "L’application affiche le vrai prix que vous avez entré.",
+      "carte_generee_id": "carte_prix_geant",
+      "sfx_libelle_simple": "Petit son au moment du prix",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 14,
+      "acte": "cta",
+      "role": "carte_contact",
+      "duree_secondes": 4.5,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_whatsapp_finale"
+      },
+      "texte_ecran": {
+        "contenu": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+        "position": "centre_bas",
+        "animation": "whatsapp_pulsant",
+        "apparition_s": 0.0,
+        "disparition_s": 4.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "fondu_enchaine",
+      "effet": "aucun_effet",
+      "sfx": "whoosh_soft",
+      "action_montage": "À la fin, la vidéo garde le nom de votre commerce, le quartier et le numéro WhatsApp à l’écran.",
+      "carte_generee_id": "carte_whatsapp_finale",
+      "sfx_libelle_simple": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    }
+  ],
+  "montage_signature": {
+    "nom": "T3_immo_auto",
+    "id_unique": "T3_immo_auto",
+    "rythme_moyen_coupe_s": 2.75,
+    "courbe_rythme": [
+      2.5,
+      3.368,
+      3.192,
+      3.059,
+      3.079,
+      3.244,
+      2.748,
+      2.517,
+      2.666,
+      2.478,
+      2.458,
+      2.209,
+      1.982,
+      4.5
+    ],
+    "transitions": [
+      "raccord_forme",
+      "zoom_snap",
+      "panoramique_raccord",
+      "match_cut_mouvement",
+      "slide_specifications",
+      "cut_sec",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "recadrage_plan_100",
+      "pan_scan_spec",
+      "zoom_push_1.25x",
+      "ken_burns_lent",
+      "stabilisation_hero",
+      "aucun_effet"
+    ],
+    "zoom": {
+      "type": "recadrages_roles_et_sujet",
+      "min": 1.0,
+      "max": 1.6
+    },
+    "signature_detail": "On fait visiter le bien ou la voiture, puis on montre les détails et les informations utiles. Le prix arrive à la fin."
+  },
+  "etalonnage": {
+    "preset": "grade_immo_auto_t3",
+    "preset_avant": null,
+    "preset_apres": null,
+    "exposition_ev": 0.2,
+    "contraste": 1.05,
+    "saturation": 1.01,
+    "temperature_k": 5400,
+    "vignettage": 0.1,
+    "nettete": 0.18,
+    "protection_peau": true,
+    "protection_peau_detail": "Peaux foncées incluses : préserver les hautes lumières du visage et vérifier l’exposition; fidélité textile/carrosserie et nourriture avant stylisation.",
+    "denoise_faible_lumiere": true,
+    "stabilisation": true,
+    "consigne_lumiere": "Filmez chaque spécification lisiblement; panorama lent à hauteur stable et lumière naturelle sans reflets écrêtés.",
+    "preset_avant_ref": null,
+    "preset_apres_ref": null
+  },
+  "style_visuel": {
+    "typographie": {
+      "preset": "sans_serif_bold_condensee",
+      "graisse": "900",
+      "couleur_texte": "#FFFFFF",
+      "contour": "#000000",
+      "fond_texte": "#FF5500"
+    },
+    "palette": "palette_T3_neutre",
+    "badges": [
+      "1_sur_3",
+      "2_sur_3",
+      "3_sur_3"
+    ],
+    "badges_optionnels_actives_par_commercant": [
+      "stock_limite",
+      "places_limitees",
+      "qualite_garantie"
+    ],
+    "engagements_optionnels_actifs_par_defaut": false
+  },
+  "audio": {
+    "musique": {
+      "genre": "amapiano instrumental",
+      "bpm_min": 89,
+      "bpm_max": 105,
+      "structure": "hook court, progression accordée aux rôles, accent sur preuve/révélation, sortie propre sous carte CTA",
+      "structure_id": "audio_structure_immo_auto_t3",
+      "categorie_audio": "musique_t3_immo_auto",
+      "cue_roles": {
+        "riser_role": "badge_specification_1",
+        "drop_scene": 4,
+        "voice_ducking": "VAD; aucun ASR"
+      }
+    },
+    "sfx_scenes": [
+      {
+        "scene": 1,
+        "categorie": "whoosh_fast"
+      },
+      {
+        "scene": 3,
+        "categorie": "clic_appareil"
+      },
+      {
+        "scene": 4,
+        "categorie": "clic_appareil"
+      },
+      {
+        "scene": 5,
+        "categorie": "clic_appareil"
+      },
+      {
+        "scene": 6,
+        "categorie": "clic_appareil"
+      },
+      {
+        "scene": 7,
+        "categorie": "whoosh_soft"
+      },
+      {
+        "scene": 10,
+        "categorie": "pop_badge"
+      },
+      {
+        "scene": 12,
+        "categorie": "clic_appareil"
+      },
+      {
+        "scene": 13,
+        "categorie": "caisse_enregistreuse"
+      },
+      {
+        "scene": 14,
+        "categorie": "whoosh_soft"
+      }
+    ],
+    "mix": {
+      "cible_lufs": -14,
+      "ducking_musique_sous_voix_db": -14,
+      "voix_prioritaire": true,
+      "limiteur_true_peak_dbtp": -1.0
+    },
+    "mode_sans_voix": {
+      "actif_par_defaut": false,
+      "compense_par": "texte_ecran_et_pictogrammes",
+      "calage": "BPM et temps forts, sans dépendance ASR"
+    },
+    "interface_commercant": {
+      "genre_en_mots_simples": "Musique calme et soignée.",
+      "message": "La musique doit rester moins forte que votre voix. Sans voix, les mots à l’écran racontent la vidéo.",
+      "note": "La musique et les petits sons doivent être autorisés pour une vidéo de commerce."
+    }
+  },
+  "copywriting": {
+    "hooks": [
+      "Découvre {nom_offre}, pièce par pièce.",
+      "Regardez le produit de près.",
+      "Voici ce qu’il faut savoir.",
+      "On vous le montre de plusieurs côtés.",
+      "Le prix arrive à la fin."
+    ],
+    "formules_prix": [
+      "Prix : {prix} {devise}.",
+      "{nom_offre} coûte {prix} {devise}.",
+      "Demandez le prix à {nom_commerce}."
+    ],
+    "formules_urgence": [
+      "Demandez si le produit est disponible.",
+      "Passe à {quartier_ville} pour le voir.",
+      "Écrivez-nous pour en savoir plus."
+    ],
+    "formules_cta": [
+      "Écrivez-nous sur WhatsApp : {whatsapp}.",
+      "Viens à {quartier_ville}.",
+      "Contacte {nom_commerce} sur WhatsApp."
+    ],
+    "regles_affichage": {
+      "format_prix": "15 000 FCFA, si c’est le vrai prix saisi",
+      "max_lignes": 2,
+      "max_caracteres_par_ligne": 28,
+      "zone_securite_ref": "zone_securite",
+      "pourcentage_reduction": "calculé automatiquement avec les deux prix saisis",
+      "note": "Phrases courtes. N’affiche pas une offre ou un stock limité si ce n’est pas vrai."
+    }
+  },
+  "variables_calculees": [],
+  "confiance_analyse": {
+    "methode": "theorique",
+    "validation_terrain": "a_faire",
+    "hypotheses_a_valider": [
+      "Lisibilité du hook sur petit écran",
+      "Compréhension du rythme et du vocabulaire local",
+      "Acceptation d’une durée 40 s",
+      "Performance du montage sans voix"
+    ],
+    "aucune_statistique_de_performance_affirmee": true
+  },
+  "signature_montage": {
+    "id_unique": "T3_immo_auto",
+    "famille_format": "T3",
+    "empreinte_sequence": [
+      "hook_fiche_bien|raccord_forme|freeze_0.5s",
+      "panorama_face|raccord_forme|recadrage_plan_100",
+      "badge_specification_1|zoom_snap|pan_scan_spec",
+      "angle_profil|panoramique_raccord|pan_scan_spec",
+      "detail_interieur_matiere|match_cut_mouvement|pan_scan_spec",
+      "badge_specification_2|slide_specifications|pan_scan_spec",
+      "vue_arriere_ou_piece|zoom_snap|recadrage_plan_100",
+      "fonctionnalite_essentielle|match_cut_mouvement|zoom_push_1.25x",
+      "panorama_ambiance|cut_sec|pan_scan_spec",
+      "badge_surface_annee|panoramique_raccord|ken_burns_lent",
+      "vue_coffre_ou_rangement|slide_specifications|stabilisation_hero",
+      "specification_documentee|zoom_snap|pan_scan_spec",
+      "prix_countup_final|cut_sec|zoom_push_1.25x",
+      "carte_contact|fondu_enchaine|aucun_effet"
+    ],
+    "courbe_rythme": [
+      2.5,
+      3.368,
+      3.192,
+      3.059,
+      3.079,
+      3.244,
+      2.748,
+      2.517,
+      2.666,
+      2.478,
+      2.458,
+      2.209,
+      1.982,
+      4.5
+    ],
+    "justification_sectorielle": "On fait visiter le bien ou la voiture, puis on montre les détails et les informations utiles. Le prix arrive à la fin."
+  },
+  "etapes_montage": [
+    {
+      "etape": 1,
+      "temps_s": 2.5,
+      "role": "Au début",
+      "action": "La vidéo commence par « découvre {nom_offre}, pièce par pièce ». Ça donne envie de regarder.",
+      "texte": "Découvre {nom_offre}, pièce par pièce.",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit souffle rapide",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 2,
+      "temps_s": 3.368,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le bien ou la voiture de face ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "DE FACE",
+      "voix": "Montrez {nom_offre} de près. Parlez d’un détail qu’on voit.",
+      "audio": "votre voix reste devant la musique.",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "theme": "presenter_offre",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 1,
+          "segment_audio_id": "T3_scene_02_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez {nom_offre} de près.",
+          "quoi_raconter": "Parlez d’un détail qu’on voit."
+        },
+        "cles": {
+          "idee": "guide.immo_auto.T3.scene_02.idee",
+          "quoi_raconter": "guide.immo_auto.T3.scene_02.quoi_raconter",
+          "quoi_montrer": "guide.immo_auto.T3.scene_02.quoi_montrer",
+          "exemple": "guide.immo_auto.T3.scene_02.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.immo_auto.T3.scene_02.conseil"
+        }
+      }
+    },
+    {
+      "etape": 3,
+      "temps_s": 3.192,
+      "role": "Un message à l’écran",
+      "action": "L’application affiche les mots « INFORMATIONS » à l’écran.",
+      "texte": "INFORMATIONS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 4,
+      "temps_s": 3.059,
+      "role": "De côté",
+      "action": "L’application reprend une partie de « Le côté ou une pièce ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "DE CÔTÉ",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 5,
+      "temps_s": 3.079,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « L’intérieur et les détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 6,
+      "temps_s": 3.244,
+      "role": "Un message à l’écran",
+      "action": "L’application affiche les mots « INFORMATIONS » à l’écran.",
+      "texte": "INFORMATIONS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 7,
+      "temps_s": 2.748,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le côté ou une pièce ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 8,
+      "temps_s": 2.517,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « L’intérieur et les détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 9,
+      "temps_s": 2.666,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le bien ou la voiture de face ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 10,
+      "temps_s": 2.478,
+      "role": "Un message à l’écran",
+      "action": "L’application affiche les mots « DE FACE » à l’écran.",
+      "texte": "DE FACE",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son pour le message",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 11,
+      "temps_s": 2.458,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « L’intérieur et les détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 12,
+      "temps_s": 2.209,
+      "role": "Une information utile",
+      "action": "L’application reprend une partie de « L’intérieur et les détails ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "INFORMATIONS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 13,
+      "temps_s": 1.982,
+      "role": "Le prix",
+      "action": "L’application affiche le vrai prix que vous avez entré.",
+      "texte": "{prix} {devise}",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son au moment du prix",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 14,
+      "temps_s": 4.5,
+      "role": "vos coordonnées",
+      "action": "À la fin, la vidéo garde le nom de votre commerce, le quartier et le numéro WhatsApp à l’écran.",
+      "texte": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    }
+  ],
+  "axes_signature": {
+    "sequence_roles": [
+      "hook_fiche_bien",
+      "panorama_face",
+      "badge_specification_1",
+      "angle_profil",
+      "detail_interieur_matiere",
+      "badge_specification_2",
+      "vue_arriere_ou_piece",
+      "fonctionnalite_essentielle",
+      "panorama_ambiance",
+      "badge_surface_annee",
+      "vue_coffre_ou_rangement",
+      "specification_documentee",
+      "prix_countup_final",
+      "carte_contact"
+    ],
+    "nombre_scenes": 14,
+    "courbe_rythme": [
+      2.5,
+      3.368,
+      3.192,
+      3.059,
+      3.079,
+      3.244,
+      2.748,
+      2.517,
+      2.666,
+      2.478,
+      2.458,
+      2.209,
+      1.982,
+      4.5
+    ],
+    "transitions": [
+      "raccord_forme",
+      "raccord_forme",
+      "zoom_snap",
+      "panoramique_raccord",
+      "match_cut_mouvement",
+      "slide_specifications",
+      "zoom_snap",
+      "match_cut_mouvement",
+      "cut_sec",
+      "panoramique_raccord",
+      "slide_specifications",
+      "zoom_snap",
+      "cut_sec",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "recadrage_plan_100",
+      "pan_scan_spec",
+      "pan_scan_spec",
+      "pan_scan_spec",
+      "pan_scan_spec",
+      "recadrage_plan_100",
+      "zoom_push_1.25x",
+      "pan_scan_spec",
+      "ken_burns_lent",
+      "stabilisation_hero",
+      "pan_scan_spec",
+      "zoom_push_1.25x",
+      "aucun_effet"
+    ],
+    "decoupage_prises": [
+      "prise_1",
+      "prise_1",
+      "carte:carte_details_produit",
+      "prise_2",
+      "prise_3",
+      "carte:carte_details_produit",
+      "prise_2",
+      "prise_3",
+      "prise_1",
+      "carte:carte_signature_t3_immo_auto",
+      "prise_3",
+      "prise_3",
+      "carte:carte_prix_geant",
+      "carte:carte_whatsapp_finale"
+    ],
+    "cartes_generees": [
+      "",
+      "",
+      "carte_details_produit",
+      "",
+      "",
+      "carte_details_produit",
+      "",
+      "",
+      "",
+      "carte_signature_t3_immo_auto",
+      "",
+      "",
+      "carte_prix_geant",
+      "carte_whatsapp_finale"
+    ],
+    "texte_animation_position": [
+      "pulse_cta_soft|centre_haut",
+      "countdown_tick|centre",
+      "side_tag_animate|tiers_gauche",
+      "kinetic_number|tiers_droit",
+      "typing_price_roll|centre",
+      "wipe_label|tiers_gauche",
+      "lower_third_glide|tiers_droit",
+      "badge_slide_snap|centre",
+      "price_shake_impact|tiers_gauche",
+      "line_draw_spec|tiers_droit",
+      "caption_breath_fade|centre",
+      "split_label_track|tiers_gauche",
+      "compteur_countup|tiers_droit",
+      "whatsapp_pulsant|centre_bas"
+    ],
+    "preset_etalonnage": "grade_immo_auto_t3",
+    "structure_audio": "audio_structure_immo_auto_t3"
+  },
+  "formulaire_ui": {
+    "titre": "Faire ma vidéo",
+    "message": "Suis les étapes. L’application prépare la vidéo pour vous.",
+    "nombre_sections_principales": 4,
+    "limite_sections_principales": 5,
+    "sections_principales": [
+      {
+        "id": "commerce_contact",
+        "titre": "votre commerce et votre WhatsApp",
+        "champs": [
+          "nom_commerce",
+          "whatsapp"
+        ],
+        "aide": "Écrivez le nom de votre commerce et le numéro où les clients peuvent vous écrire.",
+        "ordre": 1,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "offre",
+        "titre": "Ce que vous proposez",
+        "champs": [
+          "nom_offre"
+        ],
+        "aide": "Écrivez le nom du plat, du produit, du soin ou du travail.",
+        "ordre": 2,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "prix",
+        "titre": "Le prix",
+        "champs": [
+          "prix",
+          "devise"
+        ],
+        "aide": "Écrivez le vrai prix. FCFA est déjà choisi si vous ne changes rien.",
+        "ordre": 3,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "lieu",
+        "titre": "Où vous trouver",
+        "champs": [
+          "quartier_ville"
+        ],
+        "aide": "Écrivez le quartier et la ville.",
+        "ordre": 4,
+        "visible_par_defaut": true
+      }
+    ],
+    "options_facultatives_repliees": {
+      "id": "options_avancees",
+      "titre": "Autres options (facultatif)",
+      "champs": [
+        "badge_engagement_actif"
+      ],
+      "visible_par_defaut": false,
+      "aide": "Laissez vide si vous n’êtes pas sûr que le message est vrai."
+    },
+    "devise_defaut": "FCFA",
+    "devise_saisie_par_video": true,
+    "enregistrer_ou_pre_remplir_depuis_profil": false,
+    "note": "vos réponses servent pour cette vidéo seulement. Elles ne sont pas gardées dans un profil."
+  },
+  "guide_tournage": {
+    "message_principal": "Filmez les courtes vidéos demandées. L’application prépare la vidéo pour vous.",
+    "nombre_prises_a_filmer": 3,
+    "duree_brute_cible_par_prise_s": "8–20",
+    "etapes_capture": [
+      {
+        "etape": 1,
+        "prise_id": "prise_1",
+        "quoi_filmer": "Le bien ou la voiture de face",
+        "consigne": "Commencez par montrer le bien ou la voiture de face. Tenez votre téléphone debout et reste assez immobile. Filmez lentement et montre les détails qui sont vraiment présents.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [
+          2
+        ],
+        "guide_parole_segments": [
+          {
+            "scene": 2,
+            "quoi_raconter": "Parlez d’un détail qu’on voit.",
+            "quoi_montrer": "Montrez {nom_offre} de près.",
+            "exemple": "Voici {nom_offre} de près.",
+            "note_exemple": "Exemple pour comprendre, pas à répéter.",
+            "duree_conseillee_s": 2.0,
+            "segment_audio_id": "T3_scene_02_voix"
+          }
+        ],
+        "guide_parole_segmentage": "Dans la même prise, afficher les consignes l’une après l’autre. Le bouton Suivant marque la fin de chaque extrait de voix."
+      },
+      {
+        "etape": 2,
+        "prise_id": "prise_2",
+        "quoi_filmer": "Le côté ou une pièce",
+        "consigne": "Ensuite, montrez le côté ou une pièce. Tenez votre téléphone debout et reste assez immobile. Filmez lentement et montre les détails qui sont vraiment présents.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [],
+        "guide_parole_segments": [],
+        "guide_parole_segmentage": "Aucune consigne de parole dans cette prise."
+      },
+      {
+        "etape": 3,
+        "prise_id": "prise_3",
+        "quoi_filmer": "L’intérieur et les détails",
+        "consigne": "Puis, montrez l’intérieur et les détails. Tenez votre téléphone debout et reste assez immobile. Filmez lentement et montre les détails qui sont vraiment présents.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [],
+        "guide_parole_segments": [],
+        "guide_parole_segmentage": "Aucune consigne de parole dans cette prise."
+      }
+    ],
+    "pas_de_montage_manuel": true,
+    "le_moteur_reutilise_les_rushs": true,
+    "le_commercant_ne_filme_pas_une_scene_par_etape_montage": true,
+    "titre": "Ce que vous devez filmer",
+    "note": "Tenez votre téléphone debout. Filmez près d’une fenêtre ou dehors à l’ombre. Évitez d’avoir la lumière derrière le sujet.",
+    "guide_parole": {
+      "visible_avant_et_pendant_la_prise": true,
+      "consignes_regroupees_par_prise": true,
+      "segments_voix_marques_dans_la_prise": true,
+      "voix_separee_de_la_vitesse_image": true,
+      "titre": "De quoi parler ?",
+      "introduction": "Pour chaque scène parlée, vous voyez quoi montrer, quoi raconter avec vos mots, le temps conseillé et un exemple. L’exemple aide à comprendre; ne le répétez pas mot pour mot.",
+      "langue": "Parlez en français ou dans la langue que vous voulez, par exemple en fon, yoruba ou bariba.",
+      "temps": "Le temps conseillé vous aide à parler brièvement. Il ne coupe pas votre voix de force; vous pouvez continuer pendant l’image suivante.",
+      "pas_une_prise": "Filmez seulement les prises déjà demandées. Pas besoin de filmer une scène à part pour parler.",
+      "sans_voix": "Vous pouvez ne pas parler. Choisissez musique seule; la vidéo reste complète.",
+      "sous_titres": "Les mots à l’écran viennent des informations que vous avez données. Ils ne reprennent pas votre voix.",
+      "cles": {
+        "titre": "guide.commun.titre",
+        "introduction": "guide.commun.introduction",
+        "langue": "guide.commun.langue",
+        "temps": "guide.commun.temps",
+        "pas_une_prise": "guide.commun.pas_une_prise",
+        "sans_voix": "guide.commun.sans_voix",
+        "sous_titres": "guide.commun.sous_titres"
+      }
+    },
+    "sous_titres_voix": {
+      "sous_titres_automatiques": false,
+      "paroles_transcrites": false,
+      "texte_ecran_actuel": "Le nom, le prix, le lieu et les mots affichés viennent des informations saisies; ils ne reprennent pas votre voix.",
+      "voix_langue_locale": "Vous pouvez parler dans votre langue. Pour écrire vos paroles à l’écran, une personne qui connaît cette langue doit les écrire et les vérifier.",
+      "cles": {
+        "texte_ecran_actuel": "guide.commun.sous_titres",
+        "voix_langue_locale": "guide.commun.sous_titres_locale"
+      }
+    },
+    "parole_dans_prises_existantes": true,
+    "pas_une_prise_par_scene_finale": true,
+    "marqueurs_audio_sans_transcription": "Le bouton Suivant marque les extraits de voix; aucun mot n’est reconnu ou écrit automatiquement."
+  },
+  "nom_format_affiche": "Montrer un produit",
+  "interface_commercant": {
+    "visible": true,
+    "nom_format": "Montrer un produit",
+    "secteur": "Maisons, terrains et voitures",
+    "phrase_courte": "On fait visiter le bien ou la voiture, puis on montre les détails et les informations utiles.",
+    "ne_pas_afficher_cles_internes": [
+      "id",
+      "secteur",
+      "format",
+      "signature_montage.id_unique"
+    ],
+    "ton": "français simple, phrases courtes, vouvoiement respectueux",
+    "promesse": "Vous filmez les vidéos demandées. L’application prépare la vidéo pour vous."
+  }
+}

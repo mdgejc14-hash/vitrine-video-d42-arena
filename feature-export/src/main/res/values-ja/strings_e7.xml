@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="e7_title">動画のプレビュー</string>
+    <string name="e7_badge">プレビュー</string>
+    <string name="e7_check">情報を確認</string>
+    <string name="e7_create">動画を作成</string>
+    <string name="e7_footnote">この情報は商品シートからです。</string>
+</resources>

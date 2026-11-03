@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lang_title">言語を選択してください</string>
+    <string name="carousel_next">次へ</string>
+    <string name="carousel_start">はじめる</string>
+    <string name="slide1_slogan">撮る。売る。それだけ。</string>
+    <string name="slide1_sub">お店と職人のための動画アプリ</string>
+    <string name="slide2_title">AIガイド撮影</string>
+    <string name="slide2_sub">INSカメラ30 FPS、露出ロック、顔の自動保護</string>
+    <string name="slide3_slogan">30秒で売れる動画</string>
+    <string name="slide3_sub">プロの編集を自動で、オフラインでも</string>
+    <string name="sector_title">主な業種</string>
+    <string name="sector_hint">業種をタップして続行。</string>
+    <string name="action_continue">続行</string>
+    <string name="welcome_title">ようこそ</string>
+    <string name="welcome_credits">%1$dクレジットを贈呈しました。ご利用ください!</string>
+    <string name="lang_change_later">この選択は後で変更できます</string>
+    <string name="refcode_title">紹介コード</string>
+    <string name="refcode_subtitle">このステップはスキップできます。</string>
+    <string name="refcode_chosen">選択済み:</string>
+    <string name="refcode_label">紹介者のコード（お持ちの場合）</string>
+    <string name="refcode_hint">コードをここに入力</string>
+    <string name="refcode_continue">続行</string>
+    <string name="refcode_skip">コードがありません</string>
+</resources>

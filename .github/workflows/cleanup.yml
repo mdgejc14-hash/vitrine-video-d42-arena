@@ -1,0 +1,23 @@
+# Menage HEBDOMADAIRE sur la machine operateur (cron dimanche 03:00 UTC).
+# CORRECTION du doc Agent 2 : jamais de `rm -rf ~/.gradle/caches` (casserait
+# tous les builds suivants, cout re-telechargement SDK/deps). On purge UNIQUEMENT
+# les artifacts QA temporaires et on reinitialise l'etat du mock (restart).
+name: Cleanup self-hosted (sur)
+on:
+  schedule:
+    - cron: "0 3 * * 0"
+  workflow_dispatch:
+jobs:
+  cleanup:
+    runs-on: [self-hosted, linux, android-qa]
+    timeout-minutes: 15
+    continue-on-error: true
+    steps:
+      - name: Purge artifacts QA temporaires (> 7 jours)
+        run: |
+          find /tmp -maxdepth 1 -name "vv-*" -mtime +7 -exec rm -rf {} + 2>/dev/null || true
+          df -h /tmp | tail -1
+      - name: Reinitialisation de l'etat du mock (restart service)
+        run: sudo systemctl restart vv-mock 2>/dev/null || echo "service vv-mock absent (mock lance a la demande)"
+      - name: Rapport espace disque
+        run: df -h | head -5

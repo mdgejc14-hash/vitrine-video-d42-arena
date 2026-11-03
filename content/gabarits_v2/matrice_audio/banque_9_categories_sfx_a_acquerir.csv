@@ -1,0 +1,10 @@
+﻿categorie_json;alias;designation;chemin_cible_non_fourni;occurrences_scenes;duree_cible_s;octets_pcm_theoriques;sha256;licence;statut_fichier
+whoosh_soft;WS;Souffle doux;assets/audio/sfx/whoosh_soft.wav;85;0.35;33644;;A_VERIFIER;A_ACQUERIR
+whoosh_fast;WF;Souffle rapide;assets/audio/sfx/whoosh_fast.wav;15;0.22;21164;;A_VERIFIER;A_ACQUERIR
+caisse_enregistreuse;CA;Caisse pour le prix;assets/audio/sfx/caisse_enregistreuse.wav;50;0.55;52844;;A_VERIFIER;A_ACQUERIR
+clic_appareil;CL;Clic générique;assets/audio/sfx/clic_appareil.wav;40;0.12;11564;;A_VERIFIER;A_ACQUERIR
+impact_drop;IM;Impact bref;assets/audio/sfx/impact_drop.wav;31;0.22;21164;;A_VERIFIER;A_ACQUERIR
+pop_badge;PB;Pop discret de badge;assets/audio/sfx/pop_badge.wav;28;0.16;15404;;A_VERIFIER;A_ACQUERIR
+amb_chantier;CH;Ambiance chantier;assets/audio/sfx/amb_chantier.wav;17;2.50;240044;;A_VERIFIER;A_ACQUERIR
+sizzle_grill;GR;Grésillement de cuisson;assets/audio/sfx/sizzle_grill.wav;8;1.00;96044;;A_VERIFIER;A_ACQUERIR
+vapeur_plat;VA;Vapeur de plat;assets/audio/sfx/vapeur_plat.wav;6;1.00;96044;;A_VERIFIER;A_ACQUERIR

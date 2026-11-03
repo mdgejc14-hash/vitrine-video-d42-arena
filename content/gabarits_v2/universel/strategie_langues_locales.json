@@ -1,0 +1,177 @@
+{
+  "meta": {
+    "version": "1.0_theorique",
+    "date": "2026-10-26",
+    "principe": "Zéro-ASR : jamais de transcription pour les données métier. La voix sert le rythme, pas le sens.",
+    "langue_production_defaut": "fr",
+    "langues_interface_prevues": [
+      "fr",
+      "en",
+      "es",
+      "ja"
+    ],
+    "langues_voix_acceptees": [
+      "fr",
+      "fon",
+      "yoruba",
+      "bariba",
+      "nouchi",
+      "wo",
+      "bambara",
+      "ewe",
+      "dioula",
+      "lingala",
+      "autre_libre"
+    ]
+  },
+  "architecture_zero_asr": {
+    "principe_fondateur": "Aucune donnée critique (prix, nom, WhatsApp, quartier) ne vient de la voix. Tout vient des champs saisis. La voix est un habillage rythmique.",
+    "detection_vad": {
+      "technologie_reference": "Silero VAD v5 ou WebRTC VAD",
+      "role": "Détecter début/fin de parole par prise, caler les coupes sur les respirations, déclencher le ducking musique (-14 dB)",
+      "sortie": "Segments [t_start, t_end, energie] par prise, pas de texte",
+      "avantages": "Fonctionne sans modèle de langue, robuste au bruit, multilingue par nature",
+      "parametres": {
+        "seuil_activation": 0.5,
+        "duree_min_parole_ms": 250,
+        "silence_min_coupe_ms": 350,
+        "ducking_attaque_ms": 150,
+        "ducking_relache_ms": 400
+      }
+    },
+    "calage_musical_sans_vad": {
+      "mode": "musique_seule",
+      "description": "Si le commerçant ne parle pas, le montage se cale sur les temps forts musicaux (beat detection) et les durées de scènes théoriques. Tout le sens passe par texte et pictogrammes."
+    },
+    "reference_honnete_asr": {
+      "francais": "La qualité d'un ASR varie avec l'accent, le bruit, le micro et la formulation; aucune performance mesurée n'est revendiquée ici. La production ne dépend pas d'un ASR.",
+      "fon_yoruba_bariba": "La couverture et la qualité de reconnaissance pour fon, yoruba parlé localement et bariba ne sont pas établies dans ce projet. Ne pas promettre de transcription automatique; VAD seulement tant que des tests représentatifs n'ont pas été menés.",
+      "nouchi_wo_bambara": "La couverture ASR de variantes locales et de mélanges de langues n'est pas vérifiée. Prévoir VAD et sous-titres manuels, sans promesse de transcription.",
+      "strategie": "Ne jamais afficher 'transcription en cours' pour les langues locales. Proposer uniquement VAD + sous-titres manuels. Les capacités ASR futures nécessitent une évaluation documentée par langue, accent et conditions audio."
+    }
+  },
+  "packs_de_langue": {
+    "principe": "Chaque gabarit référence des clés stables pour les consignes de parole. Les packs de langue fournissent les textes; les autres traductions attendent une personne compétente.",
+    "structure_pack": {
+      "exemple_fichier": "packs_langue/fr.json",
+      "schema": {
+        "lang": "fr",
+        "traductions": {
+          "hook_nouvel_arrivage_1": "NOUVEL ARRIVAGE 🔥 {nom_offre} est là !",
+          "formule_prix_1": "Seulement {prix} {devise} !",
+          "cta_whatsapp": "Commande sur WhatsApp : {whatsapp}"
+        }
+      }
+    },
+    "packs_prevus": [
+      {
+        "lang": "fr",
+        "statut": "complet",
+        "priorite": 1,
+        "base": "français ouest-africain, formules courtes, 28c/ligne"
+      },
+      {
+        "lang": "en",
+        "statut": "a_traduire",
+        "priorite": 2,
+        "note": "English for Ghana/Nigeria border commerce"
+      },
+      {
+        "lang": "es",
+        "statut": "a_traduire",
+        "priorite": 3
+      },
+      {
+        "lang": "ja",
+        "statut": "a_traduire",
+        "priorite": 4
+      },
+      {
+        "lang": "fon",
+        "statut": "a_traduire",
+        "priorite": 5,
+        "note": "Les clés sont prêtes; faire traduire et relire par une personne qui connaît cette langue."
+      },
+      {
+        "lang": "yoruba",
+        "statut": "a_traduire",
+        "priorite": 5,
+        "note": "Les clés sont prêtes; faire traduire et relire par une personne qui connaît cette langue."
+      }
+    ],
+    "ajout_nouvelle_langue_procedure": [
+      "1. Copier packs_langue/fr.json vers packs_langue/{nouvelle_langue}.json",
+      "2. Traduire chaque valeur en gardant les {variables} intactes",
+      "3. Vérifier max 28 caractères/ligne, 2 lignes max",
+      "4. Tester affichage 9:16 sur mobile (zone sécurité 8/12/22%)",
+      "5. Ajouter entrée dans packs_prevus avec statut 'complet'"
+    ]
+  },
+  "voix_et_script_guide": {
+    "enregistrement": {
+      "duree_par_prise_s": "8 à 20s brut",
+      "qualite_min": "Micro phone à 20cm, pièce calme, pas de vent direct",
+      "option_sans_voix": "Bouton 'Utiliser seulement la musique' -> mode musique_seule, VAD ignoré, montage calé sur BPM",
+      "visualisation": "Onde VAD en temps réel (barre qui bouge quand on parle) pour rassurer sans transcrire"
+    },
+    "mixage": {
+      "cible_lufs": -14,
+      "ducking_musique_sous_voix_db": -14,
+      "egalisation_voix": "High-pass 80Hz, présence 2-4kHz léger",
+      "normalisation": "Chaque prise voix normalisée avant montage"
+    },
+    "concept_guide_parole": "Chaque scène contient une idée de parole, un exemple de ton et une durée conseillée. Ce ne sont pas des phrases à réciter. La personne peut reformuler et parler dans la langue de son choix.",
+    "affichage_guide": "Le guide de parole s’affiche avant et pendant la prise, dans la langue de l’interface.",
+    "pas_de_prise_supplementaire": "Les indications ne créent pas une prise par scène; elles se rattachent aux 2 à 4 prises déjà prévues."
+  },
+  "sous_titres_trois_modes": {
+    "mode_1_aucun": {
+      "id": "sans_sous_titre",
+      "description": "Aucun sous-titre. Choix par défaut si le commerçant ne parle pas ou préfère musique seule.",
+      "quand": "Musique seule, ou voix d'ambiance non informative",
+      "statut": "disponible_comme_consignes_de_conception; aucune transcription vocale"
+    },
+    "mode_2_gabarit": {
+      "id": "texte_ecran_donnees",
+      "description": "Texte affiché à partir du formulaire ou du pack de langue, par exemple nom, prix et contact. Ce n’est pas un sous-titre de la voix.",
+      "exemple": "Le nom et le prix saisis apparaissent à l’écran même si la personne parle une autre langue.",
+      "avantage": "Pas besoin d’ASR; les champs saisis alimentent les mots à l’écran.",
+      "statut": "textes graphiques prévus dans les gabarits; aucun sous-titrage vocal généré"
+    },
+    "mode_3_saisi_corrige": {
+      "id": "sous_titres_manuel",
+      "description": "Option à construire : la personne saisit ou corrige manuellement les paroles à afficher, ou les fait transcrire/traduire par une personne compétente.",
+      "ui": "Option à concevoir : champ facultatif pour les paroles de chaque prise, avec traduction locale relue.",
+      "validation": "Max 200 caractères total, filtrage injures basique, pas d'ASR",
+      "statut": "non implémenté dans les gabarits actuels"
+    },
+    "repli_honnete": "Aucun sous-titre automatique n’est produit. La voix peut rester en français ou dans une langue locale; pour écrire les paroles, fournir une transcription ou une traduction vérifiée par une personne compétente."
+  },
+  "checklist_implementation": [
+    "VAD Silero intégré côté moteur (pas côté app) pour analyser les 2-4 prises wav/m4a",
+    "Ducking automatique : musique -14dB quand VAD=parole, sinon 0dB",
+    "Mode musique_seule : si aucune parole détectée, passer en calage BPM",
+    "Packs de langue chargés dynamiquement, fallback fr si clé manquante",
+    "Écran d'enregistrement : pas de 'transcription', seulement 'on vous entend ✓' via VAD",
+    "Sous-titres burn-in avec zone sécurité respectée (marges 8/12/22%)"
+  ],
+  "hypotheses_a_valider_terrain": [
+    "Les commerçants préfèrent-ils parler en langue locale même si le texte écran est en français ? (Hypothèse : oui, test terrain Bénin/CIV)",
+    "Le mode musique_seule est-il perçu comme 'assez pro' sans voix ? (Test A/B)",
+    "Quelle longueur réelle de voix par prise (8-20s théorique vs réel terrain ?)",
+    "Acceptation du pack fon complet (texte écran en fon) vs bilingue fon/français ?"
+  ],
+  "confiance_analyse": {
+    "methode": "theorique",
+    "validation_terrain": "a_faire",
+    "note_legale": "Aucune donnée biométrique vocale conservée. VAD = détection d'énergie, pas d'identification. Conformité à documenter."
+  },
+  "guide_parole": {
+    "langue_du_guide": "Le guide de parole s’affiche dans la langue choisie pour l’interface, depuis packs_langue.",
+    "langue_de_la_voix": "La personne peut enregistrer sa voix en français ou dans toute langue qu’elle sait parler; aucune reconnaissance des mots n’est utilisée.",
+    "langue_des_textes_a_ecran": "Les textes affichés restent dans la langue choisie pour la vidéo et viennent des champs du formulaire ou du pack de langue; ils ne sont pas des sous-titres de la voix.",
+    "sous_titres_de_voix": "Pas de sous-titres automatiques. Pour sous-titrer une langue locale, fournir une transcription/traduction manuelle et la faire vérifier par un locuteur compétent.",
+    "mode_sans_voix": "La vidéo doit rester complète en musique seule; les éléments importants sont affichés depuis les champs saisis.",
+    "exemple_langue_libre": "Clé commune guide.commun.exemple_langue_libre, réutilisée dans toutes les scènes parlées."
+  }
+}

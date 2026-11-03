@@ -1,0 +1,2 @@
+# Optionnel : validations complètes des schémas JSON (les contrôles métier de base n’en dépendent pas).
+jsonschema>=4.18,<5

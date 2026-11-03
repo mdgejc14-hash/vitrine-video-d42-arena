@@ -1,0 +1,125 @@
+name: android-ci
+# CI Android — DURCIE (P0/P1 audit sécurité 31/10/2026, feu vert CTO) :
+#   P0 : keystore release officiel restauré depuis les GitHub Secrets
+#        (VV_KEYSTORE_B64, VV_STORE_PASSWORD) — jamais dans le dépôt ni les logs ;
+#        contrôle apksigner : l'artifact DOIT porter le certificat officiel (SHA-256
+#        comparé au keystore), sinon échec du pipeline (fin de la clé debug en CI).
+#   P1 : R8 full (isMinifyEnabled côté app/build.gradle.kts) + injection de
+#        -PvvApkSha256 → la porte d'intégrité V2.0 §22 (IntegrityGuard/ExportGate)
+#        passe de « mode dev désactivé » à ACTIVE dans chaque APK release.
+#        mapping.txt publié (dé-obfuscation des crashs).
+# Les 5 workflows Phase A existants ne sont pas modifies.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Restauration keystore officiel (P0 — secrets obligatoires)
+        env:
+          VV_KEYSTORE_B64: ${{ secrets.VV_KEYSTORE_B64 }}
+          VV_STORE_PASSWORD: ${{ secrets.VV_STORE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${VV_KEYSTORE_B64:-}" || -z "${VV_STORE_PASSWORD:-}" ]]; then
+            echo "::error::Secrets VV_KEYSTORE_B64 / VV_STORE_PASSWORD absents. Voir kit_durcissement/LISEZ_MOI_KIT.md (génération déjà faite : /home/user/keystores)."
+            exit 1
+          fi
+          mkdir -p vv-signing
+          printf '%s' "$VV_KEYSTORE_B64" | base64 -d > vv-signing/vitrine.keystore
+          {
+            echo "storeFile=vitrine.keystore"
+            echo "storePassword=$VV_STORE_PASSWORD"
+            echo "keyAlias=vitrine"
+            echo "keyPassword=$VV_STORE_PASSWORD"
+          } > vv-signing/signing.properties
+          chmod 600 vv-signing/vitrine.keystore vv-signing/signing.properties
+
+      - name: Empreinte officielle SHA-256 (porte d'intégrité V2.0 §22)
+        id: apksha
+        run: |
+          set -euo pipefail
+          PASS=$(grep '^storePassword=' vv-signing/signing.properties | cut -d= -f2-)
+          SHA=$(keytool -list -v -keystore vv-signing/vitrine.keystore -alias vitrine \
+                -storepass "$PASS" | awk -F': ' '/SHA256:/ {print $2}' | tr -d ':' | tr 'A-Z' 'a-z')
+          if [[ ${#SHA} -ne 64 ]]; then
+            echo "::error::Extraction SHA-256 du keystore échouée (alias 'vitrine' attendu)."
+            exit 1
+          fi
+          echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Validateur croise des 30 gabarits V2.0 (audit D40, C1)
+        run: python3 tools/audit/validate_gabarits.py data/src/main/assets/gabarits
+
+      - name: Qualite (ktlint + detekt) + tests JVM + graphe
+        run: ./gradlew ktlintCheck detekt testDebugUnitTest checkModuleGraph --stacktrace
+
+      - name: Harnais CI-Visual-Check (captures Compose Robolectric)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-visual-check
+          path: |
+            feature-onboarding/build/visual-check/*.png
+            feature-catalog/build/visual-check/*.png
+            feature-camera/build/visual-check/*.png
+            feature-brief/build/visual-check/*.png
+            feature-export/build/visual-check/*.png
+          retention-days: 30
+          if-no-files-found: ignore
+
+      - name: Assemblage APK + AAB debug
+        run: ./gradlew :app:assembleDebug :app:bundleDebug --stacktrace
+
+      - name: Assemblage APK release (signé officiel + R8 full + porte d'intégrité ACTIVE)
+        run: ./gradlew :app:assembleRelease -PvvApkSha256=${{ steps.apksha.outputs.sha256 }} --stacktrace
+
+      - name: Contrôle de la signature de l'artifact (P0 — clé debug interdite)
+        run: |
+          set -euo pipefail
+          APK=$(ls app/build/outputs/apk/release/*.apk | head -1)
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          CERT=$("$APKSIGNER" verify --print-certs "$APK" \
+                 | awk -F': ' '/certificate SHA-256 digest/ {print tolower($NF)}' | head -1)
+          if [[ ${#CERT} -ne 64 ]]; then
+            echo "::error::Extraction du SHA-256 de l'artifact echouee (lu : '$CERT')."
+            exit 1
+          fi
+          echo "sha256 artifact : $CERT"
+          echo "sha256 keystore : ${{ steps.apksha.outputs.sha256 }}"
+          if [[ "$CERT" != "${{ steps.apksha.outputs.sha256 }}" ]]; then
+            echo "::error::APK signé avec une clé non officielle — pipeline rejeté."
+            exit 1
+          fi
+          echo "PASS : APK release signé keystore officiel (alias vitrine)"
+
+      - name: Publication APK release (artifact zip, retention 30 j)
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitrine-video-apk-release
+          path: app/build/outputs/apk/release/*.apk
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Publication mapping R8 (dé-obfuscation des stacktraces, 90 j)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitrine-video-r8-mapping
+          path: app/build/outputs/mapping/release/mapping.txt
+          retention-days: 90
+          if-no-files-found: warn
+
+      - name: Lint cible 36 (:app)
+        run: ./gradlew :app:lintDebug --stacktrace

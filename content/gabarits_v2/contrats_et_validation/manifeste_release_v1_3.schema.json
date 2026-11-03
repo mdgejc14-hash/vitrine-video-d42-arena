@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Manifeste de release signé – V1.3",
+  "description": "Signer en Ed25519 les octets JCS UTF-8 de cette enveloppe sans le champ signature. Clé publique épinglée côté client. La validation cryptographique est séparée.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "key_id",
+    "signature_alg",
+    "canonicalisation",
+    "payload",
+    "signature"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.3"
+    },
+    "key_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "signature_alg": {
+      "const": "Ed25519"
+    },
+    "canonicalisation": {
+      "const": "RFC8785"
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "sequence",
+        "publie_le_utc",
+        "version_client_minimale",
+        "catalogue",
+        "registre_preuves",
+        "blocklist",
+        "starter",
+        "packs"
+      ],
+      "properties": {
+        "sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "publie_le_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version_client_minimale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "catalogue": {
+          "type": "object",
+          "required": [
+            "chemin",
+            "sha256",
+            "taille_octets"
+          ],
+          "properties": {
+            "chemin": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "taille_octets": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "registre_preuves": {
+          "type": "object",
+          "required": [
+            "chemin",
+            "sha256",
+            "taille_octets"
+          ],
+          "properties": {
+            "chemin": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "taille_octets": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "blocklist": {
+          "type": "object",
+          "required": [
+            "chemin",
+            "sha256",
+            "taille_octets"
+          ],
+          "properties": {
+            "chemin": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "taille_octets": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "starter": {
+          "type": "array",
+          "minItems": 60,
+          "maxItems": 60,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "required": [
+              "piste_id",
+              "secteur_id",
+              "asset_sha256"
+            ],
+            "properties": {
+              "piste_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[A-Za-z0-9_-]+$"
+              },
+              "secteur_id": {
+                "enum": [
+                  "vetements_mode",
+                  "restaurants_maquis",
+                  "immo_auto",
+                  "coiffure_beaute",
+                  "shops_small_business",
+                  "batiment_travaux"
+                ]
+              },
+              "asset_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "packs": {
+          "type": "array",
+          "minItems": 18,
+          "maxItems": 18,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "required": [
+              "pack_id",
+              "secteur_id",
+              "sha256_zip",
+              "taille_octets",
+              "nombre_pistes"
+            ],
+            "properties": {
+              "pack_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[A-Za-z0-9_-]+$"
+              },
+              "secteur_id": {
+                "enum": [
+                  "vetements_mode",
+                  "restaurants_maquis",
+                  "immo_auto",
+                  "coiffure_beaute",
+                  "shops_small_business",
+                  "batiment_travaux"
+                ]
+              },
+              "sha256_zip": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "taille_octets": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "nombre_pistes": {
+                "const": 30
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "signature": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{86}$"
+    }
+  },
+  "additionalProperties": false
+}

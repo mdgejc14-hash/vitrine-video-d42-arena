@@ -1,0 +1,23 @@
+# Gestion du mock staging en SERVICE (systemd vv-mock, installe par scripts/setup_runner.sh).
+# Le mock n'est JAMAIS expose sur Internet (ufw default deny incoming, port 3200 LAN seul).
+name: Mock staging (self-hosted)
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        type: choice
+        default: status
+        options: [start, stop, restart, status]
+jobs:
+  mock-service:
+    runs-on: [self-hosted, linux, android-qa]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: "systemctl ${{ inputs.action }} vv-mock"
+        run: |
+          sudo systemctl ${{ inputs.action }} vv-mock
+          sleep 1
+          systemctl is-active vv-mock || true
+      - name: Preuve health (si actif)
+        run: curl -sf http://localhost:3200/health || echo "mock non actif (statut attendu si action=stop)"

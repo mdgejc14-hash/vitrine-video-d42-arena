@@ -1,0 +1,702 @@
+openapi: 3.1.0
+info:
+  title: Vitrine Vidéo — API Worker et licences
+  version: 2.0.0
+  description: |
+    CONTRAT DE PROPOSITION, NON DÉPLOYÉ. Adapter aux routes et migrations réelles.
+    Les médias privés du commerçant restent sur le téléphone. En V1, l'APK est
+    téléchargé depuis le site officiel : aucun jeton Play Integrity n'est exigé.
+    Le serveur est autoritaire sur attribution, paiement, réservations et licences.
+    Trois crédits de bienvenue sans expiration sont attribués une seule fois par
+    nouveau compte éligible. Tous les MP4 finaux autorisés sont sans filigrane.
+    Le hash déclaré par le client n'est pas une preuve d'authenticité. Les schémas
+    ne remplacent ni la vérification cryptographique ni les contrôles métier.
+security:
+  - FirebaseIdToken: []
+paths:
+  /healthz:
+    get:
+      operationId: health
+      security: []
+      responses:
+        '200':
+          description: État minimal sans secrets.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status: {const: ok}
+                additionalProperties: false
+  /v2/manifest:
+    get:
+      operationId: getManifest
+      security: []
+      description: Le manifeste audio V1.3 conserve son contrat et sa signature propres.
+      parameters:
+        - name: If-None-Match
+          in: header
+          required: false
+          schema: {type: string}
+      responses:
+        '200':
+          description: Manifeste audio signé.
+          content:
+            application/json:
+              schema: {$ref: ./manifeste_release_v1_3.schema.json}
+        '304': {description: Version non modifiée.}
+  /v2/catalogue/{version}:
+    parameters:
+      - $ref: '#/components/parameters/Version'
+    get:
+      operationId: getCatalogue
+      security: []
+      responses:
+        '200':
+          description: Catalogue JSONL figé ; le hash porte sur les octets du fichier avant analyse (après éventuel décodage HTTP) ; chaque ligne suit catalogue_piste_v1_3.
+          content:
+            application/x-ndjson:
+              schema:
+                type: string
+        '404': {$ref: '#/components/responses/NotFound'}
+  /v2/blocklist/{version}:
+    parameters:
+      - $ref: '#/components/parameters/Version'
+    get:
+      operationId: getBlocklist
+      security: []
+      responses:
+        '200':
+          description: Liste de retrait liée au manifeste signé.
+          content:
+            application/json:
+              schema: {$ref: ./blocklist_v1_3.schema.json}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /v2/packs/{pack_id}/download-url:
+    parameters:
+      - name: pack_id
+        in: path
+        required: true
+        schema: {$ref: '#/components/schemas/Id'}
+    post:
+      operationId: issuePackDownloadUrl
+      description: |
+        Contrôler identité, droit de téléchargement, release et objet exact côté
+        Worker. La clé objet B2 n'est jamais fournie librement par le client.
+        La distribution ne consomme pas un permis d'export vidéo.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [release_seq]
+              properties:
+                release_seq: {type: integer, minimum: 1}
+              additionalProperties: false
+      responses:
+        '200':
+          description: URL S3 Signature V4 courte ; ne pas journaliser ou partager.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [url, expires_at, sha256, size_bytes]
+                properties:
+                  url: {type: string, format: uri}
+                  expires_at: {type: string, format: date-time}
+                  sha256: {$ref: '#/components/schemas/Sha256'}
+                  size_bytes: {type: integer, minimum: 1}
+                additionalProperties: false
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+  /v2/installations/attestation-challenge:
+    post:
+      operationId: createInstallationAttestationChallenge
+      description: |
+        Avant de générer la clé d'enregistrement, créer un défi aléatoire
+        lié au compte authentifié et à une installation provisoire. Stocker le
+        hash, le but REGISTER, l'expiration et l'usage unique en D1. Ne pas
+        réinitialiser ni remplacer la clé d'une installation déjà active.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [installation_id]
+              properties:
+                installation_id: {$ref: '#/components/schemas/Id'}
+              additionalProperties: false
+      responses:
+        '200':
+          description: Défi non prédictible à passer à setAttestationChallenge AVANT la génération de clé.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [challenge_b64url, expires_at]
+                properties:
+                  challenge_b64url: {$ref: '#/components/schemas/Base64url'}
+                  expires_at: {type: string, format: date-time}
+                additionalProperties: false
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+  /v2/installations/register:
+    post:
+      operationId: registerInstallation
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      description: |
+        Vérifier compte et défi, signature de possession, et, si fournie, chaîne
+        Android Key Attestation, racines, révocations, extension de confiance,
+        clé, défi et identité d'application selon la section 21. Le hash déclaré
+        par le client n'est pas une preuve. En absence d'attestation, classer
+        PENDING_REVIEW ; DIRECT_BASIC_APPROVED exige une politique de risque
+        approuvée. Une preuve invalide n'est pas une preuve absente. Une
+        déclaration UNAVAILABLE reste falsifiable. Consommer le défi et enregistrer
+        le résultat atomiquement. Une reprise du même corps canonique avec la
+        même clé d'idempotence et le même compte ne fait que restituer le résultat.
+        Enveloppe JCS signée : action=REGISTER_INSTALLATION, method=POST,
+        path=/v2/installations/register, installation_id, public_key_sha256,
+        challenge_b64url. La preuve est DER/base64url, clé SHA-256 sur DER SPKI.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: ./installation_direct_v2_0.schema.json}
+      responses:
+        '200':
+          description: Installation active, avec niveau d'intégrité décidé côté serveur.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [installation_id, status, integrity_tier]
+                properties:
+                  installation_id: {$ref: '#/components/schemas/Id'}
+                  status: {const: ACTIVE}
+                  integrity_tier: {enum: [DIRECT_ATTESTED, DIRECT_BASIC_APPROVED]}
+                additionalProperties: false
+        '202':
+          description: Enregistrement en attente d'arbitrage, sans droit ni licence émise.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [installation_id, status, integrity_tier]
+                properties:
+                  installation_id: {$ref: '#/components/schemas/Id'}
+                  status: {const: PENDING_REVIEW}
+                  integrity_tier: {const: PENDING_REVIEW}
+                additionalProperties: false
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+  /v2/installations/{installation_id}:
+    parameters:
+      - name: installation_id
+        in: path
+        required: true
+        schema: {$ref: '#/components/schemas/Id'}
+    get:
+      operationId: getInstallationStatus
+      description: |
+        Consulter le statut actualisé après un éventuel arbitrage. Vérifier
+        l'identité et la propriété ; ne renvoyer ni certificat ni clé ni licence.
+        La décision d'approuver le secours ne peut venir que d'une politique ou
+        d'un rôle de support autorisé, jamais du téléphone.
+      responses:
+        '200':
+          description: Statut actuel de l'installation du compte authentifié.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [installation_id, status, integrity_tier]
+                properties:
+                  installation_id: {$ref: '#/components/schemas/Id'}
+                  status: {enum: [PENDING, PENDING_REVIEW, ACTIVE, REJECTED, REVOKED, LOST]}
+                  integrity_tier: {enum: [PENDING_REVIEW, DIRECT_ATTESTED, DIRECT_BASIC_APPROVED, REJECTED]}
+                additionalProperties: false
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+  /v2/licences/challenge:
+    post:
+      operationId: createLicenceChallenge
+      description: |
+        Défi aléatoire à usage unique lié au compte, à l'installation déjà
+        enregistrée, à la clé publique et au but. Comparer la clé à celle
+        enregistrée ; aucune installation provisoire ne peut recevoir de permis.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [installation_id, public_key_spki_b64url, purpose]
+              properties:
+                installation_id: {$ref: '#/components/schemas/Id'}
+                public_key_spki_b64url: {$ref: '#/components/schemas/Base64url'}
+                purpose: {enum: [ISSUE, WELCOME_ISSUE, TIME_ANCHOR]}
+              additionalProperties: false
+      responses:
+        '200':
+          description: Défi à utiliser pour la demande indiquée, avant expiration.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [challenge_b64url, expires_at]
+                properties:
+                  challenge_b64url: {$ref: '#/components/schemas/Base64url'}
+                  expires_at: {type: string, format: date-time}
+                additionalProperties: false
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+  /v2/welcome/issue:
+    post:
+      operationId: issueWelcomePermits
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      description: |
+        Vérifier le jeton d'identité, la première création réelle du compte selon
+        les métadonnées fournisseur et la politique d'éligibilité ; une première
+        connexion ou réinstallation n'est pas une preuve de création. L'attribution
+        D1 unique est de trois crédits maximum sans paiement ni expiration.
+        Vérifier l'installation active et sa preuve sur un défi WELCOME_ISSUE neuf ;
+        réserver atomiquement la quantité disponible avant de signer ES256.
+        Même clé et même demande métier : même lot et même réponse reprise avec
+        défi neuf ; corps métier différent : 409. Gérer la récupération après panne
+        sans signer ou allouer une seconde fois. Pas de Play Integrity obligatoire.
+        Retourner par HTTPS la clé de contenu AES-256 autorisée avec le JWS signé ;
+        réponse no-store, sans journalisation de clé, jeton ou preuve.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [installation_id, requested_count, challenge_b64url, possession_signature_der_b64url]
+              properties:
+                installation_id: {$ref: '#/components/schemas/Id'}
+                requested_count: {type: integer, minimum: 1, maximum: 3}
+                challenge_b64url: {$ref: '#/components/schemas/Base64url'}
+                possession_signature_der_b64url: {$ref: '#/components/schemas/Base64url'}
+              additionalProperties: false
+      responses:
+        '200':
+          description: JWS conforme à welcome_licence_claims_v2_0, sans exp, et clé du shader sur TLS.
+          headers:
+            Cache-Control:
+              description: Ne pas conserver la réponse dans un cache HTTP.
+              schema: {type: string, const: no-store}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/LicenceIssueResult'}
+        '202': {description: Réservation en cours ; reprendre avec la même clé d'idempotence.}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+  /v2/licences/issue:
+    post:
+      operationId: issueLicence
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      description: |
+        En V1 directe le Worker vérifie le JWT, la preuve de possession, le
+        niveau d'intégrité enregistré, le paiement et les droits D1 ; réserve
+        les permis atomiquement avant signature ES256. Aucun jeton Play n'est
+        obligatoire. Un futur contrôle Play est une couche supplémentaire
+        décidée côté serveur, jamais par un champ canal fourni par le client.
+        L'idempotence compare les données métier stables et accepte un défi neuf
+        pour une reprise. La
+        période demandée peut être future si elle est déjà entièrement couverte
+        par l'abonnement payé. Demander un lot par période avant déconnexion.
+        La fin est bornée par la fin payée et la période de quota, sans fenêtre
+        arbitraire plus courte. Retourner par HTTPS la clé de contenu AES-256
+        autorisée avec le JWS signé ; réponse no-store, ne pas journaliser la clé,
+        le jeton ou les preuves.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [installation_id, subscription_id, period_id, requested_count, challenge_b64url, possession_signature_der_b64url]
+              properties:
+                installation_id: {$ref: '#/components/schemas/Id'}
+                subscription_id: {$ref: '#/components/schemas/Id'}
+                period_id: {$ref: '#/components/schemas/Id'}
+                requested_count: {type: integer, minimum: 1}
+                challenge_b64url: {$ref: '#/components/schemas/Base64url'}
+                possession_signature_der_b64url: {$ref: '#/components/schemas/Base64url'}
+                play_integrity_token: {type: string, minLength: 1, maxLength: 16000, description: 'Facultatif ; uniquement pour une future politique Play vérifiée côté serveur.'}
+              additionalProperties: false
+      responses:
+        '200':
+          description: |
+            JWS compact ES256 conforme à licence_claims_v2_0 et clé du shader sur TLS.
+            En-tête alg=ES256 et kid accepté ; signature R||S brute 64 octets.
+          headers:
+            Cache-Control:
+              description: Ne pas conserver la réponse dans un cache HTTP.
+              schema: {type: string, const: no-store}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/LicenceIssueResult'}
+        '202': {description: Émission réservée en cours ; reprendre avec la même clé d'idempotence.}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+  /v2/licences/time-anchor:
+    post:
+      operationId: refreshTimeAnchor
+      description: |
+        Avec un défi neuf et la preuve de possession, vérifier les droits et le
+        lot existant, puis retourner une ancre signée. Ne réserve pas de permis.
+        Pour un lot payé, ancre time_anchor_claims_v2_0 avec expiration bornée ;
+        pour la bienvenue, ancre welcome_time_anchor_claims_v2_0 sans expiration.
+        Un remboursement ou une révocation connu interdit une nouvelle ancre.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [grant_id, installation_id, challenge_b64url, possession_signature_der_b64url]
+              properties:
+                grant_id: {$ref: '#/components/schemas/Id'}
+                installation_id: {$ref: '#/components/schemas/Id'}
+                challenge_b64url: {$ref: '#/components/schemas/Base64url'}
+                possession_signature_der_b64url: {$ref: '#/components/schemas/Base64url'}
+                play_integrity_token: {type: string, minLength: 1, maxLength: 16000, description: 'Facultatif ; uniquement pour une future politique Play vérifiée côté serveur.'}
+              additionalProperties: false
+      responses:
+        '200':
+          description: JWS compact ES256 conforme au schéma d'ancre payé ou bienvenue selon le lot.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [time_anchor_jws]
+                properties:
+                  time_anchor_jws: {$ref: '#/components/schemas/CompactJws'}
+                additionalProperties: false
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+  /v2/licences/usage-sync:
+    post:
+      operationId: synchronizeUsage
+      description: |
+        Vérifier chaque signature d'installation, appartenance, plage de permis
+        et licence ; enregistrer la paire lot/permis une fois. Même contenu :
+        DUPLICATE ; autre contenu avec le même permis : CONFLICT et investigation.
+        Le compteur réservé devient consommé une seule fois.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [events]
+              properties:
+                events:
+                  type: array
+                  minItems: 1
+                  maxItems: 100
+                  items: {$ref: ./offline_usage_v2_0.schema.json}
+              additionalProperties: false
+      responses:
+        '200':
+          description: Résultat par événement ; des conflits peuvent figurer dans le lot.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [results]
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      required: [grant_id, permit_serial, status]
+                      properties:
+                        grant_id: {$ref: '#/components/schemas/Id'}
+                        permit_serial: {type: integer, minimum: 1}
+                        status: {enum: [APPLIED, DUPLICATE, CONFLICT, REJECTED]}
+                      additionalProperties: false
+                additionalProperties: false
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+  /v2/offers:
+    get:
+      operationId: getPublishedOffers
+      security: []
+      description: Offres effectivement publiées pour le marché ; aucune valeur de maquette n'est présumée réelle.
+      parameters:
+        - name: market
+          in: query
+          required: true
+          schema: {$ref: '#/components/schemas/Id'}
+      responses:
+        '200':
+          description: Liste d'offres confirmées, éventuellement vide.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [offer_id, plan_code, amount_minor, currency, duration_seconds, quota_videos, quota_period_rule, export_allowed, clean_export_allowed, watermarked_export_allowed]
+                  properties:
+                    offer_id: {$ref: '#/components/schemas/Id'}
+                    plan_code: {$ref: '#/components/schemas/Id'}
+                    amount_minor: {type: integer, minimum: 0}
+                    currency: {type: string, minLength: 3, maxLength: 3}
+                    duration_seconds: {type: integer, minimum: 1}
+                    quota_videos: {type: integer, minimum: 2, description: Une formule payée donne plusieurs crédits.}
+                    quota_period_rule: {enum: [SUBSCRIPTION_WINDOW, CALENDAR_MONTH, CUSTOM_APPROVED]}
+                    export_allowed: {const: true}
+                    clean_export_allowed: {const: true}
+                    watermarked_export_allowed: {const: false}
+                  additionalProperties: false
+  /v2/account/entitlement:
+    get:
+      operationId: getEntitlement
+      description: Les droits et soldes appartiennent uniquement au compte authentifié.
+      responses:
+        '200':
+          description: Solde serveur ; soustraire localement les usages non encore synchronisés, sans compter deux fois les permis réservés.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [welcome, subscriptions, periods, grants]
+                properties:
+                  welcome:
+                    description: Null si aucune attribution ; sinon quota distinct et sans date d'expiration.
+                    oneOf:
+                      - {type: 'null'}
+                      - type: object
+                        required: [quota_total, reserved_outstanding, consumed_reported, status]
+                        properties:
+                          quota_total: {const: 3}
+                          reserved_outstanding: {type: integer, minimum: 0, maximum: 3}
+                          consumed_reported: {type: integer, minimum: 0, maximum: 3}
+                          status: {enum: [ACTIVE, REVOKED, DISPUTED]}
+                        additionalProperties: false
+                  subscriptions:
+                    type: array
+                    items:
+                      type: object
+                      required: [subscription_id, plan_code, status, starts_at, expires_at]
+                      properties:
+                        subscription_id: {$ref: '#/components/schemas/Id'}
+                        plan_code: {$ref: '#/components/schemas/Id'}
+                        status: {enum: [ACTIVE, EXPIRED, REVOKED, REFUNDED, DISPUTED]}
+                        starts_at: {type: string, format: date-time}
+                        expires_at: {type: string, format: date-time}
+                      additionalProperties: false
+                  periods:
+                    type: array
+                    description: Périodes courantes et futures de la durée déjà payée ; ne suppose pas de renouvellement.
+                    items:
+                      type: object
+                      required: [period_id, subscription_id, starts_at, expires_at, quota_total, reserved_outstanding, consumed_reported]
+                      properties:
+                        period_id: {$ref: '#/components/schemas/Id'}
+                        subscription_id: {$ref: '#/components/schemas/Id'}
+                        starts_at: {type: string, format: date-time}
+                        expires_at: {type: string, format: date-time}
+                        quota_total: {type: integer, minimum: 0}
+                        reserved_outstanding: {type: integer, minimum: 0}
+                        consumed_reported: {type: integer, minimum: 0}
+                      additionalProperties: false
+                  grants:
+                    type: array
+                    description: Lots du compte, sans jeton ; soustraire les usages locaux non synchronisés de chaque lot concerné.
+                    items:
+                      type: object
+                      required: [grant_id, grant_kind, period_id, installation_id, allocated_count, reported_count, expires_at, status]
+                      properties:
+                        grant_id: {$ref: '#/components/schemas/Id'}
+                        grant_kind: {enum: [WELCOME, PAID]}
+                        period_id:
+                          anyOf:
+                            - {$ref: '#/components/schemas/Id'}
+                            - {type: 'null'}
+                        installation_id: {$ref: '#/components/schemas/Id'}
+                        allocated_count: {type: integer, minimum: 1}
+                        reported_count: {type: integer, minimum: 0}
+                        expires_at: {type: [string, 'null'], format: date-time}
+                        status: {enum: [ISSUE_PENDING, ISSUED, EXPIRED, REVOKED]}
+                      allOf:
+                        - if:
+                            properties: {grant_kind: {const: WELCOME}}
+                          then:
+                            properties:
+                              period_id: {type: 'null'}
+                              expires_at: {type: 'null'}
+                              allocated_count: {maximum: 3}
+                              status: {enum: [ISSUE_PENDING, ISSUED, REVOKED]}
+                          else:
+                            properties:
+                              period_id: {$ref: '#/components/schemas/Id'}
+                              expires_at: {type: string, format: date-time}
+                      additionalProperties: false
+                additionalProperties: false
+        '401': {$ref: '#/components/responses/Unauthorized'}
+  /v2/payments/orders:
+    post:
+      operationId: createPaymentOrder
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      description: Le prix, la devise, le quota et la durée viennent du catalogue serveur confirmé.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [offer_id]
+              properties:
+                offer_id: {$ref: '#/components/schemas/Id'}
+              additionalProperties: false
+      responses:
+        '201':
+          description: Commande créée, pas nécessairement payée.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Order'}
+        '200':
+          description: Commande existante renvoyée à la répétition idempotente.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Order'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '429': {$ref: '#/components/responses/RateLimited'}
+  /v2/payments/orders/{order_id}:
+    parameters:
+      - name: order_id
+        in: path
+        required: true
+        schema: {$ref: '#/components/schemas/Id'}
+    get:
+      operationId: getPaymentOrder
+      responses:
+        '200':
+          description: Statut de la commande après contrôle de propriété.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Order'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+  /v2/payments/webhook/{provider}:
+    parameters:
+      - name: provider
+        in: path
+        required: true
+        schema: {$ref: '#/components/schemas/Id'}
+    post:
+      operationId: receivePaymentWebhook
+      security: []
+      description: |
+        Authentification serveur-à-serveur propre au prestataire à préciser ;
+        signature sur corps brut, fraîcheur et événement unique obligatoires.
+        Une route sans JWT Firebase n'est PAS une route sans authentification.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Structure et en-têtes exacts déterminés par le prestataire sélectionné.
+              additionalProperties: true
+      responses:
+        '200': {description: Événement vérifié traité ou doublon identique déjà traité.}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+components:
+  securitySchemes:
+    FirebaseIdToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: ID token Firebase vérifié côté Worker ; ne prouve pas un abonnement.
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: {type: string, minLength: 16, maxLength: 128}
+      description: Même clé et mêmes données métier produisent le même résultat ; un changement métier est interdit. Défi et preuves peuvent être renouvelés.
+    Version:
+      name: version
+      in: path
+      required: true
+      schema: {type: integer, minimum: 1}
+  schemas:
+    Id: {type: string, minLength: 1, maxLength: 128, pattern: '^[A-Za-z0-9_-]+$'}
+    Sha256: {type: string, pattern: '^[0-9a-f]{64}$'}
+    Base64url: {type: string, minLength: 1, maxLength: 4096, pattern: '^[A-Za-z0-9_-]+$'}
+    CompactJws: {type: string, minLength: 20, maxLength: 16000, pattern: '^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$'}
+    LicenceIssueResult:
+      type: object
+      required: [licence_jws, shader_key_b64url]
+      description: |
+        Transiter uniquement sur HTTPS ; réponse Cache-Control no-store. Vérifier
+        le JWS et SHA-256 de la clé avant enveloppement immédiat par Keystore ;
+        ne pas journaliser. La clé est présente en mémoire et reste extractible
+        sur appareil compromis ; elle n'est jamais embarquée dans l'APK en clair.
+      properties:
+        licence_jws: {$ref: '#/components/schemas/CompactJws'}
+        shader_key_b64url:
+          type: string
+          minLength: 43
+          maxLength: 43
+          pattern: '^[A-Za-z0-9_-]{42}[AEIMQUYcgkosw048]$'
+          description: 32 octets AES-256 encodés en base64url sans padding.
+      additionalProperties: false
+    Order:
+      type: object
+      required: [order_id, offer_id, plan_code, status, amount_minor, currency]
+      properties:
+        order_id: {$ref: '#/components/schemas/Id'}
+        offer_id: {$ref: '#/components/schemas/Id'}
+        plan_code: {$ref: '#/components/schemas/Id'}
+        status: {enum: [CREATED, PENDING, PAID, FAILED, CANCELLED, REFUNDED, DISPUTED]}
+        amount_minor: {type: integer, minimum: 0}
+        currency: {type: string, minLength: 3, maxLength: 3}
+      additionalProperties: false
+  responses:
+    BadRequest: {description: 'Corps ou paramètres invalides, sans détail sensible.'}
+    Unauthorized: {description: Identité ou authentification prestataire invalide.}
+    Forbidden: {description: Ressource ou droit non autorisé.}
+    NotFound: {description: Ressource absente ou non accessible.}
+    Conflict: {description: "Conflit d'idempotence, quota insuffisant ou permis réutilisé."}
+    RateLimited: {description: Trop de demandes ; délai de reprise à préciser.}
+    Unavailable: {description: Dépendance indisponible ; opération à reprendre de manière idempotente.}

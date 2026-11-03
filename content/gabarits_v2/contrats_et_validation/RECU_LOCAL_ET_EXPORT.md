@@ -1,0 +1,19 @@
+# Plan de rendu et reçu local signé — V2.0
+
+## Les deux contrats livrés
+
+- `plan_rendu_v2_0.schema.json` : schéma du plan d’un export **réellement prêt**, avec sources, scènes, voix, musique/SFX réels ou repli autorisé, accord avant montage et références de sécurité. Un JSON conforme au schéma ne prouve pas, à lui seul, l’autorisation ou la fidélité.
+- `video_license_receipt_v2_0.schema.json` : schéma du **reçu local signé**, distinct de la licence serveur. Le vrai fichier `video_license_receipt.json` est produit après un MP4 final réussi, pas avant.
+
+Les deux schémas sont les fichiers du kit V2.0, copiés sans modification. Il n’y a pas de plan `PRET`, de vrai reçu signé, de fausse signature, de hash MP4 ou de licence musicale inventés dans cette archive. Le reçu ne prouve pas à lui seul un paiement, les droits, l’état du téléphone ou l’heure réelle.
+
+## Ordre attendu pour le moteur à construire
+
+1. Vérifier le compte, l’installation et les licences/permis signés. La première création de compte donne trois crédits de bienvenue **sans expiration**. Ensuite les formules payées donnent plusieurs crédits ; leur droit à l’export hors ligne dure jusqu’à la fin autorisée de l’abonnement, sous réserve des permis disponibles et d’une ancre temporelle vérifiée. Une horloge suspecte bloque l’export ; après redémarrage, une reconnexion peut être nécessaire sans faire expirer artificiellement les crédits de bienvenue.
+2. Vérifier le solde local autorisé, l’intégrité et la fraîcheur applicables du permis, les sources réelles, les décisions et la disponibilité des médias et droits. Construire le plan avec des hashes et des repères **réels**, y compris l’approbation de style. Résoudre les conflits ou demander un repli accepté. Le contrôle explicite **OK avant montage** montre ce qui sera utilisé et les changements significatifs.
+3. S’il n’y a pas de crédit valide, de licence/permis utilisable ou de vérification indispensable, ne pas lancer le pipeline MP4 final ; donner la raison. L’aperçu non payé peut être filigrané dynamiquement et protégé par `FLAG_SECURE` et masquage en arrière-plan. Un MP4 final, lorsqu’il est autorisé, est **sans filigrane**. Pas de faux MP4 noir ou corrompu comme mécanisme de blocage.
+4. Après OK et autorisation, exécuter le montage et l’export intégralement sur le téléphone. Sur erreur détectée, ne publie pas le résultat ; nettoie ou isole le temporaire. Émettre le reçu uniquement après réussite et calcul du hash des octets finaux.
+5. Produire `video_license_receipt.json` avec les valeurs réelles exigées par le schéma : hash du MP4, version et empreintes des manifestes, identité/hashes des médias et de leurs preuves lorsqu’ils sont utilisés, empreinte du gabarit et du plan, version d’application, références `grant_id`, `installation_id`, `permit_serial`, licence et ancre temporelle. Utiliser les champs `null` là où le **schéma historique du reçu** les impose pour une musique absente autorisée ; la règle « zéro `null` » s’applique aux **30 fiches de style V2**, pas aux contrats historiques ni au futur reçu.
+6. Canonicaliser les champs à signer sans `signature` selon RFC 8785, signer localement en ECDSA P-256/SHA-256 avec la clé réellement disponible dans Android Keystore et encoder la signature DER en base64url comme l’exige le contrat. Conserver la clé privée sur l’appareil et le reçu localement. Vérifier intégrité et signature avant toute exploitation. Un reçu d’export n’est pas le permis qui autorise cet export : aucune dépendance circulaire.
+
+Les sections sécurité et crédits du kit complet décrivent les limites, la gestion des permis, les cas de reprise et les différences d’API Android. Aucun APK, paiement, serveur, clé Keystore ou montage réel n’est créé ou testé par cette archive. La distribution V1 prévue est un APK direct ; Play Integrity reste une couche ultérieure pour le canal Play, pas une obligation pour l’APK direct.

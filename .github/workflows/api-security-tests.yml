@@ -1,0 +1,229 @@
+
+name: API Security CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "db/migrations/**"
+      - "scripts/security-ci.mjs"
+      - "package.json"
+      - "package-lock.json"
+      - "wrangler.jsonc"
+      - ".github/workflows/api-security-tests.yml"
+  # Audit D41 : les correctifs worker (checkout CinetPay, durcissement quota,
+  # grille webhook) doivent être VALIDÉS sur la branche d'audit avant tout
+  # merge — mêmes garde-fous (secrets du dépôt, D1 local, wrangler dev).
+  pull_request:
+    paths:
+      - "src/**"
+      - "db/migrations/**"
+      - "scripts/security-ci.mjs"
+      - "package.json"
+      - "package-lock.json"
+      - "wrangler.jsonc"
+      - ".github/workflows/api-security-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: api-security-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api-security-tests:
+    name: Local D1 and API security tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      API_BASE_URL: http://127.0.0.1:8788
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Initialize local D1 schema
+        run: |
+          npx wrangler d1 execute vitrine-video-db \
+            --local \
+            --file=db/migrations/0001_init.sql
+
+      - name: Apply query indexes migration
+        run: |
+          npx wrangler d1 execute vitrine-video-db \
+            --local \
+            --file=db/migrations/0002_query_indexes.sql
+
+      - name: Apply purge operation ledger migration
+        run: |
+          npx wrangler d1 execute vitrine-video-db \
+            --local \
+            --file=db/migrations/0003_purge_operation_ledger.sql
+
+      - name: Apply Phase B mobile migration (additive)
+        run: |
+          npx wrangler d1 execute vitrine-video-db \
+            --local \
+            --file=db/migrations/0004_phase_b_mobile.sql
+
+      - name: Apply Phase B monetisation migration (additive)
+        run: |
+          npx wrangler d1 execute vitrine-video-db \
+            --local \
+            --file=db/migrations/0005_monetisation.sql
+
+      - name: Apply Phase B consentements migration (additive)
+        run: |
+          npx wrangler d1 execute vitrine-video-db \
+            --local \
+            --file=db/migrations/0006_consentements.sql
+
+      - name: Apply Phase B croissance migration (additive)
+        run: |
+          npx wrangler d1 execute vitrine-video-db \
+            --local \
+            --file=db/migrations/0007_croissance.sql
+
+      - name: Apply billing orders migration (additive, audit final)
+        run: |
+          npx wrangler d1 execute vitrine-video-db \
+            --local \
+            --file=db/migrations/0008_billing_orders.sql
+
+      - name: Apply merchant identity migration (additive, audit final)
+        run: |
+          npx wrangler d1 execute vitrine-video-db \
+            --local \
+            --file=db/migrations/0009_merchant_identity.sql
+
+      - name: Apply audio catalog migration (additive, Phase C BGM)
+        run: |
+          npx wrangler d1 execute vitrine-video-db \
+            --local \
+            --file=db/migrations/0010_audio_catalog.sql
+
+      - name: Apply BGM library migration (additive, Phase C bibliothèque)
+        run: |
+          npx wrangler d1 execute vitrine-video-db \
+            --local \
+            --file=db/migrations/0011_bgm_library.sql
+
+      - name: Verify query indexes are used
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          check_plan() {
+            local expected_index="$1"
+            local sql="$2"
+            local output
+
+            echo "Checking index: ${expected_index}"
+
+            if ! output="$(npx wrangler d1 execute vitrine-video-db \
+              --local \
+              --command="$sql" 2>&1)"; then
+              printf '%s\n' "$output"
+              echo "FAIL: query plan could not be obtained."
+              exit 1
+            fi
+
+            printf '%s\n' "$output"
+
+            if ! printf '%s\n' "$output" | grep -Fq "$expected_index"; then
+              echo "FAIL: expected index not used: ${expected_index}"
+              exit 1
+            fi
+
+            echo "PASS: ${expected_index}"
+          }
+
+          check_plan "idx_merchants_user_created" \
+            "EXPLAIN QUERY PLAN SELECT id FROM merchants WHERE user_id = 'ci-user' ORDER BY created_at DESC LIMIT 50;"
+
+          check_plan "idx_projects_user_updated" \
+            "EXPLAIN QUERY PLAN SELECT id FROM projects WHERE user_id = 'ci-user' ORDER BY updated_at DESC LIMIT 50;"
+
+          check_plan "idx_orders_user_created" \
+            "EXPLAIN QUERY PLAN SELECT id FROM orders WHERE user_id = 'ci-user' ORDER BY created_at DESC LIMIT 50;"
+
+          check_plan "idx_notif_user_created" \
+            "EXPLAIN QUERY PLAN SELECT id FROM notifications WHERE user_id = 'ci-user' ORDER BY created_at DESC LIMIT 20;"
+
+          check_plan "idx_quota_ordre_type_created" \
+            "EXPLAIN QUERY PLAN SELECT id FROM quota_events WHERE ordre_id = 'ci-order' AND type = 'statut_change' ORDER BY created_at DESC LIMIT 1;"
+
+          check_plan "idx_files_purge" \
+            "EXPLAIN QUERY PLAN SELECT id FROM files WHERE purge_at IS NOT NULL AND purge_at <= '2099-01-01T00:00:00.000Z' LIMIT 500;"
+
+      - name: Seed CI-only template
+        run: |
+          npx wrangler d1 execute vitrine-video-db --local \
+            --command="INSERT OR REPLACE INTO templates
+            (id, secteur, langue, duree_cible_s, edl_json,
+            regles_qc_json, version, actif)
+            VALUES
+            ('ci-commerce-fr-v1', 'commerce', 'fr', 30,
+            '{}', '{}', 1, 1);"
+
+      - name: Secrets locaux wrangler (.dev.vars, jamais commité)
+        run: |
+          SECRET=$(openssl rand -hex 24)
+          printf 'BILLING_WEBHOOK_SECRET=%s\n' "$SECRET" > .dev.vars
+          printf '%s' "$SECRET" > /tmp/vv-billing-secret
+          # Cle B2 reelle (secrets repo, paire …009 mise a jour le 31/10/2026) :
+          # la CI valide ainsi le streaming audio contre le bucket veritable.
+          printf 'B2_APPLICATION_KEY=%s\n' "${{ secrets.B2_APPLICATION_KEY }}" >> .dev.vars
+          printf 'B2_KEY_ID=%s\n' "${{ secrets.B2_KEY_ID }}" >> .dev.vars
+
+      - name: Start local Worker
+        run: |
+          nohup npm run dev -- --local --ip 127.0.0.1 \
+            --port 8788 --show-interactive-dev-session=false \
+            > /tmp/vitrine-video-worker.log 2>&1 &
+          echo $! > /tmp/vitrine-video-worker.pid
+
+      - name: Wait for local API health
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail \
+              http://127.0.0.1:8788/health \
+              > /tmp/vitrine-video-health.json 2>/dev/null; then
+              cat /tmp/vitrine-video-health.json
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "Le Worker local ne répond pas."
+          cat /tmp/vitrine-video-worker.log
+          exit 1
+
+      - name: Run API security integration tests
+        env:
+          FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
+          FIREBASE_TEST_A_EMAIL: ${{ secrets.FIREBASE_TEST_A_EMAIL }}
+          FIREBASE_TEST_A_PASSWORD: ${{ secrets.FIREBASE_TEST_A_PASSWORD }}
+          FIREBASE_TEST_B_EMAIL: ${{ secrets.FIREBASE_TEST_B_EMAIL }}
+          FIREBASE_TEST_B_PASSWORD: ${{ secrets.FIREBASE_TEST_B_PASSWORD }}
+        run: BILLING_WEBHOOK_SECRET=$(cat /tmp/vv-billing-secret) node scripts/security-ci.mjs
+
+      - name: Stop local Worker
+        if: always()
+        run: |
+          if [ -f /tmp/vitrine-video-worker.pid ]; then
+            kill "$(cat /tmp/vitrine-video-worker.pid)" 2>/dev/null || true
+          fi

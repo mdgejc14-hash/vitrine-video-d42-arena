@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="e6_title">撮影しよう</string>
+    <string name="e6_to_film">撮るもの</string>
+    <string name="e6_show">見せるもの</string>
+    <string name="e6_tell">自分の言葉で語る</string>
+    <string name="e6_example">理解用の例・繰り返さない</string>
+    <string name="e6_time_hint">時間は目安です。音声は切れません。</string>
+    <string name="e6_redo">やり直す</string>
+    <string name="e6_record">録画</string>
+    <string name="e6_next">次へ</string>
+    <string name="e6_countdown">カウント3-2-1</string>
+    <string name="e6_about">約%d秒</string>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="export_t1">Export runs with the device locked: switch your screen off, the notification warns you.</string>
+    <string name="export_running">Local export running…</string>
+    <string name="export_start">Start local export</string>
+    <string name="export_preview_title">Preview of your video</string>
+    <string name="export_preview_meta">%1$d s · %2$d client rushes · %3$d camera rushes</string>
+    <string name="export_preview_typo">Voice &amp; kinetic typography</string>
+    <string name="export_gate_no_credit">No export credits left. Top up to continue.</string>
+    <string name="export_gate_integrity">Security check failed. Reinstall the official app.</string>
+    <string name="export_gate_rollback">Device clock rolled back. Export blocked until sync.</string>
+    <string name="export_progress_title">Your video is being prepared</string>
+    <string name="export_progress_sub">Progress status</string>
+    <string name="export_card_preparing">Preparing the video…</string>
+    <string name="export_card_step_title">Current step</string>
+    <string name="export_card_step_body">Shots are assembled following the chosen plan.</string>
+    <string name="export_card_time_title">Indicative time</string>
+    <string name="export_card_time_body">About 2 minutes in this mockup. Real time remains to be verified.</string>
+    <string name="export_done">Video ready! Share it with your customers.</string>
+    <string name="export_share">Share the video</string>
+    <string name="export_space">View my space</string>
+    <string name="export_failed_ui">Export interrupted. Your credits were returned — try again.</string>
+    <string name="export_input_missing">Source video not found — retake your clips before exporting. Your credit was returned.</string>
+</resources>

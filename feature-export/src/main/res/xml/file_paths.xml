@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- C16 : partage de la video exportee (cacheDir/export-N.mp4) sans exposer le chemin brut. -->
+    <cache-path name="exports" path="." />
+</paths>

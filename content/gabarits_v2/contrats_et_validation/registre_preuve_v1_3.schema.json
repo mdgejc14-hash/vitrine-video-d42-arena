@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fiche compacte de preuve – V1.3",
+  "description": "Une ligne par preuve réellement revue. Aucune preuve dans ce kit ; le schéma ne démontre pas les droits.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "preuve_id",
+    "preuve_complete_sha256",
+    "source_nom",
+    "source_url",
+    "licence_code",
+    "composition_verifiee",
+    "master_verifie",
+    "samples_verifies",
+    "usage_dans_app_et_video_commerciale_verifie",
+    "origine_humaine_documentee",
+    "revision_humaine_approuvee",
+    "approbation_id",
+    "revue_le_utc",
+    "preuve_complete_disponible_hors_ligne"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.3"
+    },
+    "preuve_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "preuve_complete_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_nom": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "licence_code": {
+      "enum": [
+        "CC0-1.0",
+        "DOMAINE_PUBLIC_VERIFIE"
+      ]
+    },
+    "composition_verifiee": {
+      "const": true
+    },
+    "master_verifie": {
+      "const": true
+    },
+    "samples_verifies": {
+      "const": true
+    },
+    "usage_dans_app_et_video_commerciale_verifie": {
+      "const": true
+    },
+    "origine_humaine_documentee": {
+      "const": true
+    },
+    "revision_humaine_approuvee": {
+      "const": true
+    },
+    "approbation_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "revue_le_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "preuve_complete_disponible_hors_ligne": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false
+}

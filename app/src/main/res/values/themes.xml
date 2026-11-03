@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Theme officiel : palette du logo (orange store, bleu nuit, blanc pur). -->
+    <style name="Theme.VitrineVideo" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:colorPrimary">#FF5500</item>
+        <item name="android:colorPrimaryDark">#0A192F</item>
+        <item name="android:colorAccent">#FF5500</item>
+    </style>
+    <!-- Splash natif : logo centre sur fond clair, transition fluide. -->
+    <style name="Theme.VitrineVideo.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FFFFFF</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.VitrineVideo</item>
+    </style>
+</resources>

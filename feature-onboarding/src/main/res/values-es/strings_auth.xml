@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="auth_title">Conexión</string>
+    <string name="auth_google">Continuar con Google</string>
+    <string name="auth_loading">Iniciando sesión…</string>
+    <string name="auth_error">No se puede conectar: %1$s — revisa tu red e inténtalo de nuevo.</string>
+    <string name="auth_subtitle">Tu cuenta Google te sigue.</string>
+    <string name="auth_card_google">Continuar con Google</string>
+    <string name="auth_card_google_body">¿Primera vez? Creamos tu cuenta. ¿Ya inscrito? Recuperas tu espacio.</string>
+    <string name="auth_card_secure">Es seguro</string>
+    <string name="auth_card_secure_body">Tu cuenta queda protegida.</string>
+    <string name="auth_offline">Continuar sin conexión</string>
+    <string name="auth_ref_detected">Código de referido detectado: %1$s</string>
+    <string name="auth_status_default">Inicio de sesión con 1 toque, sin teléfono</string>
+    <string name="refcode_invalid">Formato esperado: PALABRA-123 (3 a 10 letras, guion, 3 dígitos).</string>
+</resources>

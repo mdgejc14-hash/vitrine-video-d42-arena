@@ -1,0 +1,119 @@
+package video.vitrine.data.gabarits
+
+import org.json.JSONArray
+import org.json.JSONObject
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+/**
+ * Audit D40 (A5/A6) : la structure des gabarits V2.0 devient le beat sheet du
+ * moteur. Portes WordClock respectees par construction (moyenne <= 1,5 s,
+ * max <= 3 s, bornes contigues, duree = gabarit), reperes SFX et piste BGM
+ * issus du bloc audio, cartes generees presentes en kind="card".
+ */
+class GabaritBeatSheetTest {
+
+    private val fixtures = listOf(
+        "batiment_travaux_T1", "coiffure_beaute_T5", "vetements_mode_T4"
+    )
+
+    private fun fixture(name: String): String =
+        javaClass.getResourceAsStream("/fixtures/$name.json")!!.readBytes().decodeToString()
+
+    @Test
+    fun `beat sheet conforme aux portes de montage sur les 3 fixtures`() {
+        fixtures.forEach { name ->
+            val raw = fixture(name)
+            val doc = GabaritBeatSheet.build(raw, mapOf("nom_commerce" to "Chez Awa", "prix" to "15000"))
+            assertNotNull("doc $name", doc)
+            val sheet = JSONObject(doc!!.beatSheetJson)
+            val plans = sheet.getJSONArray("plans")
+            assertTrue("plans $name", plans.length() > 0)
+
+            var previousEnd = 0.0
+            var total = 0.0
+            var max = 0.0
+            for (i in 0 until plans.length()) {
+                val p = plans.getJSONObject(i)
+                assertEquals("contigu $name", previousEnd, p.getDouble("t0"), 1e-9)
+                previousEnd = p.getDouble("t1")
+                val d = p.getDouble("t1") - p.getDouble("t0")
+                total += d
+                max = maxOf(max, d)
+                assertTrue("plan <= 1,5 s $name", d <= 1.5 + 1e-9)
+                assertNotNull(p.getJSONArray("z"))
+                assertEquals(2, p.getJSONArray("z").length())
+                assertTrue("rid $name", p.getInt("rid") >= 0)
+            }
+            assertTrue("max <= 3 s $name", max <= 3.0)
+            assertTrue("moyenne <= 1,5 s $name", total / plans.length() <= 1.5 + 1e-9)
+
+            val attendu = JSONObject(raw).getDouble("duree_totale_secondes")
+            assertEquals("duree totale $name", attendu, total, 0.05)
+        }
+    }
+
+    @Test
+    fun `sfx et bgm viennent du bloc audio du gabarit`() {
+        fixtures.forEach { name ->
+            val raw = fixture(name)
+            val audio = JSONObject(raw).getJSONObject("audio")
+            val doc = GabaritBeatSheet.build(raw, emptyMap())!!
+            assertEquals(
+                "sfx count $name",
+                audio.getJSONArray("sfx_scenes").length(),
+                doc.sfxEvents.size
+            )
+            assertEquals(
+                "bgm $name",
+                audio.getJSONObject("musique").getString("categorie_audio"),
+                doc.bgmCategorie
+            )
+            val parsed = JSONArray(doc.sfxEventsJson)
+            assertEquals(doc.sfxEvents.size, parsed.length())
+            assertTrue(
+                "marqueurs ordonnes $name",
+                doc.sfxEvents.zipWithNext { a, b -> a.atUs <= b.atUs }.all { it }
+            )
+        }
+    }
+
+    @Test
+    fun `cartes generees deviennent des plans card et les variables sont substituees`() {
+        val raw = fixture("coiffure_beaute_T5")
+        val axes = JSONObject(raw).getJSONObject("axes_signature")
+        val decoupage = axes.getJSONArray("decoupage_prises")
+        var cartesAttendues = 0
+        for (i in 0 until decoupage.length()) {
+            if (decoupage.getString(i).startsWith("carte:")) cartesAttendues++
+        }
+        val doc = GabaritBeatSheet.build(
+            raw,
+            mapOf("nom_commerce" to "Salon Belle Tresse", "prix" to "25000", "devise" to "FCFA")
+        )!!
+        val plans = JSONObject(doc.beatSheetJson).getJSONArray("plans")
+        var cartes = 0
+        for (i in 0 until plans.length()) {
+            if (plans.getJSONObject(i).optString("kind") == "card") cartes++
+        }
+        assertTrue("au moins une carte $cartesAttendues", cartesAttendues > 0)
+        assertTrue("plans card presentes", cartes > 0)
+
+        val words = JSONObject(doc.beatSheetJson).getJSONArray("words")
+        var substitue = false
+        for (i in 0 until words.length()) {
+            val texte = words.getJSONArray(i).getString(0)
+            assertTrue("aucune variable brute", !texte.contains("{"))
+            if (texte.contains("Salon Belle Tresse") || texte.contains("25000")) substitue = true
+        }
+        assertTrue("valeur du brief presente a l'ecran", substitue)
+    }
+
+    @Test
+    fun `gabarit invalide renvoie null sans exception`() {
+        assertEquals(null, GabaritBeatSheet.build("{}", emptyMap()))
+        assertEquals(null, GabaritBeatSheet.build("pas-du-json", emptyMap()))
+    }
+}

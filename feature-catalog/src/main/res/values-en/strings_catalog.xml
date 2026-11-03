@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="catalog_title">Pick a video template</string>
+    <string name="catalog_offline">Offline: cached templates</string>
+    <string name="skin_new_arrival">New Arrivals &amp; Fresh Stock</string>
+    <string name="skin_before_after">Before / After Transformation</string>
+    <string name="skin_quick_presentation">Quick Product Showcase</string>
+    <string name="skin_flash_promo">Flash Promo &amp; Discount</string>
+    <string name="skin_customer_review">Customer Testimonial &amp; Review</string>
+    <string name="catalog_sector_focus">Templates tailored to your business: %1$s</string>
+    <string name="catalog_skins_unavailable">The styles catalog is temporarily unavailable. The 30 universal formats remain available.</string>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="auth_title">ログイン</string>
+    <string name="auth_google">Googleで続行</string>
+    <string name="auth_loading">接続中…</string>
+    <string name="auth_error">接続できません: %1$s — ネットワークを確認して再試行してください。</string>
+    <string name="auth_subtitle">Googleアカウントでそのまま続けられます。</string>
+    <string name="auth_card_google">Googleで続行</string>
+    <string name="auth_card_google_body">初めて？アカウントを作成します。登録済み？あなたのスペースに戻れます。</string>
+    <string name="auth_card_secure">セキュアです</string>
+    <string name="auth_card_secure_body">アカウントは保護されます。</string>
+    <string name="auth_offline">オフラインで続行</string>
+    <string name="auth_ref_detected">紹介コードを検出しました：%1$s</string>
+    <string name="auth_status_default">電話番号不要のワンタップサインイン</string>
+    <string name="refcode_invalid">形式：WORD-123（英字3〜10文字、ハイフン、数字3桁）。</string>
+</resources>

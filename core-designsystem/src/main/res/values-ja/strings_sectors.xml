@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sector_mode">👗 服とファッション</string>
+    <string name="sector_coiffure">✂️ 美容とヘア</string>
+    <string name="sector_restauration">🍲 食堂とレストラン</string>
+    <string name="sector_btp">🏗️ 建築と工事</string>
+    <string name="sector_immo_auto">🚗🏠 車と不動産販売</string>
+    <string name="sector_commerce">🛒 店舗と小売</string>
+    <string name="sector_all">すべての業種</string>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="export_t1">L\'export tourne appareil verrouillé : éteins ton écran, la notification te prévient.</string>
+    <string name="export_running">Export local en cours…</string>
+    <string name="export_start">Lancer l\'export local</string>
+    <string name="export_preview_title">Aperçu de votre vidéo</string>
+    <string name="export_preview_meta">%1$d s · %2$d rushs client · %3$d rushs caméra</string>
+    <string name="export_preview_typo">Voix &amp; typographie cinétique</string>
+    <string name="export_gate_no_credit">Plus de crédits export disponibles. Rechargez pour continuer.</string>
+    <string name="export_gate_integrity">Vérification de sécurité échouée. Réinstallez l\'application officielle.</string>
+    <string name="export_gate_rollback">Horloge de l\'appareil en recul. Export bloqué jusqu\'à synchronisation.</string>
+    <string name="export_progress_title">Ta vidéo se prépare</string>
+    <string name="export_progress_sub">État de progression</string>
+    <string name="export_card_preparing">Préparation de la vidéo…</string>
+    <string name="export_card_step_title">Étape en cours</string>
+    <string name="export_card_step_body">Les prises sont assemblées selon le plan choisi.</string>
+    <string name="export_card_time_title">Temps indicatif</string>
+    <string name="export_card_time_body">Environ 2 minutes dans cette maquette. Le temps réel reste à vérifier.</string>
+    <string name="export_done">Vidéo prête ! Partage-la avec tes clients.</string>
+    <string name="export_share">Partager la vidéo</string>
+    <string name="export_space">Voir mon espace</string>
+    <string name="export_failed_ui">Export interrompu. Tes crédits ont été rendus — réessaie.</string>
+    <string name="export_input_missing">Vidéo source introuvable — reprenez vos prises avant d’exporter. Ton crédit a été rendu.</string>
+</resources>

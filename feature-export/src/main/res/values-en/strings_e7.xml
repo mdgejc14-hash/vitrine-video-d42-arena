@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="e7_title">Preview of your video</string>
+    <string name="e7_badge">PREVIEW</string>
+    <string name="e7_check">Check this information</string>
+    <string name="e7_create">Create my video</string>
+    <string name="e7_footnote">This information comes from your product sheet.</string>
+</resources>

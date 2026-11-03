@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="e6_title">Filme ta prise</string>
+    <string name="e6_to_film">À filmer</string>
+    <string name="e6_show">À montrer</string>
+    <string name="e6_tell">À raconter avec tes mots</string>
+    <string name="e6_example">EXEMPLE POUR COMPRENDRE · PAS À RÉPÉTER</string>
+    <string name="e6_time_hint">Le temps est un repère; ta voix ne sera pas coupée.</string>
+    <string name="e6_redo">Refaire</string>
+    <string name="e6_record">Tourner</string>
+    <string name="e6_next">Suivant</string>
+    <string name="e6_countdown">Décompte 3-2-1</string>
+    <string name="e6_about">Environ %d secondes</string>
+</resources>

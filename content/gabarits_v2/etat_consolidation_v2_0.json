@@ -1,0 +1,28 @@
+{
+  "schema": "etat_consolidation_gabarits_v2_0",
+  "statut": "PROPOSE_A_APPROUVER",
+  "publication_autorisee_par_cette_archive": false,
+  "gabarits_json_source_inchanges": 30,
+  "fichiers_origine_inchanges_total": 40,
+  "profils_uniques_sans_null": 30,
+  "dossier_canonique": "fiches_style_v2_0",
+  "copie_identique": "profils_style",
+  "scenes": 448,
+  "indications_sfx": 280,
+  "categories_sfx": 9,
+  "scenes_sans_sfx": 168,
+  "sfx_prix_conditionnels_t5": 6,
+  "fichiers_son_reels_fournis": 0,
+  "pistes_musicales_reelles_validees": 0,
+  "references_visuelles_reelles_fournies": 0,
+  "rendus_mp4_reels_fournis": 0,
+  "fps_num": 30,
+  "fps_den": 1,
+  "audio_hz": 48000,
+  "arbitrages": [
+    "T5_SCENE_10_CONDITION_TEXTE_ACTION_DANS_LES_SIX_SECTEURS",
+    "T4_QUATRE_ROLES_ET_TEXTES_PRIX_A_ARBITRER",
+    "T4_TROIS_CIBLES_DE_RAYURE_A_CONFIRMER",
+    "PROFILS_REFERENCES_REPLIS_ET_MEDIAS_A_APPROUVER"
+  ]
+}

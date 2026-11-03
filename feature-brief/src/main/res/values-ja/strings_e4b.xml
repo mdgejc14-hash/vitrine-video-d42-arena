@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="e4b_title">始める前に</string>
+    <string name="e4b_sub">準備した内容を確認しよう。</string>
+    <string name="e4b_badge">確認</string>
+    <string name="e4b_card">あなたの動画</string>
+    <string name="e4b_format">フォーマット</string>
+    <string name="e4b_job">業種</string>
+    <string name="e4b_shots">撮影</string>
+    <string name="e4b_shots_value">予定%dショット</string>
+    <string name="e4b_infos">情報</string>
+    <string name="e4b_clear">すべて明確？</string>
+    <string name="e4b_clear_body">購買意欲を高める動画を研究しました。画面の指示どおりに進めてください。</string>
+    <string name="e4b_reassure">覚えることは何もありません。素敵な商品動画ができます。</string>
+    <string name="e4b_check">あなたの選択です。始められます。</string>
+    <string name="e4b_ok">OK、開始</string>
+</resources>

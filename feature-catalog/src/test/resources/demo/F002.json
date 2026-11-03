@@ -1,0 +1,29 @@
+{
+  "identity": { "id": "F002", "edl_version": "1.2.0", "parent": null, "name": "Salon Élégance Nokoué", "revision": 1 },
+  "sector_category": "coiffure",
+  "targeting": { "audience": "clients de proximité", "platforms": ["whatsapp_status", "facebook_reels"] },
+  "objective": "ventes",
+  "durations": { "total_s": 30, "scene_min_s": 3, "scene_max_s": 15 },
+  "hook": { "first_3s": "plan produit serré + prix affiché", "text": "Tresses & soins du mois" },
+  "timeline": {
+    "scenes": [
+      { "start_s": 0, "end_s": 3, "clip": "raw_footage.plan_produit", "transition": "cut",
+        "text_layers": [{ "text": "Tresses & soins du mois", "zone": "safe_bottom" }],
+        "audio": { "role": "voiceover_script", "music_role": "upbeat_local" } },
+      { "start_s": 3, "end_s": 18, "clip": "raw_footage.plan_metier", "transition": "cut",
+        "text_layers": [{ "text": "Forfait mariage disponible", "zone": "safe_top" }],
+        "audio": { "role": "voiceover_script", "music_role": "upbeat_local" } },
+      { "start_s": 18, "end_s": 30, "clip": "raw_footage.plan_accueil", "transition": "fade",
+        "text_layers": [{ "text": "Réservez votre créneau", "zone": "safe_bottom" }],
+        "cta": { "type": "whatsapp", "label": "Commander maintenant", "phone_required": true },
+        "audio": { "role": "voiceover_script", "music_role": "upbeat_local" } }
+    ],
+    "raw_footage": { "plans": ["plan_produit", "plan_metier", "plan_accueil"], "orientation": "portrait" },
+    "text_layers": { "font": "ins_sans", "contrast_min": 4.5 },
+    "audio": { "script_first": true, "asr": false }
+  },
+  "parameters": { "lut": "ins_neutral@1.0.0", "grain": 0.02, "hue_lock": true, "exposure_gain_range": [0.9, 1.1] },
+  "qa_rules": { "zones_sures": true, "prix_obligatoire": true, "cta_whatsapp": true, "consent_visages": true, "durees_bornees": true },
+  "music_license": { "source_policy": "catalogue_interne", "music_resolution": "role_not_title" },
+  "export_targets": [{ "w": 1080, "h": 1920, "fps": 30, "bitrate_class": true }, { "w": 720, "h": 1280, "fps": 30, "bitrate_class": true }]
+}

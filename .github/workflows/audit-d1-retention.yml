@@ -1,0 +1,701 @@
+
+name: Audit D1 Backup Retention (Dry Run)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vitrine-video-d1-retention-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    name: List backups and prepare retention report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      B2_RETENTION_KEY_ID: ${{ secrets.B2_RETENTION_KEY_ID }}
+      B2_RETENTION_APPLICATION_KEY: ${{ secrets.B2_RETENTION_APPLICATION_KEY }}
+      B2_BACKUP_BUCKET: ${{ secrets.B2_BACKUP_BUCKET }}
+      B2_S3_ENDPOINT: ${{ secrets.B2_S3_ENDPOINT }}
+
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate audit configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for name in \
+            B2_RETENTION_KEY_ID \
+            B2_RETENTION_APPLICATION_KEY \
+            B2_BACKUP_BUCKET \
+            B2_S3_ENDPOINT
+          do
+            if [[ -z "${!name:-}" ]]; then
+              echo "::error::Required secret or variable is missing: ${name}"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          import os
+          import re
+          from urllib.parse import urlparse
+
+          endpoint = os.environ["B2_S3_ENDPOINT"].rstrip("/")
+          parsed = urlparse(endpoint)
+
+          valid = (
+              parsed.scheme == "https"
+              and re.fullmatch(
+                  r"s3\.[a-z0-9-]+\.backblazeb2\.com",
+                  parsed.netloc,
+              ) is not None
+              and parsed.path in ("", "/")
+              and not parsed.query
+              and not parsed.fragment
+          )
+
+          if not valid:
+              raise SystemExit(
+                  "Invalid B2_S3_ENDPOINT format. "
+                  "Expected https://s3.<region>.backblazeb2.com"
+              )
+
+          print("Audit configuration format: OK")
+          print("No secret values are printed.")
+          PY
+
+      - name: Install minimal S3 client
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install \
+            --disable-pip-version-check \
+            --no-input \
+            'boto3>=1.34,<2'
+
+      - name: List backups and prepare dry-run report
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python - <<'PY'
+          import csv
+          import json
+          import os
+          import re
+          from collections import defaultdict
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from urllib.parse import urlparse
+
+          import boto3
+          from botocore.config import Config
+
+          # ============================================================
+          # AUDIT ONLY.
+          # No object is uploaded, overwritten, or deleted.
+          # No database is modified.
+          # ============================================================
+
+          EXPECTED_SQL = "vitrine-video-db.sql"
+          EXPECTED_SHA = "vitrine-video-db.sql.sha256"
+          EXPECTED_NAMES = {EXPECTED_SQL, EXPECTED_SHA}
+          STORAGE_PREFIX = "d1/"
+
+          output_dir = Path("retention-audit-output")
+          output_dir.mkdir(parents=True, exist_ok=True)
+
+          now = datetime.now(timezone.utc).replace(microsecond=0)
+          bucket = os.environ["B2_BACKUP_BUCKET"].strip()
+          endpoint = os.environ["B2_S3_ENDPOINT"].rstrip("/")
+
+          parsed_endpoint = urlparse(endpoint)
+          region_match = re.fullmatch(
+              r"s3\.([a-z0-9-]+)\.backblazeb2\.com",
+              parsed_endpoint.netloc,
+          )
+
+          if not region_match:
+              raise SystemExit("Invalid Backblaze S3 endpoint.")
+
+          region = region_match.group(1)
+
+          client = boto3.client(
+              "s3",
+              endpoint_url=endpoint,
+              region_name=region,
+              aws_access_key_id=os.environ["B2_RETENTION_KEY_ID"],
+              aws_secret_access_key=os.environ[
+                  "B2_RETENTION_APPLICATION_KEY"
+              ],
+              config=Config(
+                  signature_version="s3v4",
+                  retries={
+                      "max_attempts": 3,
+                      "mode": "standard",
+                  },
+              ),
+          )
+
+          print("Mode: DRY RUN — NO DELETION")
+          print(f"Audit time (UTC): {now.isoformat()}")
+          print("Listing objects under d1/.")
+
+          # ------------------------------------------------------------
+          # 1. List all objects, including every page of the response.
+          # ------------------------------------------------------------
+
+          objects = []
+          paginator = client.get_paginator("list_objects_v2")
+
+          for page in paginator.paginate(
+              Bucket=bucket,
+              Prefix=STORAGE_PREFIX,
+          ):
+              for item in page.get("Contents", []):
+                  key = item["Key"]
+
+                  objects.append({
+                      "key": key,
+                      "size": int(item.get("Size", 0)),
+                      "last_modified": (
+                          item["LastModified"]
+                          .astimezone(timezone.utc)
+                          .isoformat()
+                      ),
+                  })
+
+          objects.sort(key=lambda item: item["key"])
+
+          print(f"Objects listed: {len(objects)}")
+
+          # ------------------------------------------------------------
+          # 2. Group objects by d1/YYYY/MM/DD/HHMMSS/.
+          # Unexpected paths are protected and reported.
+          # ------------------------------------------------------------
+
+          path_pattern = re.compile(
+              r"d1/(\d{4})/(\d{2})/(\d{2})/"
+              r"(\d{6})/(.+)"
+          )
+
+          groups = {}
+          unclassified = []
+
+          for obj in objects:
+              match = path_pattern.fullmatch(obj["key"])
+
+              if not match:
+                  unclassified.append(obj)
+                  continue
+
+              year, month, day, clock, filename = match.groups()
+
+              timestamp_text = (
+                  f"{year}-{month}-{day} {clock}"
+              )
+
+              try:
+                  backup_time = datetime.strptime(
+                      timestamp_text,
+                      "%Y-%m-%d %H%M%S",
+                  ).replace(tzinfo=timezone.utc)
+              except ValueError:
+                  unclassified.append(obj)
+                  continue
+
+              prefix = f"d1/{year}/{month}/{day}/{clock}/"
+
+              if prefix not in groups:
+                  groups[prefix] = {
+                      "prefix": prefix,
+                      "timestamp": backup_time,
+                      "date_utc": backup_time.strftime("%Y-%m-%d"),
+                      "month_utc": backup_time.strftime("%Y-%m"),
+                      "objects": [],
+                      "issues": [],
+                      "complete": False,
+                      "status": "",
+                      "reason": "",
+                  }
+
+              groups[prefix]["objects"].append({
+                  **obj,
+                  "filename": filename,
+              })
+
+          # ------------------------------------------------------------
+          # 3. Validate each expected SQL/checksum pair by name and size.
+          # This step does NOT recompute the SHA-256 contents.
+          # Any anomaly protects the entire backup group.
+          # ------------------------------------------------------------
+
+          for group in groups.values():
+              entries = group["objects"]
+              name_counts = defaultdict(int)
+
+              for item in entries:
+                  name_counts[item["filename"]] += 1
+
+              extra_names = sorted(
+                  set(name_counts) - EXPECTED_NAMES
+              )
+
+              if extra_names:
+                  group["issues"].append(
+                      "Unexpected files: " + ", ".join(extra_names)
+                  )
+
+              for expected in sorted(EXPECTED_NAMES):
+                  count = name_counts[expected]
+
+                  if count == 0:
+                      group["issues"].append(
+                          f"Missing {expected}"
+                      )
+                  elif count > 1:
+                      group["issues"].append(
+                          f"Multiple entries for {expected}"
+                      )
+
+              for expected in sorted(EXPECTED_NAMES):
+                  matching = [
+                      item for item in entries
+                      if item["filename"] == expected
+                  ]
+
+                  if (
+                      len(matching) == 1
+                      and matching[0]["size"] <= 0
+                  ):
+                      group["issues"].append(
+                          f"Empty object: {expected}"
+                      )
+
+              group["sql_size_bytes"] = sum(
+                  item["size"]
+                  for item in entries
+                  if item["filename"] == EXPECTED_SQL
+              )
+
+              group["checksum_size_bytes"] = sum(
+                  item["size"]
+                  for item in entries
+                  if item["filename"] == EXPECTED_SHA
+              )
+
+              group["object_count"] = len(entries)
+
+              group["complete"] = (
+                  not group["issues"]
+                  and name_counts[EXPECTED_SQL] == 1
+                  and name_counts[EXPECTED_SHA] == 1
+              )
+
+          complete_groups = [
+              group for group in groups.values()
+              if group["complete"]
+          ]
+
+          # ------------------------------------------------------------
+          # 4. Daily retention.
+          # Select the latest complete backup for each of the
+          # 14 most recent distinct UTC dates with a complete backup.
+          # If fewer than 14 dates exist, select only those available.
+          # ------------------------------------------------------------
+
+          by_date = defaultdict(list)
+
+          for group in complete_groups:
+              by_date[group["date_utc"]].append(group)
+
+          latest_dates = sorted(
+              by_date.keys(),
+              reverse=True,
+          )[:14]
+
+          daily_keep = set()
+
+          for date in latest_dates:
+              chosen = max(
+                  by_date[date],
+                  key=lambda group: group["timestamp"],
+              )
+              daily_keep.add(chosen["prefix"])
+
+          # ------------------------------------------------------------
+          # 5. Monthly retention.
+          # Keep the latest complete backup for each of the
+          # 12 most recent COMPLETED UTC calendar months.
+          # The CURRENT month is excluded from monthly retention.
+          #
+          # Example for October 2026:
+          # October 2025 through September 2026 are the 12 months.
+          # October 2026 is covered by daily retention for now.
+          # ------------------------------------------------------------
+
+          current_month_index = (
+              now.year * 12 + now.month - 1
+          )
+
+          completed_month_indexes = range(
+              current_month_index - 12,
+              current_month_index,
+          )
+
+          months = []
+
+          for index in completed_month_indexes:
+              year = index // 12
+              month = index % 12 + 1
+              months.append(f"{year:04d}-{month:02d}")
+
+          by_month = defaultdict(list)
+
+          for group in complete_groups:
+              by_month[group["month_utc"]].append(group)
+
+          monthly_keep = set()
+          missing_months = []
+
+          for month in months:
+              candidates = by_month.get(month, [])
+
+              if not candidates:
+                  missing_months.append(month)
+                  continue
+
+              chosen = max(
+                  candidates,
+                  key=lambda group: group["timestamp"],
+              )
+
+              monthly_keep.add(chosen["prefix"])
+
+          # ------------------------------------------------------------
+          # 6. Classify groups.
+          # Candidates are for human review only.
+          # Nothing is deleted.
+          # ------------------------------------------------------------
+
+          selected_by_both = daily_keep & monthly_keep
+
+          for group in groups.values():
+              prefix = group["prefix"]
+
+              if not group["complete"]:
+                  anomalous = any(
+                      issue.startswith(
+                          (
+                              "Unexpected files",
+                              "Multiple entries",
+                          )
+                      )
+                      for issue in group["issues"]
+                  )
+
+                  if anomalous:
+                      group["status"] = "PROTECT_ANOMALOUS"
+                  else:
+                      group["status"] = "PROTECT_INCOMPLETE"
+
+                  group["reason"] = "; ".join(group["issues"])
+
+              elif prefix in selected_by_both:
+                  group["status"] = "KEEP_DAILY_AND_MONTHLY"
+                  group["reason"] = (
+                      "Selected by both daily and monthly policies"
+                  )
+
+              elif prefix in daily_keep:
+                  group["status"] = "KEEP_DAILY"
+                  group["reason"] = (
+                      "Latest complete backup for a retained UTC date"
+                  )
+
+              elif prefix in monthly_keep:
+                  group["status"] = "KEEP_MONTHLY"
+                  group["reason"] = (
+                      "Latest complete backup for a completed month"
+                  )
+
+              else:
+                  group["status"] = "REVIEW_CANDIDATE_ONLY"
+                  group["reason"] = (
+                      "Not selected by current retention rules. "
+                      "Manual review required; no deletion performed."
+                  )
+
+          # ------------------------------------------------------------
+          # 7. Summaries and report files.
+          # ------------------------------------------------------------
+
+          summary = {
+              "objects_listed": len(objects),
+              "backup_groups_found": len(groups),
+              "complete_backup_groups": len(complete_groups),
+              "protected_incomplete_or_anomalous": sum(
+                  1 for group in groups.values()
+                  if group["status"] in {
+                      "PROTECT_INCOMPLETE",
+                      "PROTECT_ANOMALOUS",
+                  }
+              ),
+              "unclassified_objects_protected": len(unclassified),
+              "daily_backups_selected": len(daily_keep),
+              "monthly_backups_selected": len(monthly_keep),
+              "retained_by_both_policies": len(selected_by_both),
+              "review_candidates_only": sum(
+                  1 for group in groups.values()
+                  if group["status"] == "REVIEW_CANDIDATE_ONLY"
+              ),
+              "monthly_periods_without_complete_backup": missing_months,
+          }
+
+          report = {
+              "report_type": "vitrine_video_d1_retention_audit",
+              "generated_at_utc": now.isoformat(),
+              "bucket": bucket,
+              "scan_prefix": STORAGE_PREFIX,
+              "mode": "dry_run_no_deletion",
+              "deletion_enabled": False,
+              "policy": {
+                  "daily": (
+                      "Keep the latest complete backup for each of "
+                      "the 14 most recent distinct UTC dates with "
+                      "a complete backup, or all available dates "
+                      "if fewer than 14 exist."
+                  ),
+                  "monthly": (
+                      "Keep the latest complete backup in each of "
+                      "the 12 most recent completed UTC calendar months. "
+                      "Exclude the current month from monthly retention."
+                  ),
+                  "current_month": (
+                      "The current month is covered by daily retention "
+                      "until the month has ended."
+                  ),
+                  "pair": (
+                      "Both vitrine-video-db.sql and "
+                      "vitrine-video-db.sql.sha256 must be present "
+                      "exactly once and be non-empty."
+                  ),
+                  "verification_limit": (
+                      "Object names and sizes are checked. The SQL "
+                      "contents are not downloaded and SHA-256 is not "
+                      "recomputed by this audit."
+                  ),
+                  "safety": (
+                      "Incomplete, anomalous, and unclassified objects "
+                      "are protected. Review candidates are never deleted."
+                  ),
+              },
+              "summary": summary,
+              "backups": [],
+              "unclassified_objects_protected": unclassified,
+          }
+
+          csv_columns = [
+              "record_type",
+              "backup_prefix",
+              "timestamp_utc",
+              "date_utc",
+              "month_utc",
+              "status",
+              "reason",
+              "sql_size_bytes",
+              "checksum_size_bytes",
+              "object_count",
+              "object_keys",
+          ]
+
+          csv_path = output_dir / "retention-audit.csv"
+          json_path = output_dir / "retention-audit.json"
+
+          with csv_path.open(
+              "w",
+              newline="",
+              encoding="utf-8",
+          ) as csv_file:
+              writer = csv.DictWriter(
+                  csv_file,
+                  fieldnames=csv_columns,
+              )
+              writer.writeheader()
+
+              for group in sorted(
+                  groups.values(),
+                  key=lambda item: item["timestamp"],
+                  reverse=True,
+              ):
+                  report_group = {
+                      key: value
+                      for key, value in group.items()
+                      if key != "timestamp"
+                  }
+
+                  report_group["timestamp_utc"] = (
+                      group["timestamp"].isoformat()
+                  )
+
+                  report["backups"].append(report_group)
+
+                  writer.writerow({
+                      "record_type": "backup_group",
+                      "backup_prefix": group["prefix"],
+                      "timestamp_utc": group["timestamp"].isoformat(),
+                      "date_utc": group["date_utc"],
+                      "month_utc": group["month_utc"],
+                      "status": group["status"],
+                      "reason": group["reason"],
+                      "sql_size_bytes": group["sql_size_bytes"],
+                      "checksum_size_bytes": group[
+                          "checksum_size_bytes"
+                      ],
+                      "object_count": group["object_count"],
+                      "object_keys": " ; ".join(
+                          item["key"] for item in group["objects"]
+                      ),
+                  })
+
+              for obj in unclassified:
+                  writer.writerow({
+                      "record_type": "unclassified_object",
+                      "backup_prefix": "",
+                      "timestamp_utc": "",
+                      "date_utc": "",
+                      "month_utc": "",
+                      "status": "UNCLASSIFIED_PROTECTED",
+                      "reason": (
+                          "Unexpected path or invalid timestamp; "
+                          "preserve for manual review."
+                      ),
+                      "sql_size_bytes": "",
+                      "checksum_size_bytes": "",
+                      "object_count": 1,
+                      "object_keys": obj["key"],
+                  })
+
+          with json_path.open(
+              "w",
+              encoding="utf-8",
+          ) as json_file:
+              json.dump(
+                  report,
+                  json_file,
+                  indent=2,
+                  ensure_ascii=False,
+              )
+              json_file.write("\n")
+
+          # ------------------------------------------------------------
+          # 8. GitHub Actions summary.
+          # ------------------------------------------------------------
+
+          summary_lines = [
+              "# D1 backup retention audit",
+              "",
+              "**Mode: DRY RUN — no objects were deleted.**",
+              "",
+              f"- Generated at (UTC): {now.isoformat()}",
+              f"- Objects listed: {summary['objects_listed']}",
+              f"- Backup groups found: {summary['backup_groups_found']}",
+              f"- Complete backup groups: {summary['complete_backup_groups']}",
+              f"- Daily backups selected: {summary['daily_backups_selected']}",
+              f"- Monthly backups selected: {summary['monthly_backups_selected']}",
+              f"- Selected by both policies: {summary['retained_by_both_policies']}",
+              f"- Review candidates only: {summary['review_candidates_only']}",
+              f"- Incomplete/anomalous groups protected: {summary['protected_incomplete_or_anomalous']}",
+              f"- Unclassified objects protected: {summary['unclassified_objects_protected']}",
+              "",
+              "## Completed months without a complete backup",
+              "",
+          ]
+
+          if missing_months:
+              summary_lines.extend(
+                  f"- {month}" for month in missing_months
+              )
+          else:
+              summary_lines.append("- None")
+
+          summary_lines.extend([
+              "",
+              "## Review candidates — no deletion",
+              "",
+          ])
+
+          review_candidates = [
+              group for group in groups.values()
+              if group["status"] == "REVIEW_CANDIDATE_ONLY"
+          ]
+
+          if review_candidates:
+              for group in sorted(
+                  review_candidates,
+                  key=lambda item: item["timestamp"],
+              )[:40]:
+                  summary_lines.append(f"- `{group['prefix']}`")
+
+              if len(review_candidates) > 40:
+                  summary_lines.append(
+                      f"- Plus {len(review_candidates) - 40} "
+                      "additional candidates in the CSV/JSON reports."
+                  )
+          else:
+              summary_lines.append("- None")
+
+          summary_lines.extend([
+              "",
+              "## Report artifacts",
+              "",
+              "- `retention-audit.csv`",
+              "- `retention-audit.json`",
+              "",
+              "This is a listing and metadata audit only. It does not "
+              "download SQL objects, recompute their SHA-256 contents, "
+              "or delete any object.",
+          ])
+
+          summary_file = os.environ.get("GITHUB_STEP_SUMMARY")
+
+          if summary_file:
+              with open(
+                  summary_file,
+                  "a",
+                  encoding="utf-8",
+              ) as stream:
+                  stream.write("\n".join(summary_lines) + "\n")
+
+          print(json.dumps(summary, indent=2))
+          print(f"CSV report: {csv_path}")
+          print(f"JSON report: {json_path}")
+          print("Deletion enabled: false")
+
+          if not objects:
+              raise SystemExit(
+                  "ERROR: No objects were listed under d1/. "
+                  "Verify the bucket, prefix restriction, and listFiles "
+                  "permission. No objects were modified."
+              )
+          PY
+
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: d1-retention-audit-${{ github.run_id }}-${{ github.run_attempt }}
+          path: retention-audit-output/
+          if-no-files-found: warn
+          retention-days: 30

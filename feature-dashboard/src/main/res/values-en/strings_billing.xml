@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="checkout_not_configured">Payment is not configured on this test device. Contact your administrator.</string>
+    <string name="plan_pass24h_title">24 h Pass</string>
+    <string name="plan_pro_title">Pro</string>
+    <string name="plan_boutique_title">Boutique</string>
+    <string name="feat_pass24h_1">6 watermark-free 1080p exports</string>
+    <string name="feat_pass24h_2">1 cloud render included</string>
+    <string name="feat_pass24h_3">One-off purchase, no renewal</string>
+    <string name="feat_pro_1">Unlimited exports (fair use: 90)</string>
+    <string name="feat_pro_2">5 cloud renders</string>
+    <string name="feat_pro_3">Brand kit</string>
+    <string name="feat_pro_4">14-day cache</string>
+    <string name="feat_boutique_1">200 white-label exports</string>
+    <string name="feat_boutique_2">20 cloud renders</string>
+    <string name="feat_boutique_3">No endcard mention</string>
+    <string name="feat_boutique_4">30-day cache</string>
+    <string name="period_30d">30 d</string>
+    <string name="paywall_footnote_bceao">Indicative equivalents at the fixed BCEAO rate: 1 EUR = 655.957 FCFA. The actual billing currency remains to be confirmed.</string>
+    <string name="billing_need_account">Sign in with your account before buying a plan.</string>
+    <string name="billing_network_error">Payment unavailable offline. Retry with a connection.</string>
+    <string name="billing_error_generic">Payment failed on the server. No charge was made — try again.</string>
+    <string name="billing_no_browser">No browser available to open the secure payment page.</string>
+</resources>

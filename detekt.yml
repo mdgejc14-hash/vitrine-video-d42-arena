@@ -1,0 +1,26 @@
+# Config detekt P2 : minimale et stricte sur la securite, pragmatique ailleurs.
+complexity:
+  active: true
+  LongMethod:
+    active: true
+    threshold: 80
+  CyclomaticComplexMethod:
+    active: true
+    threshold: 15
+style:
+  active: true
+  MagicNumber:
+    active: false
+  MaxLineLength:
+    active: true
+    maxLineLength: 140
+comments:
+  active: false
+empty-blocks:
+  active: true
+exceptions:
+  active: true
+naming:
+  active: true
+potential-bugs:
+  active: true

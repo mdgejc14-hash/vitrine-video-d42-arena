@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="brief_title">広告の内容を入力</string>
+    <string name="brief_script">あなたの文案(字幕になります)</string>
+    <string name="brief_duration">尺(秒)</string>
+    <string name="brief_objective">目的:来店|販売|認知</string>
+    <string name="brief_rushs">📁 動画ラッシュを追加</string>
+    <string name="brief_rushs_count">%1$d本のラッシュ編集準備完了</string>
+    <string name="brief_validate">ブリーフを確認</string>
+    <string name="brief_err_min">お店の紹介を%1$d文字以上で入力してください。この文章が字幕になります。</string>
+    <string name="brief_err_max">スクリプトが長すぎます（最大%1$d文字）。短い広告の方が売れます。</string>
+    <string name="brief_err_duration">推奨される長さ：%1$d〜%2$d秒。</string>
+    <string name="brief_err_objective">目標（来店、販売、認知）を選択してください。</string>
+    <string name="brief_g_continue">続行</string>
+    <string name="brief_g_my_video">マイ動画</string>
+    <string name="brief_g_step_badge">%1$d / %2$d</string>
+    <string name="brief_err_number">文字を入れずに数値を入力してください（例：15000）。</string>
+    <string name="brief_err_phone">国際形式で入力してください：+229 97 00 00 00。</string>
+    <string name="brief_g_type_here">ここに入力…</string>
+    <string name="brief_badge_stock_limite">数量限定</string>
+    <string name="brief_badge_places_limitees">枠数限定</string>
+    <string name="brief_badge_qualite_garantie">品質保証</string>
+</resources>

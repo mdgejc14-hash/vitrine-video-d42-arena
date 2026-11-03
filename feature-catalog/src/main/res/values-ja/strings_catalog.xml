@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="catalog_title">動画テンプレートを選択</string>
+    <string name="catalog_offline">オフライン:キャッシュ済みテンプレート</string>
+    <string name="skin_new_arrival">新入荷と新商品</string>
+    <string name="skin_before_after">ビフォー・アフター変身</string>
+    <string name="skin_quick_presentation">商品スピード紹介</string>
+    <string name="skin_flash_promo">フラッシュセールと割引</string>
+    <string name="skin_customer_review">お客様の声とレビュー</string>
+    <string name="catalog_sector_focus">あなたの業種向けテンプレート：%1$s</string>
+    <string name="catalog_skins_unavailable">スタイルカタログは一時的に利用できません。30種類の汎用フォーマットは引き続きご利用いただけます。</string>
+</resources>

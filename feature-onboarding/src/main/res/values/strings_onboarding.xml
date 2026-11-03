@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lang_title">Choisissez votre langue</string>
+    <string name="carousel_next">Suivant</string>
+    <string name="carousel_start">Commencer</string>
+    <string name="slide1_slogan">Filme. Vends. C\'est tout.</string>
+    <string name="slide1_sub">L\'app vidéo des boutiques et des métiers</string>
+    <string name="slide2_title">Tournage guidé par l\'IA</string>
+    <string name="slide2_sub">Caméra INS 30 FPS, verrous 3A, protection des visages</string>
+    <string name="slide3_slogan">Tes vidéos qui vendent en 30 secondes</string>
+    <string name="slide3_sub">Montage pro automatique, même hors connexion</string>
+    <string name="sector_title">Votre activité principale</string>
+    <string name="sector_hint">Tapez votre secteur, puis continuez.</string>
+    <string name="action_continue">Continuer</string>
+    <string name="welcome_title">Bienvenue</string>
+    <string name="welcome_credits">Nous vous offrons %1$d crédits. Bon tournage !</string>
+    <string name="lang_change_later">Tu pourras changer ce choix plus tard</string>
+    <string name="refcode_title">Ton code parrain</string>
+    <string name="refcode_subtitle">Tu peux passer cette étape.</string>
+    <string name="refcode_chosen">Tu as choisi :</string>
+    <string name="refcode_label">Code de ton parrain (si tu en as un)</string>
+    <string name="refcode_hint">Saisis le code ici</string>
+    <string name="refcode_continue">Continuer</string>
+    <string name="refcode_skip">Je n\'ai pas de code</string>
+</resources>

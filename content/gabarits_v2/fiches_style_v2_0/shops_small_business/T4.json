@@ -1,0 +1,3388 @@
+{
+  "schema_version": "2.0",
+  "profil_id": "profil_shops_small_business_T4_v2_0_propose",
+  "gabarit_id": "shops_small_business_T4",
+  "gabarit_sha256": "20d7e87e98b3280a380cb0eac3d538f80a39f80bd7404e9990660b8873475baa",
+  "statut": "A_APPROUVER",
+  "production_autorisee": false,
+  "validation": {
+    "reglages": "PROPOSES_NON_APPROUVES",
+    "reference_visuelle": "NON_FOURNIE",
+    "pistes_et_sfx": "NON_FOURNIS",
+    "moteur": "NON_TESTE"
+  },
+  "cadre": {
+    "ratio": "9:16",
+    "largeur_proposee_px": 720,
+    "hauteur_proposee_px": 1280,
+    "fps_num": 30,
+    "fps_den": 1,
+    "origine_coordonnees": "HAUT_GAUCHE",
+    "coordonnees": "FRACTIONS_DE_LA_TOILE",
+    "zone_sure_norm": {
+      "x0": 0.06,
+      "y0": 0.07,
+      "x1": 0.94,
+      "y1": 0.85
+    },
+    "arrondi_frames": "ARRONDIR_CUMUL_DE_DUREE_AU_PLUS_PROCHE_DEMI_VERS_LE_HAUT",
+    "texte_min_px_720": 28,
+    "contraste_min_wcag_propose": 4.5
+  },
+  "axes_signature_source": {
+    "sequence_roles": [
+      "hook_prix_flash_shop",
+      "produit_action_directe",
+      "carte_ancien_prix",
+      "rayure_etiquette",
+      "nouveau_prix_pulse",
+      "badge_reduction",
+      "macro_stock_produit",
+      "badge_stock_si_vrai",
+      "date_fin_offre",
+      "carte_achat_facile",
+      "cta_whatsapp_flash",
+      "test_fonction_produit",
+      "etiquette_ancien_prix",
+      "badge_stock_si_confirme",
+      "rappel_prix_flash",
+      "date_offre_reelle",
+      "carte_contact"
+    ],
+    "nombre_scenes": 17,
+    "courbe_rythme": [
+      2.2,
+      1.319,
+      1.366,
+      1.437,
+      1.407,
+      1.453,
+      1.604,
+      1.562,
+      1.843,
+      1.793,
+      2.073,
+      1.858,
+      2.046,
+      2.143,
+      2.226,
+      2.17,
+      4.5
+    ],
+    "transitions": [
+      "flash_blanc",
+      "flash_blanc",
+      "hard_cut_rythmique",
+      "raccord_forme",
+      "whip_pan_directionnel",
+      "wipe_lateral_produit",
+      "hard_cut_rythmique",
+      "whip_pan_directionnel",
+      "cut_sec",
+      "raccord_forme",
+      "wipe_lateral_produit",
+      "hard_cut_rythmique",
+      "cut_sec",
+      "flash_blanc",
+      "raccord_forme",
+      "wipe_lateral_produit",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "ken_burns_rapide",
+      "zoom_push_1.25x",
+      "recadrage_macro_160",
+      "boucle_2x",
+      "freeze_0.5s",
+      "recadrage_macro_160",
+      "zoom_push_1.25x",
+      "recadrage_macro_160",
+      "boucle_2x",
+      "freeze_0.5s",
+      "ken_burns_rapide",
+      "zoom_push_1.25x",
+      "recadrage_macro_160",
+      "boucle_2x",
+      "freeze_0.5s",
+      "aucun_effet"
+    ],
+    "decoupage_prises": [
+      "carte:carte_prix_geant",
+      "prise_1",
+      "carte:carte_prix_barre",
+      "carte:carte_prix_barre",
+      "carte:carte_prix_geant",
+      "carte:carte_signature_t4_shops_small_business",
+      "prise_2",
+      "carte:carte_signature_t4_shops_small_business",
+      "carte:carte_compte_a_rebours",
+      "carte:carte_signature_t4_shops_small_business",
+      "prise_1",
+      "prise_1",
+      "carte:carte_prix_barre",
+      "carte:carte_signature_t4_shops_small_business",
+      "carte:carte_prix_geant",
+      "carte:carte_compte_a_rebours",
+      "carte:carte_whatsapp_finale"
+    ],
+    "cartes_generees": [
+      "carte_prix_geant",
+      "",
+      "carte_prix_barre",
+      "carte_prix_barre",
+      "carte_prix_geant",
+      "carte_signature_t4_shops_small_business",
+      "",
+      "carte_signature_t4_shops_small_business",
+      "carte_compte_a_rebours",
+      "carte_signature_t4_shops_small_business",
+      "",
+      "",
+      "carte_prix_barre",
+      "carte_signature_t4_shops_small_business",
+      "carte_prix_geant",
+      "carte_compte_a_rebours",
+      "carte_whatsapp_finale"
+    ],
+    "texte_animation_position": [
+      "compteur_countup|centre_haut",
+      "badge_slide_snap|centre",
+      "compteur_countup|tiers_gauche",
+      "rayure_animee|tiers_droit",
+      "compteur_countup|centre",
+      "split_label_track|tiers_gauche",
+      "reveal_mask_text|tiers_droit",
+      "pulse_cta_soft|centre",
+      "countdown_tick|tiers_gauche",
+      "side_tag_animate|tiers_droit",
+      "kinetic_number|centre",
+      "typing_price_roll|tiers_gauche",
+      "compteur_countup|tiers_droit",
+      "lower_third_glide|centre",
+      "compteur_countup|tiers_gauche",
+      "price_shake_impact|tiers_droit",
+      "whatsapp_pulsant|centre_bas"
+    ],
+    "preset_etalonnage": "grade_shops_small_business_t4",
+    "structure_audio": "audio_structure_shops_small_business_t4"
+  },
+  "style_visuel_source": {
+    "typographie": {
+      "preset": "sans_serif_bold_condensee",
+      "graisse": "900",
+      "couleur_texte": "#FFFFFF",
+      "contour": "#000000",
+      "fond_texte": "#FF5500"
+    },
+    "palette": "orange_cinetique_accent",
+    "badges": [
+      "promo_flash_bandeau",
+      "pourcentage_reduction"
+    ],
+    "badges_optionnels_actives_par_commercant": [
+      "stock_limite",
+      "places_limitees",
+      "qualite_garantie"
+    ],
+    "engagements_optionnels_actifs_par_defaut": false
+  },
+  "etalonnage_source": {
+    "preset": "grade_shops_small_business_t4",
+    "exposition_ev": 0.2,
+    "contraste": 1.05,
+    "saturation": 1.05,
+    "temperature_k": 5300,
+    "vignettage": 0.1,
+    "nettete": 0.18,
+    "protection_peau": true,
+    "protection_peau_detail": "Peaux foncées incluses : préserver les hautes lumières du visage et vérifier l’exposition; fidélité textile/carrosserie et nourriture avant stylisation.",
+    "denoise_faible_lumiere": true,
+    "stabilisation": true,
+    "consigne_lumiere": "Filmez le produit proprement, fonds rangés et couleurs fidèles; montrez les accessoires réellement inclus."
+  },
+  "etalonnage_champs_non_applicables": [
+    "preset_avant",
+    "preset_apres",
+    "preset_avant_ref",
+    "preset_apres_ref"
+  ],
+  "palette_couleurs_source": [
+    "#FF5500",
+    "#FFFFFF",
+    "#0B1C2C"
+  ],
+  "audio": {
+    "genre_source": "highlife léger instrumental",
+    "bpm_min_source": 112,
+    "bpm_max_source": 128,
+    "categorie_audio_source": "musique_t4_shops_small_business",
+    "structure_id_source": "audio_structure_shops_small_business_t4",
+    "direction_ecoute_proposee": "Highlife léger et rythmé",
+    "energie_proposee": "3–4",
+    "riser": {
+      "role_source": "carte_ancien_prix",
+      "scene": 3,
+      "fenetre_frames": [
+        106,
+        147
+      ],
+      "frame_cible_candidate": 106,
+      "sample_cible_candidate": 169600
+    },
+    "drop": {
+      "scene_source": 4,
+      "fenetre_frames": [
+        147,
+        190
+      ],
+      "frame_cible_candidate": 147,
+      "sample_cible_candidate": 235200
+    },
+    "statut_piste": "A_ACQUERIR_ET_ECOUTER",
+    "pistes_reelles_validees": [],
+    "regle_cues": "LA_PISTE_MESUREE_DOIT_PLACER_SES_REPERES_DANS_LES_FENETRES_SANS_DEPLACER_LES_SCENES",
+    "ancrages_sont_des_propositions_non_mesurees": true,
+    "mix": {
+      "sample_rate_hz": 48000,
+      "ducking_musique_sous_voix_db": -14,
+      "attaque_ms": 75,
+      "relache_ms": 325,
+      "cible_lufs": -14,
+      "tolerance_lufs": 0.5,
+      "plafond_true_peak_dbtp": -1,
+      "voix_prioritaire": true,
+      "vitesse_voix": 1.0,
+      "mesurer_apres_aac": true,
+      "licence_autorisee": [
+        "CC0-1.0",
+        "DOMAINE_PUBLIC_VERIFIE"
+      ],
+      "un_seul_sfx_par_indication_source": true,
+      "ne_pas_normaliser_sfx_courts_seuls_a_lufs": true
+    }
+  },
+  "scenes": [
+    {
+      "numero": 1,
+      "acte_source": "hook",
+      "role_source": "hook_prix_flash_shop",
+      "duree_source_ms": 2200,
+      "frame_debut": 0,
+      "frame_fin_exclusive": 66,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_geant"
+      },
+      "texte": {
+        "contenu": "Un prix spécial sur {nom_offre} !",
+        "position": "centre_haut",
+        "animation": "compteur_countup",
+        "apparition_s": 0.0,
+        "disparition_s": 2.2
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "flash_blanc",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "FLASH_BLANC",
+        "duree_ms": 120,
+        "duree_frames_proposee": 4,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 64,
+        "fenetre_frame_fin_exclusive": 68,
+        "marge_b_avant_frames": 2,
+        "marge_a_apres_frames": 2,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE_OU_FONDU_DOUX",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "GEL",
+        "duree_ms": 500,
+        "position": "DEBUT_DU_PLAN",
+        "visage_parlant": "NE_PAS_GELER",
+        "id_source": "freeze_0.5s",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "compteur_countup",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "REVELATION_VALEUR",
+        "position_source": "centre_haut",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.09,
+          "x1": 0.92,
+          "y1": 0.27
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 53,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.9,
+            "opacite": 0,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.75,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1.04,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.09,
+          "x1": 0.92,
+          "y1": 0.27
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_prix_geant",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "prix": {
+          "valeur_zone_norm": {
+            "x0": 0.08,
+            "y0": 0.09,
+            "x1": 0.92,
+            "y1": 0.27
+          },
+          "valeur_intermediaire_visible": false,
+          "seulement_valeur_reelle_et_devise_confirmee": true,
+          "si_texte_source_sans_prix": "NE_PAS_AJOUTER_DE_PRIX_SANS_DECISION_EXPLICITE"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "caisse_enregistreuse",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 8,
+        "sample_cible_48khz": 12800,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 2,
+      "acte_source": "preuve",
+      "role_source": "produit_action_directe",
+      "duree_source_ms": 1319,
+      "frame_debut": 66,
+      "frame_fin_exclusive": 106,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "LE PRODUIT EN USAGE",
+        "position": "centre",
+        "animation": "badge_slide_snap",
+        "apparition_s": 0.0,
+        "disparition_s": 1.319
+      },
+      "voix": {
+        "active": true,
+        "source_audio_prise_id": "prise_1",
+        "segment_audio_id": "T4_scene_02_voix",
+        "audio_separe_de_image": true,
+        "vitesse_audio": 1.0
+      },
+      "transition_parametres": {
+        "id_source": "flash_blanc",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "FLASH_BLANC",
+        "duree_ms": 120,
+        "duree_frames_proposee": 4,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 104,
+        "fenetre_frame_fin_exclusive": 108,
+        "marge_b_avant_frames": 2,
+        "marge_a_apres_frames": 2,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE_OU_FONDU_DOUX",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "KEN_BURNS",
+        "debut": 1.0,
+        "fin": 1.08,
+        "dx": 0.015,
+        "dy": 0.0,
+        "courbe": "SMOOTHSTEP_3",
+        "id_source": "ken_burns_rapide",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.6
+      },
+      "animation_parametres": {
+        "id_source": "badge_slide_snap",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "BADGE",
+        "position_source": "centre",
+        "boite_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "entree_frames": 6,
+        "sortie_frames": 4,
+        "pleine_lisibilite_min_frames": 30,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0.12,
+            "dy": 0,
+            "scale": 0.96,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.8,
+            "dx": -0.006,
+            "dy": 0,
+            "scale": 1.03,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_1",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": false,
+        "raison": "AUCUN_SFX_DANS_LA_SOURCE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 3,
+      "acte_source": "offre",
+      "role_source": "carte_ancien_prix",
+      "duree_source_ms": 1366,
+      "frame_debut": 106,
+      "frame_fin_exclusive": 147,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_barre"
+      },
+      "texte": {
+        "contenu": "{ancien_prix} {devise}",
+        "position": "tiers_gauche",
+        "animation": "compteur_countup",
+        "apparition_s": 0.0,
+        "disparition_s": 1.366
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "hard_cut_rythmique",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE_RYTHMIQUE",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 147,
+        "fenetre_frame_fin_exclusive": 147,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "ACCENT_REEL_OU_REPLI",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "ZOOM_PROGRESSIF",
+        "debut": 1.0,
+        "fin": 1.25,
+        "centre_x": 0.5,
+        "centre_y": 0.5,
+        "courbe": "SMOOTHSTEP_3",
+        "id_source": "zoom_push_1.25x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "compteur_countup",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "REVELATION_VALEUR",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 6,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 30,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.9,
+            "opacite": 0,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.75,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1.04,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_prix_barre",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "prix": {
+          "ancien_prix_zone_norm": {
+            "x0": 0.1,
+            "y0": 0.24,
+            "x1": 0.9,
+            "y1": 0.39
+          },
+          "nouveau_prix_zone_norm": {
+            "x0": 0.1,
+            "y0": 0.45,
+            "x1": 0.9,
+            "y1": 0.63
+          },
+          "rayure_epaisseur_px_720": 4,
+          "afficher_donnees_uniquement_si_REELLES": true,
+          "donnees": "NE_MONTRER_QUE_DES_VALEURS_PREVUES_PAR_LA_SCENE_ET_LA_CARTE_APPROUVEE",
+          "rayure": "NE_BARRER_QUE_L_ANCIEN_PRIX_VERIFIE_JAMAIS_LE_PRIX_ACTUEL",
+          "si_role_ou_texte_incoherent": "BLOQUER_ET_DEMANDER_ARBITRAGE"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "caisse_enregistreuse",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 112,
+        "sample_cible_48khz": 179200,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 4,
+      "acte_source": "preuve",
+      "role_source": "rayure_etiquette",
+      "duree_source_ms": 1437,
+      "frame_debut": 147,
+      "frame_fin_exclusive": 190,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_barre"
+      },
+      "texte": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_droit",
+        "animation": "rayure_animee",
+        "apparition_s": 0.0,
+        "disparition_s": 1.437
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "raccord_forme",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE_FORME",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 190,
+        "fenetre_frame_fin_exclusive": 190,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "REPERES_REELS_OU_REPLI",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "RECADRAGE",
+        "zoom_indicatif_nom": 1.6,
+        "priorite": "RECADRAGE_SOURCE_SANS_DOUBLE_MULTIPLICATION",
+        "id_source": "recadrage_macro_160",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "rayure_animee",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "TRAIT_PRIX_BARRE",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 30,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "epaisseur_px_720": 4,
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_prix_barre",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "prix": {
+          "ancien_prix_zone_norm": {
+            "x0": 0.1,
+            "y0": 0.24,
+            "x1": 0.9,
+            "y1": 0.39
+          },
+          "nouveau_prix_zone_norm": {
+            "x0": 0.1,
+            "y0": 0.45,
+            "x1": 0.9,
+            "y1": 0.63
+          },
+          "rayure_epaisseur_px_720": 4,
+          "afficher_donnees_uniquement_si_REELLES": true,
+          "donnees": "NE_MONTRER_QUE_DES_VALEURS_PREVUES_PAR_LA_SCENE_ET_LA_CARTE_APPROUVEE",
+          "rayure": "NE_BARRER_QUE_L_ANCIEN_PRIX_VERIFIE_JAMAIS_LE_PRIX_ACTUEL",
+          "si_role_ou_texte_incoherent": "BLOQUER_ET_DEMANDER_ARBITRAGE"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "whoosh_soft",
+        "repere_visuel": "DERNIERE_IMAGE_AVANT_COUPE_CANDIDATE",
+        "frame_cible_30fps": 189,
+        "sample_cible_48khz": 302400,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": [
+        {
+          "type": "RAYURE_T4_CIBLE_A_CONFIRMER",
+          "constat": "LE_TEXTE_DE_SCENE_NE_NOMME_PAS_LA_VALEUR_A_BARRER",
+          "action": "CONFIRMER_LA_CARTE_ET_N_UTILISER_QUE_L_ANCIEN_PRIX_REEL"
+        }
+      ]
+    },
+    {
+      "numero": 5,
+      "acte_source": "offre",
+      "role_source": "nouveau_prix_pulse",
+      "duree_source_ms": 1407,
+      "frame_debut": 190,
+      "frame_fin_exclusive": 232,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_geant"
+      },
+      "texte": {
+        "contenu": "{prix} {devise}",
+        "position": "centre",
+        "animation": "compteur_countup",
+        "apparition_s": 0.0,
+        "disparition_s": 1.407
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "whip_pan_directionnel",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "WHIP",
+        "duree_ms": 180,
+        "duree_frames_proposee": 5,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 230,
+        "fenetre_frame_fin_exclusive": 235,
+        "marge_b_avant_frames": 2,
+        "marge_a_apres_frames": 3,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "BOUCLE",
+        "repetitions": 2,
+        "longueur_portion_fraction_scene": 0.5,
+        "interdire_si_visage_parlant": true,
+        "id_source": "boucle_2x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "compteur_countup",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "REVELATION_VALEUR",
+        "position_source": "centre",
+        "boite_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "entree_frames": 7,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 30,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.9,
+            "opacite": 0,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.75,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1.04,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_prix_geant",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "prix": {
+          "valeur_zone_norm": {
+            "x0": 0.12,
+            "y0": 0.36,
+            "x1": 0.88,
+            "y1": 0.64
+          },
+          "valeur_intermediaire_visible": false,
+          "seulement_valeur_reelle_et_devise_confirmee": true,
+          "si_texte_source_sans_prix": "NE_PAS_AJOUTER_DE_PRIX_SANS_DECISION_EXPLICITE"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "caisse_enregistreuse",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 197,
+        "sample_cible_48khz": 315200,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 6,
+      "acte_source": "offre",
+      "role_source": "badge_reduction",
+      "duree_source_ms": 1453,
+      "frame_debut": 232,
+      "frame_fin_exclusive": 275,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t4_shops_small_business"
+      },
+      "texte": {
+        "contenu": "-{pourcentage}%",
+        "position": "tiers_gauche",
+        "animation": "split_label_track",
+        "apparition_s": 0.0,
+        "disparition_s": 1.453
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "wipe_lateral_produit",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "MASQUE_LATERAL",
+        "duree_ms": 240,
+        "duree_frames_proposee": 7,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 272,
+        "fenetre_frame_fin_exclusive": 279,
+        "marge_b_avant_frames": 3,
+        "marge_a_apres_frames": 4,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "GEL",
+        "duree_ms": 500,
+        "position": "DEBUT_DU_PLAN",
+        "visage_parlant": "NE_PAS_GELER",
+        "id_source": "freeze_0.5s",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "split_label_track",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "ETIQUETTE_SPLIT",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 30,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": -0.08,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_signature_t4_shops_small_business",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "signature": {
+          "secteur": "shops_small_business",
+          "barre_norm": {
+            "x0": 0.08,
+            "y0": 0.75,
+            "x1": 0.92,
+            "y1": 0.79
+          },
+          "icone": "FORME_GEOMETRIQUE_NEUTRE_ASSOCIEE_AU_SECTEUR",
+          "texte": "UNIQUEMENT_TEXTE_SOURCE_ET_DONNEES_REELLES"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "pop_badge",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 240,
+        "sample_cible_48khz": 384000,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 7,
+      "acte_source": "urgence",
+      "role_source": "macro_stock_produit",
+      "duree_source_ms": 1604,
+      "frame_debut": 275,
+      "frame_fin_exclusive": 324,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "DE PRÈS",
+        "position": "tiers_droit",
+        "animation": "reveal_mask_text",
+        "apparition_s": 0.0,
+        "disparition_s": 1.604
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "hard_cut_rythmique",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE_RYTHMIQUE",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 324,
+        "fenetre_frame_fin_exclusive": 324,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "ACCENT_REEL_OU_REPLI",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "RECADRAGE",
+        "zoom_indicatif_nom": 1.6,
+        "priorite": "RECADRAGE_SOURCE_SANS_DOUBLE_MULTIPLICATION",
+        "id_source": "recadrage_macro_160",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.3
+      },
+      "animation_parametres": {
+        "id_source": "reveal_mask_text",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "MASQUE_TEXTE",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 36,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_2",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "clic_appareil",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 283,
+        "sample_cible_48khz": 452800,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 8,
+      "acte_source": "urgence",
+      "role_source": "badge_stock_si_vrai",
+      "duree_source_ms": 1562,
+      "frame_debut": 324,
+      "frame_fin_exclusive": 370,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t4_shops_small_business"
+      },
+      "texte": {
+        "contenu": "Demandez si c’est disponible",
+        "position": "centre",
+        "animation": "pulse_cta_soft",
+        "apparition_s": 0.0,
+        "disparition_s": 1.562
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "whip_pan_directionnel",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "WHIP",
+        "duree_ms": 180,
+        "duree_frames_proposee": 5,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 368,
+        "fenetre_frame_fin_exclusive": 373,
+        "marge_b_avant_frames": 2,
+        "marge_a_apres_frames": 3,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "ZOOM_PROGRESSIF",
+        "debut": 1.0,
+        "fin": 1.25,
+        "centre_x": 0.5,
+        "centre_y": 0.5,
+        "courbe": "SMOOTHSTEP_3",
+        "id_source": "zoom_push_1.25x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "pulse_cta_soft",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "PULSATION",
+        "position_source": "centre",
+        "boite_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 33,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.96,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "pulse_amplitude": 0.035,
+        "pulse_period_frames": 45,
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_signature_t4_shops_small_business",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "signature": {
+          "secteur": "shops_small_business",
+          "barre_norm": {
+            "x0": 0.08,
+            "y0": 0.75,
+            "x1": 0.92,
+            "y1": 0.79
+          },
+          "icone": "FORME_GEOMETRIQUE_NEUTRE_ASSOCIEE_AU_SECTEUR",
+          "texte": "UNIQUEMENT_TEXTE_SOURCE_ET_DONNEES_REELLES"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "pop_badge",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 332,
+        "sample_cible_48khz": 531200,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 9,
+      "acte_source": "urgence",
+      "role_source": "date_fin_offre",
+      "duree_source_ms": 1843,
+      "frame_debut": 370,
+      "frame_fin_exclusive": 426,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_compte_a_rebours"
+      },
+      "texte": {
+        "contenu": "Offre jusqu’au {fin_promo}",
+        "position": "tiers_gauche",
+        "animation": "countdown_tick",
+        "apparition_s": 0.0,
+        "disparition_s": 1.843
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "cut_sec",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 426,
+        "fenetre_frame_fin_exclusive": 426,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "AUCUN",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "RECADRAGE",
+        "zoom_indicatif_nom": 1.6,
+        "priorite": "RECADRAGE_SOURCE_SANS_DOUBLE_MULTIPLICATION",
+        "id_source": "recadrage_macro_160",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "countdown_tick",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "BATTEMENT_DATE_REELLE",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 43,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.95,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "pulse_amplitude": 0.025,
+        "pulse_period_frames": 30,
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_compte_a_rebours",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "compte_a_rebours": {
+          "barre_norm": {
+            "x0": 0.12,
+            "y0": 0.72,
+            "x1": 0.88,
+            "y1": 0.75
+          },
+          "date": "FIN_PROMO_REELLE_SAISIE",
+          "pas_de_fausse_urgence": true
+        }
+      },
+      "ancre_sfx": {
+        "present": false,
+        "raison": "AUCUN_SFX_DANS_LA_SOURCE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 10,
+      "acte_source": "reassurance",
+      "role_source": "carte_achat_facile",
+      "duree_source_ms": 1793,
+      "frame_debut": 426,
+      "frame_fin_exclusive": 480,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t4_shops_small_business"
+      },
+      "texte": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_droit",
+        "animation": "side_tag_animate",
+        "apparition_s": 0.0,
+        "disparition_s": 1.793
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "raccord_forme",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE_FORME",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 480,
+        "fenetre_frame_fin_exclusive": 480,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "REPERES_REELS_OU_REPLI",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "BOUCLE",
+        "repetitions": 2,
+        "longueur_portion_fraction_scene": 0.5,
+        "interdire_si_visage_parlant": true,
+        "id_source": "boucle_2x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "side_tag_animate",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "ETIQUETTE",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 41,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0.1,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_signature_t4_shops_small_business",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "signature": {
+          "secteur": "shops_small_business",
+          "barre_norm": {
+            "x0": 0.08,
+            "y0": 0.75,
+            "x1": 0.92,
+            "y1": 0.79
+          },
+          "icone": "FORME_GEOMETRIQUE_NEUTRE_ASSOCIEE_AU_SECTEUR",
+          "texte": "UNIQUEMENT_TEXTE_SOURCE_ET_DONNEES_REELLES"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "pop_badge",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 434,
+        "sample_cible_48khz": 694400,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 11,
+      "acte_source": "preuve",
+      "role_source": "cta_whatsapp_flash",
+      "duree_source_ms": 2073,
+      "frame_debut": 480,
+      "frame_fin_exclusive": 542,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "kinetic_number",
+        "apparition_s": 0.0,
+        "disparition_s": 2.073
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "wipe_lateral_produit",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "MASQUE_LATERAL",
+        "duree_ms": 240,
+        "duree_frames_proposee": 7,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 539,
+        "fenetre_frame_fin_exclusive": 546,
+        "marge_b_avant_frames": 3,
+        "marge_a_apres_frames": 4,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "GEL",
+        "duree_ms": 500,
+        "position": "DEBUT_DU_PLAN",
+        "visage_parlant": "NE_PAS_GELER",
+        "id_source": "freeze_0.5s",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.6
+      },
+      "animation_parametres": {
+        "id_source": "kinetic_number",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "CHIFFRE_COMPLET",
+        "position_source": "centre",
+        "boite_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 49,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0.02,
+            "scale": 0.9,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.8,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1.03,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_1",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "whoosh_soft",
+        "repere_visuel": "CENTRE_TRANSITION_DE_SORTIE_CANDIDAT",
+        "frame_cible_30fps": 542,
+        "sample_cible_48khz": 867200,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 12,
+      "acte_source": "preuve",
+      "role_source": "test_fonction_produit",
+      "duree_source_ms": 1858,
+      "frame_debut": 542,
+      "frame_fin_exclusive": 597,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte": {
+        "contenu": "LE PRODUIT EN USAGE",
+        "position": "tiers_gauche",
+        "animation": "typing_price_roll",
+        "apparition_s": 0.0,
+        "disparition_s": 1.858
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "hard_cut_rythmique",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE_RYTHMIQUE",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 597,
+        "fenetre_frame_fin_exclusive": 597,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "ACCENT_REEL_OU_REPLI",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "KEN_BURNS",
+        "debut": 1.0,
+        "fin": 1.08,
+        "dx": 0.015,
+        "dy": 0.0,
+        "courbe": "SMOOTHSTEP_3",
+        "id_source": "ken_burns_rapide",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "source_vitesse": 1.0,
+        "regle_vitesse_effective": "1.0_SI_VISAGE_PARLANT_SYNCHRONISE_SINON_SOURCE_VITESSE",
+        "zoom_source": 1.0
+      },
+      "animation_parametres": {
+        "id_source": "typing_price_roll",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "REVELATION_VALEUR",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 42,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "prise",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "SUPERPOSITION_SUR_PRISE",
+        "prise_id": "prise_1",
+        "image_fond": "SOURCE_CHOISIE_PAR_MARQUEURS",
+        "regle_visage": "SI_VISAGE_PARLANT_MASQUE_BLOQUER_OU_DEMANDER_RECADRAGE_APPROUVE_OU_REPRISE"
+      },
+      "ancre_sfx": {
+        "present": false,
+        "raison": "AUCUN_SFX_DANS_LA_SOURCE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 13,
+      "acte_source": "offre",
+      "role_source": "etiquette_ancien_prix",
+      "duree_source_ms": 2046,
+      "frame_debut": 597,
+      "frame_fin_exclusive": 659,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_barre"
+      },
+      "texte": {
+        "contenu": "{ancien_prix} {devise}",
+        "position": "tiers_droit",
+        "animation": "compteur_countup",
+        "apparition_s": 0.0,
+        "disparition_s": 2.046
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "cut_sec",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 659,
+        "fenetre_frame_fin_exclusive": 659,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "AUCUN",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "ZOOM_PROGRESSIF",
+        "debut": 1.0,
+        "fin": 1.25,
+        "centre_x": 0.5,
+        "centre_y": 0.5,
+        "courbe": "SMOOTHSTEP_3",
+        "id_source": "zoom_push_1.25x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "compteur_countup",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "REVELATION_VALEUR",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 49,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.9,
+            "opacite": 0,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.75,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1.04,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_prix_barre",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "prix": {
+          "ancien_prix_zone_norm": {
+            "x0": 0.1,
+            "y0": 0.24,
+            "x1": 0.9,
+            "y1": 0.39
+          },
+          "nouveau_prix_zone_norm": {
+            "x0": 0.1,
+            "y0": 0.45,
+            "x1": 0.9,
+            "y1": 0.63
+          },
+          "rayure_epaisseur_px_720": 4,
+          "afficher_donnees_uniquement_si_REELLES": true,
+          "donnees": "NE_MONTRER_QUE_DES_VALEURS_PREVUES_PAR_LA_SCENE_ET_LA_CARTE_APPROUVEE",
+          "rayure": "NE_BARRER_QUE_L_ANCIEN_PRIX_VERIFIE_JAMAIS_LE_PRIX_ACTUEL",
+          "si_role_ou_texte_incoherent": "BLOQUER_ET_DEMANDER_ARBITRAGE"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "caisse_enregistreuse",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 605,
+        "sample_cible_48khz": 968000,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 14,
+      "acte_source": "urgence",
+      "role_source": "badge_stock_si_confirme",
+      "duree_source_ms": 2143,
+      "frame_debut": 659,
+      "frame_fin_exclusive": 723,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t4_shops_small_business"
+      },
+      "texte": {
+        "contenu": "Demandez si c’est disponible",
+        "position": "centre",
+        "animation": "lower_third_glide",
+        "apparition_s": 0.0,
+        "disparition_s": 2.143
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "flash_blanc",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "FLASH_BLANC",
+        "duree_ms": 120,
+        "duree_frames_proposee": 4,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 721,
+        "fenetre_frame_fin_exclusive": 725,
+        "marge_b_avant_frames": 2,
+        "marge_a_apres_frames": 2,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE_OU_FONDU_DOUX",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "RECADRAGE",
+        "zoom_indicatif_nom": 1.6,
+        "priorite": "RECADRAGE_SOURCE_SANS_DOUBLE_MULTIPLICATION",
+        "id_source": "recadrage_macro_160",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "lower_third_glide",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "BANDEAU",
+        "position_source": "centre",
+        "boite_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 51,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": -0.12,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.12,
+          "y0": 0.36,
+          "x1": 0.88,
+          "y1": 0.64
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_signature_t4_shops_small_business",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "signature": {
+          "secteur": "shops_small_business",
+          "barre_norm": {
+            "x0": 0.08,
+            "y0": 0.75,
+            "x1": 0.92,
+            "y1": 0.79
+          },
+          "icone": "FORME_GEOMETRIQUE_NEUTRE_ASSOCIEE_AU_SECTEUR",
+          "texte": "UNIQUEMENT_TEXTE_SOURCE_ET_DONNEES_REELLES"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "pop_badge",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 667,
+        "sample_cible_48khz": 1067200,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 15,
+      "acte_source": "offre",
+      "role_source": "rappel_prix_flash",
+      "duree_source_ms": 2226,
+      "frame_debut": 723,
+      "frame_fin_exclusive": 790,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_geant"
+      },
+      "texte": {
+        "contenu": "{prix} {devise}",
+        "position": "tiers_gauche",
+        "animation": "compteur_countup",
+        "apparition_s": 0.0,
+        "disparition_s": 2.226
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "raccord_forme",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "COUPE_FORME",
+        "duree_ms": 0,
+        "duree_frames_proposee": 0,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 790,
+        "fenetre_frame_fin_exclusive": 790,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "REPERES_REELS_OU_REPLI",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "BOUCLE",
+        "repetitions": 2,
+        "longueur_portion_fraction_scene": 0.5,
+        "interdire_si_visage_parlant": true,
+        "id_source": "boucle_2x",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "compteur_countup",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "REVELATION_VALEUR",
+        "position_source": "tiers_gauche",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 54,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.9,
+            "opacite": 0,
+            "masque": 0,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.75,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1.04,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.3,
+          "x1": 0.48,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_prix_geant",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "prix": {
+          "valeur_zone_norm": {
+            "x0": 0.08,
+            "y0": 0.3,
+            "x1": 0.48,
+            "y1": 0.69
+          },
+          "valeur_intermediaire_visible": false,
+          "seulement_valeur_reelle_et_devise_confirmee": true,
+          "si_texte_source_sans_prix": "NE_PAS_AJOUTER_DE_PRIX_SANS_DECISION_EXPLICITE"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "caisse_enregistreuse",
+        "repere_visuel": "FIN_ENTREE_VALEUR_LISIBLE_CANDIDATE",
+        "frame_cible_30fps": 731,
+        "sample_cible_48khz": 1169600,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 16,
+      "acte_source": "urgence",
+      "role_source": "date_offre_reelle",
+      "duree_source_ms": 2170,
+      "frame_debut": 790,
+      "frame_fin_exclusive": 855,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_compte_a_rebours"
+      },
+      "texte": {
+        "contenu": "Offre jusqu’au {fin_promo}",
+        "position": "tiers_droit",
+        "animation": "price_shake_impact",
+        "apparition_s": 0.0,
+        "disparition_s": 2.17
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "wipe_lateral_produit",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "MASQUE_LATERAL",
+        "duree_ms": 240,
+        "duree_frames_proposee": 7,
+        "mode_temps": "CENTREE_SUR_FRONTIERE",
+        "fenetre_frame_debut": 852,
+        "fenetre_frame_fin_exclusive": 859,
+        "marge_b_avant_frames": 3,
+        "marge_a_apres_frames": 4,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "SCENE_SUIVANTE",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "GEL",
+        "duree_ms": 500,
+        "position": "DEBUT_DU_PLAN",
+        "visage_parlant": "NE_PAS_GELER",
+        "id_source": "freeze_0.5s",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "price_shake_impact",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "IMPACT",
+        "position_source": "tiers_droit",
+        "boite_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 52,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.92,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.6,
+            "dx": 0.008,
+            "dy": 0,
+            "scale": 1.04,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 0.8,
+            "dx": -0.005,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.52,
+          "y0": 0.3,
+          "x1": 0.92,
+          "y1": 0.69
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_compte_a_rebours",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "compte_a_rebours": {
+          "barre_norm": {
+            "x0": 0.12,
+            "y0": 0.72,
+            "x1": 0.88,
+            "y1": 0.75
+          },
+          "date": "FIN_PROMO_REELLE_SAISIE",
+          "pas_de_fausse_urgence": true
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "whoosh_soft",
+        "repere_visuel": "CENTRE_TRANSITION_DE_SORTIE_CANDIDAT",
+        "frame_cible_30fps": 855,
+        "sample_cible_48khz": 1368000,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    },
+    {
+      "numero": 17,
+      "acte_source": "cta",
+      "role_source": "carte_contact",
+      "duree_source_ms": 4500,
+      "frame_debut": 855,
+      "frame_fin_exclusive": 990,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_whatsapp_finale"
+      },
+      "texte": {
+        "contenu": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+        "position": "centre_bas",
+        "animation": "whatsapp_pulsant",
+        "apparition_s": 0.0,
+        "disparition_s": 4.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_parametres": {
+        "id_source": "fondu_enchaine",
+        "origine": "PROPOSITION_ARCHITECTURE_3_6",
+        "type": "FONDU_AB_LINEAIRE",
+        "duree_ms": 300,
+        "duree_frames_proposee": 9,
+        "mode_temps": "SORTIE_DANS_DERNIERE_SCENE",
+        "fenetre_frame_debut": 981,
+        "fenetre_frame_fin_exclusive": 990,
+        "marge_b_avant_frames": 0,
+        "marge_a_apres_frames": 0,
+        "geometry": {
+          "centre_x": 0.5,
+          "centre_y": 0.5,
+          "direction": "GAUCHE_VERS_DROITE",
+          "deplacement_max_fraction": 0.12,
+          "zoom_debut": 1.0,
+          "zoom_fin": 1.18,
+          "masque_depart": 0.0,
+          "masque_fin": 1.0,
+          "adouci_bord_px_720": 2
+        },
+        "cible": "FOND_NOIR_PROPOSE_A_APPROUVER",
+        "fondu_alpha": "k/(N-1) pour N>1",
+        "courbe_graphique": "SMOOTHSTEP_3",
+        "flash_couleur": "#FFFFFF",
+        "flash_opacite_pic": 0.35,
+        "repli_prevu": "FONDU_COULEUR_OU_COUPE",
+        "repli_exige_accord": true,
+        "sur_manque_marges": "REDUIRE_N_PUIS_REPLI_EXPLICITE",
+        "test_lisibilite_prix": "NE_PAS_SUPERPOSER_DEUX_VALEURS"
+      },
+      "effet_parametres": {
+        "type": "AUCUN",
+        "regle": "AUCUNE_TRANSFORMATION_SUPPLEMENTAIRE",
+        "id_source": "aucun_effet",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "portrait_centre_x": 0.5,
+        "portrait_centre_y": 0.5,
+        "voix_vitesse": 1.0,
+        "ne_pas_geler_visage_parlant": true,
+        "regle_vitesse_effective": "ANIMATION_GRAPHIQUE_SANS_ACCELERER_VOIX_NI_VIDEO_DE_FOND"
+      },
+      "animation_parametres": {
+        "id_source": "whatsapp_pulsant",
+        "origine": "PROPOSITION_A_APPROUVER",
+        "primitive": "PULSATION_CONTACT",
+        "position_source": "centre_bas",
+        "boite_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.66,
+          "x1": 0.92,
+          "y1": 0.84
+        },
+        "entree_frames": 8,
+        "sortie_frames": 5,
+        "pleine_lisibilite_min_frames": 122,
+        "courbe_entree": "SMOOTHSTEP_3_PAR_SEGMENT",
+        "courbe_sortie": "LINEAIRE_1_VERS_0",
+        "keyframes_entree": [
+          {
+            "t": 0,
+            "dx": 0,
+            "dy": 0,
+            "scale": 0.96,
+            "opacite": 0,
+            "masque": 1,
+            "rotation_deg": 0
+          },
+          {
+            "t": 1,
+            "dx": 0,
+            "dy": 0,
+            "scale": 1,
+            "opacite": 1,
+            "masque": 1,
+            "rotation_deg": 0
+          }
+        ],
+        "masque_coordonnees": "LOCAL_BOITE_TEXTE_GAUCHE_VERS_DROITE",
+        "si_entree_zero": "APPLIQUER_IMMEDIATEMENT_LA_DERNIERE_KEYFRAME",
+        "ne_pas_afficher_de_prix_intermediaire": true,
+        "texte_source_sans_troncature": true,
+        "si_ne_tient_pas": "DEMANDER_TEXTE_PLUS_COURT_OU_REPLI_ACCEPTE",
+        "pulse_amplitude": 0.035,
+        "pulse_period_frames": 45,
+        "regle_valeur_prix": "MASQUER_VALEUR_ENTIERE_PENDANT_ENTREE_PUIS_AFFICHER_LA_VALEUR_FINALE_ENTIERE"
+      },
+      "carte_layout": {
+        "source_type": "generee",
+        "zone_texte_norm": {
+          "x0": 0.08,
+          "y0": 0.66,
+          "x1": 0.92,
+          "y1": 0.84
+        },
+        "zone_sure_norm": {
+          "x0": 0.06,
+          "y0": 0.07,
+          "x1": 0.94,
+          "y1": 0.85
+        },
+        "marge_haute_fraction": 0.07,
+        "marge_laterale_fraction": 0.06,
+        "marge_basse_fraction": 0.15,
+        "texte_padding_fraction_toile": 0.015,
+        "taille_base_px_720": 54,
+        "taille_min_px_720": 28,
+        "interligne": 1.0,
+        "contraste_min_wcag_propose": 4.5,
+        "si_trop_long": "DEMANDER_TEXTE_PLUS_COURT_OU_ACCORD",
+        "mode_masque_texte": "BOITE_CLIPPEE_SANS_TRONQUER_CONTENU",
+        "type": "CARTE_GENEREE",
+        "carte_id": "carte_whatsapp_finale",
+        "fond": "COULEUR_PALETTE_ET_CONTRASTE_DU_GABARIT",
+        "fond_opacite": 1.0,
+        "panneau_texte_opacite": 0.92,
+        "rayon_angles_px_720": 16,
+        "decor": {
+          "forme": "BARRE_DIAGONALE",
+          "couleur": "ACCENT_PALETTE",
+          "x0": 0.06,
+          "y0": 0.76,
+          "x1": 0.94,
+          "y1": 0.8
+        },
+        "contact": {
+          "nom_norm": {
+            "x0": 0.08,
+            "y0": 0.15,
+            "x1": 0.92,
+            "y1": 0.3
+          },
+          "lieu_norm": {
+            "x0": 0.08,
+            "y0": 0.34,
+            "x1": 0.92,
+            "y1": 0.48
+          },
+          "whatsapp_norm": {
+            "x0": 0.08,
+            "y0": 0.66,
+            "x1": 0.92,
+            "y1": 0.84
+          },
+          "donnees": "UNIQUEMENT_SAISIES_ET_VALIDEES"
+        }
+      },
+      "ancre_sfx": {
+        "present": true,
+        "categorie": "whoosh_soft",
+        "repere_visuel": "PREMIERE_PULSATION_CONTACT_CANDIDATE",
+        "frame_cible_30fps": 863,
+        "sample_cible_48khz": 1380800,
+        "origine": "CALCUL_PROPOSE_NON_MESURE",
+        "declenchement_son": "sample_depart = sample_cible_48khz - sample_impact_mesure_du_fichier",
+        "sample_impact_fichier": {
+          "etat": "A_MESURER_APRES_ACQUISITION"
+        },
+        "fichier_et_droits": {
+          "etat": "A_ACQUERIR_ET_VERIFIER"
+        },
+        "garder_si_condition_fausse": false,
+        "gestion_bords": "PAS_DE_TRONCATURE_SILENCIEUSE"
+      },
+      "condition": {
+        "type": "AUCUNE",
+        "execution": "NORMALE"
+      },
+      "alertes_source": []
+    }
+  ]
+}

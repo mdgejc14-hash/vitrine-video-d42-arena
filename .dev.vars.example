@@ -1,0 +1,8 @@
+# Secrets locaux wrangler dev (copier en .dev.vars, JAMAIS commiter).
+# Production : wrangler secret put <NOM> (jamais dans le depot).
+BILLING_WEBHOOK_SECRET=          # >= 32 caracteres, openssl rand -hex 24
+ORDER_LIFECYCLE_SECRET=          # >= 32 caracteres
+B2_APPLICATION_KEY=              # cle d'application Backblaze B2 (writeFiles sur le bucket)
+B2_ORPHAN_AUDIT_TOKEN=           # token interne audit orphelins B2
+B2_AUDIT_KEY_ID=                 # compte B2 lecture seule (audit)
+B2_AUDIT_APPLICATION_KEY=

@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Événement local d’usage – V2.0",
+  "description": "Signer le JSON JCS sans signature avec la clé d’installation. receipt_sha256 = SHA-256 des octets JCS du reçu complet signé. La paire (grant_id, permit_serial) identifie l’usage.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "grant_id",
+    "installation_id",
+    "permit_serial",
+    "mp4_sha256",
+    "plan_sha256",
+    "receipt_sha256",
+    "licence_sha256",
+    "created_at_estimate_ms",
+    "canonicalisation",
+    "signature_alg",
+    "signature_format",
+    "signature"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "grant_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "installation_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "permit_serial": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "mp4_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "plan_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "receipt_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "licence_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "created_at_estimate_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "canonicalisation": {
+      "const": "RFC8785"
+    },
+    "signature_alg": {
+      "const": "ECDSA-P256-SHA256"
+    },
+    "signature_format": {
+      "const": "base64url-der"
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    }
+  },
+  "additionalProperties": false
+}

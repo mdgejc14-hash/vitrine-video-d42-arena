@@ -1,0 +1,32 @@
+﻿carte_id_source;nb_occurrences;nb_avec_voix;scenes_source;statut_layout
+carte_avant_apres_split;4;0;"vetements_mode_T2:SC09; immo_auto_T2:SC10; coiffure_beaute_T2:SC09; shops_small_business_T2:SC09";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_compte_a_rebours;10;0;"vetements_mode_T4:SC10; vetements_mode_T4:SC16; restaurants_maquis_T4:SC08; restaurants_maquis_T4:SC10; immo_auto_T4:SC09; immo_auto_T4:SC16; coiffure_beaute_T4:SC09; coiffure_beaute_T4:SC16; shops_small_business_T4:SC09; shops_small_business_T4:SC16";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_details_produit;3;0;"immo_auto_T3:SC03; immo_auto_T3:SC06; immo_auto_T4:SC03";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_identite_client;6;6;"vetements_mode_T5:SC03; restaurants_maquis_T5:SC03; immo_auto_T5:SC03; coiffure_beaute_T5:SC03; shops_small_business_T5:SC03; batiment_travaux_T5:SC03";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_prix_barre;11;0;"vetements_mode_T4:SC03; vetements_mode_T4:SC04; restaurants_maquis_T4:SC03; restaurants_maquis_T4:SC04; immo_auto_T4:SC04; immo_auto_T4:SC05; coiffure_beaute_T4:SC04; shops_small_business_T4:SC03; shops_small_business_T4:SC04; shops_small_business_T4:SC13; batiment_travaux_T4:SC04";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_prix_geant;42;0;"vetements_mode_T1:SC14; vetements_mode_T2:SC14; vetements_mode_T3:SC13; vetements_mode_T4:SC05; vetements_mode_T4:SC15; vetements_mode_T5:SC10; restaurants_maquis_T1:SC14; restaurants_maquis_T2:SC15; restaurants_maquis_T3:SC13; restaurants_maquis_T4:SC05; restaurants_maquis_T4:SC15; restaurants_maquis_T5:SC10; immo_auto_T1:SC14; immo_auto_T2:SC14; immo_auto_T3:SC13; immo_auto_T4:SC06; immo_auto_T4:SC15; immo_auto_T5:SC10; coiffure_beaute_T1:SC14; coiffure_beaute_T2:SC15; coiffure_beaute_T3:SC13; coiffure_beaute_T4:SC03; coiffure_beaute_T4:SC05; coiffure_beaute_T4:SC15; coiffure_beaute_T5:SC10; shops_small_business_T1:SC14; shops_small_business_T2:SC14; shops_small_business_T3:SC13; shops_small_business_T4:SC01; shops_small_business_T4:SC05; shops_small_business_T4:SC15; shops_small_business_T5:SC10; batiment_travaux_T1:SC14; batiment_travaux_T2:SC16; batiment_travaux_T3:SC13; batiment_travaux_T4:SC01; batiment_travaux_T4:SC03; batiment_travaux_T4:SC05; batiment_travaux_T4:SC10; batiment_travaux_T4:SC11; batiment_travaux_T4:SC15; batiment_travaux_T5:SC10";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t1_batiment_travaux;3;1;"batiment_travaux_T1:SC02; batiment_travaux_T1:SC10; batiment_travaux_T1:SC13";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t1_coiffure_beaute;2;1;"coiffure_beaute_T1:SC02; coiffure_beaute_T1:SC13";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t1_immo_auto;4;1;"immo_auto_T1:SC02; immo_auto_T1:SC04; immo_auto_T1:SC10; immo_auto_T1:SC11";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t1_restaurants_maquis;2;1;"restaurants_maquis_T1:SC02; restaurants_maquis_T1:SC12";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t1_shops_small_business;2;1;"shops_small_business_T1:SC02; shops_small_business_T1:SC13";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t1_vetements_mode;1;1;vetements_mode_T1:SC02;PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t2_batiment_travaux;1;0;batiment_travaux_T2:SC12;PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t3_batiment_travaux;1;0;batiment_travaux_T3:SC10;PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t3_coiffure_beaute;2;0;"coiffure_beaute_T3:SC09; coiffure_beaute_T3:SC12";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t3_immo_auto;1;0;immo_auto_T3:SC10;PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t3_restaurants_maquis;1;0;restaurants_maquis_T3:SC09;PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t3_shops_small_business;1;0;shops_small_business_T3:SC10;PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t4_batiment_travaux;3;0;"batiment_travaux_T4:SC06; batiment_travaux_T4:SC09; batiment_travaux_T4:SC14";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t4_coiffure_beaute;3;0;"coiffure_beaute_T4:SC06; coiffure_beaute_T4:SC08; coiffure_beaute_T4:SC14";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t4_immo_auto;4;0;"immo_auto_T4:SC07; immo_auto_T4:SC08; immo_auto_T4:SC12; immo_auto_T4:SC14";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t4_restaurants_maquis;2;0;"restaurants_maquis_T4:SC06; restaurants_maquis_T4:SC14";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t4_shops_small_business;4;0;"shops_small_business_T4:SC06; shops_small_business_T4:SC08; shops_small_business_T4:SC10; shops_small_business_T4:SC14";PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t4_vetements_mode;1;0;vetements_mode_T4:SC06;PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t5_batiment_travaux;1;0;batiment_travaux_T5:SC08;PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t5_coiffure_beaute;1;0;coiffure_beaute_T5:SC08;PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t5_immo_auto;1;0;immo_auto_T5:SC08;PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t5_restaurants_maquis;1;0;restaurants_maquis_T5:SC08;PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t5_shops_small_business;1;0;shops_small_business_T5:SC08;PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_signature_t5_vetements_mode;1;0;vetements_mode_T5:SC08;PARAMETRES_NON_FOURNIS_A_VALIDER
+carte_whatsapp_finale;30;0;"vetements_mode_T1:SC15; vetements_mode_T2:SC15; vetements_mode_T3:SC14; vetements_mode_T4:SC17; vetements_mode_T5:SC13; restaurants_maquis_T1:SC15; restaurants_maquis_T2:SC16; restaurants_maquis_T3:SC14; restaurants_maquis_T4:SC17; restaurants_maquis_T5:SC13; immo_auto_T1:SC15; immo_auto_T2:SC15; immo_auto_T3:SC14; immo_auto_T4:SC17; immo_auto_T5:SC13; coiffure_beaute_T1:SC15; coiffure_beaute_T2:SC16; coiffure_beaute_T3:SC14; coiffure_beaute_T4:SC17; coiffure_beaute_T5:SC13; shops_small_business_T1:SC15; shops_small_business_T2:SC15; shops_small_business_T3:SC14; shops_small_business_T4:SC17; shops_small_business_T5:SC13; batiment_travaux_T1:SC15; batiment_travaux_T2:SC17; batiment_travaux_T3:SC14; batiment_travaux_T4:SC17; batiment_travaux_T5:SC13";PARAMETRES_NON_FOURNIS_A_VALIDER

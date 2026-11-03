@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="e7_title">Vista previa de tu vídeo</string>
+    <string name="e7_badge">VISTA</string>
+    <string name="e7_check">Verifica esta información</string>
+    <string name="e7_create">Crear mi vídeo</string>
+    <string name="e7_footnote">Esta información viene de tu ficha de producto.</string>
+</resources>

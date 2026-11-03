@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="checkout_not_configured">このテスト端末では支払いが設定されていません。管理者にお問い合わせください。</string>
+    <string name="plan_pass24h_title">24時間パス</string>
+    <string name="plan_pro_title">Pro</string>
+    <string name="plan_boutique_title">ブティック</string>
+    <string name="feat_pass24h_1">透かしなし1080p書き出し6回</string>
+    <string name="feat_pass24h_2">クラウドレンダリング1回付き</string>
+    <string name="feat_pass24h_3">買い切り・更新なし</string>
+    <string name="feat_pro_1">書き出し無制限（フェアユース90回）</string>
+    <string name="feat_pro_2">クラウドレンダリング5回</string>
+    <string name="feat_pro_3">ブランドキット</string>
+    <string name="feat_pro_4">キャッシュ14日</string>
+    <string name="feat_boutique_1">ホワイトラベル書き出し200回</string>
+    <string name="feat_boutique_2">クラウドレンダリング20回</string>
+    <string name="feat_boutique_3">エンドカードの表記なし</string>
+    <string name="feat_boutique_4">キャッシュ30日</string>
+    <string name="period_30d">30日</string>
+    <string name="paywall_footnote_bceao">BCEAO固定レートによる参考換算：1 EUR = 655,957 FCFA。実際の請求通貨は確認中です。</string>
+    <string name="billing_need_account">プランを購入する前にアカウントでサインインしてください。</string>
+    <string name="billing_network_error">オフラインでは支払いできません。接続して再試行してください。</string>
+    <string name="billing_error_generic">サーバー側で支払いに失敗しました。課金は発生していません。再試行してください。</string>
+    <string name="billing_no_browser">安全な支払いページを開けるブラウザーがありません。</string>
+</resources>

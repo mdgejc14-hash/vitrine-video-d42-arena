@@ -1,0 +1,2507 @@
+{
+  "meta": {
+    "version": "1.0_theorique",
+    "date": "2026-10-26",
+    "principe": "Dictionnaire moteur Media3 - toutes les primitives reutilisables par ID. Les gabarits ne referencent que ces IDs.",
+    "ratio_maitre": "9:16",
+    "cible_lufs": -14,
+    "couleur_marque": "#FF5500",
+    "zone_securite": {
+      "marges_laterales_pct": 8,
+      "marge_haut_pct": 12,
+      "marge_bas_pct": 22,
+      "max_lignes": 2,
+      "max_caracteres_par_ligne": 28
+    }
+  },
+  "transitions": [
+    {
+      "id": "flash_blanc",
+      "nom": "Flash blanc",
+      "duree_s": 0.15,
+      "description": "Flash lumineux sur temps fort, signature T1",
+      "usage": "T1 révélation"
+    },
+    {
+      "id": "whip_pan",
+      "nom": "Whip Pan",
+      "duree_s": 0.25,
+      "description": "Balayage rapide avec flou directionnel",
+      "usage": "T1 accélération"
+    },
+    {
+      "id": "zoom_through",
+      "nom": "Zoom Through",
+      "duree_s": 0.3,
+      "description": "Zoom avant traversant le sujet",
+      "usage": "T1 révélation"
+    },
+    {
+      "id": "cut_sec",
+      "nom": "Cut sec",
+      "duree_s": 0.02,
+      "description": "Coupe franche sans transition",
+      "usage": "T4 urgence, T1 rapide"
+    },
+    {
+      "id": "swipe_gauche",
+      "nom": "Swipe gauche",
+      "duree_s": 0.3,
+      "description": "Balayage vers la gauche",
+      "usage": "T2 révélation"
+    },
+    {
+      "id": "swipe_droit",
+      "nom": "Swipe droit",
+      "duree_s": 0.3,
+      "description": "Balayage vers la droite",
+      "usage": "T2 process"
+    },
+    {
+      "id": "rideau_vertical",
+      "nom": "Rideau vertical",
+      "duree_s": 0.4,
+      "description": "Rideau qui descend/découvre",
+      "usage": "T2 transformation"
+    },
+    {
+      "id": "split_screen_glissant",
+      "nom": "Split-screen glissant",
+      "duree_s": 0.5,
+      "description": "Ecran se divise en deux, glissement central",
+      "usage": "T2 avant/après"
+    },
+    {
+      "id": "glitch",
+      "nom": "Glitch",
+      "duree_s": 0.15,
+      "description": "Decalage RGB, trame numérique",
+      "usage": "T4 urgence"
+    },
+    {
+      "id": "tremblement_shake",
+      "nom": "Tremblement",
+      "duree_s": 0.2,
+      "description": "Secousse caméra légère",
+      "usage": "T4 prix"
+    },
+    {
+      "id": "slide_doux",
+      "nom": "Slide doux",
+      "duree_s": 0.4,
+      "description": "Glissement lent et fluide",
+      "usage": "T3 catalogue"
+    },
+    {
+      "id": "fondu_enchaine",
+      "nom": "Fondu enchaîné",
+      "duree_s": 0.5,
+      "description": "Transition douce",
+      "usage": "T5 témoignage"
+    },
+    {
+      "id": "fondu_noir",
+      "nom": "Fondu au noir",
+      "duree_s": 0.3,
+      "description": "Leger assombrissement",
+      "usage": "Fin de chapître"
+    },
+    {
+      "id": "zoom_punch_in",
+      "nom": "Punch-in zoom",
+      "duree_s": 0.4,
+      "description": "Zoom progressif 100%->130%",
+      "usage": "Universel recadrage"
+    },
+    {
+      "id": "orbite_lent",
+      "nom": "Orbite lent",
+      "duree_s": 0.6,
+      "description": "Mouvement orbital autour produit",
+      "usage": "T3 orbite"
+    },
+    {
+      "id": "parallaxe_douce",
+      "nom": "Parallaxe douce",
+      "duree_s": 0.5,
+      "description": "Effet profondeur en deux plans",
+      "usage": "T3 parallaxe"
+    },
+    {
+      "id": "match_cut_mouvement",
+      "nom": "match cut mouvement",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "fondu_croise_temps",
+      "nom": "fondu croise temps",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "cut_sur_action",
+      "nom": "cut sur action",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "raccord_panorama",
+      "nom": "raccord panorama",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "wipe_rideau_vertical",
+      "nom": "wipe rideau vertical",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "zoom_snap",
+      "nom": "zoom snap",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "iris_ouverture",
+      "nom": "iris ouverture",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "split_screen_vertical",
+      "nom": "split screen vertical",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "whip_pan_directionnel",
+      "nom": "whip pan directionnel",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "flash_chaleur",
+      "nom": "flash chaleur",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "slide_specifications",
+      "nom": "slide specifications",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "fondu_lent_temoignage",
+      "nom": "fondu lent temoignage",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "hard_cut_rythmique",
+      "nom": "hard cut rythmique",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "raccord_forme",
+      "nom": "raccord forme",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "panoramique_raccord",
+      "nom": "panoramique raccord",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    },
+    {
+      "id": "wipe_lateral_produit",
+      "nom": "wipe lateral produit",
+      "duree_s": 0.25,
+      "description": "Transition motivée par le mouvement ou la structure narrative; utiliser uniquement si le mouvement source le permet."
+    }
+  ],
+  "effets": [
+    {
+      "id": "accelere_x1_5",
+      "type": "vitesse",
+      "facteur": 1.5,
+      "description": "Accéléré léger chantier"
+    },
+    {
+      "id": "accelere_x2",
+      "type": "vitesse",
+      "facteur": 2.0,
+      "description": "Process x2"
+    },
+    {
+      "id": "accelere_x3",
+      "type": "vitesse",
+      "facteur": 3.0,
+      "description": "Process x3 signature T2"
+    },
+    {
+      "id": "accelere_x4",
+      "type": "vitesse",
+      "facteur": 4.0,
+      "description": "Chantier/time-lapse x4"
+    },
+    {
+      "id": "ralenti_0.5x",
+      "type": "vitesse",
+      "facteur": 0.5,
+      "description": "Ralenti beauté / révélation"
+    },
+    {
+      "id": "ralenti_0.7x",
+      "type": "vitesse",
+      "facteur": 0.7,
+      "description": "Ralenti léger produit"
+    },
+    {
+      "id": "freeze_0.5s",
+      "type": "freeze",
+      "duree_s": 0.5,
+      "description": "Arrêt sur image 0.5s"
+    },
+    {
+      "id": "freeze_1s",
+      "type": "freeze",
+      "duree_s": 1.0,
+      "description": "Arrêt 1s pour impact"
+    },
+    {
+      "id": "ken_burns_lent",
+      "type": "mouvement_photo",
+      "description": "Zoom lent Ken Burns sur photo"
+    },
+    {
+      "id": "ken_burns_rapide",
+      "type": "mouvement_photo",
+      "description": "Ken Burns rapide dynamique"
+    },
+    {
+      "id": "boucle_2x",
+      "type": "boucle",
+      "repetitions": 2,
+      "description": "Boucle la prise 2 fois"
+    },
+    {
+      "id": "punch_in_progressif",
+      "type": "zoom",
+      "description": "Zoom progressif signature",
+      "params": {
+        "min": 1.0,
+        "max": 1.15,
+        "duree_s": 2.0
+      }
+    },
+    {
+      "id": "stabilisation_auto",
+      "type": "correction",
+      "description": "Stabilisation Media3"
+    },
+    {
+      "id": "denoise_leger",
+      "type": "correction",
+      "description": "Débruitage faible lumière"
+    },
+    {
+      "id": "vignettage_doux",
+      "type": "correction",
+      "description": "Vignettage centre"
+    },
+    {
+      "id": "orbite_lent",
+      "type": "mouvement_camera",
+      "description": "Orbite douce autour du sujet, simulée si prise fixe"
+    },
+    {
+      "id": "parallaxe_douce",
+      "type": "mouvement_photo",
+      "description": "Séparation profondeur légère pour catalogue produit"
+    },
+    {
+      "id": "speed_ramp_x5",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "speed_ramp_x4",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "ralenti_0.4x",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "freeze_0.3s",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "ken_burns_detail",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "recadrage_macro_160",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "recadrage_plan_100",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "accelere_x6",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "ralenti_reveal_0.6x",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "vignette_focus",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "focus_pull_simule",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "boucle_action_2x",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "stabilisation_hero",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "aucun_effet",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "zoom_push_1.25x",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    },
+    {
+      "id": "pan_scan_spec",
+      "type": "montage",
+      "description": "Effet réglé comme ponctuation, sans masquer la preuve visuelle."
+    }
+  ],
+  "animations_texte": [
+    {
+      "id": "pop_in_cinetique",
+      "description": "Pop + rebond cinétique, signature hook"
+    },
+    {
+      "id": "slide_bas",
+      "description": "Glisse depuis le haut"
+    },
+    {
+      "id": "scale_shake",
+      "description": "Agrandissement + tremblement (prix promo)"
+    },
+    {
+      "id": "compteur_countup",
+      "description": "Compteur qui défile 0 -> prix"
+    },
+    {
+      "id": "clignotant",
+      "description": "Clignotement bannière PROMO"
+    },
+    {
+      "id": "bandeau_diagonal",
+      "description": "Bannière diagonale NOUVEL ARRIVAGE"
+    },
+    {
+      "id": "barre_progression",
+      "description": "Barre compte à rebours qui se vide"
+    },
+    {
+      "id": "rayure_animee",
+      "description": "Trait qui barre l'ancien prix"
+    },
+    {
+      "id": "typing_machine",
+      "description": "Frappe lettre par lettre"
+    },
+    {
+      "id": "fondu_texte",
+      "description": "Apparition en fondu doux"
+    },
+    {
+      "id": "rebond_legere",
+      "description": "Rebond léger fin d'anim"
+    },
+    {
+      "id": "badge_pop",
+      "description": "Badge qui pop avec scale"
+    },
+    {
+      "id": "whatsapp_pulsant",
+      "description": "Bouton CTA qui pulse toutes les 1.2s"
+    },
+    {
+      "id": "typing_price_roll",
+      "description": "Animation de texte contrôlée, compatible zone de sécurité verticale."
+    },
+    {
+      "id": "wipe_label",
+      "description": "Animation de texte contrôlée, compatible zone de sécurité verticale."
+    },
+    {
+      "id": "lower_third_glide",
+      "description": "Animation de texte contrôlée, compatible zone de sécurité verticale."
+    },
+    {
+      "id": "badge_slide_snap",
+      "description": "Animation de texte contrôlée, compatible zone de sécurité verticale."
+    },
+    {
+      "id": "price_shake_impact",
+      "description": "Animation de texte contrôlée, compatible zone de sécurité verticale."
+    },
+    {
+      "id": "line_draw_spec",
+      "description": "Animation de texte contrôlée, compatible zone de sécurité verticale."
+    },
+    {
+      "id": "caption_breath_fade",
+      "description": "Animation de texte contrôlée, compatible zone de sécurité verticale."
+    },
+    {
+      "id": "split_label_track",
+      "description": "Animation de texte contrôlée, compatible zone de sécurité verticale."
+    },
+    {
+      "id": "reveal_mask_text",
+      "description": "Animation de texte contrôlée, compatible zone de sécurité verticale."
+    },
+    {
+      "id": "pulse_cta_soft",
+      "description": "Animation de texte contrôlée, compatible zone de sécurité verticale."
+    },
+    {
+      "id": "countdown_tick",
+      "description": "Animation de texte contrôlée, compatible zone de sécurité verticale."
+    },
+    {
+      "id": "side_tag_animate",
+      "description": "Animation de texte contrôlée, compatible zone de sécurité verticale."
+    },
+    {
+      "id": "kinetic_number",
+      "description": "Animation de texte contrôlée, compatible zone de sécurité verticale."
+    }
+  ],
+  "presets_etalonnage": [
+    {
+      "id": "punchy_chaud",
+      "nom": "Punchy chaud (T1)",
+      "exposition_ev": 0.25,
+      "contraste": 1.18,
+      "saturation": 1.22,
+      "temperature_k": 5600,
+      "teinte": 0.02,
+      "vignettage": 0.12,
+      "nettete": 0.22,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "S_legere",
+      "note": "Vif, chaud, contraste punchy pour révélation"
+    },
+    {
+      "id": "avant_froid",
+      "nom": "Avant froid désaturé (T2 - avant)",
+      "exposition_ev": -0.15,
+      "contraste": 0.88,
+      "saturation": 0.78,
+      "temperature_k": 6800,
+      "teinte": -0.03,
+      "vignettage": 0.08,
+      "nettete": 0.15,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "plate"
+    },
+    {
+      "id": "apres_eclatant",
+      "nom": "Après éclatant (T2 - après)",
+      "exposition_ev": 0.35,
+      "contraste": 1.22,
+      "saturation": 1.28,
+      "temperature_k": 5200,
+      "teinte": 0.01,
+      "vignettage": 0.15,
+      "nettete": 0.25,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "S_forte"
+    },
+    {
+      "id": "propre_neutre",
+      "nom": "Propre neutre lumineux (T3)",
+      "exposition_ev": 0.2,
+      "contraste": 1.05,
+      "saturation": 1.05,
+      "temperature_k": 5500,
+      "teinte": 0.0,
+      "vignettage": 0.05,
+      "nettete": 0.18,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre",
+      "note": "Fidélité couleurs critique pour mode et auto"
+    },
+    {
+      "id": "flash_sature",
+      "nom": "Flash saturé contraste élevé (T4)",
+      "exposition_ev": 0.3,
+      "contraste": 1.32,
+      "saturation": 1.35,
+      "temperature_k": 5800,
+      "teinte": 0.02,
+      "vignettage": 0.18,
+      "nettete": 0.28,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "S_extreme"
+    },
+    {
+      "id": "chaleureux_naturel",
+      "nom": "Chaleureux naturel (T5)",
+      "exposition_ev": 0.15,
+      "contraste": 1.02,
+      "saturation": 1.08,
+      "temperature_k": 5300,
+      "teinte": 0.0,
+      "vignettage": 0.14,
+      "nettete": 0.12,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "douce",
+      "note": "Teintes peau fidèles, vignettage doux"
+    },
+    {
+      "id": "grade_vetements_mode_t1",
+      "nom": "vetements_mode T1 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.04,
+      "saturation": 1.02,
+      "temperature_k": 5400,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_vetements_mode_t2",
+      "nom": "vetements_mode T2 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.04,
+      "saturation": 0.98,
+      "temperature_k": 5400,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_vetements_mode_t3",
+      "nom": "vetements_mode T3 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.04,
+      "saturation": 1.02,
+      "temperature_k": 5400,
+      "teinte": 0.0,
+      "vignettage": 0.06,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_vetements_mode_t4",
+      "nom": "vetements_mode T4 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.09,
+      "saturation": 1.05,
+      "temperature_k": 5400,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_vetements_mode_t5",
+      "nom": "vetements_mode T5 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.02,
+      "saturation": 1.0,
+      "temperature_k": 5400,
+      "teinte": 0.0,
+      "vignettage": 0.06,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_coiffure_beaute_t1",
+      "nom": "coiffure_beaute T1 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.03,
+      "saturation": 1.05,
+      "temperature_k": 5200,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.14,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_coiffure_beaute_t2",
+      "nom": "coiffure_beaute T2 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.03,
+      "saturation": 1.01,
+      "temperature_k": 5200,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.14,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_coiffure_beaute_t3",
+      "nom": "coiffure_beaute T3 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.03,
+      "saturation": 1.05,
+      "temperature_k": 5200,
+      "teinte": 0.0,
+      "vignettage": 0.06,
+      "nettete": 0.14,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_coiffure_beaute_t4",
+      "nom": "coiffure_beaute T4 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.08,
+      "saturation": 1.08,
+      "temperature_k": 5200,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.14,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_coiffure_beaute_t5",
+      "nom": "coiffure_beaute T5 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.01,
+      "saturation": 1.03,
+      "temperature_k": 5200,
+      "teinte": 0.0,
+      "vignettage": 0.06,
+      "nettete": 0.14,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_restaurants_maquis_t1",
+      "nom": "restaurants_maquis T1 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.08,
+      "saturation": 1.12,
+      "temperature_k": 5600,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_restaurants_maquis_t2",
+      "nom": "restaurants_maquis T2 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.08,
+      "saturation": 1.08,
+      "temperature_k": 5600,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_restaurants_maquis_t3",
+      "nom": "restaurants_maquis T3 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.08,
+      "saturation": 1.12,
+      "temperature_k": 5600,
+      "teinte": 0.0,
+      "vignettage": 0.06,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_restaurants_maquis_t4",
+      "nom": "restaurants_maquis T4 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.13,
+      "saturation": 1.15,
+      "temperature_k": 5600,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_restaurants_maquis_t5",
+      "nom": "restaurants_maquis T5 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.06,
+      "saturation": 1.1,
+      "temperature_k": 5600,
+      "teinte": 0.0,
+      "vignettage": 0.06,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_batiment_travaux_t1",
+      "nom": "batiment_travaux T1 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.06,
+      "saturation": 1.0,
+      "temperature_k": 5500,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_batiment_travaux_t2",
+      "nom": "batiment_travaux T2 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.06,
+      "saturation": 1.0,
+      "temperature_k": 5500,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_batiment_travaux_t3",
+      "nom": "batiment_travaux T3 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.06,
+      "saturation": 1.0,
+      "temperature_k": 5500,
+      "teinte": 0.0,
+      "vignettage": 0.06,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_batiment_travaux_t4",
+      "nom": "batiment_travaux T4 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.11,
+      "saturation": 1.03,
+      "temperature_k": 5500,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_batiment_travaux_t5",
+      "nom": "batiment_travaux T5 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.04,
+      "saturation": 0.98,
+      "temperature_k": 5500,
+      "teinte": 0.0,
+      "vignettage": 0.06,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_immo_auto_t1",
+      "nom": "immo_auto T1 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.05,
+      "saturation": 1.01,
+      "temperature_k": 5400,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.14,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_immo_auto_t2",
+      "nom": "immo_auto T2 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.05,
+      "saturation": 1.01,
+      "temperature_k": 5400,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.14,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_immo_auto_t3",
+      "nom": "immo_auto T3 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.05,
+      "saturation": 1.01,
+      "temperature_k": 5400,
+      "teinte": 0.0,
+      "vignettage": 0.06,
+      "nettete": 0.14,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_immo_auto_t4",
+      "nom": "immo_auto T4 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.1,
+      "saturation": 1.04,
+      "temperature_k": 5400,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.14,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_immo_auto_t5",
+      "nom": "immo_auto T5 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.03,
+      "saturation": 0.99,
+      "temperature_k": 5400,
+      "teinte": 0.0,
+      "vignettage": 0.06,
+      "nettete": 0.14,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_shops_small_business_t1",
+      "nom": "shops_small_business T1 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.05,
+      "saturation": 1.05,
+      "temperature_k": 5300,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_shops_small_business_t2",
+      "nom": "shops_small_business T2 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.05,
+      "saturation": 1.05,
+      "temperature_k": 5300,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_shops_small_business_t3",
+      "nom": "shops_small_business T3 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.05,
+      "saturation": 1.05,
+      "temperature_k": 5300,
+      "teinte": 0.0,
+      "vignettage": 0.06,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_shops_small_business_t4",
+      "nom": "shops_small_business T4 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.1,
+      "saturation": 1.08,
+      "temperature_k": 5300,
+      "teinte": 0.0,
+      "vignettage": 0.1,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    },
+    {
+      "id": "grade_shops_small_business_t5",
+      "nom": "shops_small_business T5 - correction sujet dédiée",
+      "exposition_ev": 0.1,
+      "contraste": 1.03,
+      "saturation": 1.03,
+      "temperature_k": 5300,
+      "teinte": 0.0,
+      "vignettage": 0.06,
+      "nettete": 0.1,
+      "protection_peau": true,
+      "denoise_faible_lumiere": true,
+      "stabilisation": true,
+      "courbe": "neutre_corrige_puis_creatif",
+      "note": "Commencer par balance des blancs/exposition et continuité; priorité au rendu fidèle du sujet, couleurs textile/carrosserie et teintes de peau."
+    }
+  ],
+  "consignes_lumiere": [
+    {
+      "id": "face_fenetre",
+      "consigne": "Filme face à la fenêtre, lumière sur le sujet, pas derrière",
+      "cas_usage": "Intérieur, visage, produit"
+    },
+    {
+      "id": "exterieur_ombre_douce",
+      "consigne": "Filme à l'ombre douce (sous auvent), évite soleil direct dur",
+      "cas_usage": "Auto, chantier, marché"
+    },
+    {
+      "id": "eviter_contre_jour",
+      "consigne": "Ne filme jamais dos à la fenêtre. Toi = face lumière",
+      "cas_usage": "Tous"
+    },
+    {
+      "id": "lampe_a_gauche",
+      "consigne": "Place une lampe blanche à 45° à gauche si sombre",
+      "cas_usage": "Soir, intérieur sombre"
+    },
+    {
+      "id": "plat_proche_fenetre",
+      "consigne": "Pose le plat près de la fenêtre, lumière latérale",
+      "cas_usage": "Restauration"
+    }
+  ],
+  "presets_typographiques": [
+    {
+      "id": "sans_serif_bold_condensee",
+      "famille": "Sans-serif condensée extra-grasse",
+      "graisse": 900,
+      "style": "condensed_bold",
+      "couleur_texte": "#FFFFFF",
+      "contour": "#000000",
+      "epaisseur_contour_px": 4,
+      "fond_texte": "#FF5500",
+      "interlignage": 1.0,
+      "espacement_lettres": -0.02,
+      "ombre": {
+        "x": 2,
+        "y": 2,
+        "flou": 4,
+        "couleur": "#00000088"
+      },
+      "usage": "Hook, Prix, CTA - lisible en vertical"
+    },
+    {
+      "id": "sans_serif_black_condensee",
+      "famille": "Sans-serif black condensée",
+      "graisse": 900,
+      "style": "black_condensed",
+      "couleur_texte": "#FF5500",
+      "contour": "#FFFFFF",
+      "fond_texte": "#0B1C2C",
+      "usage": "Prix géant promo"
+    },
+    {
+      "id": "serif_elegante",
+      "famille": "Serif élégante",
+      "graisse": 700,
+      "style": "elegant_serif",
+      "couleur_texte": "#FFFFFF",
+      "contour": "#000000",
+      "fond_texte": "transparent",
+      "usage": "Mode, beauté - variantes"
+    },
+    {
+      "id": "arrondie_amicale",
+      "famille": "Arrondie amicale",
+      "graisse": 800,
+      "style": "rounded_friendly",
+      "couleur_texte": "#FFFFFF",
+      "contour": "#0B1C2C",
+      "fond_texte": "#FF5500",
+      "usage": "Témoignage, shops"
+    }
+  ],
+  "palettes": [
+    {
+      "id": "orange_cinetique_accent",
+      "couleurs": [
+        "#FF5500",
+        "#FFFFFF",
+        "#0B1C2C"
+      ],
+      "usage": "Accent prix universel"
+    },
+    {
+      "id": "palette_T1_chaude",
+      "couleurs": [
+        "#0B1C2C",
+        "#FF5500",
+        "#FFCC00",
+        "#FFFFFF"
+      ],
+      "usage": "T1 nouvel arrivage"
+    },
+    {
+      "id": "palette_T2_split",
+      "couleurs": [
+        "#6B7280",
+        "#F97316",
+        "#FFFFFF",
+        "#0B1C2C"
+      ],
+      "usage": "T2 avant froid / après chaud"
+    },
+    {
+      "id": "palette_T3_neutre",
+      "couleurs": [
+        "#F5F5F0",
+        "#0B1C2C",
+        "#FF5500",
+        "#FFFFFF"
+      ],
+      "usage": "T3 catalogue vivant"
+    },
+    {
+      "id": "palette_T4_flash",
+      "couleurs": [
+        "#FF0000",
+        "#FFCC00",
+        "#000000",
+        "#FF5500",
+        "#FFFFFF"
+      ],
+      "usage": "T4 promo rouge/jaune/noir"
+    },
+    {
+      "id": "palette_T5_naturel",
+      "couleurs": [
+        "#FFF8F0",
+        "#2D1B0E",
+        "#FF5500",
+        "#FFFFFF"
+      ],
+      "usage": "T5 témoignage chaleureux"
+    }
+  ],
+  "badges": [
+    {
+      "id": "nouveau",
+      "texte": "NOUVEAU",
+      "couleur_fond": "#FF5500",
+      "couleur_texte": "#FFFFFF"
+    },
+    {
+      "id": "disponible_maintenant",
+      "texte": "DISPONIBLE MAINTENANT",
+      "couleur_fond": "#0B1C2C",
+      "couleur_texte": "#FFCC00"
+    },
+    {
+      "id": "avant",
+      "texte": "AVANT",
+      "couleur_fond": "#6B7280",
+      "couleur_texte": "#FFFFFF"
+    },
+    {
+      "id": "apres",
+      "texte": "APRÈS",
+      "couleur_fond": "#FF5500",
+      "couleur_texte": "#FFFFFF"
+    },
+    {
+      "id": "stock_limite",
+      "texte": "STOCK LIMITÉ",
+      "couleur_fond": "#FF0000",
+      "couleur_texte": "#FFFFFF",
+      "optionnel": true
+    },
+    {
+      "id": "places_limitees",
+      "texte": "PLACES LIMITÉES",
+      "couleur_fond": "#FF0000",
+      "couleur_texte": "#FFFFFF",
+      "optionnel": true
+    },
+    {
+      "id": "promo_flash_bandeau",
+      "texte": "PROMO FLASH",
+      "couleur_fond": "#FF0000",
+      "couleur_texte": "#FFCC00",
+      "animation": "clignotant"
+    },
+    {
+      "id": "pourcentage_reduction",
+      "texte": "-{pourcentage}%",
+      "couleur_fond": "#FF5500",
+      "couleur_texte": "#FFFFFF",
+      "calcule_auto": true
+    },
+    {
+      "id": "qualite_garantie",
+      "texte": "QUALITÉ GARANTIE",
+      "couleur_fond": "#0B1C2C",
+      "couleur_texte": "#FFFFFF",
+      "optionnel": true
+    },
+    {
+      "id": "chantier_livre",
+      "texte": "CHANTIER LIVRÉ",
+      "couleur_fond": "#0B1C2C",
+      "couleur_texte": "#FFFFFF"
+    },
+    {
+      "id": "travail_soigne",
+      "texte": "TRAVAIL SOIGNÉ",
+      "couleur_fond": "#059669",
+      "couleur_texte": "#FFFFFF",
+      "optionnel": true
+    },
+    {
+      "id": "client_satisfait",
+      "texte": "CLIENT SATISFAIT",
+      "couleur_fond": "#059669",
+      "couleur_texte": "#FFFFFF"
+    },
+    {
+      "id": "1_sur_3",
+      "texte": "1/3",
+      "couleur_fond": "#0B1C2C",
+      "couleur_texte": "#FFFFFF"
+    },
+    {
+      "id": "2_sur_3",
+      "texte": "2/3",
+      "couleur_fond": "#0B1C2C",
+      "couleur_texte": "#FFFFFF"
+    },
+    {
+      "id": "3_sur_3",
+      "texte": "3/3",
+      "couleur_fond": "#0B1C2C",
+      "couleur_texte": "#FFFFFF"
+    },
+    {
+      "id": "livraison_dispo",
+      "texte": "LIVRAISON DISPO",
+      "couleur_fond": "#0B1C2C",
+      "couleur_texte": "#FFFFFF",
+      "optionnel": true
+    }
+  ],
+  "cartes_generees": [
+    {
+      "id": "carte_titre_nouvel_arrivage",
+      "type": "generee",
+      "description": "Fond couleur + bannière diagonale + nom_offre",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_prix_geant",
+      "type": "generee",
+      "description": "Prix géant orange #FF5500 sur fond contraste, compteur count-up",
+      "duree_s": 3.0
+    },
+    {
+      "id": "carte_prix_barre",
+      "type": "generee",
+      "description": "Ancien prix barré rayure animée + nouveau prix scale_shake",
+      "duree_s": 3.5
+    },
+    {
+      "id": "carte_compte_a_rebours",
+      "type": "generee",
+      "description": "Barre progression + texte Jusqu'à {fin_promo}",
+      "duree_s": 2.5
+    },
+    {
+      "id": "carte_pourquoi_nous_choisir",
+      "type": "generee",
+      "description": "3 pictogrammes + 3 arguments (qualité, rapidité, confiance)",
+      "duree_s": 3.0
+    },
+    {
+      "id": "carte_mosaique_finale",
+      "type": "generee",
+      "description": "Mosaïque de tous les articles vus",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_whatsapp_finale",
+      "type": "generee",
+      "description": "Nom commerce + quartier/ville + WhatsApp pulsant, 4s mini",
+      "duree_s": 4.5
+    },
+    {
+      "id": "carte_identite_client",
+      "type": "generee",
+      "description": "Bandeau {prenom_client}, client(e) à {quartier_ville}",
+      "duree_s": 3.0
+    },
+    {
+      "id": "carte_avant_apres_split",
+      "type": "generee",
+      "description": "Split-screen AVANT/APRÈS côte à côte 3s",
+      "duree_s": 3.0
+    },
+    {
+      "id": "carte_details_produit",
+      "type": "generee",
+      "description": "Flèches + labels matière/taille/ingrédient",
+      "duree_s": 2.5
+    },
+    {
+      "id": "carte_signature_t1_vetements_mode",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T1 × vetements_mode; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t2_vetements_mode",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T2 × vetements_mode; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t3_vetements_mode",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T3 × vetements_mode; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t4_vetements_mode",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T4 × vetements_mode; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t5_vetements_mode",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T5 × vetements_mode; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t1_coiffure_beaute",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T1 × coiffure_beaute; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t2_coiffure_beaute",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T2 × coiffure_beaute; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t3_coiffure_beaute",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T3 × coiffure_beaute; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t4_coiffure_beaute",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T4 × coiffure_beaute; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t5_coiffure_beaute",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T5 × coiffure_beaute; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t1_restaurants_maquis",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T1 × restaurants_maquis; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t2_restaurants_maquis",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T2 × restaurants_maquis; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t3_restaurants_maquis",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T3 × restaurants_maquis; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t4_restaurants_maquis",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T4 × restaurants_maquis; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t5_restaurants_maquis",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T5 × restaurants_maquis; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t1_batiment_travaux",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T1 × batiment_travaux; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t2_batiment_travaux",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T2 × batiment_travaux; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t3_batiment_travaux",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T3 × batiment_travaux; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t4_batiment_travaux",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T4 × batiment_travaux; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t5_batiment_travaux",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T5 × batiment_travaux; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t1_immo_auto",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T1 × immo_auto; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t2_immo_auto",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T2 × immo_auto; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t3_immo_auto",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T3 × immo_auto; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t4_immo_auto",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T4 × immo_auto; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t5_immo_auto",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T5 × immo_auto; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t1_shops_small_business",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T1 × shops_small_business; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t2_shops_small_business",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T2 × shops_small_business; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t3_shops_small_business",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T3 × shops_small_business; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t4_shops_small_business",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T4 × shops_small_business; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    },
+    {
+      "id": "carte_signature_t5_shops_small_business",
+      "type": "generee",
+      "description": "Carte de montage dédiée à T5 × shops_small_business; affiche uniquement des champs saisis ou pictogrammes neutres.",
+      "duree_s": 2.0
+    }
+  ],
+  "sfx_categories": [
+    {
+      "id": "whoosh_fast",
+      "categorie": "whoosh",
+      "description": "Souffle rapide transition"
+    },
+    {
+      "id": "whoosh_soft",
+      "categorie": "whoosh",
+      "description": "Souffle doux"
+    },
+    {
+      "id": "impact_drop",
+      "categorie": "impact",
+      "description": "Boom révélation drop"
+    },
+    {
+      "id": "riser_tension",
+      "categorie": "riser",
+      "description": "Montée tension avant révélation"
+    },
+    {
+      "id": "caisse_enregistreuse",
+      "categorie": "caisse",
+      "description": "Ting caisse prix"
+    },
+    {
+      "id": "tic_tac_horloge",
+      "categorie": "tic_tac",
+      "description": "Tic-tac urgence"
+    },
+    {
+      "id": "sirene_courte",
+      "categorie": "sirene",
+      "description": "Sirène courte promo"
+    },
+    {
+      "id": "sizzle_grill",
+      "categorie": "cuisine",
+      "description": "Grésillement grillade"
+    },
+    {
+      "id": "vapeur_plat",
+      "categorie": "cuisine",
+      "description": "Vapeur plat chaud"
+    },
+    {
+      "id": "clic_appareil",
+      "categorie": "clic",
+      "description": "Clic catalogue"
+    },
+    {
+      "id": "pop_badge",
+      "categorie": "pop",
+      "description": "Pop badge"
+    },
+    {
+      "id": "glitch_digital",
+      "categorie": "glitch",
+      "description": "Glitch numérique"
+    },
+    {
+      "id": "applause_leger",
+      "categorie": "foule",
+      "description": "Applaudissement léger"
+    },
+    {
+      "id": "amb_marché",
+      "categorie": "ambiance",
+      "description": "Ambiance marché"
+    },
+    {
+      "id": "amb_cuisine",
+      "categorie": "ambiance",
+      "description": "Ambiance cuisine maquis"
+    },
+    {
+      "id": "amb_chantier",
+      "categorie": "ambiance",
+      "description": "Ambiance chantier"
+    },
+    {
+      "id": "amb_salon_beaute",
+      "categorie": "ambiance",
+      "description": "Ambiance salon"
+    },
+    {
+      "id": "amb_rue_ville",
+      "categorie": "ambiance",
+      "description": "Ambiance rue"
+    }
+  ],
+  "structures_hooks": [
+    {
+      "id": "hook_question_choc",
+      "exemple": "Tu as vu ça ?? {nom_offre} est arrivé !"
+    },
+    {
+      "id": "hook_transformation",
+      "exemple": "TRANSFORMATION 😱 Regarde !"
+    },
+    {
+      "id": "hook_prix_choc",
+      "exemple": "-{pourcentage}% aujourd'hui seulement !"
+    },
+    {
+      "id": "hook_temoignage",
+      "exemple": "Écoute {prenom_client}..."
+    },
+    {
+      "id": "hook_nouveaute",
+      "exemple": "NOUVEL ARRIVAGE 🔥 {nom_offre}"
+    }
+  ],
+  "pictogrammes": [
+    {
+      "id": "picto_whatsapp",
+      "forme": "bulle téléphone"
+    },
+    {
+      "id": "picto_localisation",
+      "forme": "épingle carte"
+    },
+    {
+      "id": "picto_horloge",
+      "forme": "horloge"
+    },
+    {
+      "id": "picto_prix",
+      "forme": "étiquette"
+    },
+    {
+      "id": "picto_coche",
+      "forme": "coche verte"
+    },
+    {
+      "id": "picto_etoile",
+      "forme": "étoile"
+    },
+    {
+      "id": "picto_fleche_detail",
+      "forme": "flèche pointant détail"
+    }
+  ],
+  "mouvements_camera": [
+    {
+      "id": "fixe",
+      "description": "Caméra fixe sur trépied ou posée"
+    },
+    {
+      "id": "pano_lent",
+      "description": "Panoramique horizontal lent"
+    },
+    {
+      "id": "orbite",
+      "description": "Mouvement orbital autour du sujet"
+    },
+    {
+      "id": "travelling_avant",
+      "description": "Avancée vers le sujet"
+    },
+    {
+      "id": "zoom_progressif",
+      "description": "Zoom optique progressif"
+    }
+  ],
+  "categories_audio_musique": [
+    {
+      "id": "musique_t1_vetements_mode",
+      "type": "musique",
+      "secteur": "vetements_mode",
+      "format": "T1",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t2_vetements_mode",
+      "type": "musique",
+      "secteur": "vetements_mode",
+      "format": "T2",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t3_vetements_mode",
+      "type": "musique",
+      "secteur": "vetements_mode",
+      "format": "T3",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t4_vetements_mode",
+      "type": "musique",
+      "secteur": "vetements_mode",
+      "format": "T4",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t5_vetements_mode",
+      "type": "musique",
+      "secteur": "vetements_mode",
+      "format": "T5",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t1_coiffure_beaute",
+      "type": "musique",
+      "secteur": "coiffure_beaute",
+      "format": "T1",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t2_coiffure_beaute",
+      "type": "musique",
+      "secteur": "coiffure_beaute",
+      "format": "T2",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t3_coiffure_beaute",
+      "type": "musique",
+      "secteur": "coiffure_beaute",
+      "format": "T3",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t4_coiffure_beaute",
+      "type": "musique",
+      "secteur": "coiffure_beaute",
+      "format": "T4",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t5_coiffure_beaute",
+      "type": "musique",
+      "secteur": "coiffure_beaute",
+      "format": "T5",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t1_restaurants_maquis",
+      "type": "musique",
+      "secteur": "restaurants_maquis",
+      "format": "T1",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t2_restaurants_maquis",
+      "type": "musique",
+      "secteur": "restaurants_maquis",
+      "format": "T2",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t3_restaurants_maquis",
+      "type": "musique",
+      "secteur": "restaurants_maquis",
+      "format": "T3",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t4_restaurants_maquis",
+      "type": "musique",
+      "secteur": "restaurants_maquis",
+      "format": "T4",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t5_restaurants_maquis",
+      "type": "musique",
+      "secteur": "restaurants_maquis",
+      "format": "T5",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t1_batiment_travaux",
+      "type": "musique",
+      "secteur": "batiment_travaux",
+      "format": "T1",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t2_batiment_travaux",
+      "type": "musique",
+      "secteur": "batiment_travaux",
+      "format": "T2",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t3_batiment_travaux",
+      "type": "musique",
+      "secteur": "batiment_travaux",
+      "format": "T3",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t4_batiment_travaux",
+      "type": "musique",
+      "secteur": "batiment_travaux",
+      "format": "T4",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t5_batiment_travaux",
+      "type": "musique",
+      "secteur": "batiment_travaux",
+      "format": "T5",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t1_immo_auto",
+      "type": "musique",
+      "secteur": "immo_auto",
+      "format": "T1",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t2_immo_auto",
+      "type": "musique",
+      "secteur": "immo_auto",
+      "format": "T2",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t3_immo_auto",
+      "type": "musique",
+      "secteur": "immo_auto",
+      "format": "T3",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t4_immo_auto",
+      "type": "musique",
+      "secteur": "immo_auto",
+      "format": "T4",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t5_immo_auto",
+      "type": "musique",
+      "secteur": "immo_auto",
+      "format": "T5",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t1_shops_small_business",
+      "type": "musique",
+      "secteur": "shops_small_business",
+      "format": "T1",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t2_shops_small_business",
+      "type": "musique",
+      "secteur": "shops_small_business",
+      "format": "T2",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t3_shops_small_business",
+      "type": "musique",
+      "secteur": "shops_small_business",
+      "format": "T3",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t4_shops_small_business",
+      "type": "musique",
+      "secteur": "shops_small_business",
+      "format": "T4",
+      "statut": "categorie_de_recherche"
+    },
+    {
+      "id": "musique_t5_shops_small_business",
+      "type": "musique",
+      "secteur": "shops_small_business",
+      "format": "T5",
+      "statut": "categorie_de_recherche"
+    }
+  ],
+  "structures_audio": [
+    {
+      "id": "audio_structure_vetements_mode_t1",
+      "nom": "vetements_mode T1 - structure musicale",
+      "bpm_min": 100,
+      "bpm_max": 112,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_vetements_mode_t2",
+      "nom": "vetements_mode T2 - structure musicale",
+      "bpm_min": 94,
+      "bpm_max": 108,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_vetements_mode_t3",
+      "nom": "vetements_mode T3 - structure musicale",
+      "bpm_min": 88,
+      "bpm_max": 104,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_vetements_mode_t4",
+      "nom": "vetements_mode T4 - structure musicale",
+      "bpm_min": 110,
+      "bpm_max": 126,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_vetements_mode_t5",
+      "nom": "vetements_mode T5 - structure musicale",
+      "bpm_min": 76,
+      "bpm_max": 94,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_coiffure_beaute_t1",
+      "nom": "coiffure_beaute T1 - structure musicale",
+      "bpm_min": 101,
+      "bpm_max": 113,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_coiffure_beaute_t2",
+      "nom": "coiffure_beaute T2 - structure musicale",
+      "bpm_min": 95,
+      "bpm_max": 109,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_coiffure_beaute_t3",
+      "nom": "coiffure_beaute T3 - structure musicale",
+      "bpm_min": 89,
+      "bpm_max": 105,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_coiffure_beaute_t4",
+      "nom": "coiffure_beaute T4 - structure musicale",
+      "bpm_min": 111,
+      "bpm_max": 127,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_coiffure_beaute_t5",
+      "nom": "coiffure_beaute T5 - structure musicale",
+      "bpm_min": 77,
+      "bpm_max": 95,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_restaurants_maquis_t1",
+      "nom": "restaurants_maquis T1 - structure musicale",
+      "bpm_min": 102,
+      "bpm_max": 114,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_restaurants_maquis_t2",
+      "nom": "restaurants_maquis T2 - structure musicale",
+      "bpm_min": 96,
+      "bpm_max": 110,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_restaurants_maquis_t3",
+      "nom": "restaurants_maquis T3 - structure musicale",
+      "bpm_min": 90,
+      "bpm_max": 106,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_restaurants_maquis_t4",
+      "nom": "restaurants_maquis T4 - structure musicale",
+      "bpm_min": 112,
+      "bpm_max": 128,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_restaurants_maquis_t5",
+      "nom": "restaurants_maquis T5 - structure musicale",
+      "bpm_min": 78,
+      "bpm_max": 96,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_batiment_travaux_t1",
+      "nom": "batiment_travaux T1 - structure musicale",
+      "bpm_min": 100,
+      "bpm_max": 112,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_batiment_travaux_t2",
+      "nom": "batiment_travaux T2 - structure musicale",
+      "bpm_min": 94,
+      "bpm_max": 108,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_batiment_travaux_t3",
+      "nom": "batiment_travaux T3 - structure musicale",
+      "bpm_min": 88,
+      "bpm_max": 104,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_batiment_travaux_t4",
+      "nom": "batiment_travaux T4 - structure musicale",
+      "bpm_min": 110,
+      "bpm_max": 126,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_batiment_travaux_t5",
+      "nom": "batiment_travaux T5 - structure musicale",
+      "bpm_min": 76,
+      "bpm_max": 94,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_immo_auto_t1",
+      "nom": "immo_auto T1 - structure musicale",
+      "bpm_min": 101,
+      "bpm_max": 113,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_immo_auto_t2",
+      "nom": "immo_auto T2 - structure musicale",
+      "bpm_min": 95,
+      "bpm_max": 109,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_immo_auto_t3",
+      "nom": "immo_auto T3 - structure musicale",
+      "bpm_min": 89,
+      "bpm_max": 105,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_immo_auto_t4",
+      "nom": "immo_auto T4 - structure musicale",
+      "bpm_min": 111,
+      "bpm_max": 127,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_immo_auto_t5",
+      "nom": "immo_auto T5 - structure musicale",
+      "bpm_min": 77,
+      "bpm_max": 95,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_shops_small_business_t1",
+      "nom": "shops_small_business T1 - structure musicale",
+      "bpm_min": 102,
+      "bpm_max": 114,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_shops_small_business_t2",
+      "nom": "shops_small_business T2 - structure musicale",
+      "bpm_min": 96,
+      "bpm_max": 110,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_shops_small_business_t3",
+      "nom": "shops_small_business T3 - structure musicale",
+      "bpm_min": 90,
+      "bpm_max": 106,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_shops_small_business_t4",
+      "nom": "shops_small_business T4 - structure musicale",
+      "bpm_min": 112,
+      "bpm_max": 128,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    },
+    {
+      "id": "audio_structure_shops_small_business_t5",
+      "nom": "shops_small_business T5 - structure musicale",
+      "bpm_min": 78,
+      "bpm_max": 96,
+      "structure": "intro hook; corps; accent sectoriel; sortie propre",
+      "cue_roles": {
+        "riser": "avant revelation / prix selon rôle",
+        "drop": "première scène preuve phare",
+        "duck": "sous voix VAD",
+        "outro": "carte contact tenue"
+      },
+      "description": "Repères par rôle/scène : cut au beat uniquement quand il renforce l’action; sous voix, abaisser la musique; ne jamais imposer une tendance commerciale."
+    }
+  ],
+  "themes_parole": [
+    {
+      "id": "accroche",
+      "nom": "Accroche",
+      "description": "Dire tout de suite de quoi parle la vidéo."
+    },
+    {
+      "id": "presenter_offre",
+      "nom": "Présenter ce qui est proposé",
+      "description": "Dire ce que vous montrez ou proposez."
+    },
+    {
+      "id": "parler_interet",
+      "nom": "Expliquer l’intérêt",
+      "description": "Dire à quoi ça sert."
+    },
+    {
+      "id": "detail_qualite",
+      "nom": "Montrer un détail",
+      "description": "Parler d’un détail qu’on voit."
+    },
+    {
+      "id": "parler_prix",
+      "nom": "Parler du prix",
+      "description": "Dire le prix écrit dans les informations."
+    },
+    {
+      "id": "urgence_reelle",
+      "nom": "Parler d’une vraie date",
+      "description": "Rappeler jusqu’à quand l’offre dure."
+    },
+    {
+      "id": "donner_adresse_contact",
+      "nom": "Donner le lieu ou le contact",
+      "description": "Dire où trouver le commerce ou comment le joindre."
+    },
+    {
+      "id": "inviter_a_venir",
+      "nom": "Inviter à venir ou écrire",
+      "description": "Inviter les gens à passer ou à écrire."
+    },
+    {
+      "id": "remercier",
+      "nom": "Remercier",
+      "description": "Dire merci."
+    },
+    {
+      "id": "question_client",
+      "nom": "Question ouverte au client",
+      "description": "Demander au client ce qu’il a fait ou vu."
+    },
+    {
+      "id": "ressenti_client",
+      "nom": "Récit du client",
+      "description": "Laisser le client raconter ce qu’il a vécu."
+    },
+    {
+      "id": "aucune",
+      "nom": "Aucune parole",
+      "description": "Pas besoin de parler dans cette scène."
+    }
+  ],
+  "regles_guide_parole": {
+    "idee_max_mots": 25,
+    "idee_min_phrases": 1,
+    "idee_max_phrases": 2,
+    "exemple_min_phrases": 1,
+    "exemple_max_phrases": 1,
+    "exemple_max_mots": 20,
+    "debit_exemple_mots_par_seconde": 2.5,
+    "tolerance_debit_pct": 20,
+    "idee_formulee_comme_consigne": true,
+    "exemple_presented_comme_illustration_non_a_reciter": true,
+    "plusieurs_consignes_dans_une_prise_existante": true,
+    "marqueurs_audio_par_bouton_suivant": true,
+    "audio_voix_separe_de_vitesse_image": true,
+    "asr": false,
+    "duree_conseillee_peut_depasse_duree_scene": true,
+    "arret_force_par_temps_conseille": false,
+    "un_seul_theme_par_scene": true,
+    "guide_possible_en_langue_interface": true,
+    "voix_libre_dans_langue_choisie": true,
+    "sous_titres_depuis_voix_automatiques": false,
+    "mode_sans_voix": "musique_seule",
+    "exemple_langue_libre_key": "guide.commun.exemple_langue_libre"
+  },
+  "schema_guide_parole": {
+    "champs_requis": [
+      "parole_active",
+      "duree_parole_s",
+      "duree_affichee_s",
+      "idee",
+      "quoi_raconter",
+      "quoi_montrer",
+      "exemple",
+      "exemple_langue_libre",
+      "theme",
+      "conseil",
+      "cles"
+    ],
+    "cles_i18n": [
+      "idee",
+      "quoi_raconter",
+      "quoi_montrer",
+      "exemple",
+      "exemple_langue_libre",
+      "conseil"
+    ],
+    "capture_scene_parlee": {
+      "prise_id": "prise caméra déjà demandée",
+      "ordre_dans_la_prise": "ordre des consignes pendant la même prise",
+      "segment_audio_id": "identifiant du segment voix",
+      "marqueur_de_segment": "bouton_suivant",
+      "quoi_raconter": "sujet à dire avec ses mots",
+      "quoi_montrer": "élément visible lié au sujet de parole",
+      "duree_cible_s": "durée interne de la consigne",
+      "duree_affichee_s": "temps conseillé affiché au commerçant",
+      "audio_separe_de_image": true,
+      "vitesse_voix": 1.0
+    },
+    "scene_sans_parole": {
+      "idee": "",
+      "quoi_raconter": "",
+      "quoi_montrer": "",
+      "exemple": "",
+      "exemple_langue_libre": "",
+      "theme": "aucune",
+      "duree_parole_s": 0,
+      "duree_affichee_s": 0
+    }
+  }
+}

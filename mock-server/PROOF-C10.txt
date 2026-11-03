@@ -1,0 +1,20 @@
+== health ==
+{"status":"OK","service":"VV Mock Staging","ts":"2026-10-31T07:29:53.680Z","plans":[500,3000,7500]}
+== pricing (tarifs officiels) ==
+{"currency":"XOF","parity_bceao_fcfa_per_eur":655.957,"plans":[{"id":"pass24h","name":"Pass 24 h","price_fcfa":500,"renew_days":null},{"id":"pro","name":"Pro","price_fcfa":3000,"renew_days":30},{"id":"boutique","name":"Boutique","price_fcfa":7500,"renew_days":30}]}
+== signup SSO (sans telephone) ==
+{"user":{"id":"0f6a26c3-0636-473d-b00a-ec580cc6b593","email":"qa@vv.test","createdAt":"2026-10-31T07:29:53.698Z"},"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIwZjZhMjZjMy0wNjM2LTQ3M2QtYjAw
+== welcome-grant #1 (doit etre granted:true) ==
+{"granted":true,"credits_total":3}
+== welcome-grant #2 MEME empreinte (doit etre granted:false) ==
+{"granted":false,"credits_total":3,"already":true}
+== C10 reset ==
+{"success":true,"resetToken":"33eba5ad-b28a-4c8d-8139-a19e6c62a7ae"}
+== C10 install (avec token) ==
+{"success":true,"installationId":"4ed4d09a-f538-4cfa-8428-6e188d20e052","status":"INSTALLED"}
+== C10 install REPLAY du meme token (doit echouer) ==
+{"error":"reset introuvable ou deja utilise"}
+== C10 verify (doit etre isValid:true) ==
+{"success":true,"isValid":true,"installation":{"id":"4ed4d09a-f538-4cfa-8428-6e188d20e052","appId":"video.vitrine.app","userId":"u1","deviceId":"d1","resetToken":"33eba5ad-b28a-4c8d-8139-a19e6c62a7ae","status":"INSTALLED","timestamp":"2026-10-31T07:29:53.723Z","installationTimestamp":"2026-10-31T07:29:53.733Z"}}
+== storage upload ==
+{"id":"450c6593-a5fe-4aca-96f8-3dd3b0bfefd4","url":"mock://storage/450c6593-a5fe-4aca-96f8-3dd3b0bfefd4_t.mp4"}

@@ -1,0 +1,1521 @@
+{
+  "id": "batiment_travaux_T3",
+  "secteur": "batiment_travaux",
+  "secteur_libelle": "Bâtiment & Travaux",
+  "format": "T3_presentation_produit",
+  "version": "2.0_theorique",
+  "duree_totale_secondes": 40,
+  "nombre_scenes": 14,
+  "ratio": "9:16",
+  "notes_adaptation": "On montre le travail à faire, les outils et le résultat. On n’ajoute pas de promesse de qualité ou de délai sans preuve.",
+  "champs_saisie": [
+    {
+      "id": "nom_commerce",
+      "label": "Nom de votre commerce",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Bâtir Pro",
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "groupe_ui": "commerce_contact",
+      "aide_simple": "Écrivez le nom que les clients doivent voir."
+    },
+    {
+      "id": "nom_offre",
+      "label": "Nom du travail à faire",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Rénovation cuisine",
+      "source": "saisie_video",
+      "scenes": [
+        1
+      ],
+      "groupe_ui": "offre",
+      "aide_simple": "Écrivez le nom du plat, du produit ou du travail."
+    },
+    {
+      "id": "prix",
+      "label": "Prix du travail",
+      "type": "nombre",
+      "obligatoire": true,
+      "exemple": "15000",
+      "source": "saisie_video",
+      "scenes": [
+        13
+      ],
+      "groupe_ui": "prix",
+      "aide_simple": "Écrivez le vrai prix. La monnaie FCFA est choisie par défaut."
+    },
+    {
+      "id": "devise",
+      "label": "Monnaie",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "FCFA",
+      "source": "saisie_video",
+      "scenes": [
+        13
+      ],
+      "defaut": "FCFA",
+      "groupe_ui": "prix",
+      "affichage_ui": "sélecteur compact; FCFA proposé par défaut pour cette vidéo",
+      "aide_simple": "FCFA est déjà choisi. Change-le seulement si besoin."
+    },
+    {
+      "id": "quartier_ville",
+      "label": "Quartier et ville",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Akpakpa, Cotonou",
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "groupe_ui": "lieu",
+      "aide_simple": "Écrivez le quartier et la ville où les clients peuvent venir."
+    },
+    {
+      "id": "whatsapp",
+      "label": "votre numéro WhatsApp",
+      "type": "telephone",
+      "obligatoire": true,
+      "exemple": "+229 97 00 00 00",
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "validation": "format_international",
+      "groupe_ui": "commerce_contact",
+      "aide_simple": "Écrivez le numéro sur lequel les clients peuvent vous écrire, avec le + et le code du pays."
+    },
+    {
+      "id": "badge_engagement_actif",
+      "label": "Afficher un message spécial (facultatif)",
+      "type": "case_a_cocher",
+      "obligatoire": false,
+      "exemple": false,
+      "source": "saisie_video",
+      "scenes": [
+        14
+      ],
+      "defaut": false,
+      "choix": [
+        "stock_limite",
+        "places_limitees",
+        "qualite_garantie"
+      ],
+      "groupe_ui": "options_avancees",
+      "afficher_par_defaut": false,
+      "aide_simple": "Laissez désactivé, sauf si le message est vrai."
+    }
+  ],
+  "politique_saisie": {
+    "mode": "saisie_video",
+    "recollecter_a_chaque_video": true,
+    "enregistrer_dans_profil": false,
+    "pre_remplissage_automatique": false,
+    "numero_whatsapp_obligatoire": true,
+    "prix_obligatoire_sauf_T5": true,
+    "format_prix": "15 000 FCFA",
+    "badge_engagement_actif_par_defaut": false
+  },
+  "prises": [
+    {
+      "id": "prise_1",
+      "libelle": "Le lieu du travail",
+      "duree_cible_s": 12,
+      "consigne_camera": "Commencez par montrer le lieu du travail. Tenez votre téléphone debout et reste assez immobile. Filmez depuis un endroit sûr et montre le vrai travail.",
+      "type_plan": "plan_large",
+      "mouvement": "pano_lent",
+      "lumiere": "exterieur_ombre_douce",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        1,
+        2
+      ],
+      "guide_parole_scenes": [
+        2
+      ],
+      "segments_guide_parole": [
+        {
+          "scene": 2,
+          "quoi_raconter": "Dites ce que vous faites.",
+          "quoi_montrer": "Montrez les outils, les matériaux ou le travail.",
+          "exemple": "Voici le travail en cours.",
+          "note_exemple": "Exemple pour comprendre, pas à répéter.",
+          "duree_conseillee_s": 2.0,
+          "segment_audio_id": "T3_scene_02_voix"
+        }
+      ]
+    },
+    {
+      "id": "prise_2",
+      "libelle": "Les outils et matériaux",
+      "duree_cible_s": 12,
+      "consigne_camera": "Ensuite, montrez les outils et matériaux. Tenez votre téléphone debout et reste assez immobile. Filmez depuis un endroit sûr et montre le vrai travail.",
+      "type_plan": "gros_plan",
+      "mouvement": "travelling_avant",
+      "lumiere": "exterieur_ombre_douce",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        4,
+        12
+      ],
+      "guide_parole_scenes": [],
+      "segments_guide_parole": []
+    },
+    {
+      "id": "prise_3",
+      "libelle": "Le résultat de près",
+      "duree_cible_s": 12,
+      "consigne_camera": "Puis, montrez le résultat de près. Tenez votre téléphone debout et reste assez immobile. Filmez depuis un endroit sûr et montre le vrai travail.",
+      "type_plan": "plan_moyen",
+      "mouvement": "travelling_avant",
+      "lumiere": "exterieur_ombre_douce",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        3,
+        5,
+        6,
+        7,
+        8,
+        9,
+        11
+      ],
+      "guide_parole_scenes": [],
+      "segments_guide_parole": []
+    }
+  ],
+  "scenes": [
+    {
+      "numero": 1,
+      "acte": "hook",
+      "role": "hook_service_batiment",
+      "duree_secondes": 2.5,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "Voici le travail {nom_offre}.",
+        "position": "centre_haut",
+        "animation": "price_shake_impact",
+        "apparition_s": 0.0,
+        "disparition_s": 2.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "panoramique_raccord",
+      "effet": "freeze_0.5s",
+      "sfx": "impact_drop",
+      "action_montage": "La vidéo commence par « voici le travail {nom_offre} ». Ça donne envie de regarder.",
+      "sfx_libelle_simple": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 2,
+      "acte": "preuve",
+      "role": "plan_large_type_chantier",
+      "duree_secondes": 4.038,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "100%",
+        "vitesse": 4.0
+      },
+      "texte_ecran": {
+        "contenu": "LE TRAVAIL EN COURS",
+        "position": "tiers_gauche",
+        "animation": "line_draw_spec",
+        "apparition_s": 0.0,
+        "disparition_s": 4.038
+      },
+      "voix": {
+        "active": true,
+        "source_audio_prise_id": "prise_1",
+        "segment_audio_id": "T3_scene_02_voix",
+        "audio_separe_de_image": true,
+        "vitesse_audio": 1.0
+      },
+      "transition_sortie": "panoramique_raccord",
+      "effet": "accelere_x4",
+      "sfx": "amb_chantier",
+      "action_montage": "L’application reprend une partie de « Le lieu du travail ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Petit son discret",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "duree_affichee_s": 2.0,
+        "idee": "Montrez les outils, les matériaux ou le travail. Dites ce que vous faites.",
+        "quoi_raconter": "Dites ce que vous faites.",
+        "quoi_montrer": "Montrez les outils, les matériaux ou le travail.",
+        "exemple": "Voici le travail en cours.",
+        "exemple_langue_libre": "Dites cette idée avec vos mots, en français ou dans la langue que vous voulez.",
+        "theme": "presenter_offre",
+        "conseil": "Montrez l’outil ou le matériau dont vous parlez.",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 1,
+          "segment_audio_id": "T3_scene_02_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez les outils, les matériaux ou le travail.",
+          "quoi_raconter": "Dites ce que vous faites."
+        },
+        "cles": {
+          "idee": "guide.batiment_travaux.T3.scene_02.idee",
+          "quoi_raconter": "guide.batiment_travaux.T3.scene_02.quoi_raconter",
+          "quoi_montrer": "guide.batiment_travaux.T3.scene_02.quoi_montrer",
+          "exemple": "guide.batiment_travaux.T3.scene_02.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.batiment_travaux.T3.scene_02.conseil"
+        }
+      }
+    },
+    {
+      "numero": 3,
+      "acte": "reassurance",
+      "role": "etape_1_preparation",
+      "duree_secondes": 1.739,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "130%",
+        "vitesse": 4.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_droit",
+        "animation": "caption_breath_fade",
+        "apparition_s": 0.0,
+        "disparition_s": 1.739
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "slide_doux",
+      "effet": "accelere_x4",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 4,
+      "acte": "preuve",
+      "role": "outil_et_materiau",
+      "duree_secondes": 3.32,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "160%",
+        "vitesse": 5.0
+      },
+      "texte_ecran": {
+        "contenu": "LE TRAVAIL EN COURS",
+        "position": "centre",
+        "animation": "split_label_track",
+        "apparition_s": 0.0,
+        "disparition_s": 3.32
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "fondu_croise_temps",
+      "effet": "speed_ramp_x5",
+      "sfx": "amb_chantier",
+      "action_montage": "L’application reprend une partie de « Les outils et matériaux ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 5,
+      "acte": "reassurance",
+      "role": "etape_2_execution",
+      "duree_secondes": 3.201,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_gauche",
+        "animation": "reveal_mask_text",
+        "apparition_s": 0.0,
+        "disparition_s": 3.201
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "freeze_1s",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 6,
+      "acte": "preuve",
+      "role": "macro_joint_finition",
+      "duree_secondes": 1.491,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "DE PRÈS",
+        "position": "tiers_droit",
+        "animation": "pulse_cta_soft",
+        "apparition_s": 0.0,
+        "disparition_s": 1.491
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "raccord_panorama",
+      "effet": "stabilisation_hero",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 7,
+      "acte": "reassurance",
+      "role": "etape_3_controle",
+      "duree_secondes": 2.899,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "160%",
+        "vitesse": 4.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "countdown_tick",
+        "apparition_s": 0.0,
+        "disparition_s": 2.899
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "slide_doux",
+      "effet": "accelere_x4",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 8,
+      "acte": "preuve",
+      "role": "plan_ligne_et_niveau",
+      "duree_secondes": 3.342,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_gauche",
+        "animation": "side_tag_animate",
+        "apparition_s": 0.0,
+        "disparition_s": 3.342
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "recadrage_plan_100",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 9,
+      "acte": "preuve",
+      "role": "equipe_securite_visuelle",
+      "duree_secondes": 1.585,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "130%",
+        "vitesse": 5.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_droit",
+        "animation": "kinetic_number",
+        "apparition_s": 0.0,
+        "disparition_s": 1.585
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "speed_ramp_x5",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 10,
+      "acte": "reassurance",
+      "role": "carte_zone_intervention",
+      "duree_secondes": 4.084,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t3_batiment_travaux"
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "typing_price_roll",
+        "apparition_s": 0.0,
+        "disparition_s": 4.084
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "fondu_croise_temps",
+      "effet": "freeze_1s",
+      "sfx": null,
+      "action_montage": "L’application affiche les mots « À DÉCOUVRIR » à l’écran.",
+      "carte_generee_id": "carte_signature_t3_batiment_travaux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 11,
+      "acte": "preuve",
+      "role": "alignement_niveau_controle",
+      "duree_secondes": 2.929,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_gauche",
+        "animation": "wipe_label",
+        "apparition_s": 0.0,
+        "disparition_s": 2.929
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "raccord_panorama",
+      "effet": "stabilisation_auto",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 12,
+      "acte": "preuve",
+      "role": "texture_materiau_macro",
+      "duree_secondes": 1.517,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "DE PRÈS",
+        "position": "tiers_droit",
+        "animation": "lower_third_glide",
+        "apparition_s": 0.0,
+        "disparition_s": 1.517
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "slide_doux",
+      "effet": "pan_scan_spec",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Les outils et matériaux ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 13,
+      "acte": "offre",
+      "role": "prix_countup_final",
+      "duree_secondes": 2.855,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_geant"
+      },
+      "texte_ecran": {
+        "contenu": "{prix} {devise}",
+        "position": "centre",
+        "animation": "compteur_countup",
+        "apparition_s": 0.0,
+        "disparition_s": 2.855
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "recadrage_plan_100",
+      "sfx": "caisse_enregistreuse",
+      "action_montage": "L’application affiche le vrai prix que vous avez entré.",
+      "carte_generee_id": "carte_prix_geant",
+      "sfx_libelle_simple": "Petit son au moment du prix",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 14,
+      "acte": "cta",
+      "role": "carte_contact",
+      "duree_secondes": 4.5,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_whatsapp_finale"
+      },
+      "texte_ecran": {
+        "contenu": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+        "position": "centre_bas",
+        "animation": "whatsapp_pulsant",
+        "apparition_s": 0.0,
+        "disparition_s": 4.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "fondu_enchaine",
+      "effet": "aucun_effet",
+      "sfx": "whoosh_soft",
+      "action_montage": "À la fin, la vidéo garde le nom de votre commerce, le quartier et le numéro WhatsApp à l’écran.",
+      "carte_generee_id": "carte_whatsapp_finale",
+      "sfx_libelle_simple": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    }
+  ],
+  "montage_signature": {
+    "nom": "T3_batiment_travaux",
+    "id_unique": "T3_batiment_travaux",
+    "rythme_moyen_coupe_s": 2.75,
+    "courbe_rythme": [
+      2.5,
+      4.038,
+      1.739,
+      3.32,
+      3.201,
+      1.491,
+      2.899,
+      3.342,
+      1.585,
+      4.084,
+      2.929,
+      1.517,
+      2.855,
+      4.5
+    ],
+    "transitions": [
+      "panoramique_raccord",
+      "slide_doux",
+      "fondu_croise_temps",
+      "cut_sec",
+      "raccord_panorama",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "accelere_x4",
+      "speed_ramp_x5",
+      "freeze_1s",
+      "stabilisation_hero",
+      "recadrage_plan_100",
+      "stabilisation_auto",
+      "pan_scan_spec",
+      "aucun_effet"
+    ],
+    "zoom": {
+      "type": "recadrages_roles_et_sujet",
+      "min": 1.0,
+      "max": 1.6
+    },
+    "signature_detail": "On montre le travail à faire, les outils et le résultat. On n’ajoute pas de promesse de qualité ou de délai sans preuve."
+  },
+  "etalonnage": {
+    "preset": "grade_batiment_travaux_t3",
+    "preset_avant": null,
+    "preset_apres": null,
+    "exposition_ev": 0.2,
+    "contraste": 1.06,
+    "saturation": 1.0,
+    "temperature_k": 5500,
+    "vignettage": 0.1,
+    "nettete": 0.18,
+    "protection_peau": true,
+    "protection_peau_detail": "Peaux foncées incluses : préserver les hautes lumières du visage et vérifier l’exposition; fidélité textile/carrosserie et nourriture avant stylisation.",
+    "denoise_faible_lumiere": true,
+    "stabilisation": true,
+    "consigne_lumiere": "Filmez en lumière du jour si possible; gardez les lignes droites, montre la zone réelle et ne filme que les étapes sûres.",
+    "preset_avant_ref": null,
+    "preset_apres_ref": null
+  },
+  "style_visuel": {
+    "typographie": {
+      "preset": "sans_serif_bold_condensee",
+      "graisse": "900",
+      "couleur_texte": "#FFFFFF",
+      "contour": "#000000",
+      "fond_texte": "#FF5500"
+    },
+    "palette": "palette_T3_neutre",
+    "badges": [
+      "1_sur_3",
+      "2_sur_3",
+      "3_sur_3"
+    ],
+    "badges_optionnels_actives_par_commercant": [
+      "stock_limite",
+      "places_limitees",
+      "qualite_garantie"
+    ],
+    "engagements_optionnels_actifs_par_defaut": false
+  },
+  "audio": {
+    "musique": {
+      "genre": "percussions afro industrielles",
+      "bpm_min": 88,
+      "bpm_max": 104,
+      "structure": "hook court, progression accordée aux rôles, accent sur preuve/révélation, sortie propre sous carte CTA",
+      "structure_id": "audio_structure_batiment_travaux_t3",
+      "categorie_audio": "musique_t3_batiment_travaux",
+      "cue_roles": {
+        "riser_role": "etape_1_preparation",
+        "drop_scene": 4,
+        "voice_ducking": "VAD; aucun ASR"
+      }
+    },
+    "sfx_scenes": [
+      {
+        "scene": 1,
+        "categorie": "impact_drop"
+      },
+      {
+        "scene": 2,
+        "categorie": "amb_chantier"
+      },
+      {
+        "scene": 4,
+        "categorie": "amb_chantier"
+      },
+      {
+        "scene": 13,
+        "categorie": "caisse_enregistreuse"
+      },
+      {
+        "scene": 14,
+        "categorie": "whoosh_soft"
+      }
+    ],
+    "mix": {
+      "cible_lufs": -14,
+      "ducking_musique_sous_voix_db": -14,
+      "voix_prioritaire": true,
+      "limiteur_true_peak_dbtp": -1.0
+    },
+    "mode_sans_voix": {
+      "actif_par_defaut": false,
+      "compense_par": "texte_ecran_et_pictogrammes",
+      "calage": "BPM et temps forts, sans dépendance ASR"
+    },
+    "interface_commercant": {
+      "genre_en_mots_simples": "Musique rythmée qui accompagne le travail.",
+      "message": "La musique doit rester moins forte que votre voix. Sans voix, les mots à l’écran racontent la vidéo.",
+      "note": "La musique et les petits sons doivent être autorisés pour une vidéo de commerce."
+    }
+  },
+  "copywriting": {
+    "hooks": [
+      "Voici le travail {nom_offre}.",
+      "Regardez le produit de près.",
+      "Voici ce qu’il faut savoir.",
+      "On vous le montre de plusieurs côtés.",
+      "Le prix arrive à la fin."
+    ],
+    "formules_prix": [
+      "Prix : {prix} {devise}.",
+      "{nom_offre} coûte {prix} {devise}.",
+      "Demandez le prix à {nom_commerce}."
+    ],
+    "formules_urgence": [
+      "Demandez si le produit est disponible.",
+      "Passe à {quartier_ville} pour le voir.",
+      "Écrivez-nous pour en savoir plus."
+    ],
+    "formules_cta": [
+      "Écrivez-nous sur WhatsApp : {whatsapp}.",
+      "Viens à {quartier_ville}.",
+      "Contacte {nom_commerce} sur WhatsApp."
+    ],
+    "regles_affichage": {
+      "format_prix": "15 000 FCFA, si c’est le vrai prix saisi",
+      "max_lignes": 2,
+      "max_caracteres_par_ligne": 28,
+      "zone_securite_ref": "zone_securite",
+      "pourcentage_reduction": "calculé automatiquement avec les deux prix saisis",
+      "note": "Phrases courtes. N’affiche pas une offre ou un stock limité si ce n’est pas vrai."
+    }
+  },
+  "variables_calculees": [],
+  "confiance_analyse": {
+    "methode": "theorique",
+    "validation_terrain": "a_faire",
+    "hypotheses_a_valider": [
+      "Lisibilité du hook sur petit écran",
+      "Compréhension du rythme et du vocabulaire local",
+      "Acceptation d’une durée 40 s",
+      "Performance du montage sans voix"
+    ],
+    "aucune_statistique_de_performance_affirmee": true
+  },
+  "signature_montage": {
+    "id_unique": "T3_batiment_travaux",
+    "famille_format": "T3",
+    "empreinte_sequence": [
+      "hook_service_batiment|panoramique_raccord|freeze_0.5s",
+      "plan_large_type_chantier|panoramique_raccord|accelere_x4",
+      "etape_1_preparation|slide_doux|accelere_x4",
+      "outil_et_materiau|fondu_croise_temps|speed_ramp_x5",
+      "etape_2_execution|cut_sec|freeze_1s",
+      "macro_joint_finition|raccord_panorama|stabilisation_hero",
+      "etape_3_controle|slide_doux|accelere_x4",
+      "plan_ligne_et_niveau|cut_sec|recadrage_plan_100",
+      "equipe_securite_visuelle|cut_sec|speed_ramp_x5",
+      "carte_zone_intervention|fondu_croise_temps|freeze_1s",
+      "alignement_niveau_controle|raccord_panorama|stabilisation_auto",
+      "texture_materiau_macro|slide_doux|pan_scan_spec",
+      "prix_countup_final|cut_sec|recadrage_plan_100",
+      "carte_contact|fondu_enchaine|aucun_effet"
+    ],
+    "courbe_rythme": [
+      2.5,
+      4.038,
+      1.739,
+      3.32,
+      3.201,
+      1.491,
+      2.899,
+      3.342,
+      1.585,
+      4.084,
+      2.929,
+      1.517,
+      2.855,
+      4.5
+    ],
+    "justification_sectorielle": "On montre le travail à faire, les outils et le résultat. On n’ajoute pas de promesse de qualité ou de délai sans preuve."
+  },
+  "etapes_montage": [
+    {
+      "etape": 1,
+      "temps_s": 2.5,
+      "role": "Au début",
+      "action": "La vidéo commence par « voici le travail {nom_offre} ». Ça donne envie de regarder.",
+      "texte": "Voici le travail {nom_offre}.",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 2,
+      "temps_s": 4.038,
+      "role": "Le travail en cours",
+      "action": "L’application reprend une partie de « Le lieu du travail ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "LE TRAVAIL EN COURS",
+      "voix": "Montrez les outils, les matériaux ou le travail. Dites ce que vous faites.",
+      "audio": "Petit son discret",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "theme": "presenter_offre",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 1,
+          "segment_audio_id": "T3_scene_02_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez les outils, les matériaux ou le travail.",
+          "quoi_raconter": "Dites ce que vous faites."
+        },
+        "cles": {
+          "idee": "guide.batiment_travaux.T3.scene_02.idee",
+          "quoi_raconter": "guide.batiment_travaux.T3.scene_02.quoi_raconter",
+          "quoi_montrer": "guide.batiment_travaux.T3.scene_02.quoi_montrer",
+          "exemple": "guide.batiment_travaux.T3.scene_02.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.batiment_travaux.T3.scene_02.conseil"
+        }
+      }
+    },
+    {
+      "etape": 3,
+      "temps_s": 1.739,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 4,
+      "temps_s": 3.32,
+      "role": "Le travail en cours",
+      "action": "L’application reprend une partie de « Les outils et matériaux ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "LE TRAVAIL EN COURS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 5,
+      "temps_s": 3.201,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 6,
+      "temps_s": 1.491,
+      "role": "De près",
+      "action": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "DE PRÈS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 7,
+      "temps_s": 2.899,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 8,
+      "temps_s": 3.342,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 9,
+      "temps_s": 1.585,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 10,
+      "temps_s": 4.084,
+      "role": "Un message à l’écran",
+      "action": "L’application affiche les mots « À DÉCOUVRIR » à l’écran.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 11,
+      "temps_s": 2.929,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le résultat de près ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 12,
+      "temps_s": 1.517,
+      "role": "De près",
+      "action": "L’application reprend une partie de « Les outils et matériaux ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "DE PRÈS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 13,
+      "temps_s": 2.855,
+      "role": "Le prix",
+      "action": "L’application affiche le vrai prix que vous avez entré.",
+      "texte": "{prix} {devise}",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son au moment du prix",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 14,
+      "temps_s": 4.5,
+      "role": "vos coordonnées",
+      "action": "À la fin, la vidéo garde le nom de votre commerce, le quartier et le numéro WhatsApp à l’écran.",
+      "texte": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    }
+  ],
+  "axes_signature": {
+    "sequence_roles": [
+      "hook_service_batiment",
+      "plan_large_type_chantier",
+      "etape_1_preparation",
+      "outil_et_materiau",
+      "etape_2_execution",
+      "macro_joint_finition",
+      "etape_3_controle",
+      "plan_ligne_et_niveau",
+      "equipe_securite_visuelle",
+      "carte_zone_intervention",
+      "alignement_niveau_controle",
+      "texture_materiau_macro",
+      "prix_countup_final",
+      "carte_contact"
+    ],
+    "nombre_scenes": 14,
+    "courbe_rythme": [
+      2.5,
+      4.038,
+      1.739,
+      3.32,
+      3.201,
+      1.491,
+      2.899,
+      3.342,
+      1.585,
+      4.084,
+      2.929,
+      1.517,
+      2.855,
+      4.5
+    ],
+    "transitions": [
+      "panoramique_raccord",
+      "panoramique_raccord",
+      "slide_doux",
+      "fondu_croise_temps",
+      "cut_sec",
+      "raccord_panorama",
+      "slide_doux",
+      "cut_sec",
+      "cut_sec",
+      "fondu_croise_temps",
+      "raccord_panorama",
+      "slide_doux",
+      "cut_sec",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "accelere_x4",
+      "accelere_x4",
+      "speed_ramp_x5",
+      "freeze_1s",
+      "stabilisation_hero",
+      "accelere_x4",
+      "recadrage_plan_100",
+      "speed_ramp_x5",
+      "freeze_1s",
+      "stabilisation_auto",
+      "pan_scan_spec",
+      "recadrage_plan_100",
+      "aucun_effet"
+    ],
+    "decoupage_prises": [
+      "prise_1",
+      "prise_1",
+      "prise_3",
+      "prise_2",
+      "prise_3",
+      "prise_3",
+      "prise_3",
+      "prise_3",
+      "prise_3",
+      "carte:carte_signature_t3_batiment_travaux",
+      "prise_3",
+      "prise_2",
+      "carte:carte_prix_geant",
+      "carte:carte_whatsapp_finale"
+    ],
+    "cartes_generees": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "carte_signature_t3_batiment_travaux",
+      "",
+      "",
+      "carte_prix_geant",
+      "carte_whatsapp_finale"
+    ],
+    "texte_animation_position": [
+      "price_shake_impact|centre_haut",
+      "line_draw_spec|tiers_gauche",
+      "caption_breath_fade|tiers_droit",
+      "split_label_track|centre",
+      "reveal_mask_text|tiers_gauche",
+      "pulse_cta_soft|tiers_droit",
+      "countdown_tick|centre",
+      "side_tag_animate|tiers_gauche",
+      "kinetic_number|tiers_droit",
+      "typing_price_roll|centre",
+      "wipe_label|tiers_gauche",
+      "lower_third_glide|tiers_droit",
+      "compteur_countup|centre",
+      "whatsapp_pulsant|centre_bas"
+    ],
+    "preset_etalonnage": "grade_batiment_travaux_t3",
+    "structure_audio": "audio_structure_batiment_travaux_t3"
+  },
+  "formulaire_ui": {
+    "titre": "Faire ma vidéo",
+    "message": "Suis les étapes. L’application prépare la vidéo pour vous.",
+    "nombre_sections_principales": 4,
+    "limite_sections_principales": 5,
+    "sections_principales": [
+      {
+        "id": "commerce_contact",
+        "titre": "votre commerce et votre WhatsApp",
+        "champs": [
+          "nom_commerce",
+          "whatsapp"
+        ],
+        "aide": "Écrivez le nom de votre commerce et le numéro où les clients peuvent vous écrire.",
+        "ordre": 1,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "offre",
+        "titre": "Ce que vous proposez",
+        "champs": [
+          "nom_offre"
+        ],
+        "aide": "Écrivez le nom du plat, du produit, du soin ou du travail.",
+        "ordre": 2,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "prix",
+        "titre": "Le prix",
+        "champs": [
+          "prix",
+          "devise"
+        ],
+        "aide": "Écrivez le vrai prix. FCFA est déjà choisi si vous ne changes rien.",
+        "ordre": 3,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "lieu",
+        "titre": "Où vous trouver",
+        "champs": [
+          "quartier_ville"
+        ],
+        "aide": "Écrivez le quartier et la ville.",
+        "ordre": 4,
+        "visible_par_defaut": true
+      }
+    ],
+    "options_facultatives_repliees": {
+      "id": "options_avancees",
+      "titre": "Autres options (facultatif)",
+      "champs": [
+        "badge_engagement_actif"
+      ],
+      "visible_par_defaut": false,
+      "aide": "Laissez vide si vous n’êtes pas sûr que le message est vrai."
+    },
+    "devise_defaut": "FCFA",
+    "devise_saisie_par_video": true,
+    "enregistrer_ou_pre_remplir_depuis_profil": false,
+    "note": "vos réponses servent pour cette vidéo seulement. Elles ne sont pas gardées dans un profil."
+  },
+  "guide_tournage": {
+    "message_principal": "Filmez les courtes vidéos demandées. L’application prépare la vidéo pour vous.",
+    "nombre_prises_a_filmer": 3,
+    "duree_brute_cible_par_prise_s": "8–20",
+    "etapes_capture": [
+      {
+        "etape": 1,
+        "prise_id": "prise_1",
+        "quoi_filmer": "Le lieu du travail",
+        "consigne": "Commencez par montrer le lieu du travail. Tenez votre téléphone debout et reste assez immobile. Filmez depuis un endroit sûr et montre le vrai travail.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [
+          2
+        ],
+        "guide_parole_segments": [
+          {
+            "scene": 2,
+            "quoi_raconter": "Dites ce que vous faites.",
+            "quoi_montrer": "Montrez les outils, les matériaux ou le travail.",
+            "exemple": "Voici le travail en cours.",
+            "note_exemple": "Exemple pour comprendre, pas à répéter.",
+            "duree_conseillee_s": 2.0,
+            "segment_audio_id": "T3_scene_02_voix"
+          }
+        ],
+        "guide_parole_segmentage": "Dans la même prise, afficher les consignes l’une après l’autre. Le bouton Suivant marque la fin de chaque extrait de voix."
+      },
+      {
+        "etape": 2,
+        "prise_id": "prise_2",
+        "quoi_filmer": "Les outils et matériaux",
+        "consigne": "Ensuite, montrez les outils et matériaux. Tenez votre téléphone debout et reste assez immobile. Filmez depuis un endroit sûr et montre le vrai travail.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [],
+        "guide_parole_segments": [],
+        "guide_parole_segmentage": "Aucune consigne de parole dans cette prise."
+      },
+      {
+        "etape": 3,
+        "prise_id": "prise_3",
+        "quoi_filmer": "Le résultat de près",
+        "consigne": "Puis, montrez le résultat de près. Tenez votre téléphone debout et reste assez immobile. Filmez depuis un endroit sûr et montre le vrai travail.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [],
+        "guide_parole_segments": [],
+        "guide_parole_segmentage": "Aucune consigne de parole dans cette prise."
+      }
+    ],
+    "pas_de_montage_manuel": true,
+    "le_moteur_reutilise_les_rushs": true,
+    "le_commercant_ne_filme_pas_une_scene_par_etape_montage": true,
+    "titre": "Ce que vous devez filmer",
+    "note": "Tenez votre téléphone debout. Filmez près d’une fenêtre ou dehors à l’ombre. Évitez d’avoir la lumière derrière le sujet.",
+    "guide_parole": {
+      "visible_avant_et_pendant_la_prise": true,
+      "consignes_regroupees_par_prise": true,
+      "segments_voix_marques_dans_la_prise": true,
+      "voix_separee_de_la_vitesse_image": true,
+      "titre": "De quoi parler ?",
+      "introduction": "Pour chaque scène parlée, vous voyez quoi montrer, quoi raconter avec vos mots, le temps conseillé et un exemple. L’exemple aide à comprendre; ne le répétez pas mot pour mot.",
+      "langue": "Parlez en français ou dans la langue que vous voulez, par exemple en fon, yoruba ou bariba.",
+      "temps": "Le temps conseillé vous aide à parler brièvement. Il ne coupe pas votre voix de force; vous pouvez continuer pendant l’image suivante.",
+      "pas_une_prise": "Filmez seulement les prises déjà demandées. Pas besoin de filmer une scène à part pour parler.",
+      "sans_voix": "Vous pouvez ne pas parler. Choisissez musique seule; la vidéo reste complète.",
+      "sous_titres": "Les mots à l’écran viennent des informations que vous avez données. Ils ne reprennent pas votre voix.",
+      "cles": {
+        "titre": "guide.commun.titre",
+        "introduction": "guide.commun.introduction",
+        "langue": "guide.commun.langue",
+        "temps": "guide.commun.temps",
+        "pas_une_prise": "guide.commun.pas_une_prise",
+        "sans_voix": "guide.commun.sans_voix",
+        "sous_titres": "guide.commun.sous_titres"
+      }
+    },
+    "sous_titres_voix": {
+      "sous_titres_automatiques": false,
+      "paroles_transcrites": false,
+      "texte_ecran_actuel": "Le nom, le prix, le lieu et les mots affichés viennent des informations saisies; ils ne reprennent pas votre voix.",
+      "voix_langue_locale": "Vous pouvez parler dans votre langue. Pour écrire vos paroles à l’écran, une personne qui connaît cette langue doit les écrire et les vérifier.",
+      "cles": {
+        "texte_ecran_actuel": "guide.commun.sous_titres",
+        "voix_langue_locale": "guide.commun.sous_titres_locale"
+      }
+    },
+    "parole_dans_prises_existantes": true,
+    "pas_une_prise_par_scene_finale": true,
+    "marqueurs_audio_sans_transcription": "Le bouton Suivant marque les extraits de voix; aucun mot n’est reconnu ou écrit automatiquement."
+  },
+  "nom_format_affiche": "Montrer un produit",
+  "interface_commercant": {
+    "visible": true,
+    "nom_format": "Montrer un produit",
+    "secteur": "Construction et travaux",
+    "phrase_courte": "On montre le travail à faire, les outils et le résultat.",
+    "ne_pas_afficher_cles_internes": [
+      "id",
+      "secteur",
+      "format",
+      "signature_montage.id_unique"
+    ],
+    "ton": "français simple, phrases courtes, vouvoiement respectueux",
+    "promesse": "Vous filmez les vidéos demandées. L’application prépare la vidéo pour vous."
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vitrine-video-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-17",
+  "workers_dev": true,
+
+  // ============================ BLOC ROUTAGE (A ACTIVER) ============================
+  // BLOQUEUR n°1 RESOLU (31/10/2026) : OPTION B ACTEE par la direction —
+  // URL officielle deployee : https://vitrine-video-api.mdgejcinfluence.workers.dev
+  // (workers_dev: true suffit ; aucune route a declarer). L'app est alignee via
+  // vvApiBaseUrl dans gradle.properties.
+  // ETAT 01/11/2026 (audit D40) : migrations 0001 a 0012 APPLIQUEES sur le D1
+  // prod et WORKER REDEPLOYE via le workflow "Deploy Production" (secret
+  // CLOUDFLARE_API_TOKEN mis a jour le 31/10 ; runs 41312068176 et 41312551179
+  // = success, smoke tests verts, routes audio v2 600 pistes verifiees E2E).
+  // Voir docs/PRODUCTION_SETUP.md §4bis.
+  //
+  // OPTION A — domaine propre (recommande, necessite vitrine.video dans CE compte
+  // Cloudflare). Décommenter, puis : npx wrangler deploy
+  //   "routes": [
+  //     { "pattern": "api.vitrine.video", "custom_domain": true }
+  //   ],
+  //
+  // OPTION B — URL workers.dev (aucun domaine a acheter). Laisser workers_dev a
+  // true, déployer, puis lire l'URL réelle : npx wrangler deploy (elle est affichée)
+  // ou npx wrangler subdomain. Ensuite aligner l'app (1 ligne, gradle.properties) :
+  //   vvApiBaseUrl=https://vitrine-video-api.<sous-domaine-compte>.workers.dev
+  //
+  // Rappel : l'app lit BuildConfig.API_BASE_URL (feature-onboarding/feature-catalog),
+  // injectable par -PvvApiBaseUrl sans modification de code.
+  // ===================================================================================
+
+  "triggers": {
+    "crons": [
+      "0 3 * * *"
+    ]
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "vitrine-video-db",
+      "database_id": "00000000-0000-0000-0000-000000000000"
+    }
+  ],
+
+  "vars": {
+    "B2_BUCKET": "vitrine-video-media",
+    "B2_ENDPOINT": "https://s3.us-east-005.backblazeb2.com",
+    "B2_KEY_ID": "0051874222bd9b00000000009",
+    "B2_REGION": "us-east-005",
+    // Audit D40 (A10) : binding MANQUANT depuis l'origine — routeManifest et
+    // routeAsset lisaient env.VV_ASSETS_BUCKET (undefined) -> 404 permanent
+    // ("manifeste absent") sur le catalogue skins et les vignettes.
+    "VV_ASSETS_BUCKET": "vitrine-video-media"
+  },
+
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true,
+      "persist": true
+    },
+    "traces": {
+      "enabled": false,
+      "head_sampling_rate": 1,
+      "persist": true
+    },
+    "issue_detection": {
+      "enabled": false
+    }
+  },
+
+  "previews": {
+    "d1_databases": [
+      {
+        "binding": "DB",
+        "database_name": "vitrine-video-db-preview",
+        "database_id": "00000000-0000-0000-0000-000000000000"
+      }
+    ]
+  }
+}

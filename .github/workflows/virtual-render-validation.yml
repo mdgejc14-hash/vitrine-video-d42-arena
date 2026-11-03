@@ -1,0 +1,886 @@
+# =============================================================================
+# D42 — VALIDATION VIRTUELLE : l'APK RÉEL tourne sur émulateur et produit des
+#       MP4 par le MOTEUR DE PRODUCTION (aucun moteur de test).
+#
+# Principes (mission D42) :
+#  - KVM est SONDÉ, jamais supposé ; repli logiciel étiqueté « software ».
+#  - Un maillon manquant = job ROUGE (aucun succès par étape sautée).
+#  - Permissions minimales : `contents: read` partout, aucun write, aucun secret
+#    de paiement. Le serveur reste en `501 billing_not_configured`.
+#  - Actions épinglées à un SHA de commit vérifié.
+# =============================================================================
+name: d42-virtual-render
+
+on:
+  workflow_dispatch:
+    inputs:
+      api_level:
+        description: "API de l'émulateur (34 = rendus complets)"
+        required: false
+        default: "34"
+      templates:
+        description: "Gabarits : all | T1,T2 | restaurants_maquis_T1,..."
+        required: false
+        default: "all"
+      langs:
+        description: "Langues CSV"
+        required: false
+        default: "fr,en,es,ja"
+      run_matrix:
+        description: "1 = lancer les rendus après le smoke validé"
+        required: false
+        default: "1"
+      profils:
+        description: "validation | production | both (lots à lancer)"
+        required: false
+        default: "validation"
+      shards:
+        description: "Nombre total de lots (dénominateur du découpage)"
+        required: false
+        default: "8"
+      shards_json:
+        description: "Liste JSON des lots à exécuter, ex. [1] ou [3,4,5,6]"
+        required: false
+        default: "[1,2,3,4,5,6,7,8]"
+      langs_lot:
+        description: "Langues des lots : all | fr | en | es | ja"
+        required: false
+        default: "all"
+      limite:
+        description: "Plafond de rendus par job (0 = aucun) — sert à MESURER"
+        required: false
+        default: "0"
+      run_ui:
+        description: "1 = exécuter le robot UI (chaque écran, chaque clic)"
+        required: false
+        default: "0"
+      run_smoke:
+        description: "1 = smoke obligatoire ; 0 = APK app déjà prouvé par un smoke vert"
+        required: false
+        default: "1"
+  push:
+    branches: [audit-d41]
+    paths:
+      - ".github/workflows/virtual-render-validation.yml"
+      - "app/src/androidTest/**"
+      - "ins-effects/**"
+      - "feature-export/**"
+      - "data/src/main/assets/gabarits/**"
+      - "core-model/src/main/**/Gabarit*.kt"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: d42-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  D42_JAVA: "17"
+
+jobs:
+  # ---------------------------------------------------------------------------
+  preflight:
+    name: "preflight — capacités réelles"
+    # Même OS que les jobs émulateur : la sonde doit décrire l'environnement RÉEL.
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    outputs:
+      kvm: ${{ steps.kvm.outputs.kvm }}
+      mode: ${{ steps.kvm.outputs.mode }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Composants SDK (la sonde doit voir l'émulateur réel)
+        run: |
+          yes | sdkmanager --licenses >/dev/null 2>&1 || true
+          sdkmanager --install "emulator" "platform-tools" >/dev/null 2>&1 || true
+
+      - name: Sonde KVM / architecture (jamais supposé)
+        id: kvm
+        run: |
+          set +e
+          ARCH=$(uname -m)
+          # Un /dev/kvm présent ne prouve RIEN : on ouvre le device et on
+          # interroge son API (KVM_GET_API_VERSION = ioctl 0xAE00). C'est le
+          # seul test qui distingue « device visible » de « accélération
+          # réellement utilisable ». Un run D42 a précisément vu un runner où
+          # le device existait et où QEMU retombait en TCG sans erreur.
+          PROBE="import fcntl,os;print('OK:%d'%fcntl.ioctl(os.open('/dev/kvm',os.O_RDWR),0xAE00))"
+          KVMIO=$(python3 -c "$PROBE" 2>&1 | tail -1)
+          case "$KVMIO" in
+            OK:*) ACCEL=oui ;;
+            *)
+              if [ -e /dev/kvm ]; then
+                sudo chmod 666 /dev/kvm 2>/dev/null
+                KVMIO=$(python3 -c "$PROBE" 2>&1 | tail -1)
+              fi
+              case "$KVMIO" in OK:*) ACCEL=oui ;; *) ACCEL=non ;; esac
+              ;;
+          esac
+          ACCEL_CHECK="indisponible"
+          [ -x "$ANDROID_SDK_ROOT/emulator/emulator" ] && \
+            ACCEL_CHECK=$("$ANDROID_SDK_ROOT/emulator/emulator" -accel-check 2>&1 | tr '\n' ' ' | cut -c1-150)
+          if [ "$ACCEL" = "oui" ]; then MODE=kvm; else MODE=software; fi
+          echo "kvm=$ACCEL" >> "$GITHUB_OUTPUT"
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Capacités de l'environnement"
+            echo ""
+            echo "| élément | valeur |"
+            echo "|---|---|"
+            echo "| architecture | $ARCH |"
+            echo "| /dev/kvm (ioctl KVM_GET_API_VERSION) | \`$KVMIO\` |"
+            echo "| \`emulator -accel-check\` | \`${ACCEL_CHECK}\` |"
+            echo "| virtualisation CPU | $(grep -qE 'vmx|svm' /proc/cpuinfo && echo oui || echo non) |"
+            echo "| **mode émulateur retenu** | **$MODE** |"
+            echo "| vCPU / RAM | $(nproc) / $(free -g | awk '/Mem:/{print $2}') Go |"
+            echo "| ubuntu | $(lsb_release -ds 2>/dev/null) |"
+            echo "| java | $(java -version 2>&1 | head -1) |"
+            echo "| disque libre racine | $(df -h / | awk 'NR==2{print $4}') |"
+          } | tee preflight.txt
+          cat preflight.txt >> "$GITHUB_STEP_SUMMARY"
+          if [ "$MODE" = "software" ]; then
+            echo "::warning title=EMU-SOFTWARE::aucune accélération KVM utilisable — rendu très lent, étiqueté EMU-SOFTWARE"
+          fi
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: d42-preflight
+          path: preflight.txt
+          retention-days: 30
+
+  # ---------------------------------------------------------------------------
+  build:
+    name: "build — APK app + APK instrumenté"
+    runs-on: ubuntu-latest
+    needs: preflight
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.D42_JAVA }}
+
+      - uses: gradle/actions/setup-gradle@48b5f213c81028ace310571dc5ec0fbbca0b2947 # v4
+
+      - name: Assemblage APK application + APK de test
+        # `set -o pipefail` est OBLIGATOIRE : sans lui, `./gradlew ... | tail`
+        # renvoie le code de `tail` et un BUILD FAILED passe pour un succès.
+        # Observé sur le run 41452127404 (step vert, BUILD FAILED, APK de test
+        # absent, smoke voué à l'échec) → finding D42-F02.
+        shell: bash
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon --stacktrace \
+            :app:assembleDebug :app:assembleDebugAndroidTest -x lint 2>&1 | tail -80
+
+      - name: Empreintes + version de commit
+        run: |
+          mkdir -p out
+          cp app/build/outputs/apk/debug/app-debug.apk out/
+          cp app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk out/
+          # Les deux APK sont exigés : sans APK de test, aucun rendu possible.
+          for f in app-debug.apk app-debug-androidTest.apk; do
+            [ -s "out/$f" ] || { echo "::error title=APK MANQUANT::$f"; exit 1; }
+          done
+          ( cd out && sha256sum *.apk ) | tee out/SHA256SUMS.txt
+          echo "commit=${{ github.sha }}" | tee -a out/SHA256SUMS.txt
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: d42-apk
+          path: |
+            out/*.apk
+            out/SHA256SUMS.txt
+          retention-days: 30
+
+  # ---------------------------------------------------------------------------
+  # PHASE 2 — preuve minimale : l'APK RÉEL démarre et le MOTEUR produit 1 MP4.
+  #          Aucun rendu de masse n'est lancé avant cette preuve.
+  # ---------------------------------------------------------------------------
+  smoke:
+    name: "smoke — 1 rendu de production réel"
+    # D42-BUDGET : un push ne doit JAMAIS lancer d'émulateur. 18 min par push,
+    # et le smoke peut être sauté quand l'APK app est déjà prouvé : le harnais
+    # de rendu vit dans l'APK de test, pas dans l'app.
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch'
+          && github.event.inputs.run_smoke != '0' }}
+    # 22.04 et non ubuntu-latest : le 02/11, Ubuntu 26.04 exposait /dev/kvm mais
+    # laissait QEMU en TCG (constaté, voir rapport section K).
+    runs-on: ubuntu-22.04
+    needs: [preflight, build]
+    # Un rendu complet de 33 s a ~100x le temps reel (encodeur + GL logiciels) :
+    # il faut de la marge pour MESURER, pas pour masquer un echec.
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.D42_JAVA }}
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: d42-apk
+          path: apk
+
+      - name: Libérer de l'espace disque (l'AVD réclame ~7,4 Go)
+        run: |
+          echo "== avant =="; df -h / | tail -1
+          sudo rm -rf /usr/local/lib/android/sdk/ndk \
+                      /usr/share/dotnet \
+                      /opt/hostedtoolcache/CodeQL \
+                      /opt/hostedtoolcache/go \
+                      /opt/hostedtoolcache/Ruby \
+                      /usr/local/lib/android/sdk/system-images/android-33 \
+                      /usr/local/lib/android/sdk/system-images/android-35 || true
+          sudo docker image prune -af >/dev/null 2>&1 || true
+          echo "== après =="; df -h / | tail -1
+          libre=$(df -m / | awk 'NR==2{print $4}')
+          echo "disque_libre_mb=$libre"
+          if [ "$libre" -lt 9000 ]; then
+            echo "::warning title=ESPACE DISQUE FAIBLE::${libre} Mo libres, l'émulateur peut échouer (documenté en K de D42)"
+          fi
+
+      - name: Émulateur + image système (téléchargement avec reprises)
+        # Flake observé au run 41635970684 : « An error occurred while preparing
+        # SDK package Android Emulator: Archive is not a ZIP archive », puis
+        # « could not connect to TCP port 5554 ». Le paquet SDK était corrompu
+        # au téléchargement : l'action renonce et le job meurt en 1 min, après
+        # avoir déjà payé la compilation. Trois tentatives, puis vérification
+        # que le binaire existe vraiment.
+        run: |
+          SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          API="${{ github.event.inputs.api_level || '34' }}"
+          ok=0
+          for i in 1 2 3; do
+            echo "tentative $i"
+            if yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --install \
+                 "emulator" "system-images;android-$API;google_apis;x86_64" >/dev/null; then
+              ok=1; break
+            fi
+            sleep 15
+          done
+          if [ "$ok" -ne 1 ] || [ ! -x "$SDK/emulator/emulator" ]; then
+            echo "::error title=SDK ÉMULATEUR INDISPONIBLE::trois téléchargements ont échoué (BLOCKED_ENVIRONMENT)"
+            exit 1
+          fi
+          "$SDK/emulator/emulator" -version | head -2
+
+      - name: Donner l'accès à /dev/kvm (chaque job a son propre conteneur)
+        run: |
+          ls -l /dev/kvm || true
+          sudo chmod 666 /dev/kvm 2>/dev/null || true
+          sudo gpasswd -a "$USER" kvm 2>/dev/null || true
+          python3 -c "import fcntl,os;print('ioctl KVM_OK=%d' % fcntl.ioctl(os.open('/dev/kvm', os.O_RDWR), 0xAE00))" \
+            || echo "::warning::ioctl KVM indisponible — l'émulateur refusera -accel on (BLOCKED_ENVIRONMENT)"
+
+      - name: Émulateur + installation + 1 rendu moteur
+        uses: ReactiveCircus/android-emulator-runner@c9c93e6ba9c4194322e114c40970d5983d9a07cc # v2.38.0
+        with:
+          api-level: ${{ github.event.inputs.api_level || '34' }}
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2   # 1080x1920, AVD ~5 Go au lieu de 7,4 (disque du runner)
+          disable-animations: true
+          # Par défaut l'action désactive KVM dès qu'elle ne peut pas lire les
+          # permissions (« ProbeKVM: This user doesn't have permissions »).
+          # Observé run 41456891324 : 15 min de TCG silencieux.
+          disable-linux-hw-accel: false
+          emulator-options: >-
+            -no-window -gpu swiftshader_indirect -no-snapshot -no-snapshot-save
+            -noaudio -no-boot-anim -camera-back none -camera-front none -accel on
+            -cores 4 -memory 4096
+          # android-emulator-runner exécute CHAQUE LIGNE du script dans un
+          # shell distinct : toute la logique est donc dans un script versionné,
+          # appelé ici sur une seule ligne (constat run 41463616121).
+          script: bash .github/scripts/d42-render.sh smoke fr restaurants_maquis_T1 smoke-out 5400 stock_limite
+
+      - name: Verdict MP4 réel (jamais de succès cosmétique)
+        if: always()
+        run: |
+          n=$(find . -name '*.mp4' -newer apk/SHA256SUMS.txt 2>/dev/null | wc -l)
+          echo "MP4 trouvés: $n"
+          find . -name '*.mp4' -exec ls -lh {} \; || true
+          {
+            echo "## Smoke"
+            echo "- mode émulateur : **${{ needs.preflight.outputs.mode }}**"
+            echo "- KVM : ${{ needs.preflight.outputs.kvm }}"
+            echo "- MP4 produits : $n"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$n" -lt 1 ]; then
+            echo "::error title=SMOKE ECHOUE::aucun MP4 produit par le moteur — le pipeline n'a rien prouvé"
+            exit 1
+          fi
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: d42-smoke
+          path: |
+            smoke-out/
+            instrumentation.txt
+          retention-days: 30
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
+  # PHASE 5 — matrice 30 gabarits × 4 langues = 120 MP4 réels
+  #          1 émulateur par langue, 30 rendus séquentiels (§4.2 : organisation
+  #          explicitement autorisée, coût maîtrisé, couverture complète).
+  # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # PHASE 5 — MATRICE 120 : 30 gabarits × 4 langues, profil VALIDATION 540x960.
+  #
+  # Coût mesuré avant découpage : 758 s par rendu de 35 s en 1080x1920 sur
+  # émulateur KVM (encodeur et GL logiciels). 30 rendus dans UN job = 381 min,
+  # très au-delà de la durée raisonnable d'un runner et incompatible avec les
+  # 2 000 min/mois du palier gratuit (déjà 1 100 min consommées le 03/11).
+  #
+  # Découpage : 4 langues × 8 lots = 32 jobs de 3 à 4 rendus (≈ 25 min mur et
+  # 25 min facturées chacun) au lieu de 4 jobs de 381 min. Le parallélisme
+  # réduit la DURÉE, pas les minutes : le coût réel baisse parce que le profil
+  # de validation encode 540x960 (≈ 4× moins de pixels) — voir D42_RESUME_STATE.
+  #
+  # Reprise : chaque lot est indépendant et publie son manifeste + SHA-256.
+  # Un lot déjà vert n'est pas relancé (workflow_dispatch ciblé).
+  # ---------------------------------------------------------------------------
+  validation:
+    name: "validation ${{ matrix.lang }} lot ${{ matrix.shard }}/${{ github.event.inputs.shards || '8' }}"
+    # D42-BUDGET : jamais sur push. Un push ne coûte que preflight + build.
+    runs-on: ubuntu-22.04
+    needs: [preflight, build, smoke]
+    # Le smoke reste le garde-fou : les rendus ne partent que s'il est vert,
+    # sauf dispatch explicite run_smoke=0 (APK app déjà prouvé, harnais seul
+    # modifié). Un smoke sauté SANS run_smoke=0 ne fait jamais partir la matrice.
+    if: >-
+      ${{ always() && github.event_name == 'workflow_dispatch'
+          && github.event.inputs.run_matrix != '0'
+          && (github.event.inputs.profils || 'validation') != 'production'
+          && (needs.smoke.result == 'success'
+              || (github.event.inputs.run_smoke == '0' && needs.smoke.result == 'skipped')) }}
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      # 8 jobs simultanés au plus : la matrice fait 32 jobs, le plafond du
+      # palier gratuit est de 20 jobs concurrents.
+      max-parallel: 8
+      matrix:
+        lang: ${{ fromJSON(github.event.inputs.langs_lot == 'fr' && '["fr"]' || github.event.inputs.langs_lot == 'en' && '["en"]' || github.event.inputs.langs_lot == 'es' && '["es"]' || github.event.inputs.langs_lot == 'ja' && '["ja"]' || '["fr","en","es","ja"]') }}
+        # Liste explicite : `range()` n'est pas une fonction documentée des
+        # expressions GitHub, on ne parie pas dessus.
+        shard: ${{ fromJSON(github.event.inputs.shards_json || '[1,2,3,4,5,6,7,8]') }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.D42_JAVA }}
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: d42-apk
+          path: apk
+
+      - name: Libérer de l'espace disque (l'AVD réclame ~7,4 Go)
+        run: |
+          sudo rm -rf /usr/local/lib/android/sdk/ndk /usr/share/dotnet \
+                      /opt/hostedtoolcache/CodeQL /opt/hostedtoolcache/go \
+                      /opt/hostedtoolcache/Ruby \
+                      /usr/local/lib/android/sdk/system-images/android-33 \
+                      /usr/local/lib/android/sdk/system-images/android-35 || true
+          sudo docker image prune -af >/dev/null 2>&1 || true
+          df -h / | tail -1
+
+      - name: Émulateur + image système (téléchargement avec reprises)
+        # Flake observé au run 41635970684 : « An error occurred while preparing
+        # SDK package Android Emulator: Archive is not a ZIP archive », puis
+        # « could not connect to TCP port 5554 ». Le paquet SDK était corrompu
+        # au téléchargement : l'action renonce et le job meurt en 1 min, après
+        # avoir déjà payé la compilation. Trois tentatives, puis vérification
+        # que le binaire existe vraiment.
+        run: |
+          SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          API="${{ github.event.inputs.api_level || '34' }}"
+          ok=0
+          for i in 1 2 3; do
+            echo "tentative $i"
+            if yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --install \
+                 "emulator" "system-images;android-$API;google_apis;x86_64" >/dev/null; then
+              ok=1; break
+            fi
+            sleep 15
+          done
+          if [ "$ok" -ne 1 ] || [ ! -x "$SDK/emulator/emulator" ]; then
+            echo "::error title=SDK ÉMULATEUR INDISPONIBLE::trois téléchargements ont échoué (BLOCKED_ENVIRONMENT)"
+            exit 1
+          fi
+          "$SDK/emulator/emulator" -version | head -2
+
+      - name: Donner l'accès à /dev/kvm (chaque job a son propre conteneur)
+        run: |
+          ls -l /dev/kvm || true
+          sudo chmod 666 /dev/kvm 2>/dev/null || true
+          sudo gpasswd -a "$USER" kvm 2>/dev/null || true
+          python3 -c "import fcntl,os;print('ioctl KVM_OK=%d' % fcntl.ioctl(os.open('/dev/kvm', os.O_RDWR), 0xAE00))" \
+            || echo "::warning::ioctl KVM indisponible — émulateur en logiciel (BLOCKED_ENVIRONMENT)"
+
+      - name: Rendu du lot (profil validation 540x960)
+        uses: ReactiveCircus/android-emulator-runner@c9c93e6ba9c4194322e114c40970d5983d9a07cc # v2.38.0
+        with:
+          api-level: ${{ github.event.inputs.api_level || '34' }}
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          disable-linux-hw-accel: false
+          emulator-options: >-
+            -no-window -gpu swiftshader_indirect -no-snapshot -no-snapshot-save
+            -noaudio -no-boot-anim -camera-back none -camera-front none -accel on
+            -cores 4 -memory 4096
+          script: >-
+            bash .github/scripts/d42-render.sh matrix ${{ matrix.lang }}
+            "shard:${{ matrix.shard }}/${{ github.event.inputs.shards || '8' }}"
+            "renders-${{ matrix.lang }}-${{ matrix.shard }}" 1800 none validation
+            "${{ github.event.inputs.limite || '0' }}"
+
+      - name: Manifeste SHA-256 du lot (aucune preuve supprimée silencieusement)
+        if: always()
+        run: |
+          d="renders-${{ matrix.lang }}-${{ matrix.shard }}"
+          mkdir -p "$d"
+          {
+            echo "## Lot ${{ matrix.lang }} ${{ matrix.shard }}"
+            echo "| fichier | octets | sha256 |"
+            echo "|---|---|---|"
+            find "$d" -name '*.mp4' -printf '%f %s %p\n' 2>/dev/null |
+              while read -r nom taille chemin; do
+                echo "| $nom | $taille | $(sha256sum "$chemin" | cut -d' ' -f1) |"
+              done
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "MP4 du lot : $(find "$d" -name '*.mp4' | wc -l)"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: d42-renders-${{ matrix.lang }}-${{ matrix.shard }}
+          path: renders-${{ matrix.lang }}-${{ matrix.shard }}/
+          retention-days: 30
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
+  # PHASE 6 — ROBOT UI : chaque écran de l'APK ouvert, chaque élément cliquable
+  # cliqué, capture APRÈS action, matrice {écran, élément, attendu, constaté,
+  # capture, statut}. Un écran sans issue ou un crash fait échouer le job.
+  # ---------------------------------------------------------------------------
+  ui-robots:
+    name: "robot UI (écrans réels, clics réels)"
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_ui == '1' }}
+    runs-on: ubuntu-22.04
+    needs: [preflight, build]
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.D42_JAVA }}
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: d42-apk
+          path: apk
+
+      - name: Libérer de l'espace disque
+        run: |
+          sudo rm -rf /usr/local/lib/android/sdk/ndk /usr/share/dotnet \
+                      /opt/hostedtoolcache/CodeQL /opt/hostedtoolcache/go || true
+          df -h / | tail -1
+
+      - name: Émulateur + image système (téléchargement avec reprises)
+        run: |
+          SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          API="${{ github.event.inputs.api_level || '34' }}"
+          ok=0
+          for i in 1 2 3; do
+            if yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --install \
+                 "emulator" "system-images;android-$API;google_apis;x86_64" >/dev/null; then
+              ok=1; break
+            fi
+            sleep 15
+          done
+          [ "$ok" -eq 1 ] || { echo "::error title=SDK ÉMULATEUR INDISPONIBLE::BLOCKED_ENVIRONMENT"; exit 1; }
+          "$SDK/emulator/emulator" -version | head -2
+
+      - name: Donner l'accès à /dev/kvm
+        run: |
+          sudo chmod 666 /dev/kvm 2>/dev/null || true
+          sudo gpasswd -a "$USER" kvm 2>/dev/null || true
+
+      - name: Exploration des écrans
+        uses: ReactiveCircus/android-emulator-runner@c9c93e6ba9c4194322e114c40970d5983d9a07cc # v2.38.0
+        with:
+          api-level: ${{ github.event.inputs.api_level || '34' }}
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          disable-linux-hw-accel: false
+          emulator-options: >-
+            -no-window -gpu swiftshader_indirect -no-snapshot -no-snapshot-save
+            -noaudio -no-boot-anim -camera-back none -camera-front none -accel on
+            -cores 4 -memory 4096
+          script: bash .github/scripts/d42-ui.sh ui-out
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: d42-ui-robots
+          path: ui-out/
+          retention-days: 30
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
+  # PHASE 5b — 12 RENDUS DE RÉFÉRENCE EN QUALITÉ DE PRODUCTION (1080x1920, 30 FPS)
+  #   Couverture documentée : 6 secteurs × 2, 4 langues × 3, T1/T2/T3/T4/T5,
+  #   dont le T4 (cartes commerciales, 17 scènes) et le japonais (CJK).
+  #   Ces rendus ne sont PAS fusionnés avec les 120 de validation : la règle de
+  #   classification de D42 interdit de confondre 540x960 et 1080x1920.
+  # ---------------------------------------------------------------------------
+  reference:
+    name: "référence production ${{ matrix.lang }} (3 rendus 1080p)"
+    if: >-
+      ${{ always() && github.event_name == 'workflow_dispatch'
+          && github.event.inputs.run_matrix != '0'
+          && (github.event.inputs.profils == 'production' || github.event.inputs.profils == 'both')
+          && (needs.smoke.result == 'success'
+              || (github.event.inputs.run_smoke == '0' && needs.smoke.result == 'skipped')) }}
+    runs-on: ubuntu-22.04
+    needs: [preflight, build, smoke]
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        lang: [fr, en, es, ja]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.D42_JAVA }}
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: d42-apk
+          path: apk
+
+      - name: Libérer de l'espace disque
+        run: |
+          sudo rm -rf /usr/local/lib/android/sdk/ndk /usr/share/dotnet \
+                      /opt/hostedtoolcache/CodeQL /opt/hostedtoolcache/go || true
+          sudo docker image prune -af >/dev/null 2>&1 || true
+          df -h / | tail -1
+
+      - name: Émulateur + image système (téléchargement avec reprises)
+        # Flake observé au run 41635970684 : « An error occurred while preparing
+        # SDK package Android Emulator: Archive is not a ZIP archive », puis
+        # « could not connect to TCP port 5554 ». Le paquet SDK était corrompu
+        # au téléchargement : l'action renonce et le job meurt en 1 min, après
+        # avoir déjà payé la compilation. Trois tentatives, puis vérification
+        # que le binaire existe vraiment.
+        run: |
+          SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          API="${{ github.event.inputs.api_level || '34' }}"
+          ok=0
+          for i in 1 2 3; do
+            echo "tentative $i"
+            if yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --install \
+                 "emulator" "system-images;android-$API;google_apis;x86_64" >/dev/null; then
+              ok=1; break
+            fi
+            sleep 15
+          done
+          if [ "$ok" -ne 1 ] || [ ! -x "$SDK/emulator/emulator" ]; then
+            echo "::error title=SDK ÉMULATEUR INDISPONIBLE::trois téléchargements ont échoué (BLOCKED_ENVIRONMENT)"
+            exit 1
+          fi
+          "$SDK/emulator/emulator" -version | head -2
+
+      - name: Donner l'accès à /dev/kvm
+        run: |
+          sudo chmod 666 /dev/kvm 2>/dev/null || true
+          sudo gpasswd -a "$USER" kvm 2>/dev/null || true
+          python3 -c "import fcntl,os;print('ioctl KVM_OK=%d' % fcntl.ioctl(os.open('/dev/kvm', os.O_RDWR), 0xAE00))" \
+            || echo "::warning::KVM indisponible"
+
+      - name: Rendu des 3 gabarits de référence (1080x1920)
+        uses: ReactiveCircus/android-emulator-runner@c9c93e6ba9c4194322e114c40970d5983d9a07cc # v2.38.0
+        with:
+          api-level: ${{ github.event.inputs.api_level || '34' }}
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          disable-linux-hw-accel: false
+          emulator-options: >-
+            -no-window -gpu swiftshader_indirect -no-snapshot -no-snapshot-save
+            -noaudio -no-boot-anim -camera-back none -camera-front none -accel on
+            -cores 4 -memory 4096
+          script: >-
+            bash .github/scripts/d42-render.sh matrix ${{ matrix.lang }} ref
+            "renders-ref-${{ matrix.lang }}" 1800 none production
+
+      - name: Manifeste des références
+        if: always()
+        run: |
+          d="renders-ref-${{ matrix.lang }}"
+          mkdir -p "$d"
+          find "$d" -name '*.mp4' -exec sha256sum {} \; | tee "REF-${{ matrix.lang }}.sha256" || true
+          echo "références ${{ matrix.lang }} : $(find "$d" -name '*.mp4' | wc -l)/3"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: d42-ref-${{ matrix.lang }}
+          path: |
+            renders-ref-${{ matrix.lang }}/
+            REF-${{ matrix.lang }}.sha256
+          retention-days: 30
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
+  # Analyse média sur les MP4 RÉELS (ffprobe / ebur128 / astats)
+  # ---------------------------------------------------------------------------
+  media:
+    name: "analyse média (ffprobe + EBU R128)"
+    runs-on: ubuntu-latest
+    needs: [validation, reference]
+    # Analyse dès qu'UNE des deux séries a produit des fichiers : un lot de
+    # références lancé seul doit tout de même être mesuré.
+    if: ${{ always() && (needs.validation.result == 'success' || needs.reference.result == 'success') }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: d42-renders-*
+          path: renders
+
+      - name: Références de production (facultatif)
+        continue-on-error: true
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: d42-ref-*
+          path: renders
+
+      - name: Outils média (ffprobe/ffmpeg absents des runners)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          ffprobe -version | head -1
+
+      - name: Mesures par fichier
+        run: |
+          mkdir -p reports
+          python3 - <<'PY' | tee reports/synthese.txt
+          import json, subprocess, glob, os
+          lignes, ok, ko = [], 0, 0
+          for f in sorted(glob.glob("renders/**/*.mp4", recursive=True)):
+              base = os.path.basename(f)
+              if base == "cache-export-1.mp4":
+                  continue     # capture de diagnostic, pas un rendu
+              dossier = f.split(os.sep)[-2]
+              try:
+                  d = json.loads(subprocess.run(
+                      ["ffprobe", "-v", "error", "-show_streams", "-show_format",
+                       "-of", "json", f], capture_output=True, text=True, timeout=120).stdout)
+              except Exception:
+                  d = {}
+              streams = d.get("streams", [])
+              v = next((s for s in streams if s.get("codec_type") == "video"), {})
+              a = next((s for s in streams if s.get("codec_type") == "audio"), {})
+              dur = float(d.get("format", {}).get("duration", 0) or 0)
+              w, h = int(v.get("width", 0)), int(v.get("height", 0))
+              rot = 0
+              for sd in v.get("side_data_list", []) or []:
+                  if "rotation" in sd:
+                      rot = abs(int(float(sd["rotation"])))
+              if rot in (90, 270):
+                  w, h = h, w
+              fps = v.get("r_frame_rate", "0/1")
+              try:
+                  num, den = fps.split("/")
+                  fps_v = round(float(num) / float(den), 2) if float(den) else 0
+              except Exception:
+                  fps_v = 0
+              # LUFS integre + true peak (EBU R128)
+              sortie = subprocess.run(
+                  ["ffmpeg", "-hide_banner", "-nostats", "-i", f,
+                   "-af", "ebur128=peak=true", "-f", "null", "-"],
+                  capture_output=True, text=True).stderr
+              lufs, tp = 0.0, 0.0
+              for ligne in sortie.splitlines():
+                  if "I:" in ligne and "LUFS" in ligne:
+                      try: lufs = float(ligne.split("I:")[1].split()[0])
+                      except Exception: pass
+                  if "Peak:" in ligne and "dBFS" in ligne:
+                      try: tp = float(ligne.split("Peak:")[1].split()[0])
+                      except Exception: pass
+              statut = "OK"
+              if dur <= 0: statut = "ECHEC_DUREE"
+              elif not v: statut = "ECHEC_PAS_DE_VIDEO"
+              elif not a: statut = "ECHEC_PAS_DAUDIO"
+              elif lufs == 0.0: statut = "ECHEC_AUDIO_MUET"
+              if statut == "OK": ok += 1
+              else: ko += 1
+              profil = "production" if "ref" in dossier else "validation"
+              lignes.append([base, dossier, profil, f"{dur:.2f}", f"{w}x{h}",
+                             f"{fps_v}", v.get("codec_name", "-"), a.get("codec_name", "-"),
+                             f"{lufs:.1f}", f"{tp:.1f}", statut])
+          entete = ["gabarit", "dossier", "profil", "duree_s", "resolution", "fps",
+                    "codec_v", "codec_a", "LUFS_I", "true_peak_dBTP", "statut"]
+          with open("reports/media.md", "w") as md:
+              md.write("| " + " | ".join(entete) + " |\n")
+              md.write("|" + "---|" * len(entete) + "\n")
+              for l in lignes:
+                  md.write("| " + " | ".join(l) + " |\n")
+          print(f"OK={ok} ECHECS={ko} FICHIERS={len(lignes)}")
+          PY
+          cat reports/synthese.txt >> "$GITHUB_STEP_SUMMARY"
+          head -14 reports/media.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Refus du succès cosmétique (aucune mesure = échec)
+        run: |
+          ligne=$(cat reports/synthese.txt)
+          echo "$ligne"
+          ok=$(echo "$ligne" | sed -n 's/.*OK=\([0-9]*\).*/\1/p')
+          fichiers=$(echo "$ligne" | sed -n 's/.*FICHIERS=\([0-9]*\).*/\1/p')
+          if [ -z "${ok:-}" ] || [ "${ok:-0}" -eq 0 ] || [ "${fichiers:-0}" -eq 0 ]; then
+            echo "::error title=ANALYSE MÉDIA VIDE::aucun MP4 mesuré — le job ne peut pas être vert"
+            exit 1
+          fi
+          if [ "$ok" -ne "$fichiers" ]; then
+            echo "::warning title=MP4 NON CONFORMES::$((fichiers-ok)) fichier(s) en échec (voir media.md)"
+          fi
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: d42-media-analysis
+          path: reports/
+          retention-days: 30
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
+  # Planches contact : preuves visuelles consultables depuis GitHub
+  # ---------------------------------------------------------------------------
+  contact-sheets:
+    name: "planches contact (frames réelles)"
+    runs-on: ubuntu-latest
+    needs: [validation, reference]
+    if: ${{ always() && (needs.validation.result == 'success' || needs.reference.result == 'success') }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: d42-renders-*
+          path: renders
+
+      - name: Outils média (ffprobe/ffmpeg absents des runners)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+
+      - name: Extraction + tuilage
+        run: |
+          mkdir -p sheets
+          for f in $(find renders -name '*.mp4' ! -name 'cache-export-1.mp4' | sort); do
+            base=$(basename "$f" .mp4)
+            lang=$(basename "$(dirname "$f")")
+            tmp=$(mktemp -d)
+            dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")
+            for pct in 5 20 40 60 80 95; do
+              t=$(python3 -c "print(round(float('$dur')*$pct/100,2))")
+              ffmpeg -v error -ss "$t" -i "$f" -frames:v 1 -q:v 3 "$tmp/f$pct.jpg" || true
+            done
+            ffmpeg -v error -pattern_type glob -i "$tmp/*.jpg"               -filter_complex "scale=300:-1,tile=6x1" -frames:v 1               "sheets/${lang}__${base}.jpg" || true
+            rm -rf "$tmp"
+          done
+          chmod -R a+r sheets
+          {
+            echo "## Planches contact"
+            echo ""
+            echo "| langue | gabarit | fichier |"
+            echo "|---|---|---|"
+            for s in $(ls sheets/*.jpg 2>/dev/null); do
+              n=$(basename "$s" .jpg); l=${n%%__*}; g=${n#*__}
+              echo "| $l | $g | $s |"
+            done
+          } > sheets/INDEX.md
+          echo "planches: $(ls sheets/*.jpg 2>/dev/null | wc -l)" >> sheets/INDEX.md
+          head -8 sheets/INDEX.md >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: d42-contact-sheets
+          path: sheets/
+          retention-days: 14
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
+  # Récapitulatif : aucun maillon manquant ne peut passer pour un succès
+  # ---------------------------------------------------------------------------
+  ci-summary:
+    name: "récapitulatif D42"
+    runs-on: ubuntu-latest
+    needs: [preflight, build, smoke, validation, reference]
+    if: always()
+    timeout-minutes: 5
+    steps:
+      - name: Verdict
+        run: |
+          {
+            echo "## D42 — récapitulatif"
+            echo ""
+            echo "| maillon | résultat |"
+            echo "|---|---|"
+            echo "| preflight (KVM) | ${{ needs.preflight.result }} — mode=${{ needs.preflight.outputs.mode }} |"
+            echo "| build (APK app + test) | ${{ needs.build.result }} |"
+            echo "| smoke (1 rendu moteur réel) | ${{ needs.smoke.result }} |"
+            echo "| validation 540x960 (120 visés) | ${{ needs.validation.result }} |"
+            echo "| référence 1080x1920 (12 visés) | ${{ needs.reference.result }} |"
+            echo ""
+            echo "> Un émulateur n'est pas un téléphone : aucune ligne de ce rapport"
+            echo "> ne vaut certification de compatibilité physique."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "événement=${{ github.event_name }} build=${{ needs.build.result }} smoke=${{ needs.smoke.result }}"
+          if [ "${{ needs.preflight.result }}" = "failure" ] || [ "${{ needs.build.result }}" != "success" ]; then
+            echo "::error title=D42 BLOQUE::preflight ou build en échec"; exit 1
+          fi
+          # Sur un push, seuls preflight et build tournent : rien d'autre à juger.
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            echo "push : build seul jugé (rendus déclenchés uniquement)"
+            exit 0
+          fi
+          if [ "${{ needs.smoke.result }}" != "success" ]; then
+            echo "::error title=D42 BLOQUE::le smoke n'a pas prouvé l'exécution du moteur (BLOCKED_ENVIRONMENT si l'émulateur n'a pas démarré)"; exit 1
+          fi

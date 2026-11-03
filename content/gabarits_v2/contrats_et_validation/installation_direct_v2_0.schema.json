@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Enregistrement d’installation APK direct – V2.0",
+  "description": "Défi créé avant la clé attestée ; valider chaîne, extension, possession et politique côté Worker. UNAVAILABLE reste non attesté et son motif est déclaré par le client.",
+  "type": "object",
+  "required": [
+    "installation_id",
+    "challenge_b64url",
+    "public_key_spki_b64url",
+    "possession_signature_der_b64url",
+    "evidence"
+  ],
+  "properties": {
+    "installation_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "challenge_b64url": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "public_key_spki_b64url": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "possession_signature_der_b64url": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "evidence": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "certificate_chain_der_b64url"
+          ],
+          "properties": {
+            "type": {
+              "const": "ANDROID_KEY_ATTESTATION"
+            },
+            "certificate_chain_der_b64url": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16384,
+                "pattern": "^[A-Za-z0-9_-]+$"
+              },
+              "description": "Chaîne DER retournée par Keystore ; taille totale limitée par le Worker et validation cryptographique obligatoire."
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "reason_code"
+          ],
+          "properties": {
+            "type": {
+              "const": "UNAVAILABLE"
+            },
+            "reason_code": {
+              "enum": [
+                "DEVICE_UNSUPPORTED",
+                "KEY_ATTESTATION_UNAVAILABLE",
+                "OTHER"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "reported_apk_cert_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Déclaré par le client, falsifiable ; jamais une preuve serveur."
+    }
+  },
+  "additionalProperties": false
+}

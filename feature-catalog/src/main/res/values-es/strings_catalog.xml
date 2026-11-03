@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="catalog_title">Elige una plantilla de vídeo</string>
+    <string name="catalog_offline">Sin conexión: plantillas en caché</string>
+    <string name="skin_new_arrival">Novedades y Recién Llegados</string>
+    <string name="skin_before_after">Antes / Después de la Transformación</string>
+    <string name="skin_quick_presentation">Presentación Rápida de Producto</string>
+    <string name="skin_flash_promo">Promo Flash y Descuento</string>
+    <string name="skin_customer_review">Testimonio y Opinión de Cliente</string>
+    <string name="catalog_sector_focus">Plantillas adaptadas a tu comercio: %1$s</string>
+    <string name="catalog_skins_unavailable">El catálogo de estilos no está disponible por ahora. Los 30 formatos universales siguen disponibles.</string>
+</resources>

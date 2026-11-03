@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Contenu du JWS de bienvenue sans expiration – V2.0",
+  "description": "Au plus trois permis pour le compte ; aucune expiration ni aucun abonnement ou paiement fictif. Contrôler signature, quota, installation et temps fiable.",
+  "type": "object",
+  "required": [
+    "iss",
+    "aud",
+    "sub",
+    "jti",
+    "iat",
+    "nbf",
+    "purpose",
+    "expiration_policy",
+    "grant_id",
+    "installation_id",
+    "cnf",
+    "permit_first",
+    "permit_count",
+    "export_allowed",
+    "clean_export_allowed",
+    "watermarked_export_allowed",
+    "server_time_ms",
+    "challenge_sha256",
+    "shader_payload_id",
+    "shader_ciphertext_sha256",
+    "shader_key_sha256"
+  ],
+  "properties": {
+    "iss": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "aud": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "sub": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "jti": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "iat": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "nbf": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "purpose": {
+      "const": "WELCOME_EXPORT_LICENCE"
+    },
+    "expiration_policy": {
+      "const": "NONE"
+    },
+    "grant_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "installation_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "cnf": {
+      "type": "object",
+      "required": [
+        "spki_sha256"
+      ],
+      "properties": {
+        "spki_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "permit_first": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "permit_count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3
+    },
+    "export_allowed": {
+      "const": true
+    },
+    "clean_export_allowed": {
+      "const": true
+    },
+    "watermarked_export_allowed": {
+      "const": false
+    },
+    "server_time_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "challenge_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "shader_payload_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "shader_ciphertext_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "shader_key_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

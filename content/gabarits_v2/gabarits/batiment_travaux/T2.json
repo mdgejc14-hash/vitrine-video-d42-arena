@@ -1,0 +1,1788 @@
+{
+  "id": "batiment_travaux_T2",
+  "secteur": "batiment_travaux",
+  "secteur_libelle": "Bâtiment & Travaux",
+  "format": "T2_avant_apres",
+  "version": "2.0_theorique",
+  "duree_totale_secondes": 35,
+  "nombre_scenes": 17,
+  "ratio": "9:16",
+  "notes_adaptation": "On montre le chantier au début, deux étapes de travail, puis le résultat fini. Les travaux ne sont pas remplacés par des images inventées.",
+  "champs_saisie": [
+    {
+      "id": "nom_commerce",
+      "label": "Nom de votre commerce",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Bâtir Pro",
+      "source": "saisie_video",
+      "scenes": [
+        17
+      ],
+      "groupe_ui": "commerce_contact",
+      "aide_simple": "Écrivez le nom que les clients doivent voir."
+    },
+    {
+      "id": "nom_offre",
+      "label": "Nom du travail à faire",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Rénovation cuisine",
+      "source": "saisie_video",
+      "scenes": [
+        9
+      ],
+      "groupe_ui": "offre",
+      "aide_simple": "Écrivez le nom du plat, du produit ou du travail."
+    },
+    {
+      "id": "prix",
+      "label": "Prix du travail",
+      "type": "nombre",
+      "obligatoire": true,
+      "exemple": "15000",
+      "source": "saisie_video",
+      "scenes": [
+        16
+      ],
+      "groupe_ui": "prix",
+      "aide_simple": "Écrivez le vrai prix. La monnaie FCFA est choisie par défaut."
+    },
+    {
+      "id": "devise",
+      "label": "Monnaie",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "FCFA",
+      "source": "saisie_video",
+      "scenes": [
+        16
+      ],
+      "defaut": "FCFA",
+      "groupe_ui": "prix",
+      "affichage_ui": "sélecteur compact; FCFA proposé par défaut pour cette vidéo",
+      "aide_simple": "FCFA est déjà choisi. Change-le seulement si besoin."
+    },
+    {
+      "id": "quartier_ville",
+      "label": "Quartier et ville",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Akpakpa, Cotonou",
+      "source": "saisie_video",
+      "scenes": [
+        17
+      ],
+      "groupe_ui": "lieu",
+      "aide_simple": "Écrivez le quartier et la ville où les clients peuvent venir."
+    },
+    {
+      "id": "whatsapp",
+      "label": "votre numéro WhatsApp",
+      "type": "telephone",
+      "obligatoire": true,
+      "exemple": "+229 97 00 00 00",
+      "source": "saisie_video",
+      "scenes": [
+        17
+      ],
+      "validation": "format_international",
+      "groupe_ui": "commerce_contact",
+      "aide_simple": "Écrivez le numéro sur lequel les clients peuvent vous écrire, avec le + et le code du pays."
+    },
+    {
+      "id": "badge_engagement_actif",
+      "label": "Afficher un message spécial (facultatif)",
+      "type": "case_a_cocher",
+      "obligatoire": false,
+      "exemple": false,
+      "source": "saisie_video",
+      "scenes": [
+        13
+      ],
+      "defaut": false,
+      "choix": [
+        "stock_limite",
+        "places_limitees",
+        "qualite_garantie"
+      ],
+      "groupe_ui": "options_avancees",
+      "afficher_par_defaut": false,
+      "aide_simple": "Laissez désactivé, sauf si le message est vrai."
+    }
+  ],
+  "politique_saisie": {
+    "mode": "saisie_video",
+    "recollecter_a_chaque_video": true,
+    "enregistrer_dans_profil": false,
+    "pre_remplissage_automatique": false,
+    "numero_whatsapp_obligatoire": true,
+    "prix_obligatoire_sauf_T5": true,
+    "format_prix": "15 000 FCFA",
+    "badge_engagement_actif_par_defaut": false
+  },
+  "prises": [
+    {
+      "id": "prise_1",
+      "libelle": "Le chantier au début",
+      "duree_cible_s": 12,
+      "consigne_camera": "Filmez le chantier au début depuis un endroit sûr. Gardez le même endroit pour les autres vidéos.",
+      "type_plan": "plan_large",
+      "mouvement": "fixe",
+      "lumiere": "exterieur_ombre_douce",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        1,
+        2,
+        3
+      ],
+      "guide_parole_scenes": [
+        2
+      ],
+      "segments_guide_parole": [
+        {
+          "scene": 2,
+          "quoi_raconter": "Dites ce qui a changé.",
+          "quoi_montrer": "Montrez le chantier au début, puis l’étape suivante.",
+          "exemple": "Voici le chantier au début.",
+          "note_exemple": "Exemple pour comprendre, pas à répéter.",
+          "duree_conseillee_s": 2.0,
+          "segment_audio_id": "T2_scene_02_voix"
+        }
+      ]
+    },
+    {
+      "id": "prise_2",
+      "libelle": "Une première étape",
+      "duree_cible_s": 12,
+      "consigne_camera": "Filmez une première étape du travail depuis le même endroit.",
+      "type_plan": "plan_moyen",
+      "mouvement": "travelling_avant",
+      "lumiere": "exterieur_ombre_douce",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        4,
+        5,
+        6,
+        10,
+        13,
+        14
+      ],
+      "guide_parole_scenes": [],
+      "segments_guide_parole": []
+    },
+    {
+      "id": "prise_3",
+      "libelle": "Une deuxième étape",
+      "duree_cible_s": 12,
+      "consigne_camera": "Filmez une autre étape du travail depuis le même endroit.",
+      "type_plan": "plan_moyen",
+      "mouvement": "travelling_avant",
+      "lumiere": "exterieur_ombre_douce",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        7,
+        8,
+        9,
+        15
+      ],
+      "guide_parole_scenes": [],
+      "segments_guide_parole": []
+    },
+    {
+      "id": "prise_4",
+      "libelle": "Le travail terminé",
+      "duree_cible_s": 12,
+      "consigne_camera": "Quand le travail est fini, filme le résultat depuis le même endroit.",
+      "type_plan": "plan_large",
+      "mouvement": "pano_lent",
+      "lumiere": "exterieur_ombre_douce",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        11
+      ],
+      "guide_parole_scenes": [],
+      "segments_guide_parole": []
+    }
+  ],
+  "scenes": [
+    {
+      "numero": 1,
+      "acte": "hook",
+      "role": "hook_site_avant",
+      "duree_secondes": 2.5,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "Voici le chantier au début et à la fin.",
+        "position": "centre_haut",
+        "animation": "badge_slide_snap",
+        "apparition_s": 0.0,
+        "disparition_s": 2.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "raccord_panorama",
+      "effet": "freeze_0.5s",
+      "sfx": "impact_drop",
+      "action_montage": "La vidéo commence par « voici le chantier au début et à la fin ». Ça donne envie de regarder.",
+      "etalonnage_scene": "avant_froid",
+      "sfx_libelle_simple": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 2,
+      "acte": "preuve",
+      "role": "etendue_chantier_initial",
+      "duree_secondes": 1.773,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "AU DÉBUT",
+        "position": "centre",
+        "animation": "price_shake_impact",
+        "apparition_s": 0.0,
+        "disparition_s": 1.773
+      },
+      "voix": {
+        "active": true,
+        "source_audio_prise_id": "prise_1",
+        "segment_audio_id": "T2_scene_02_voix",
+        "audio_separe_de_image": true,
+        "vitesse_audio": 1.0
+      },
+      "transition_sortie": "fondu_noir",
+      "effet": "freeze_1s",
+      "sfx": "amb_chantier",
+      "action_montage": "L’application reprend une partie de « Le chantier au début ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "etalonnage_scene": "avant_froid",
+      "sfx_libelle_simple": "Petit son discret",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "duree_affichee_s": 2.0,
+        "idee": "Montrez le chantier au début, puis l’étape suivante. Dites ce qui a changé.",
+        "quoi_raconter": "Dites ce qui a changé.",
+        "quoi_montrer": "Montrez le chantier au début, puis l’étape suivante.",
+        "exemple": "Voici le chantier au début.",
+        "exemple_langue_libre": "Dites cette idée avec vos mots, en français ou dans la langue que vous voulez.",
+        "theme": "accroche",
+        "conseil": "Filmez les deux moments depuis le même endroit.",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 1,
+          "segment_audio_id": "T2_scene_02_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez le chantier au début, puis l’étape suivante.",
+          "quoi_raconter": "Dites ce qui a changé."
+        },
+        "cles": {
+          "idee": "guide.batiment_travaux.T2.scene_02.idee",
+          "quoi_raconter": "guide.batiment_travaux.T2.scene_02.quoi_raconter",
+          "quoi_montrer": "guide.batiment_travaux.T2.scene_02.quoi_montrer",
+          "exemple": "guide.batiment_travaux.T2.scene_02.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.batiment_travaux.T2.scene_02.conseil"
+        }
+      }
+    },
+    {
+      "numero": 3,
+      "acte": "preuve",
+      "role": "repere_zone_travaux",
+      "duree_secondes": 2.333,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_gauche",
+        "animation": "line_draw_spec",
+        "apparition_s": 0.0,
+        "disparition_s": 2.333
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "panoramique_raccord",
+      "effet": "stabilisation_auto",
+      "sfx": "amb_chantier",
+      "action_montage": "L’application reprend une partie de « Le chantier au début ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 4,
+      "acte": "preuve",
+      "role": "jalon_fondations",
+      "duree_secondes": 2.388,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 4.0
+      },
+      "texte_ecran": {
+        "contenu": "LE TRAVAIL EN COURS",
+        "position": "tiers_droit",
+        "animation": "caption_breath_fade",
+        "apparition_s": 0.0,
+        "disparition_s": 2.388
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "slide_doux",
+      "effet": "accelere_x4",
+      "sfx": "amb_chantier",
+      "action_montage": "L’application montre « Une première étape » un peu plus vite pour ne pas faire attendre.",
+      "sfx_libelle_simple": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 5,
+      "acte": "preuve",
+      "role": "progression_mur_acceleree",
+      "duree_secondes": 2.411,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "160%",
+        "vitesse": 4.0
+      },
+      "texte_ecran": {
+        "contenu": "LE TRAVAIL EN COURS",
+        "position": "centre",
+        "animation": "split_label_track",
+        "apparition_s": 0.0,
+        "disparition_s": 2.411
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "fondu_croise_temps",
+      "effet": "accelere_x4",
+      "sfx": "amb_chantier",
+      "action_montage": "L’application montre « Une première étape » un peu plus vite pour ne pas faire attendre.",
+      "sfx_libelle_simple": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 6,
+      "acte": "preuve",
+      "role": "jalon_structure_x4",
+      "duree_secondes": 2.329,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "100%",
+        "vitesse": 4.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_gauche",
+        "animation": "reveal_mask_text",
+        "apparition_s": 0.0,
+        "disparition_s": 2.329
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "accelere_x4",
+      "sfx": "amb_chantier",
+      "action_montage": "L’application montre « Une première étape » un peu plus vite pour ne pas faire attendre.",
+      "sfx_libelle_simple": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 7,
+      "acte": "preuve",
+      "role": "pose_reseaux",
+      "duree_secondes": 2.516,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "LE TRAVAIL EN COURS",
+        "position": "tiers_droit",
+        "animation": "pulse_cta_soft",
+        "apparition_s": 0.0,
+        "disparition_s": 2.516
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "panoramique_raccord",
+      "effet": "freeze_1s",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Une deuxième étape ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 8,
+      "acte": "preuve",
+      "role": "enduit_finition",
+      "duree_secondes": 2.046,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "LE TRAVAIL EN COURS",
+        "position": "centre",
+        "animation": "countdown_tick",
+        "apparition_s": 0.0,
+        "disparition_s": 2.046
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "fondu_croise_temps",
+      "effet": "stabilisation_hero",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Une deuxième étape ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 9,
+      "acte": "preuve",
+      "role": "detail_metier_livre",
+      "duree_secondes": 1.955,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_gauche",
+        "animation": "side_tag_animate",
+        "apparition_s": 0.0,
+        "disparition_s": 1.955
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "pan_scan_spec",
+      "sfx": "impact_drop",
+      "action_montage": "L’application reprend une partie de « Une deuxième étape ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 10,
+      "acte": "preuve",
+      "role": "transition_fondu_temps",
+      "duree_secondes": 1.649,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_droit",
+        "animation": "kinetic_number",
+        "apparition_s": 0.0,
+        "disparition_s": 1.649
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "slide_doux",
+      "effet": "recadrage_plan_100",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Une première étape ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 11,
+      "acte": "preuve",
+      "role": "plan_large_livraison_stabilise",
+      "duree_secondes": 1.362,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_4",
+        "recadrage": "160%",
+        "vitesse": 5.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "typing_price_roll",
+        "apparition_s": 0.0,
+        "disparition_s": 1.362
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "fondu_croise_temps",
+      "effet": "speed_ramp_x5",
+      "sfx": "impact_drop",
+      "action_montage": "L’application montre « Le travail terminé » plus lentement pour laisser voir le résultat.",
+      "etalonnage_scene": "apres_eclatant",
+      "sfx_libelle_simple": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 12,
+      "acte": "reassurance",
+      "role": "badge_chantier_livre",
+      "duree_secondes": 1.092,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t2_batiment_travaux"
+      },
+      "texte_ecran": {
+        "contenu": "À RETENIR",
+        "position": "tiers_gauche",
+        "animation": "wipe_label",
+        "apparition_s": 0.0,
+        "disparition_s": 1.092
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "panoramique_raccord",
+      "effet": "freeze_1s",
+      "sfx": "amb_chantier",
+      "action_montage": "L’application affiche les mots « À RETENIR » à l’écran.",
+      "carte_generee_id": "carte_signature_t2_batiment_travaux",
+      "sfx_libelle_simple": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 13,
+      "acte": "preuve",
+      "role": "jalon_elevation_mur",
+      "duree_secondes": 1.161,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 4.0
+      },
+      "texte_ecran": {
+        "contenu": "LE TRAVAIL EN COURS",
+        "position": "tiers_droit",
+        "animation": "lower_third_glide",
+        "apparition_s": 0.0,
+        "disparition_s": 1.161
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "accelere_x4",
+      "sfx": "amb_chantier",
+      "action_montage": "L’application montre « Une première étape » un peu plus vite pour ne pas faire attendre.",
+      "sfx_libelle_simple": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 14,
+      "acte": "preuve",
+      "role": "jalon_pose_equipement",
+      "duree_secondes": 1.298,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "160%",
+        "vitesse": 4.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "badge_slide_snap",
+        "apparition_s": 0.0,
+        "disparition_s": 1.298
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "raccord_panorama",
+      "effet": "accelere_x4",
+      "sfx": "amb_chantier",
+      "action_montage": "L’application montre « Une première étape » un peu plus vite pour ne pas faire attendre.",
+      "sfx_libelle_simple": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 15,
+      "acte": "reassurance",
+      "role": "inspection_finition_detail",
+      "duree_secondes": 1.668,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_3",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "INFORMATIONS",
+        "position": "tiers_gauche",
+        "animation": "price_shake_impact",
+        "apparition_s": 0.0,
+        "disparition_s": 1.668
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "slide_doux",
+      "effet": "stabilisation_hero",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Une deuxième étape ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 16,
+      "acte": "offre",
+      "role": "prix_devis",
+      "duree_secondes": 2.019,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_geant"
+      },
+      "texte_ecran": {
+        "contenu": "{prix} {devise}",
+        "position": "tiers_droit",
+        "animation": "compteur_countup",
+        "apparition_s": 0.0,
+        "disparition_s": 2.019
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "speed_ramp_x5",
+      "sfx": "caisse_enregistreuse",
+      "action_montage": "L’application affiche le vrai prix que vous avez entré.",
+      "carte_generee_id": "carte_prix_geant",
+      "sfx_libelle_simple": "Petit son au moment du prix",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 17,
+      "acte": "cta",
+      "role": "carte_contact",
+      "duree_secondes": 4.5,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_whatsapp_finale"
+      },
+      "texte_ecran": {
+        "contenu": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+        "position": "centre_bas",
+        "animation": "whatsapp_pulsant",
+        "apparition_s": 0.0,
+        "disparition_s": 4.5
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "fondu_enchaine",
+      "effet": "aucun_effet",
+      "sfx": "whoosh_soft",
+      "action_montage": "À la fin, la vidéo garde le nom de votre commerce, le quartier et le numéro WhatsApp à l’écran.",
+      "carte_generee_id": "carte_whatsapp_finale",
+      "sfx_libelle_simple": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    }
+  ],
+  "montage_signature": {
+    "nom": "T2_batiment_travaux",
+    "id_unique": "T2_batiment_travaux",
+    "rythme_moyen_coupe_s": 1.87,
+    "courbe_rythme": [
+      2.5,
+      1.773,
+      2.333,
+      2.388,
+      2.411,
+      2.329,
+      2.516,
+      2.046,
+      1.955,
+      1.649,
+      1.362,
+      1.092,
+      1.161,
+      1.298,
+      1.668,
+      2.019,
+      4.5
+    ],
+    "transitions": [
+      "raccord_panorama",
+      "fondu_noir",
+      "panoramique_raccord",
+      "slide_doux",
+      "fondu_croise_temps",
+      "cut_sec",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "freeze_1s",
+      "stabilisation_auto",
+      "accelere_x4",
+      "stabilisation_hero",
+      "pan_scan_spec",
+      "recadrage_plan_100",
+      "speed_ramp_x5",
+      "aucun_effet"
+    ],
+    "zoom": {
+      "type": "recadrages_roles_et_sujet",
+      "min": 1.0,
+      "max": 1.6
+    },
+    "signature_detail": "On montre le chantier au début, deux étapes de travail, puis le résultat fini. Les travaux ne sont pas remplacés par des images inventées."
+  },
+  "etalonnage": {
+    "preset": "grade_batiment_travaux_t2",
+    "preset_avant": "avant_froid",
+    "preset_apres": "apres_eclatant",
+    "exposition_ev": 0.2,
+    "contraste": 1.06,
+    "saturation": 1.0,
+    "temperature_k": 5500,
+    "vignettage": 0.1,
+    "nettete": 0.18,
+    "protection_peau": true,
+    "protection_peau_detail": "Peaux foncées incluses : préserver les hautes lumières du visage et vérifier l’exposition; fidélité textile/carrosserie et nourriture avant stylisation.",
+    "denoise_faible_lumiere": true,
+    "stabilisation": true,
+    "consigne_lumiere": "Filmez en lumière du jour si possible; gardez les lignes droites, montre la zone réelle et ne filme que les étapes sûres.",
+    "preset_avant_ref": "avant_froid",
+    "preset_apres_ref": "apres_eclatant"
+  },
+  "style_visuel": {
+    "typographie": {
+      "preset": "sans_serif_bold_condensee",
+      "graisse": "900",
+      "couleur_texte": "#FFFFFF",
+      "contour": "#000000",
+      "fond_texte": "#FF5500"
+    },
+    "palette": "palette_T3_neutre",
+    "badges": [
+      "avant",
+      "apres"
+    ],
+    "badges_optionnels_actives_par_commercant": [
+      "stock_limite",
+      "places_limitees",
+      "qualite_garantie"
+    ],
+    "engagements_optionnels_actifs_par_defaut": false
+  },
+  "audio": {
+    "musique": {
+      "genre": "afrobeats chantier instrumental",
+      "bpm_min": 94,
+      "bpm_max": 108,
+      "structure": "hook court, progression accordée aux rôles, accent sur preuve/révélation, sortie propre sous carte CTA",
+      "structure_id": "audio_structure_batiment_travaux_t2",
+      "categorie_audio": "musique_t2_batiment_travaux",
+      "cue_roles": {
+        "riser_role": "plan_large_livraison_stabilise",
+        "drop_scene": 11,
+        "voice_ducking": "VAD; aucun ASR"
+      }
+    },
+    "sfx_scenes": [
+      {
+        "scene": 1,
+        "categorie": "impact_drop"
+      },
+      {
+        "scene": 2,
+        "categorie": "amb_chantier"
+      },
+      {
+        "scene": 3,
+        "categorie": "amb_chantier"
+      },
+      {
+        "scene": 4,
+        "categorie": "amb_chantier"
+      },
+      {
+        "scene": 5,
+        "categorie": "amb_chantier"
+      },
+      {
+        "scene": 6,
+        "categorie": "amb_chantier"
+      },
+      {
+        "scene": 9,
+        "categorie": "impact_drop"
+      },
+      {
+        "scene": 11,
+        "categorie": "impact_drop"
+      },
+      {
+        "scene": 12,
+        "categorie": "amb_chantier"
+      },
+      {
+        "scene": 13,
+        "categorie": "amb_chantier"
+      },
+      {
+        "scene": 14,
+        "categorie": "amb_chantier"
+      },
+      {
+        "scene": 16,
+        "categorie": "caisse_enregistreuse"
+      },
+      {
+        "scene": 17,
+        "categorie": "whoosh_soft"
+      }
+    ],
+    "mix": {
+      "cible_lufs": -14,
+      "ducking_musique_sous_voix_db": -14,
+      "voix_prioritaire": true,
+      "limiteur_true_peak_dbtp": -1.0
+    },
+    "mode_sans_voix": {
+      "actif_par_defaut": false,
+      "compense_par": "texte_ecran_et_pictogrammes",
+      "calage": "BPM et temps forts, sans dépendance ASR"
+    },
+    "interface_commercant": {
+      "genre_en_mots_simples": "Musique rythmée qui accompagne le travail.",
+      "message": "La musique doit rester moins forte que votre voix. Sans voix, les mots à l’écran racontent la vidéo.",
+      "note": "La musique et les petits sons doivent être autorisés pour une vidéo de commerce."
+    }
+  },
+  "copywriting": {
+    "hooks": [
+      "Voici le chantier au début et à la fin.",
+      "Voici le début. Regardez le résultat.",
+      "On vous montre ce qui a changé.",
+      "Regardez le résultat de près.",
+      "Écrivez à {nom_commerce} pour poser vos questions."
+    ],
+    "formules_prix": [
+      "Le résultat coûte {prix} {devise}.",
+      "Prix : {prix} {devise}.",
+      "Écrivez à {nom_commerce} pour le prix."
+    ],
+    "formules_urgence": [
+      "Demandez un rendez-vous si vous en avez besoin.",
+      "Viens voir le résultat chez {nom_commerce}.",
+      "Écrivez-nous pour poser vos questions."
+    ],
+    "formules_cta": [
+      "Écrivez-nous sur WhatsApp : {whatsapp}.",
+      "Viens à {quartier_ville}.",
+      "Contacte {nom_commerce} sur WhatsApp."
+    ],
+    "regles_affichage": {
+      "format_prix": "15 000 FCFA, si c’est le vrai prix saisi",
+      "max_lignes": 2,
+      "max_caracteres_par_ligne": 28,
+      "zone_securite_ref": "zone_securite",
+      "pourcentage_reduction": "calculé automatiquement avec les deux prix saisis",
+      "note": "Phrases courtes. N’affiche pas une offre ou un stock limité si ce n’est pas vrai."
+    }
+  },
+  "variables_calculees": [],
+  "confiance_analyse": {
+    "methode": "theorique",
+    "validation_terrain": "a_faire",
+    "hypotheses_a_valider": [
+      "Lisibilité du hook sur petit écran",
+      "Compréhension du rythme et du vocabulaire local",
+      "Acceptation d’une durée 35 s",
+      "Performance du montage sans voix"
+    ],
+    "aucune_statistique_de_performance_affirmee": true
+  },
+  "signature_montage": {
+    "id_unique": "T2_batiment_travaux",
+    "famille_format": "T2",
+    "empreinte_sequence": [
+      "hook_site_avant|raccord_panorama|freeze_0.5s",
+      "etendue_chantier_initial|fondu_noir|freeze_1s",
+      "repere_zone_travaux|panoramique_raccord|stabilisation_auto",
+      "jalon_fondations|slide_doux|accelere_x4",
+      "progression_mur_acceleree|fondu_croise_temps|accelere_x4",
+      "jalon_structure_x4|cut_sec|accelere_x4",
+      "pose_reseaux|panoramique_raccord|freeze_1s",
+      "enduit_finition|fondu_croise_temps|stabilisation_hero",
+      "detail_metier_livre|cut_sec|pan_scan_spec",
+      "transition_fondu_temps|slide_doux|recadrage_plan_100",
+      "plan_large_livraison_stabilise|fondu_croise_temps|speed_ramp_x5",
+      "badge_chantier_livre|panoramique_raccord|freeze_1s",
+      "jalon_elevation_mur|cut_sec|accelere_x4",
+      "jalon_pose_equipement|raccord_panorama|accelere_x4",
+      "inspection_finition_detail|slide_doux|stabilisation_hero",
+      "prix_devis|cut_sec|speed_ramp_x5",
+      "carte_contact|fondu_enchaine|aucun_effet"
+    ],
+    "courbe_rythme": [
+      2.5,
+      1.773,
+      2.333,
+      2.388,
+      2.411,
+      2.329,
+      2.516,
+      2.046,
+      1.955,
+      1.649,
+      1.362,
+      1.092,
+      1.161,
+      1.298,
+      1.668,
+      2.019,
+      4.5
+    ],
+    "justification_sectorielle": "On montre le chantier au début, deux étapes de travail, puis le résultat fini. Les travaux ne sont pas remplacés par des images inventées."
+  },
+  "etapes_montage": [
+    {
+      "etape": 1,
+      "temps_s": 2.5,
+      "role": "Au début",
+      "action": "La vidéo commence par « voici le chantier au début et à la fin ». Ça donne envie de regarder.",
+      "texte": "Voici le chantier au début et à la fin.",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 2,
+      "temps_s": 1.773,
+      "role": "Au début",
+      "action": "L’application reprend une partie de « Le chantier au début ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "AU DÉBUT",
+      "voix": "Montrez le chantier au début, puis l’étape suivante. Dites ce qui a changé.",
+      "audio": "Petit son discret",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "theme": "accroche",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 1,
+          "segment_audio_id": "T2_scene_02_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez le chantier au début, puis l’étape suivante.",
+          "quoi_raconter": "Dites ce qui a changé."
+        },
+        "cles": {
+          "idee": "guide.batiment_travaux.T2.scene_02.idee",
+          "quoi_raconter": "guide.batiment_travaux.T2.scene_02.quoi_raconter",
+          "quoi_montrer": "guide.batiment_travaux.T2.scene_02.quoi_montrer",
+          "exemple": "guide.batiment_travaux.T2.scene_02.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.batiment_travaux.T2.scene_02.conseil"
+        }
+      }
+    },
+    {
+      "etape": 3,
+      "temps_s": 2.333,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le chantier au début ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 4,
+      "temps_s": 2.388,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application montre « Une première étape » un peu plus vite pour ne pas faire attendre.",
+      "texte": "LE TRAVAIL EN COURS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 5,
+      "temps_s": 2.411,
+      "role": "Le travail en cours",
+      "action": "L’application montre « Une première étape » un peu plus vite pour ne pas faire attendre.",
+      "texte": "LE TRAVAIL EN COURS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 6,
+      "temps_s": 2.329,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application montre « Une première étape » un peu plus vite pour ne pas faire attendre.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 7,
+      "temps_s": 2.516,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Une deuxième étape ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "LE TRAVAIL EN COURS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 8,
+      "temps_s": 2.046,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Une deuxième étape ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "LE TRAVAIL EN COURS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 9,
+      "temps_s": 1.955,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Une deuxième étape ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 10,
+      "temps_s": 1.649,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Une première étape ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 11,
+      "temps_s": 1.362,
+      "role": "Le résultat",
+      "action": "L’application montre « Le travail terminé » plus lentement pour laisser voir le résultat.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 12,
+      "temps_s": 1.092,
+      "role": "Un message à l’écran",
+      "action": "L’application affiche les mots « À RETENIR » à l’écran.",
+      "texte": "À RETENIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 13,
+      "temps_s": 1.161,
+      "role": "Le travail en cours",
+      "action": "L’application montre « Une première étape » un peu plus vite pour ne pas faire attendre.",
+      "texte": "LE TRAVAIL EN COURS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 14,
+      "temps_s": 1.298,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application montre « Une première étape » un peu plus vite pour ne pas faire attendre.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son discret",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 15,
+      "temps_s": 1.668,
+      "role": "Une information utile",
+      "action": "L’application reprend une partie de « Une deuxième étape ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "INFORMATIONS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 16,
+      "temps_s": 2.019,
+      "role": "Le prix",
+      "action": "L’application affiche le vrai prix que vous avez entré.",
+      "texte": "{prix} {devise}",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son au moment du prix",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 17,
+      "temps_s": 4.5,
+      "role": "vos coordonnées",
+      "action": "À la fin, la vidéo garde le nom de votre commerce, le quartier et le numéro WhatsApp à l’écran.",
+      "texte": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    }
+  ],
+  "axes_signature": {
+    "sequence_roles": [
+      "hook_site_avant",
+      "etendue_chantier_initial",
+      "repere_zone_travaux",
+      "jalon_fondations",
+      "progression_mur_acceleree",
+      "jalon_structure_x4",
+      "pose_reseaux",
+      "enduit_finition",
+      "detail_metier_livre",
+      "transition_fondu_temps",
+      "plan_large_livraison_stabilise",
+      "badge_chantier_livre",
+      "jalon_elevation_mur",
+      "jalon_pose_equipement",
+      "inspection_finition_detail",
+      "prix_devis",
+      "carte_contact"
+    ],
+    "nombre_scenes": 17,
+    "courbe_rythme": [
+      2.5,
+      1.773,
+      2.333,
+      2.388,
+      2.411,
+      2.329,
+      2.516,
+      2.046,
+      1.955,
+      1.649,
+      1.362,
+      1.092,
+      1.161,
+      1.298,
+      1.668,
+      2.019,
+      4.5
+    ],
+    "transitions": [
+      "raccord_panorama",
+      "fondu_noir",
+      "panoramique_raccord",
+      "slide_doux",
+      "fondu_croise_temps",
+      "cut_sec",
+      "panoramique_raccord",
+      "fondu_croise_temps",
+      "cut_sec",
+      "slide_doux",
+      "fondu_croise_temps",
+      "panoramique_raccord",
+      "cut_sec",
+      "raccord_panorama",
+      "slide_doux",
+      "cut_sec",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "freeze_1s",
+      "stabilisation_auto",
+      "accelere_x4",
+      "accelere_x4",
+      "accelere_x4",
+      "freeze_1s",
+      "stabilisation_hero",
+      "pan_scan_spec",
+      "recadrage_plan_100",
+      "speed_ramp_x5",
+      "freeze_1s",
+      "accelere_x4",
+      "accelere_x4",
+      "stabilisation_hero",
+      "speed_ramp_x5",
+      "aucun_effet"
+    ],
+    "decoupage_prises": [
+      "prise_1",
+      "prise_1",
+      "prise_1",
+      "prise_2",
+      "prise_2",
+      "prise_2",
+      "prise_3",
+      "prise_3",
+      "prise_3",
+      "prise_2",
+      "prise_4",
+      "carte:carte_signature_t2_batiment_travaux",
+      "prise_2",
+      "prise_2",
+      "prise_3",
+      "carte:carte_prix_geant",
+      "carte:carte_whatsapp_finale"
+    ],
+    "cartes_generees": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "carte_signature_t2_batiment_travaux",
+      "",
+      "",
+      "",
+      "carte_prix_geant",
+      "carte_whatsapp_finale"
+    ],
+    "texte_animation_position": [
+      "badge_slide_snap|centre_haut",
+      "price_shake_impact|centre",
+      "line_draw_spec|tiers_gauche",
+      "caption_breath_fade|tiers_droit",
+      "split_label_track|centre",
+      "reveal_mask_text|tiers_gauche",
+      "pulse_cta_soft|tiers_droit",
+      "countdown_tick|centre",
+      "side_tag_animate|tiers_gauche",
+      "kinetic_number|tiers_droit",
+      "typing_price_roll|centre",
+      "wipe_label|tiers_gauche",
+      "lower_third_glide|tiers_droit",
+      "badge_slide_snap|centre",
+      "price_shake_impact|tiers_gauche",
+      "compteur_countup|tiers_droit",
+      "whatsapp_pulsant|centre_bas"
+    ],
+    "preset_etalonnage": "grade_batiment_travaux_t2",
+    "structure_audio": "audio_structure_batiment_travaux_t2"
+  },
+  "formulaire_ui": {
+    "titre": "Faire ma vidéo",
+    "message": "Suis les étapes. L’application prépare la vidéo pour vous.",
+    "nombre_sections_principales": 4,
+    "limite_sections_principales": 5,
+    "sections_principales": [
+      {
+        "id": "commerce_contact",
+        "titre": "votre commerce et votre WhatsApp",
+        "champs": [
+          "nom_commerce",
+          "whatsapp"
+        ],
+        "aide": "Écrivez le nom de votre commerce et le numéro où les clients peuvent vous écrire.",
+        "ordre": 1,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "offre",
+        "titre": "Ce que vous proposez",
+        "champs": [
+          "nom_offre"
+        ],
+        "aide": "Écrivez le nom du plat, du produit, du soin ou du travail.",
+        "ordre": 2,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "prix",
+        "titre": "Le prix",
+        "champs": [
+          "prix",
+          "devise"
+        ],
+        "aide": "Écrivez le vrai prix. FCFA est déjà choisi si vous ne changes rien.",
+        "ordre": 3,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "lieu",
+        "titre": "Où vous trouver",
+        "champs": [
+          "quartier_ville"
+        ],
+        "aide": "Écrivez le quartier et la ville.",
+        "ordre": 4,
+        "visible_par_defaut": true
+      }
+    ],
+    "options_facultatives_repliees": {
+      "id": "options_avancees",
+      "titre": "Autres options (facultatif)",
+      "champs": [
+        "badge_engagement_actif"
+      ],
+      "visible_par_defaut": false,
+      "aide": "Laissez vide si vous n’êtes pas sûr que le message est vrai."
+    },
+    "devise_defaut": "FCFA",
+    "devise_saisie_par_video": true,
+    "enregistrer_ou_pre_remplir_depuis_profil": false,
+    "note": "vos réponses servent pour cette vidéo seulement. Elles ne sont pas gardées dans un profil."
+  },
+  "guide_tournage": {
+    "message_principal": "Filmez les courtes vidéos demandées. L’application prépare la vidéo pour vous.",
+    "nombre_prises_a_filmer": 4,
+    "duree_brute_cible_par_prise_s": "8–20",
+    "etapes_capture": [
+      {
+        "etape": 1,
+        "prise_id": "prise_1",
+        "quoi_filmer": "Le chantier au début",
+        "consigne": "Filmez le chantier au début depuis un endroit sûr. Gardez le même endroit pour les autres vidéos.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [
+          2
+        ],
+        "guide_parole_segments": [
+          {
+            "scene": 2,
+            "quoi_raconter": "Dites ce qui a changé.",
+            "quoi_montrer": "Montrez le chantier au début, puis l’étape suivante.",
+            "exemple": "Voici le chantier au début.",
+            "note_exemple": "Exemple pour comprendre, pas à répéter.",
+            "duree_conseillee_s": 2.0,
+            "segment_audio_id": "T2_scene_02_voix"
+          }
+        ],
+        "guide_parole_segmentage": "Dans la même prise, afficher les consignes l’une après l’autre. Le bouton Suivant marque la fin de chaque extrait de voix."
+      },
+      {
+        "etape": 2,
+        "prise_id": "prise_2",
+        "quoi_filmer": "Une première étape",
+        "consigne": "Filmez une première étape du travail depuis le même endroit.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [],
+        "guide_parole_segments": [],
+        "guide_parole_segmentage": "Aucune consigne de parole dans cette prise."
+      },
+      {
+        "etape": 3,
+        "prise_id": "prise_3",
+        "quoi_filmer": "Une deuxième étape",
+        "consigne": "Filmez une autre étape du travail depuis le même endroit.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [],
+        "guide_parole_segments": [],
+        "guide_parole_segmentage": "Aucune consigne de parole dans cette prise."
+      },
+      {
+        "etape": 4,
+        "prise_id": "prise_4",
+        "quoi_filmer": "Le travail terminé",
+        "consigne": "Quand le travail est fini, filme le résultat depuis le même endroit.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [],
+        "guide_parole_segments": [],
+        "guide_parole_segmentage": "Aucune consigne de parole dans cette prise."
+      }
+    ],
+    "pas_de_montage_manuel": true,
+    "le_moteur_reutilise_les_rushs": true,
+    "le_commercant_ne_filme_pas_une_scene_par_etape_montage": true,
+    "titre": "Ce que vous devez filmer",
+    "note": "Tenez votre téléphone debout. Filmez près d’une fenêtre ou dehors à l’ombre. Évitez d’avoir la lumière derrière le sujet.",
+    "guide_parole": {
+      "visible_avant_et_pendant_la_prise": true,
+      "consignes_regroupees_par_prise": true,
+      "segments_voix_marques_dans_la_prise": true,
+      "voix_separee_de_la_vitesse_image": true,
+      "titre": "De quoi parler ?",
+      "introduction": "Pour chaque scène parlée, vous voyez quoi montrer, quoi raconter avec vos mots, le temps conseillé et un exemple. L’exemple aide à comprendre; ne le répétez pas mot pour mot.",
+      "langue": "Parlez en français ou dans la langue que vous voulez, par exemple en fon, yoruba ou bariba.",
+      "temps": "Le temps conseillé vous aide à parler brièvement. Il ne coupe pas votre voix de force; vous pouvez continuer pendant l’image suivante.",
+      "pas_une_prise": "Filmez seulement les prises déjà demandées. Pas besoin de filmer une scène à part pour parler.",
+      "sans_voix": "Vous pouvez ne pas parler. Choisissez musique seule; la vidéo reste complète.",
+      "sous_titres": "Les mots à l’écran viennent des informations que vous avez données. Ils ne reprennent pas votre voix.",
+      "cles": {
+        "titre": "guide.commun.titre",
+        "introduction": "guide.commun.introduction",
+        "langue": "guide.commun.langue",
+        "temps": "guide.commun.temps",
+        "pas_une_prise": "guide.commun.pas_une_prise",
+        "sans_voix": "guide.commun.sans_voix",
+        "sous_titres": "guide.commun.sous_titres"
+      }
+    },
+    "sous_titres_voix": {
+      "sous_titres_automatiques": false,
+      "paroles_transcrites": false,
+      "texte_ecran_actuel": "Le nom, le prix, le lieu et les mots affichés viennent des informations saisies; ils ne reprennent pas votre voix.",
+      "voix_langue_locale": "Vous pouvez parler dans votre langue. Pour écrire vos paroles à l’écran, une personne qui connaît cette langue doit les écrire et les vérifier.",
+      "cles": {
+        "texte_ecran_actuel": "guide.commun.sous_titres",
+        "voix_langue_locale": "guide.commun.sous_titres_locale"
+      }
+    },
+    "parole_dans_prises_existantes": true,
+    "pas_une_prise_par_scene_finale": true,
+    "marqueurs_audio_sans_transcription": "Le bouton Suivant marque les extraits de voix; aucun mot n’est reconnu ou écrit automatiquement."
+  },
+  "nom_format_affiche": "Avant et après",
+  "interface_commercant": {
+    "visible": true,
+    "nom_format": "Avant et après",
+    "secteur": "Construction et travaux",
+    "phrase_courte": "On montre le chantier au début, deux étapes de travail, puis le résultat fini.",
+    "ne_pas_afficher_cles_internes": [
+      "id",
+      "secteur",
+      "format",
+      "signature_montage.id_unique"
+    ],
+    "ton": "français simple, phrases courtes, vouvoiement respectueux",
+    "promesse": "Vous filmez les vidéos demandées. L’application prépare la vidéo pour vous."
+  }
+}

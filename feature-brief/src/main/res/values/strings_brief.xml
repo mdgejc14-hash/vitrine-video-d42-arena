@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="brief_title">Décrivez votre publicité</string>
+    <string name="brief_script">Votre texte (devient les sous-titres)</string>
+    <string name="brief_duration">Durée (secondes)</string>
+    <string name="brief_objective">Objectif : visites | ventes | notoriété</string>
+    <string name="brief_rushs">📁 Ajouter mes rushs vidéo</string>
+    <string name="brief_rushs_count">%1$d rush(s) prêt(s) pour le montage</string>
+    <string name="brief_validate">Valider le brief</string>
+    <string name="brief_err_min">Décrivez votre activité en au moins %1$d caractères : c’est ce texte qui devient les sous-titres.</string>
+    <string name="brief_err_max">Script trop long (max %1$d caractères) : une publicité courte vend mieux.</string>
+    <string name="brief_err_duration">Durée conseillée : %1$d à %2$d secondes.</string>
+    <string name="brief_err_objective">Choisissez un objectif (visites, ventes, notoriété).</string>
+    <string name="brief_g_continue">Continuer</string>
+    <string name="brief_g_my_video">Ma vidéo</string>
+    <string name="brief_g_step_badge">%1$d / %2$d</string>
+    <string name="brief_err_number">Saisis un nombre, sans lettres (ex. 15000).</string>
+    <string name="brief_err_phone">Format international attendu : +229 97 00 00 00.</string>
+    <string name="brief_g_type_here">Saisis ici…</string>
+    <string name="brief_badge_stock_limite">Stock limité</string>
+    <string name="brief_badge_places_limitees">Places limitées</string>
+    <string name="brief_badge_qualite_garantie">Qualité garantie</string>
+</resources>

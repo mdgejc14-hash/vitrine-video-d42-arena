@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SFX approuvé – V1.3",
+  "description": "Le sample de choc doit être inférieur à la durée ; vérifier audio et licence séparément.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "categorie_json",
+    "chemin_logique",
+    "taille_octets",
+    "sha256",
+    "audio_hz",
+    "duree_samples",
+    "sample_impact_fichier",
+    "licence_code",
+    "preuve_id",
+    "preuve_sha256",
+    "revision_humaine_approuvee"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.3"
+    },
+    "categorie_json": {
+      "enum": [
+        "whoosh_soft",
+        "whoosh_fast",
+        "caisse_enregistreuse",
+        "clic_appareil",
+        "impact_drop",
+        "pop_badge",
+        "amb_chantier",
+        "sizzle_grill",
+        "vapeur_plat"
+      ]
+    },
+    "chemin_logique": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "taille_octets": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "audio_hz": {
+      "const": 48000
+    },
+    "duree_samples": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "sample_impact_fichier": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "licence_code": {
+      "enum": [
+        "CC0-1.0",
+        "DOMAINE_PUBLIC_VERIFIE"
+      ]
+    },
+    "preuve_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "preuve_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "revision_humaine_approuvee": {
+      "const": true
+    }
+  },
+  "additionalProperties": false
+}

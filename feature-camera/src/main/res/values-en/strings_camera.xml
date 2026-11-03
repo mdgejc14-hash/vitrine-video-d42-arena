@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera_guide">Center your product · daylight or window light · don\'t talk during the shot</string>
+    <string name="camera_record">Lock and record</string>
+    <string name="camera_consent_title">Client agreement</string>
+    <string name="camera_consent_body">Does this person agree to be filmed and to see the video published?</string>
+    <string name="camera_consent_ok">Yes, agreement confirmed</string>
+    <string name="camera_consent_ko">No, do not publish</string>
+    <string name="camera_recording">Recording… tap to stop and continue</string>
+    <string name="camera_stop">Stop and continue</string>
+    <string name="camera_blocked">Shot blocked: missing consent (R4)</string>
+    <string name="camera_scene_counter">Scene %1$d/%2$d</string>
+    <string name="camera_scene_front">Film your product from the front, slow move</string>
+    <string name="camera_scene_detail">Close-up: useful details, textures</string>
+    <string name="camera_scene_use">Show the product in real use</string>
+    <string name="camera_faces_ok">Faces detected: %1$d · R4 gate: clear frame</string>
+    <string name="camera_faces_ko">Faces detected: %1$d · R4 gate: consent required</string>
+    <string name="camera_take_failed">Take failed (incomplete file). Retry this take — nothing was lost.</string>
+    <string name="camera_permission_needed">Camera access required</string>
+    <string name="camera_permission_body">Without the camera, no take can be recorded. Allow access to continue.</string>
+    <string name="camera_permission_grant">Allow</string>
+    <string name="camera_permission_later">Later</string>
+</resources>

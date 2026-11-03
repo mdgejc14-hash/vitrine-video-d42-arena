@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lang_title">Choose your language</string>
+    <string name="carousel_next">Next</string>
+    <string name="carousel_start">Get started</string>
+    <string name="slide1_slogan">Shoot. Sell. Done.</string>
+    <string name="slide1_sub">The video app for shops and trades</string>
+    <string name="slide2_title">AI-guided filming</string>
+    <string name="slide2_sub">30 FPS INS camera, exposure locks, automatic face protection</string>
+    <string name="slide3_slogan">Videos that sell in 30 seconds</string>
+    <string name="slide3_sub">Pro editing done for you automatically, even offline</string>
+    <string name="sector_title">Your main business</string>
+    <string name="sector_hint">Tap your sector, then continue.</string>
+    <string name="action_continue">Continue</string>
+    <string name="welcome_title">Welcome</string>
+    <string name="welcome_credits">We\'ve added %1$d credits to your account. Enjoy!</string>
+    <string name="lang_change_later">You can change this choice later</string>
+    <string name="refcode_title">Your referral code</string>
+    <string name="refcode_subtitle">You can skip this step.</string>
+    <string name="refcode_chosen">You chose:</string>
+    <string name="refcode_label">Your referrer code (if you have one)</string>
+    <string name="refcode_hint">Type the code here</string>
+    <string name="refcode_continue">Continue</string>
+    <string name="refcode_skip">I don\'t have a code</string>
+</resources>

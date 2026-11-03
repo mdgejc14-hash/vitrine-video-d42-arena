@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera_guide">Cadrez votre produit au centre · lumière du jour ou vitrine · ne parlez pas pendant le plan</string>
+    <string name="camera_record">Verrouiller et enregistrer</string>
+    <string name="camera_consent_title">Accord du client</string>
+    <string name="camera_consent_body">Cette personne accepte-t-elle d\'être filmée et de voir la vidéo publiée ?</string>
+    <string name="camera_consent_ok">Oui, accord confirmé</string>
+    <string name="camera_consent_ko">Non, ne pas publier</string>
+    <string name="camera_recording">Enregistrement… tapez pour arrêter et continuer</string>
+    <string name="camera_stop">Arrêter et continuer</string>
+    <string name="camera_blocked">Plan bloqué : consentement manquant (R4)</string>
+    <string name="camera_scene_counter">Scene %1$d/%2$d</string>
+    <string name="camera_scene_front">Filmez votre produit de face, mouvement lent</string>
+    <string name="camera_scene_detail">Plan rapproché : détails utiles, textures</string>
+    <string name="camera_scene_use">Montrez le produit en situation, usage réel</string>
+    <string name="camera_faces_ok">Visages détectés : %1$d · porte R4 : cadre libre</string>
+    <string name="camera_faces_ko">Visages détectés : %1$d · porte R4 : consentement requis</string>
+    <string name="camera_take_failed">Prise ratée (fichier incomplet). Réessaie cette prise — rien n’a été perdu.</string>
+    <string name="camera_permission_needed">Accès caméra nécessaire</string>
+    <string name="camera_permission_body">Sans la caméra, aucune prise ne peut être enregistrée. Autorise l’accès pour continuer.</string>
+    <string name="camera_permission_grant">Autoriser</string>
+    <string name="camera_permission_later">Plus tard</string>
+</resources>

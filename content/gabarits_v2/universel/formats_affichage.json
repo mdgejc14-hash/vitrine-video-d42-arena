@@ -1,0 +1,26 @@
+{
+  "titre": "Choisis le type de vidéo",
+  "note": "Choisis ce que tu veux montrer dans ta vidéo.",
+  "choix": [
+    {
+      "nom": "Nouvel arrivage",
+      "explication": "Montre ce qui vient d’arriver."
+    },
+    {
+      "nom": "Avant et après",
+      "explication": "Montre le début et le résultat."
+    },
+    {
+      "nom": "Montrer un produit",
+      "explication": "Montre le produit et son prix."
+    },
+    {
+      "nom": "Promotion",
+      "explication": "Montre une offre et sa vraie date de fin."
+    },
+    {
+      "nom": "Un client raconte",
+      "explication": "Laisse un vrai client raconter son expérience."
+    }
+  ]
+}

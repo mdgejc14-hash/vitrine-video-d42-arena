@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Release side-loading : declarer le SHA-256 de la cle de signature dans la
+         console Google Cloud (client OAuth Android), voir docs/SSO_RELEASE.md. -->
+
+    <!-- Audit D41 (F64) : visibilite de paquet Android 11+ — sans <queries>, la
+         resolution d'un ACTION_VIEW https (ouverture du checkout heberge dans le
+         navigateur) echoue silencieusement (ActivityNotFoundException avalee). -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="text/plain" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="video/mp4" />
+        </intent>
+    </queries>
+
+    <application
+        android:label="Vitrine Video"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/Theme.VitrineVideo"
+        android:allowBackup="false"
+        android:supportsRtl="true">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.VitrineVideo.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- Audit D41 (F34/F63) : deep-link de parrainage route vers le
+                 navigateur central (avant : AuthActivity exportee recevait le
+                 lien mais le parcours s'arretait au retour navigateur, et le
+                 jeton Firebase etait exposible a toute app lancante).
+                 autoVerify exige assetlinks.json heberge sur vitrine.video
+                 (domaine non enregistre a ce jour — prerequis externe documente
+                 au rapport D41) ; sans verification, Android propose le
+                 choix navigateur/app, le parcours fonctionne quand meme. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="vitrine.video"
+                    android:pathPrefix="/r/" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

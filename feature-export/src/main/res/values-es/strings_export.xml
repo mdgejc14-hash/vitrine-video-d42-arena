@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="export_t1">La exportación sigue con el dispositivo bloqueado: apaga la pantalla, el aviso te avisa.</string>
+    <string name="export_running">Exportación local en curso…</string>
+    <string name="export_start">Iniciar exportación local</string>
+    <string name="export_preview_title">Vista previa de tu vídeo</string>
+    <string name="export_preview_meta">%1$d s · %2$d rushes cliente · %3$d rushes cámara</string>
+    <string name="export_preview_typo">Voz y tipografía cinética</string>
+    <string name="export_gate_no_credit">Sin créditos de exportación. Recarga para continuar.</string>
+    <string name="export_gate_integrity">Verificación de seguridad fallida. Reinstala la app oficial.</string>
+    <string name="export_gate_rollback">Reloj del dispositivo en retroceso. Export bloqueado hasta sincronizar.</string>
+    <string name="export_progress_title">Tu vídeo se prepara</string>
+    <string name="export_progress_sub">Estado de progreso</string>
+    <string name="export_card_preparing">Preparando el vídeo…</string>
+    <string name="export_card_step_title">Paso en curso</string>
+    <string name="export_card_step_body">Las tomas se ensamblan según el plan elegido.</string>
+    <string name="export_card_time_title">Tiempo orientativo</string>
+    <string name="export_card_time_body">Unos 2 minutos en esta maqueta. El tiempo real queda por verificar.</string>
+    <string name="export_done">¡Vídeo listo! Compártelo con tus clientes.</string>
+    <string name="export_share">Compartir el vídeo</string>
+    <string name="export_space">Ver mi espacio</string>
+    <string name="export_failed_ui">Exportación interrumpida. Tus créditos fueron devueltos — inténtalo de nuevo.</string>
+    <string name="export_input_missing">No se encuentra el vídeo de origen — vuelve a grabar tus tomas antes de exportar. Se devolvió tu crédito.</string>
+</resources>

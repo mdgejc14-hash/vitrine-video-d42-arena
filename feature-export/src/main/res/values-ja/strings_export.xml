@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="export_t1">端末ロック中も書き出しは続きます：画面をオフにして下さい。通知でお知らせします。</string>
+    <string name="export_running">ローカル書き出し中…</string>
+    <string name="export_start">ローカル書き出し開始</string>
+    <string name="export_preview_title">動画のプレビュー</string>
+    <string name="export_preview_meta">%1$d秒 · クライアント素材%2$d · 撮影素材%3$d</string>
+    <string name="export_preview_typo">音声とキネティックタイポグラフィ</string>
+    <string name="export_gate_no_credit">輸出クレジットがありません。チャージしてください。</string>
+    <string name="export_gate_integrity">セキュリティ検証に失敗。公式アプリを再インストールしてください。</string>
+    <string name="export_gate_rollback">端末時計が戻っています。同期までエクスポートはブロックされます。</string>
+    <string name="export_progress_title">動画を準備しています</string>
+    <string name="export_progress_sub">進行状況</string>
+    <string name="export_card_preparing">動画を準備中…</string>
+    <string name="export_card_step_title">現在のステップ</string>
+    <string name="export_card_step_body">選んだプランに従って撮影をまとめています。</string>
+    <string name="export_card_time_title">目安時間</string>
+    <string name="export_card_time_body">このモックでは約2分。実時間は未検証です。</string>
+    <string name="export_done">動画が完成しました！お客様に共有しましょう。</string>
+    <string name="export_share">動画を共有</string>
+    <string name="export_space">マイページを見る</string>
+    <string name="export_failed_ui">書き出しが中断されました。クレジットは返却済みです — もう一度お試しください。</string>
+    <string name="export_input_missing">元動画が見つかりません。書き出す前に撮り直してください。クレジットは返却されました。</string>
+</resources>

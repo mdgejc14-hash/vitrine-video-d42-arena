@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera_guide">Centra tu producto · luz de día o de escaparate · no hables durante el plano</string>
+    <string name="camera_record">Bloquear y grabar</string>
+    <string name="camera_consent_title">Acuerdo del cliente</string>
+    <string name="camera_consent_body">¿Esta persona acepta ser filmada y ver el vídeo publicado?</string>
+    <string name="camera_consent_ok">Sí, acuerdo confirmado</string>
+    <string name="camera_consent_ko">No, no publicar</string>
+    <string name="camera_recording">Grabando… toca para terminar y continuar</string>
+    <string name="camera_stop">Terminar y continuar</string>
+    <string name="camera_blocked">Plano bloqueado: falta consentimiento (R4)</string>
+    <string name="camera_scene_counter">Escena %1$d/%2$d</string>
+    <string name="camera_scene_front">Filma tu producto de frente, movimiento lento</string>
+    <string name="camera_scene_detail">Primer plano: detalles útiles, texturas</string>
+    <string name="camera_scene_use">Muestra el producto en uso real</string>
+    <string name="camera_faces_ok">Rostros detectados: %1$d · puerta R4: cuadro libre</string>
+    <string name="camera_faces_ko">Rostros detectados: %1$d · puerta R4: consentimiento requerido</string>
+    <string name="camera_take_failed">Toma fallida (archivo incompleto). Reintenta esta toma — no se perdió nada.</string>
+    <string name="camera_permission_needed">Se necesita acceso a la cámara</string>
+    <string name="camera_permission_body">Sin la cámara no se puede grabar ninguna toma. Permite el acceso para continuar.</string>
+    <string name="camera_permission_grant">Permitir</string>
+    <string name="camera_permission_later">Más tarde</string>
+</resources>

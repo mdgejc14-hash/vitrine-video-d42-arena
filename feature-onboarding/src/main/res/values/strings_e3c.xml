@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="auth_preparing">On prépare ton compte...</string>
+    <string name="auth_preparing_sub">Ça ne prend qu\'un instant.</string>
+</resources>

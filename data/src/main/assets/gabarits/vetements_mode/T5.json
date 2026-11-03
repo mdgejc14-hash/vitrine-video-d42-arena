@@ -1,0 +1,1689 @@
+{
+  "id": "vetements_mode_T5",
+  "secteur": "vetements_mode",
+  "secteur_libelle": "Vêtements & Mode",
+  "format": "T5_temoignage_client",
+  "version": "2.0_theorique",
+  "duree_totale_secondes": 50,
+  "nombre_scenes": 13,
+  "ratio": "9:16",
+  "notes_adaptation": "Le client parle avec ses mots. On montre le vêtement pendant qu’il raconte son expérience.",
+  "champs_saisie": [
+    {
+      "id": "nom_commerce",
+      "label": "Nom de votre commerce",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Boutique Élégance",
+      "source": "saisie_video",
+      "scenes": [
+        13
+      ],
+      "groupe_ui": "commerce_contact",
+      "aide_simple": "Écrivez le nom que les clients doivent voir."
+    },
+    {
+      "id": "nom_offre",
+      "label": "Nom du vêtement",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Robe wax",
+      "source": "saisie_video",
+      "scenes": [
+        4
+      ],
+      "groupe_ui": "offre",
+      "aide_simple": "Écrivez le nom du plat, du produit ou du travail."
+    },
+    {
+      "id": "prix",
+      "label": "Prix",
+      "type": "nombre",
+      "obligatoire": false,
+      "exemple": "15000",
+      "source": "saisie_video",
+      "scenes": [
+        10
+      ],
+      "groupe_ui": "prix",
+      "aide_simple": "Écrivez le vrai prix. La monnaie FCFA est choisie par défaut."
+    },
+    {
+      "id": "devise",
+      "label": "Monnaie",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "FCFA",
+      "source": "saisie_video",
+      "scenes": [
+        10
+      ],
+      "defaut": "FCFA",
+      "groupe_ui": "prix",
+      "affichage_ui": "sélecteur compact; FCFA proposé par défaut pour cette vidéo",
+      "aide_simple": "FCFA est déjà choisi. Change-le seulement si besoin."
+    },
+    {
+      "id": "prenom_client",
+      "label": "Prénom du client",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Aïcha",
+      "source": "saisie_video",
+      "scenes": [
+        1,
+        3
+      ],
+      "groupe_ui": "client_consentement",
+      "aide_simple": "Écrivez le prénom du vrai client."
+    },
+    {
+      "id": "accord_client_diffusion",
+      "label": "Le client accepte-t-il que la vidéo soit publiée ?",
+      "type": "case_a_cocher",
+      "obligatoire": true,
+      "exemple": "Oui, le client a accepté",
+      "source": "saisie_video",
+      "scenes": [
+        1
+      ],
+      "valeur_obligatoire": true,
+      "groupe_ui": "client_consentement",
+      "aide_simple": "Coche seulement si le client accepte que sa vidéo soit publiée."
+    },
+    {
+      "id": "citation_client",
+      "label": "Les mots du client (facultatif)",
+      "type": "texte",
+      "obligatoire": false,
+      "exemple": "Service très soigné !",
+      "source": "saisie_video",
+      "scenes": [
+        8
+      ],
+      "afficher_seulement_si_saisie": true,
+      "groupe_ui": "client_consentement",
+      "aide_simple": "Écrivez ses vrais mots. Vous pouvez laisser vide."
+    },
+    {
+      "id": "quartier_ville",
+      "label": "Quartier et ville",
+      "type": "texte",
+      "obligatoire": true,
+      "exemple": "Akpakpa, Cotonou",
+      "source": "saisie_video",
+      "scenes": [
+        3,
+        13
+      ],
+      "groupe_ui": "lieu",
+      "aide_simple": "Écrivez le quartier et la ville où les clients peuvent venir."
+    },
+    {
+      "id": "whatsapp",
+      "label": "votre numéro WhatsApp",
+      "type": "telephone",
+      "obligatoire": true,
+      "exemple": "+229 97 00 00 00",
+      "source": "saisie_video",
+      "scenes": [
+        10,
+        13
+      ],
+      "validation": "format_international",
+      "groupe_ui": "commerce_contact",
+      "aide_simple": "Écrivez le numéro sur lequel les clients peuvent vous écrire, avec le + et le code du pays."
+    },
+    {
+      "id": "badge_engagement_actif",
+      "label": "Afficher un message spécial (facultatif)",
+      "type": "case_a_cocher",
+      "obligatoire": false,
+      "exemple": false,
+      "source": "saisie_video",
+      "scenes": [
+        12
+      ],
+      "defaut": false,
+      "choix": [
+        "stock_limite",
+        "places_limitees",
+        "qualite_garantie"
+      ],
+      "groupe_ui": "options_avancees",
+      "afficher_par_defaut": false,
+      "aide_simple": "Laissez désactivé, sauf si le message est vrai."
+    }
+  ],
+  "politique_saisie": {
+    "mode": "saisie_video",
+    "recollecter_a_chaque_video": true,
+    "enregistrer_dans_profil": false,
+    "pre_remplissage_automatique": false,
+    "numero_whatsapp_obligatoire": true,
+    "prix_obligatoire_sauf_T5": true,
+    "format_prix": "15 000 FCFA",
+    "badge_engagement_actif_par_defaut": false
+  },
+  "prises": [
+    {
+      "id": "prise_1",
+      "libelle": "Le client qui parle",
+      "duree_cible_s": 12,
+      "consigne_camera": "Commencez par montrer le client qui parle. Tenez votre téléphone debout et reste assez immobile. Filmez près d’une fenêtre pour que les vraies couleurs se voient.",
+      "type_plan": "plan_moyen",
+      "mouvement": "fixe",
+      "lumiere": "face_fenetre",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        1,
+        2,
+        5,
+        12
+      ],
+      "guide_parole_scenes": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "segments_guide_parole": [
+        {
+          "scene": 1,
+          "quoi_raconter": "Demandez au client de parler du vêtement qu’il montre.",
+          "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+          "exemple": "Je parle de cette tenue.",
+          "note_exemple": "Exemple pour comprendre, pas à répéter.",
+          "duree_conseillee_s": 2.0,
+          "segment_audio_id": "T5_scene_01_voix"
+        },
+        {
+          "scene": 2,
+          "quoi_raconter": "Laissez-le raconter sa visite ou son essayage.",
+          "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+          "exemple": "Je raconte mon essayage.",
+          "note_exemple": "Exemple pour comprendre, pas à répéter.",
+          "duree_conseillee_s": 2.0,
+          "segment_audio_id": "T5_scene_02_voix"
+        },
+        {
+          "scene": 3,
+          "quoi_raconter": "Demandez-lui ce qu’il a regardé ou essayé.",
+          "quoi_montrer": "Gardez aussi à l’écran une image tirée de la prise « Le client qui parle », derrière ou à côté de la carte « {prenom_client} · {quartier_ville} ».",
+          "exemple": "Je continue mon récit.",
+          "note_exemple": "Exemple pour comprendre, pas à répéter.",
+          "duree_conseillee_s": 2.0,
+          "segment_audio_id": "T5_scene_03_voix"
+        },
+        {
+          "scene": 5,
+          "quoi_raconter": "Invitez-le à parler d’un moment de sa visite.",
+          "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+          "exemple": "Voilà ce que j’ai vécu.",
+          "note_exemple": "Exemple pour comprendre, pas à répéter.",
+          "duree_conseillee_s": 2.0,
+          "segment_audio_id": "T5_scene_05_voix"
+        }
+      ]
+    },
+    {
+      "id": "prise_2",
+      "libelle": "Le vêtement porté",
+      "duree_cible_s": 12,
+      "consigne_camera": "Ensuite, montrez le vêtement porté. Tenez votre téléphone debout et reste assez immobile. Filmez près d’une fenêtre pour que les vraies couleurs se voient.",
+      "type_plan": "plan_moyen",
+      "mouvement": "travelling_avant",
+      "lumiere": "face_fenetre",
+      "astuce": "Gardez le sujet dans l’image. Ne bouge pas trop. Si l’image est ratée, recommence cette courte vidéo.",
+      "photo_acceptee": true,
+      "scenes_alimentees": [
+        4,
+        6,
+        7,
+        9,
+        11
+      ],
+      "guide_parole_scenes": [],
+      "segments_guide_parole": []
+    }
+  ],
+  "scenes": [
+    {
+      "numero": 1,
+      "acte": "hook",
+      "role": "hook_client_style",
+      "duree_secondes": 2.8,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "Écoutons {prenom_client} parler de son expérience.",
+        "position": "centre_haut",
+        "animation": "price_shake_impact",
+        "apparition_s": 0.0,
+        "disparition_s": 2.8
+      },
+      "voix": {
+        "active": true,
+        "source_audio_prise_id": "prise_1",
+        "segment_audio_id": "T5_scene_01_voix",
+        "audio_separe_de_image": true,
+        "vitesse_audio": 1.0
+      },
+      "transition_sortie": "match_cut_mouvement",
+      "effet": "freeze_0.5s",
+      "sfx": "whoosh_soft",
+      "action_montage": "La vidéo commence par « écoutons {prenom_client} parler de son expérience ». Ça donne envie de regarder.",
+      "sfx_libelle_simple": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "duree_affichee_s": 2.0,
+        "idee": "Demandez au client de parler du vêtement qu’il montre.",
+        "quoi_raconter": "Demandez au client de parler du vêtement qu’il montre.",
+        "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+        "exemple": "Je parle de cette tenue.",
+        "exemple_langue_libre": "Dites cette idée avec vos mots, en français ou dans la langue que vous voulez.",
+        "theme": "question_client",
+        "conseil": "Laissez le client parler avec ses mots.",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 1,
+          "segment_audio_id": "T5_scene_01_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+          "quoi_raconter": "Demandez au client de parler du vêtement qu’il montre."
+        },
+        "cles": {
+          "idee": "guide.vetements_mode.T5.scene_01.idee",
+          "quoi_raconter": "guide.vetements_mode.T5.scene_01.quoi_raconter",
+          "quoi_montrer": "guide.vetements_mode.T5.scene_01.quoi_montrer",
+          "exemple": "guide.vetements_mode.T5.scene_01.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.vetements_mode.T5.scene_01.conseil"
+        }
+      }
+    },
+    {
+      "numero": 2,
+      "acte": "preuve",
+      "role": "visage_client_son_direct",
+      "duree_secondes": 2.669,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "LE CLIENT RACONTE",
+        "position": "centre",
+        "animation": "line_draw_spec",
+        "apparition_s": 0.0,
+        "disparition_s": 2.669
+      },
+      "voix": {
+        "active": true,
+        "source_audio_prise_id": "prise_1",
+        "segment_audio_id": "T5_scene_02_voix",
+        "audio_separe_de_image": true,
+        "vitesse_audio": 1.0
+      },
+      "transition_sortie": "match_cut_mouvement",
+      "effet": "ken_burns_lent",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le client qui parle ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "duree_affichee_s": 2.0,
+        "idee": "Laissez-le raconter sa visite ou son essayage.",
+        "quoi_raconter": "Laissez-le raconter sa visite ou son essayage.",
+        "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+        "exemple": "Je raconte mon essayage.",
+        "exemple_langue_libre": "Dites cette idée avec vos mots, en français ou dans la langue que vous voulez.",
+        "theme": "ressenti_client",
+        "conseil": "Écoutez sans le couper.",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 2,
+          "segment_audio_id": "T5_scene_02_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+          "quoi_raconter": "Laissez-le raconter sa visite ou son essayage."
+        },
+        "cles": {
+          "idee": "guide.vetements_mode.T5.scene_02.idee",
+          "quoi_raconter": "guide.vetements_mode.T5.scene_02.quoi_raconter",
+          "quoi_montrer": "guide.vetements_mode.T5.scene_02.quoi_montrer",
+          "exemple": "guide.vetements_mode.T5.scene_02.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.vetements_mode.T5.scene_02.conseil"
+        }
+      }
+    },
+    {
+      "numero": 3,
+      "acte": "reassurance",
+      "role": "carte_identite_client",
+      "duree_secondes": 4.045,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_identite_client"
+      },
+      "texte_ecran": {
+        "contenu": "{prenom_client} · {quartier_ville}",
+        "position": "tiers_gauche",
+        "animation": "caption_breath_fade",
+        "apparition_s": 0.0,
+        "disparition_s": 4.045
+      },
+      "voix": {
+        "active": true,
+        "source_audio_prise_id": "prise_1",
+        "segment_audio_id": "T5_scene_03_voix",
+        "audio_separe_de_image": true,
+        "vitesse_audio": 1.0
+      },
+      "transition_sortie": "wipe_lateral_produit",
+      "effet": "ralenti_0.7x",
+      "sfx": "pop_badge",
+      "action_montage": "L’application affiche les mots « {prenom_client} · {quartier_ville} » à l’écran.",
+      "carte_generee_id": "carte_identite_client",
+      "sfx_libelle_simple": "Petit son pour le message",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "duree_affichee_s": 2.0,
+        "idee": "Demandez-lui ce qu’il a regardé ou essayé.",
+        "quoi_raconter": "Demandez-lui ce qu’il a regardé ou essayé.",
+        "quoi_montrer": "Gardez aussi à l’écran une image tirée de la prise « Le client qui parle », derrière ou à côté de la carte « {prenom_client} · {quartier_ville} ».",
+        "exemple": "Je continue mon récit.",
+        "exemple_langue_libre": "Dites cette idée avec vos mots, en français ou dans la langue que vous voulez.",
+        "theme": "question_client",
+        "conseil": "Laissez le client choisir ses mots.",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 3,
+          "segment_audio_id": "T5_scene_03_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Gardez aussi à l’écran une image tirée de la prise « Le client qui parle », derrière ou à côté de la carte « {prenom_client} · {quartier_ville} ».",
+          "quoi_raconter": "Demandez-lui ce qu’il a regardé ou essayé."
+        },
+        "cles": {
+          "idee": "guide.vetements_mode.T5.scene_03.idee",
+          "quoi_raconter": "guide.vetements_mode.T5.scene_03.quoi_raconter",
+          "quoi_montrer": "guide.vetements_mode.T5.scene_03.quoi_montrer",
+          "exemple": "guide.vetements_mode.T5.scene_03.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.vetements_mode.T5.scene_03.conseil"
+        }
+      }
+    },
+    {
+      "numero": 4,
+      "acte": "preuve",
+      "role": "cutaway_essayage",
+      "duree_secondes": 5.072,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_droit",
+        "animation": "split_label_track",
+        "apparition_s": 0.0,
+        "disparition_s": 5.072
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "slide_doux",
+      "effet": "freeze_0.5s",
+      "sfx": "whoosh_soft",
+      "action_montage": "L’application reprend une partie de « Le vêtement porté ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 5,
+      "acte": "preuve",
+      "role": "phrase_experience_client",
+      "duree_secondes": 3.287,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "LE CLIENT RACONTE",
+        "position": "centre",
+        "animation": "reveal_mask_text",
+        "apparition_s": 0.0,
+        "disparition_s": 3.287
+      },
+      "voix": {
+        "active": true,
+        "source_audio_prise_id": "prise_1",
+        "segment_audio_id": "T5_scene_05_voix",
+        "audio_separe_de_image": true,
+        "vitesse_audio": 1.0
+      },
+      "transition_sortie": "whip_pan",
+      "effet": "recadrage_macro_160",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le client qui parle ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "duree_affichee_s": 2.0,
+        "idee": "Invitez-le à parler d’un moment de sa visite.",
+        "quoi_raconter": "Invitez-le à parler d’un moment de sa visite.",
+        "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+        "exemple": "Voilà ce que j’ai vécu.",
+        "exemple_langue_libre": "Dites cette idée avec vos mots, en français ou dans la langue que vous voulez.",
+        "theme": "ressenti_client",
+        "conseil": "Laissez-le répondre à sa façon.",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 4,
+          "segment_audio_id": "T5_scene_05_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+          "quoi_raconter": "Invitez-le à parler d’un moment de sa visite."
+        },
+        "cles": {
+          "idee": "guide.vetements_mode.T5.scene_05.idee",
+          "quoi_raconter": "guide.vetements_mode.T5.scene_05.quoi_raconter",
+          "quoi_montrer": "guide.vetements_mode.T5.scene_05.quoi_montrer",
+          "exemple": "guide.vetements_mode.T5.scene_05.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.vetements_mode.T5.scene_05.conseil"
+        }
+      }
+    },
+    {
+      "numero": 6,
+      "acte": "preuve",
+      "role": "macro_tissu_evoqué",
+      "duree_secondes": 2.757,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "DE PRÈS",
+        "position": "tiers_gauche",
+        "animation": "pulse_cta_soft",
+        "apparition_s": 0.0,
+        "disparition_s": 2.757
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "flash_blanc",
+      "effet": "recadrage_macro_160",
+      "sfx": "clic_appareil",
+      "action_montage": "L’application reprend une partie de « Le vêtement porté ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 7,
+      "acte": "preuve",
+      "role": "retour_miroir",
+      "duree_secondes": 3.853,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "130%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_droit",
+        "animation": "countdown_tick",
+        "apparition_s": 0.0,
+        "disparition_s": 3.853
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "wipe_lateral_produit",
+      "effet": "ken_burns_lent",
+      "sfx": "whoosh_soft",
+      "action_montage": "L’application reprend une partie de « Le vêtement porté ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "sfx_libelle_simple": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 8,
+      "acte": "preuve",
+      "role": "citation_si_saisie",
+      "duree_secondes": 5.494,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_signature_t5_vetements_mode"
+      },
+      "texte_ecran": {
+        "contenu": "{citation_client}",
+        "position": "centre",
+        "animation": "side_tag_animate",
+        "apparition_s": 0.0,
+        "disparition_s": 5.494
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "whip_pan",
+      "effet": "ralenti_0.7x",
+      "sfx": null,
+      "action_montage": "La phrase s’affiche seulement si vous l’avez écrite et si le client a accepté.",
+      "carte_generee_id": "carte_signature_t5_vetements_mode",
+      "condition_affichage": "citation_client_est_saisie",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 9,
+      "acte": "reassurance",
+      "role": "conseil_vendeur_visuel",
+      "duree_secondes": 3.487,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "100%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "tiers_gauche",
+        "animation": "kinetic_number",
+        "apparition_s": 0.0,
+        "disparition_s": 3.487
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "cut_sec",
+      "effet": "freeze_0.5s",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le vêtement porté ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 10,
+      "acte": "offre",
+      "role": "prix_optionnel_temoignage",
+      "duree_secondes": 2.562,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_prix_geant"
+      },
+      "texte_ecran": {
+        "contenu": "Prix sur demande",
+        "position": "tiers_droit",
+        "animation": "compteur_countup",
+        "apparition_s": 0.0,
+        "disparition_s": 2.562
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "slide_doux",
+      "effet": "recadrage_macro_160",
+      "sfx": "caisse_enregistreuse",
+      "action_montage": "L’application affiche le vrai prix que vous avez entré.",
+      "carte_generee_id": "carte_prix_geant",
+      "condition_affichage": "prix_est_saisi",
+      "sfx_libelle_simple": "Petit son au moment du prix",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 11,
+      "acte": "reassurance",
+      "role": "quartier_boutique",
+      "duree_secondes": 3.948,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_2",
+        "recadrage": "160%",
+        "vitesse": 1.0
+      },
+      "texte_ecran": {
+        "contenu": "À DÉCOUVRIR",
+        "position": "centre",
+        "animation": "wipe_label",
+        "apparition_s": 0.0,
+        "disparition_s": 3.948
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "flash_blanc",
+      "effet": "punch_in_progressif",
+      "sfx": null,
+      "action_montage": "L’application reprend une partie de « Le vêtement porté ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 12,
+      "acte": "preuve",
+      "role": "reaction_apres_essayage",
+      "duree_secondes": 5.026,
+      "source": {
+        "type": "prise",
+        "prise_id": "prise_1",
+        "recadrage": "100%",
+        "vitesse": 0.5
+      },
+      "texte_ecran": {
+        "contenu": "LE RÉSULTAT",
+        "position": "tiers_gauche",
+        "animation": "lower_third_glide",
+        "apparition_s": 0.0,
+        "disparition_s": 5.026
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "wipe_lateral_produit",
+      "effet": "ralenti_0.7x",
+      "sfx": "impact_drop",
+      "action_montage": "L’application montre « Le client qui parle » plus lentement pour laisser voir le résultat.",
+      "sfx_libelle_simple": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    },
+    {
+      "numero": 13,
+      "acte": "cta",
+      "role": "carte_contact",
+      "duree_secondes": 5.0,
+      "source": {
+        "type": "generee",
+        "carte_id": "carte_whatsapp_finale"
+      },
+      "texte_ecran": {
+        "contenu": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+        "position": "centre_bas",
+        "animation": "whatsapp_pulsant",
+        "apparition_s": 0.0,
+        "disparition_s": 5.0
+      },
+      "voix": {
+        "active": false
+      },
+      "transition_sortie": "fondu_enchaine",
+      "effet": "aucun_effet",
+      "sfx": "whoosh_soft",
+      "action_montage": "À la fin, la vidéo garde le nom de votre commerce, le quartier et le numéro WhatsApp à l’écran.",
+      "carte_generee_id": "carte_whatsapp_finale",
+      "sfx_libelle_simple": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "duree_affichee_s": 0,
+        "idee": "",
+        "quoi_raconter": "",
+        "quoi_montrer": "",
+        "exemple": "",
+        "exemple_langue_libre": "",
+        "theme": "aucune",
+        "conseil": "",
+        "cles": {}
+      }
+    }
+  ],
+  "montage_signature": {
+    "nom": "T5_vetements_mode",
+    "id_unique": "T5_vetements_mode",
+    "rythme_moyen_coupe_s": 3.84,
+    "courbe_rythme": [
+      2.8,
+      2.669,
+      4.045,
+      5.072,
+      3.287,
+      2.757,
+      3.853,
+      5.494,
+      3.487,
+      2.562,
+      3.948,
+      5.026,
+      5.0
+    ],
+    "transitions": [
+      "match_cut_mouvement",
+      "wipe_lateral_produit",
+      "slide_doux",
+      "whip_pan",
+      "flash_blanc",
+      "cut_sec",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "ken_burns_lent",
+      "ralenti_0.7x",
+      "recadrage_macro_160",
+      "punch_in_progressif",
+      "aucun_effet"
+    ],
+    "zoom": {
+      "type": "recadrages_roles_et_sujet",
+      "min": 1.0,
+      "max": 1.6
+    },
+    "signature_detail": "Le client parle avec ses mots. On montre le vêtement pendant qu’il raconte son expérience."
+  },
+  "etalonnage": {
+    "preset": "grade_vetements_mode_t5",
+    "preset_avant": null,
+    "preset_apres": null,
+    "exposition_ev": 0.2,
+    "contraste": 1.04,
+    "saturation": 1.02,
+    "temperature_k": 5400,
+    "vignettage": 0.1,
+    "nettete": 0.18,
+    "protection_peau": true,
+    "protection_peau_detail": "Peaux foncées incluses : préserver les hautes lumières du visage et vérifier l’exposition; fidélité textile/carrosserie et nourriture avant stylisation.",
+    "denoise_faible_lumiere": true,
+    "stabilisation": true,
+    "consigne_lumiere": "Filmez près d’une fenêtre, garde le tissu dans une lumière neutre et évite les filtres qui changent la couleur.",
+    "preset_avant_ref": null,
+    "preset_apres_ref": null
+  },
+  "style_visuel": {
+    "typographie": {
+      "preset": "sans_serif_bold_condensee",
+      "graisse": "900",
+      "couleur_texte": "#FFFFFF",
+      "contour": "#000000",
+      "fond_texte": "#FF5500"
+    },
+    "palette": "palette_T3_neutre",
+    "badges": [],
+    "badges_optionnels_actives_par_commercant": [
+      "stock_limite",
+      "places_limitees",
+      "qualite_garantie"
+    ],
+    "engagements_optionnels_actifs_par_defaut": false
+  },
+  "audio": {
+    "musique": {
+      "genre": "amapiano léger instrumental",
+      "bpm_min": 76,
+      "bpm_max": 94,
+      "structure": "hook court, progression accordée aux rôles, accent sur preuve/révélation, sortie propre sous carte CTA",
+      "structure_id": "audio_structure_vetements_mode_t5",
+      "categorie_audio": "musique_t5_vetements_mode",
+      "cue_roles": {
+        "riser_role": "reaction_apres_essayage",
+        "drop_scene": 12,
+        "voice_ducking": "VAD; aucun ASR"
+      }
+    },
+    "sfx_scenes": [
+      {
+        "scene": 1,
+        "categorie": "whoosh_soft"
+      },
+      {
+        "scene": 3,
+        "categorie": "pop_badge"
+      },
+      {
+        "scene": 4,
+        "categorie": "whoosh_soft"
+      },
+      {
+        "scene": 6,
+        "categorie": "clic_appareil"
+      },
+      {
+        "scene": 7,
+        "categorie": "whoosh_soft"
+      },
+      {
+        "scene": 10,
+        "categorie": "caisse_enregistreuse"
+      },
+      {
+        "scene": 12,
+        "categorie": "impact_drop"
+      },
+      {
+        "scene": 13,
+        "categorie": "whoosh_soft"
+      }
+    ],
+    "mix": {
+      "cible_lufs": -14,
+      "ducking_musique_sous_voix_db": -14,
+      "voix_prioritaire": true,
+      "limiteur_true_peak_dbtp": -1.0
+    },
+    "mode_sans_voix": {
+      "actif_par_defaut": false,
+      "compense_par": "texte_ecran_et_pictogrammes",
+      "calage": "BPM et temps forts, sans dépendance ASR"
+    },
+    "interface_commercant": {
+      "genre_en_mots_simples": "Musique rythmée et élégante.",
+      "message": "La musique doit rester moins forte que votre voix. Sans voix, les mots à l’écran racontent la vidéo.",
+      "note": "La musique et les petits sons doivent être autorisés pour une vidéo de commerce."
+    }
+  },
+  "copywriting": {
+    "hooks": [
+      "Écoutons {prenom_client} parler de son expérience.",
+      "Voici ce que {prenom_client} raconte.",
+      "Écoutons son expérience.",
+      "Le client parle avec ses mots.",
+      "Écrivez à {nom_commerce} pour en savoir plus."
+    ],
+    "formules_prix": [
+      "Demandez le prix sur WhatsApp : {whatsapp}.",
+      "Écrivez à {nom_commerce} pour le prix.",
+      "Le prix est donné sur demande."
+    ],
+    "formules_urgence": [
+      "Merci au client d’avoir accepté la vidéo.",
+      "Chaque client raconte sa propre expérience.",
+      "Écrivez-nous pour poser vos questions."
+    ],
+    "formules_cta": [
+      "Écrivez-nous sur WhatsApp : {whatsapp}.",
+      "Viens à {quartier_ville}.",
+      "Contacte {nom_commerce} sur WhatsApp."
+    ],
+    "regles_affichage": {
+      "format_prix": "15 000 FCFA, si c’est le vrai prix saisi",
+      "max_lignes": 2,
+      "max_caracteres_par_ligne": 28,
+      "zone_securite_ref": "zone_securite",
+      "pourcentage_reduction": "calculé automatiquement avec les deux prix saisis",
+      "note": "Phrases courtes. N’affiche pas une offre ou un stock limité si ce n’est pas vrai."
+    }
+  },
+  "variables_calculees": [],
+  "confiance_analyse": {
+    "methode": "theorique",
+    "validation_terrain": "a_faire",
+    "hypotheses_a_valider": [
+      "Lisibilité du hook sur petit écran",
+      "Compréhension du rythme et du vocabulaire local",
+      "Acceptation d’une durée 50 s",
+      "Performance du montage sans voix"
+    ],
+    "aucune_statistique_de_performance_affirmee": true
+  },
+  "signature_montage": {
+    "id_unique": "T5_vetements_mode",
+    "famille_format": "T5",
+    "empreinte_sequence": [
+      "hook_client_style|match_cut_mouvement|freeze_0.5s",
+      "visage_client_son_direct|match_cut_mouvement|ken_burns_lent",
+      "carte_identite_client|wipe_lateral_produit|ralenti_0.7x",
+      "cutaway_essayage|slide_doux|freeze_0.5s",
+      "phrase_experience_client|whip_pan|recadrage_macro_160",
+      "macro_tissu_evoqué|flash_blanc|recadrage_macro_160",
+      "retour_miroir|wipe_lateral_produit|ken_burns_lent",
+      "citation_si_saisie|whip_pan|ralenti_0.7x",
+      "conseil_vendeur_visuel|cut_sec|freeze_0.5s",
+      "prix_optionnel_temoignage|slide_doux|recadrage_macro_160",
+      "quartier_boutique|flash_blanc|punch_in_progressif",
+      "reaction_apres_essayage|wipe_lateral_produit|ralenti_0.7x",
+      "carte_contact|fondu_enchaine|aucun_effet"
+    ],
+    "courbe_rythme": [
+      2.8,
+      2.669,
+      4.045,
+      5.072,
+      3.287,
+      2.757,
+      3.853,
+      5.494,
+      3.487,
+      2.562,
+      3.948,
+      5.026,
+      5.0
+    ],
+    "justification_sectorielle": "Le client parle avec ses mots. On montre le vêtement pendant qu’il raconte son expérience."
+  },
+  "etapes_montage": [
+    {
+      "etape": 1,
+      "temps_s": 2.8,
+      "role": "Au début",
+      "action": "La vidéo commence par « écoutons {prenom_client} parler de son expérience ». Ça donne envie de regarder.",
+      "texte": "Écoutons {prenom_client} parler de son expérience.",
+      "voix": "Demandez au client de parler du vêtement qu’il montre.",
+      "audio": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "theme": "question_client",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 1,
+          "segment_audio_id": "T5_scene_01_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+          "quoi_raconter": "Demandez au client de parler du vêtement qu’il montre."
+        },
+        "cles": {
+          "idee": "guide.vetements_mode.T5.scene_01.idee",
+          "quoi_raconter": "guide.vetements_mode.T5.scene_01.quoi_raconter",
+          "quoi_montrer": "guide.vetements_mode.T5.scene_01.quoi_montrer",
+          "exemple": "guide.vetements_mode.T5.scene_01.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.vetements_mode.T5.scene_01.conseil"
+        }
+      }
+    },
+    {
+      "etape": 2,
+      "temps_s": 2.669,
+      "role": "Le client parle",
+      "action": "L’application reprend une partie de « Le client qui parle ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "LE CLIENT RACONTE",
+      "voix": "Laissez-le raconter sa visite ou son essayage.",
+      "audio": "votre voix reste devant la musique.",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "theme": "ressenti_client",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 2,
+          "segment_audio_id": "T5_scene_02_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+          "quoi_raconter": "Laissez-le raconter sa visite ou son essayage."
+        },
+        "cles": {
+          "idee": "guide.vetements_mode.T5.scene_02.idee",
+          "quoi_raconter": "guide.vetements_mode.T5.scene_02.quoi_raconter",
+          "quoi_montrer": "guide.vetements_mode.T5.scene_02.quoi_montrer",
+          "exemple": "guide.vetements_mode.T5.scene_02.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.vetements_mode.T5.scene_02.conseil"
+        }
+      }
+    },
+    {
+      "etape": 3,
+      "temps_s": 4.045,
+      "role": "Le prénom du client",
+      "action": "L’application affiche les mots « {prenom_client} · {quartier_ville} » à l’écran.",
+      "texte": "{prenom_client} · {quartier_ville}",
+      "voix": "Demandez-lui ce qu’il a regardé ou essayé.",
+      "audio": "Petit son pour le message",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "theme": "question_client",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 3,
+          "segment_audio_id": "T5_scene_03_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Gardez aussi à l’écran une image tirée de la prise « Le client qui parle », derrière ou à côté de la carte « {prenom_client} · {quartier_ville} ».",
+          "quoi_raconter": "Demandez-lui ce qu’il a regardé ou essayé."
+        },
+        "cles": {
+          "idee": "guide.vetements_mode.T5.scene_03.idee",
+          "quoi_raconter": "guide.vetements_mode.T5.scene_03.quoi_raconter",
+          "quoi_montrer": "guide.vetements_mode.T5.scene_03.quoi_montrer",
+          "exemple": "guide.vetements_mode.T5.scene_03.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.vetements_mode.T5.scene_03.conseil"
+        }
+      }
+    },
+    {
+      "etape": 4,
+      "temps_s": 5.072,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le vêtement porté ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 5,
+      "temps_s": 3.287,
+      "role": "Le client parle",
+      "action": "L’application reprend une partie de « Le client qui parle ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "LE CLIENT RACONTE",
+      "voix": "Invitez-le à parler d’un moment de sa visite.",
+      "audio": "votre voix reste devant la musique.",
+      "guide_parole": {
+        "parole_active": true,
+        "duree_parole_s": 2.0,
+        "theme": "ressenti_client",
+        "capture": {
+          "prise_id": "prise_1",
+          "ordre_dans_la_prise": 4,
+          "segment_audio_id": "T5_scene_05_voix",
+          "marqueur_de_segment": "bouton_suivant",
+          "duree_cible_s": 2.0,
+          "duree_affichee_s": 2.0,
+          "tolerance_debit_pct": 20,
+          "arret_force": false,
+          "audio_separe_de_image": true,
+          "vitesse_voix": 1.0,
+          "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+          "quoi_raconter": "Invitez-le à parler d’un moment de sa visite."
+        },
+        "cles": {
+          "idee": "guide.vetements_mode.T5.scene_05.idee",
+          "quoi_raconter": "guide.vetements_mode.T5.scene_05.quoi_raconter",
+          "quoi_montrer": "guide.vetements_mode.T5.scene_05.quoi_montrer",
+          "exemple": "guide.vetements_mode.T5.scene_05.exemple",
+          "exemple_langue_libre": "guide.commun.exemple_langue_libre",
+          "conseil": "guide.vetements_mode.T5.scene_05.conseil"
+        }
+      }
+    },
+    {
+      "etape": 6,
+      "temps_s": 2.757,
+      "role": "De près",
+      "action": "L’application reprend une partie de « Le vêtement porté ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "DE PRÈS",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit clic",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 7,
+      "temps_s": 3.853,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le vêtement porté ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 8,
+      "temps_s": 5.494,
+      "role": "Une image du produit ou du travail",
+      "action": "La phrase s’affiche seulement si vous l’avez écrite et si le client a accepté.",
+      "texte": "{citation_client}",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 9,
+      "temps_s": 3.487,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le vêtement porté ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 10,
+      "temps_s": 2.562,
+      "role": "Le prix",
+      "action": "L’application affiche le vrai prix que vous avez entré.",
+      "texte": "Prix sur demande",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit son au moment du prix",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 11,
+      "temps_s": 3.948,
+      "role": "Une image du produit ou du travail",
+      "action": "L’application reprend une partie de « Le vêtement porté ». Vous n’avez pas besoin de couper la vidéo vous-même.",
+      "texte": "À DÉCOUVRIR",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "La musique continue doucement.",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 12,
+      "temps_s": 5.026,
+      "role": "Le résultat",
+      "action": "L’application montre « Le client qui parle » plus lentement pour laisser voir le résultat.",
+      "texte": "LE RÉSULTAT",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Son bref au moment du résultat",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    },
+    {
+      "etape": 13,
+      "temps_s": 5.0,
+      "role": "vos coordonnées",
+      "action": "À la fin, la vidéo garde le nom de votre commerce, le quartier et le numéro WhatsApp à l’écran.",
+      "texte": "{nom_commerce} · {quartier_ville} · {whatsapp}",
+      "voix": "Pas de parole nécessaire dans cette scène.",
+      "audio": "Petit souffle doux",
+      "guide_parole": {
+        "parole_active": false,
+        "duree_parole_s": 0,
+        "theme": "aucune",
+        "capture": null,
+        "cles": {}
+      }
+    }
+  ],
+  "axes_signature": {
+    "sequence_roles": [
+      "hook_client_style",
+      "visage_client_son_direct",
+      "carte_identite_client",
+      "cutaway_essayage",
+      "phrase_experience_client",
+      "macro_tissu_evoqué",
+      "retour_miroir",
+      "citation_si_saisie",
+      "conseil_vendeur_visuel",
+      "prix_optionnel_temoignage",
+      "quartier_boutique",
+      "reaction_apres_essayage",
+      "carte_contact"
+    ],
+    "nombre_scenes": 13,
+    "courbe_rythme": [
+      2.8,
+      2.669,
+      4.045,
+      5.072,
+      3.287,
+      2.757,
+      3.853,
+      5.494,
+      3.487,
+      2.562,
+      3.948,
+      5.026,
+      5.0
+    ],
+    "transitions": [
+      "match_cut_mouvement",
+      "match_cut_mouvement",
+      "wipe_lateral_produit",
+      "slide_doux",
+      "whip_pan",
+      "flash_blanc",
+      "wipe_lateral_produit",
+      "whip_pan",
+      "cut_sec",
+      "slide_doux",
+      "flash_blanc",
+      "wipe_lateral_produit",
+      "fondu_enchaine"
+    ],
+    "effets": [
+      "freeze_0.5s",
+      "ken_burns_lent",
+      "ralenti_0.7x",
+      "freeze_0.5s",
+      "recadrage_macro_160",
+      "recadrage_macro_160",
+      "ken_burns_lent",
+      "ralenti_0.7x",
+      "freeze_0.5s",
+      "recadrage_macro_160",
+      "punch_in_progressif",
+      "ralenti_0.7x",
+      "aucun_effet"
+    ],
+    "decoupage_prises": [
+      "prise_1",
+      "prise_1",
+      "carte:carte_identite_client",
+      "prise_2",
+      "prise_1",
+      "prise_2",
+      "prise_2",
+      "carte:carte_signature_t5_vetements_mode",
+      "prise_2",
+      "carte:carte_prix_geant",
+      "prise_2",
+      "prise_1",
+      "carte:carte_whatsapp_finale"
+    ],
+    "cartes_generees": [
+      "",
+      "",
+      "carte_identite_client",
+      "",
+      "",
+      "",
+      "",
+      "carte_signature_t5_vetements_mode",
+      "",
+      "carte_prix_geant",
+      "",
+      "",
+      "carte_whatsapp_finale"
+    ],
+    "texte_animation_position": [
+      "price_shake_impact|centre_haut",
+      "line_draw_spec|centre",
+      "caption_breath_fade|tiers_gauche",
+      "split_label_track|tiers_droit",
+      "reveal_mask_text|centre",
+      "pulse_cta_soft|tiers_gauche",
+      "countdown_tick|tiers_droit",
+      "side_tag_animate|centre",
+      "kinetic_number|tiers_gauche",
+      "compteur_countup|tiers_droit",
+      "wipe_label|centre",
+      "lower_third_glide|tiers_gauche",
+      "whatsapp_pulsant|centre_bas"
+    ],
+    "preset_etalonnage": "grade_vetements_mode_t5",
+    "structure_audio": "audio_structure_vetements_mode_t5"
+  },
+  "formulaire_ui": {
+    "titre": "Faire ma vidéo",
+    "message": "Suis les étapes. L’application prépare la vidéo pour vous.",
+    "nombre_sections_principales": 5,
+    "limite_sections_principales": 5,
+    "sections_principales": [
+      {
+        "id": "commerce_contact",
+        "titre": "votre commerce et votre WhatsApp",
+        "champs": [
+          "nom_commerce",
+          "whatsapp"
+        ],
+        "aide": "Écrivez le nom de votre commerce et le numéro où les clients peuvent vous écrire.",
+        "ordre": 1,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "offre",
+        "titre": "Ce que vous proposez",
+        "champs": [
+          "nom_offre"
+        ],
+        "aide": "Écrivez le nom du plat, du produit, du soin ou du travail.",
+        "ordre": 2,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "client_consentement",
+        "titre": "Le client et son accord",
+        "champs": [
+          "prenom_client",
+          "accord_client_diffusion",
+          "citation_client"
+        ],
+        "aide": "Le client doit accepter la vidéo. La phrase du client est facultative.",
+        "ordre": 3,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "prix",
+        "titre": "Le prix",
+        "champs": [
+          "prix",
+          "devise"
+        ],
+        "aide": "Écrivez le vrai prix. FCFA est déjà choisi si vous ne changes rien.",
+        "ordre": 4,
+        "visible_par_defaut": true
+      },
+      {
+        "id": "lieu",
+        "titre": "Où vous trouver",
+        "champs": [
+          "quartier_ville"
+        ],
+        "aide": "Écrivez le quartier et la ville.",
+        "ordre": 5,
+        "visible_par_defaut": true
+      }
+    ],
+    "options_facultatives_repliees": {
+      "id": "options_avancees",
+      "titre": "Autres options (facultatif)",
+      "champs": [
+        "badge_engagement_actif"
+      ],
+      "visible_par_defaut": false,
+      "aide": "Laissez vide si vous n’êtes pas sûr que le message est vrai."
+    },
+    "devise_defaut": "FCFA",
+    "devise_saisie_par_video": true,
+    "enregistrer_ou_pre_remplir_depuis_profil": false,
+    "note": "vos réponses servent pour cette vidéo seulement. Elles ne sont pas gardées dans un profil."
+  },
+  "guide_tournage": {
+    "message_principal": "Filmez les courtes vidéos demandées. L’application prépare la vidéo pour vous.",
+    "nombre_prises_a_filmer": 2,
+    "duree_brute_cible_par_prise_s": "8–20",
+    "etapes_capture": [
+      {
+        "etape": 1,
+        "prise_id": "prise_1",
+        "quoi_filmer": "Le client qui parle",
+        "consigne": "Commencez par montrer le client qui parle. Tenez votre téléphone debout et reste assez immobile. Filmez près d’une fenêtre pour que les vraies couleurs se voient.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [
+          1,
+          2,
+          3,
+          5
+        ],
+        "guide_parole_segments": [
+          {
+            "scene": 1,
+            "quoi_raconter": "Demandez au client de parler du vêtement qu’il montre.",
+            "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+            "exemple": "Je parle de cette tenue.",
+            "note_exemple": "Exemple pour comprendre, pas à répéter.",
+            "duree_conseillee_s": 2.0,
+            "segment_audio_id": "T5_scene_01_voix"
+          },
+          {
+            "scene": 2,
+            "quoi_raconter": "Laissez-le raconter sa visite ou son essayage.",
+            "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+            "exemple": "Je raconte mon essayage.",
+            "note_exemple": "Exemple pour comprendre, pas à répéter.",
+            "duree_conseillee_s": 2.0,
+            "segment_audio_id": "T5_scene_02_voix"
+          },
+          {
+            "scene": 3,
+            "quoi_raconter": "Demandez-lui ce qu’il a regardé ou essayé.",
+            "quoi_montrer": "Gardez aussi à l’écran une image tirée de la prise « Le client qui parle », derrière ou à côté de la carte « {prenom_client} · {quartier_ville} ».",
+            "exemple": "Je continue mon récit.",
+            "note_exemple": "Exemple pour comprendre, pas à répéter.",
+            "duree_conseillee_s": 2.0,
+            "segment_audio_id": "T5_scene_03_voix"
+          },
+          {
+            "scene": 5,
+            "quoi_raconter": "Invitez-le à parler d’un moment de sa visite.",
+            "quoi_montrer": "Montrez le client pendant qu’il répond avec ses mots.",
+            "exemple": "Voilà ce que j’ai vécu.",
+            "note_exemple": "Exemple pour comprendre, pas à répéter.",
+            "duree_conseillee_s": 2.0,
+            "segment_audio_id": "T5_scene_05_voix"
+          }
+        ],
+        "guide_parole_segmentage": "Dans la même prise, afficher les consignes l’une après l’autre. Le bouton Suivant marque la fin de chaque extrait de voix."
+      },
+      {
+        "etape": 2,
+        "prise_id": "prise_2",
+        "quoi_filmer": "Le vêtement porté",
+        "consigne": "Ensuite, montrez le vêtement porté. Tenez votre téléphone debout et reste assez immobile. Filmez près d’une fenêtre pour que les vraies couleurs se voient.",
+        "photo_acceptee": true,
+        "duree_conseillee": "Environ 12 secondes",
+        "guide_parole_scenes": [],
+        "guide_parole_segments": [],
+        "guide_parole_segmentage": "Aucune consigne de parole dans cette prise."
+      }
+    ],
+    "pas_de_montage_manuel": true,
+    "le_moteur_reutilise_les_rushs": true,
+    "le_commercant_ne_filme_pas_une_scene_par_etape_montage": true,
+    "titre": "Ce que vous devez filmer",
+    "note": "Tenez votre téléphone debout. Filmez près d’une fenêtre ou dehors à l’ombre. Évitez d’avoir la lumière derrière le sujet.",
+    "guide_parole": {
+      "visible_avant_et_pendant_la_prise": true,
+      "consignes_regroupees_par_prise": true,
+      "segments_voix_marques_dans_la_prise": true,
+      "voix_separee_de_la_vitesse_image": true,
+      "titre": "De quoi parler ?",
+      "introduction": "Pour chaque scène parlée, vous voyez quoi montrer, quoi raconter avec vos mots, le temps conseillé et un exemple. L’exemple aide à comprendre; ne le répétez pas mot pour mot.",
+      "langue": "Parlez en français ou dans la langue que vous voulez, par exemple en fon, yoruba ou bariba.",
+      "temps": "Le temps conseillé vous aide à parler brièvement. Il ne coupe pas votre voix de force; vous pouvez continuer pendant l’image suivante.",
+      "pas_une_prise": "Filmez seulement les prises déjà demandées. Pas besoin de filmer une scène à part pour parler.",
+      "sans_voix": "Vous pouvez ne pas parler. Choisissez musique seule; la vidéo reste complète.",
+      "sous_titres": "Les mots à l’écran viennent des informations que vous avez données. Ils ne reprennent pas votre voix.",
+      "cles": {
+        "titre": "guide.commun.titre",
+        "introduction": "guide.commun.introduction",
+        "langue": "guide.commun.langue",
+        "temps": "guide.commun.temps",
+        "pas_une_prise": "guide.commun.pas_une_prise",
+        "sans_voix": "guide.commun.sans_voix",
+        "sous_titres": "guide.commun.sous_titres"
+      }
+    },
+    "sous_titres_voix": {
+      "sous_titres_automatiques": false,
+      "paroles_transcrites": false,
+      "texte_ecran_actuel": "Le nom, le prix, le lieu et les mots affichés viennent des informations saisies; ils ne reprennent pas votre voix.",
+      "voix_langue_locale": "Vous pouvez parler dans votre langue. Pour écrire vos paroles à l’écran, une personne qui connaît cette langue doit les écrire et les vérifier.",
+      "cles": {
+        "texte_ecran_actuel": "guide.commun.sous_titres",
+        "voix_langue_locale": "guide.commun.sous_titres_locale"
+      }
+    },
+    "parole_dans_prises_existantes": true,
+    "pas_une_prise_par_scene_finale": true,
+    "marqueurs_audio_sans_transcription": "Le bouton Suivant marque les extraits de voix; aucun mot n’est reconnu ou écrit automatiquement."
+  },
+  "nom_format_affiche": "Un client raconte",
+  "interface_commercant": {
+    "visible": true,
+    "nom_format": "Un client raconte",
+    "secteur": "Vêtements",
+    "phrase_courte": "Le client parle avec ses mots.",
+    "ne_pas_afficher_cles_internes": [
+      "id",
+      "secteur",
+      "format",
+      "signature_montage.id_unique"
+    ],
+    "ton": "français simple, phrases courtes, vouvoiement respectueux",
+    "promesse": "Vous filmez les vidéos demandées. L’application prépare la vidéo pour vous."
+  }
+}

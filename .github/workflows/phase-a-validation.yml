@@ -1,0 +1,61 @@
+name: Phase A safe validation
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "db/migrations/**"
+      - "scripts/check_phase_a.cjs"
+      - "scripts/check-b2-orphans.mjs"
+      - "scripts/security-ci.mjs"
+      - "tests/**"
+      - "package.json"
+      - "wrangler.jsonc"
+      - ".github/workflows/phase-a-validation.yml"
+      - ".github/workflows/api-security-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase-a-safe-validation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  syntax-and-unit-tests:
+    name: Syntax, purge unit tests, and local D1 migrations
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check src/index.js
+          node --check src/purge-executor-core.js
+          node --check scripts/check_phase_a.cjs
+          node --check scripts/check-b2-orphans.mjs
+          node --check scripts/security-ci.mjs
+          node --input-type=module -e 'await import("./src/index.js"); console.log("Worker module import OK")'
+
+      - name: Run purge executor unit tests
+        run: node --test tests/purge-executor-core.test.mjs
+
+      - name: Create fresh local D1 schema
+        run: |
+          npx wrangler d1 execute vitrine-video-db --local --file=db/migrations/0001_init.sql
+          npx wrangler d1 execute vitrine-video-db --local --file=db/migrations/0002_query_indexes.sql
+          npx wrangler d1 execute vitrine-video-db --local --file=db/migrations/0003_purge_operation_ledger.sql

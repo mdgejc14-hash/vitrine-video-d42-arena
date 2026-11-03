@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sector_mode">👗 Vêtements &amp; Mode</string>
+    <string name="sector_coiffure">✂️ Coiffure &amp; Beauté</string>
+    <string name="sector_restauration">🍲 Restauration &amp; Maquis</string>
+    <string name="sector_btp">🏗️ Bâtiment &amp; Travaux</string>
+    <string name="sector_immo_auto">🚗🏠 Vente de Voitures &amp; Maisons</string>
+    <string name="sector_commerce">🛒 Boutique &amp; Petit Commerce</string>
+    <string name="sector_all">Tous les métiers</string>
+</resources>
