@@ -213,3 +213,110 @@ consommée** pour produire ces preuves.
 - D42 n'est **pas** terminée ; D41 n'est **pas** modifiée.
 - Le miroir public existe toujours et doit être supprimé après la porte E.
 - Les MP4 produits restent des artefacts Actions : aucun n'est versionné.
+
+---
+
+# ADDENDUM D42.3 — CÂBLAGE DES GABARITS ET VALIDATION EXACTE
+
+**Date :** 2026-11-03 · **Branche :** `d42.2` · **Miroir :** `6f71ade`
+
+## 1. Défaut corrigé : le filtre de gabarit était perdu
+
+Le workflow passait `shard:N/8` **dans l'argument des gabarits**. Le motif shard
+l'emportait dans `cibles()`, la liste restait les 30 gabarits, et `limite=1` ne
+gardait que le premier venu : le rendu était vert, mais sur
+`batiment_travaux_T1` au lieu du gabarit demandé.
+
+| Notion | Avant | Après |
+|---|---|---|
+| Filtre de gabarit | écrasé par le lot | `d42_templates`, argument 3 |
+| Indice du lot | confondu avec le filtre | `d42_shard`, argument 9 |
+| Total des lots | confondu avec le filtre | `d42_shards`, argument 10 |
+| Badge | figé à `none` | entrée `badge` du workflow |
+| Profil, langue, limite | déjà distincts | inchangés |
+
+Ordre d'application dans `cibles()` : **filtre, puis contrôle, puis lot, puis
+plafond**. Un gabarit demandé introuvable provoque un échec immédiat ; une
+demande d'un seul gabarit doit rendre exactement une cible.
+
+Journal obtenu : `D42-SELECTION filtre=restaurants_maquis_T1 demandes=1
+selectionnes=1 ids=restaurants_maquis_T1 lots=1 indice=1`.
+
+## 2. Récapitulatif CI
+
+`smoke=skipped` n'est accepté que si `run_smoke=0` **et** validation `success`.
+Tout autre cas reste rouge. Le run 41722190374 est entièrement vert, smoke
+inclus comme `skipped` légitime.
+
+## 3. Deux défauts de rendu corrigés
+
+| Défaut | Preuve | Correctif |
+|---|---|---|
+| Prix brut `25000 FCFA` | 8b.texte du run 41718770982 | `grouperMilliers` sur `{prix}` → `25 000 FCFA` |
+| Numéro coupé `…+2299700` / `0000` | frames du run 41718770982 | `splitLines` ne coupe plus dans une suite de chiffres, préfère un séparateur, et garde le `+` avec ses chiffres |
+
+Tests JVM ajoutés : `un numero de telephone n_est jamais coupe en deux`,
+`la coupure prefere un separateur de champs`,
+`le plus international reste avec les chiffres`,
+`le prix est groupe par milliers dans le texte affiche`.
+
+## 4. Rendu de référence (run 41722190374)
+
+| Élément | Valeur |
+|---|---|
+| Gabarit demandé / exécuté | `restaurants_maquis_T1` / `restaurants_maquis_T1` |
+| Langue, badge, profil | fr, `stock_limite`, validation 540×960 |
+| Lignes du manifeste | **1** |
+| MP4 | 15 204 494 o, 35,04 s, h264 540×960 + aac 48 kHz |
+| SHA-256 | `9a0d27efa018d6bb6dda9f564af806841f71a5f47963a60ee757af49e3a2737e` |
+| Durée du rendu | 149 025 ms |
+| Worker | `SUCCEEDED` |
+
+## 5. Les six chaînes demandées — verdict
+
+| # | Chaîne exigée | Observée | Verdict |
+|---|---|---|---|
+| 1 | `Chez D42 Test` | oui, scène d'ouverture et carte de contact | **conforme** |
+| 2 | `OFFRE D42 DIAGNOSTIC` | **jamais** | **absent** |
+| 3 | `25 000 FCFA` | oui, après correctif | **conforme** |
+| 4 | `COTONOU` | oui, carte de contact | **conforme** |
+| 5 | `STOCK LIMITÉ` | « Stock limité » | **casse différente** |
+| 6 | `CONTACTEZ-NOUS` | **jamais** | **absent** |
+
+**3 conformes sur 6. Porte A NON validée** — l'ordre interdit de la déclarer si
+une seule valeur manque.
+
+### Pourquoi 2 et 6 sont absents — cause structurelle, pas technique
+
+- `{nom_offre}` n'apparaît dans `restaurants_maquis_T1` **que** dans
+  `copywriting.formules_prix[0]`, une phrase de conseil au commerçant qui
+  **n'est jamais affichée**. Aucune scène ne porte l'offre. 14 des 30 gabarits
+  l'affichent (dont `restaurants_maquis_T3` et `T4`) ; **T1 non**.
+- **Aucun des 30 gabarits** ne contient de libellé CTA : `CONTACTEZ-NOUS`
+  n'existe nulle part dans les textes de scène. La scène de contact rend
+  `nom_commerce · quartier_ville · whatsapp`, sans appel à l'action.
+- Le badge est rendu fidèlement à la l10n : `Stock limité`, pas `STOCK LIMITÉ`.
+  La casse exigée diffère de la chaîne produit.
+
+Ces trois écarts ne peuvent pas être fermés par le moteur : ils demandent une
+modification éditoriale des gabarits (ajouter une scène « offre » dans T1 et un
+libellé CTA dans les 30 gabarits, ou dans la l10n). Les fabriquer après rendu
+est interdit et n'a pas été fait.
+
+## 6. Transfert vers `audit-d41`
+
+Non exécuté : la branche `d42.2` est poussée, la PR #2 reste ouverte et non
+fusionnée. Procédure vérifiable préparée :
+
+```
+git diff cf26af5..d42.2 --stat          # 12 fichiers touchés
+git log --oneline cf26af5..d42.2        # 18 commits
+```
+
+Le transfert se fera par `git merge --no-ff d42.2` après accord, jamais par
+copie aveugle de fichiers.
+
+## 7. Coût
+
+Runs publics : 5 pour D42.3 (2 échecs de compilation corrigés en cours de
+route). Minutes privées : **0**. Paiement inchangé : `501`.
