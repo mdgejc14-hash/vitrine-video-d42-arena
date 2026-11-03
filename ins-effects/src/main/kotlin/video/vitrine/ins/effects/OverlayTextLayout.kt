@@ -129,6 +129,10 @@ object OverlayTextLayout {
     /** Fraction minimale de la hauteur de sortie exigee pour un texte lisible. */
     const val FRACTION_MIN_LISIBLE = 0.05f
 
-    /** Part de la hauteur occupee par le texte dans un cadre 1080x1920. */
-    const val HEIGHT_FRACTION = 0.055f
+    /**
+     * Part de la hauteur occupee par le texte. Type Double comme
+     * [WIDTH_FRACTION] : `maxOf` n'accepte pas des operandes de types
+     * differents (erreur de compilation constatee au run 41702332080).
+     */
+    const val HEIGHT_FRACTION = 0.055
 }
