@@ -4,7 +4,7 @@
  "note": "D42 — source canonique = textes FR des 30 gabarits (jamais reecrits). Chaque cle est le TEXTE EXACT du JSON ; les valeurs sont les traductions. Les variables {…} doivent rester identiques d'une langue a l'autre.",
  "badges": {
   "stock_limite": {
-   "fr": "Stock limité",
+   "fr": "STOCK LIMITÉ",
    "en": "Limited stock",
    "es": "Stock limitado",
    "ja": "在庫限定"

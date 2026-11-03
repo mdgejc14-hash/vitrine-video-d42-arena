@@ -136,9 +136,9 @@ class GabaritL10nTest {
         assertNotNull(avec)
         val motsSans = mots(sans!!.beatSheetJson).map { it.getString(0) }
         val motsAvec = mots(avec!!.beatSheetJson).map { it.getString(0) }
-        assertFalse("badge present sans selection", motsSans.contains("Stock limité"))
-        assertTrue("badge absent alors qu'il est selectionne", motsAvec.contains("Stock limité"))
-        assertEquals("une seule insertion de badge", 1, motsAvec.count { it == "Stock limité" })
+        assertFalse("badge present sans selection", motsSans.contains("STOCK LIMITÉ"))
+        assertTrue("badge absent alors qu'il est selectionne", motsAvec.contains("STOCK LIMITÉ"))
+        assertEquals("une seule insertion de badge", 1, motsAvec.count { it == "STOCK LIMITÉ" })
     }
 
     @Test
@@ -152,11 +152,11 @@ class GabaritL10nTest {
             badgeTexte = donnees.badge("stock_limite", "fr")
         )!!
         val tous = mots(doc.beatSheetJson)
-        val badge = tous.first { it.getString(0) == "Stock limité" }
+        val badge = tous.first { it.getString(0) == "STOCK LIMITÉ" }
         val debutBadge = badge.getDouble(1)
         val finBadge = badge.getDouble(2)
         // Aucun autre texte actif pendant la fenetre du badge.
-        val collisions = tous.filter { it.getString(0) != "Stock limité" }
+        val collisions = tous.filter { it.getString(0) != "STOCK LIMITÉ" }
             .filter { it.getDouble(1) < finBadge - 1e-6 && it.getDouble(2) > debutBadge + 1e-6 }
         assertTrue("textes simultanes du badge: $collisions", collisions.isEmpty())
     }
