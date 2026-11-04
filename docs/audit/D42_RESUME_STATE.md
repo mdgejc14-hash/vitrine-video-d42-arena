@@ -114,3 +114,44 @@ Le push vers le dépôt privé **n'a pas pu être exécuté**. Patch vérifiable
 ⚠️ Cela ne prouve **pas** qu'ils s'affichent : la porte A a montré que `T1`
 avait un champ `prix` pendant que le prix restait invisible. La colonne
 « rendu » ne se remplit que par rendu réel.
+
+---
+
+## D42.5 bis — CI VERTE (2026-11-04, run `41792419629`)
+
+| Étape | Résultat |
+|---|---|
+| 7 — Validateur croisé des 30 gabarits | ✅ |
+| **8 — ktlint + detekt + tests JVM + graphe** | ✅ **première exécution réelle** |
+| 9 — Harnais CI-Visual-Check (artefacts Robolectric) | ✅ |
+| 10 — Assemblage APK + AAB debug | ✅ |
+| 11-13 — Release signé / contrôle / publication | ⏭️ sautés (secrets absents du miroir) |
+| 14 — Publication mapping R8 | ✅ |
+| 15 — Lint cible 36 | ✅ |
+
+### Ce que la CI a révélé en s'exécutant enfin
+
+Quatre défauts **antérieurs** à D42.5, tous invisibles tant que l'étape 8 était
+sautée :
+
+1. `GabaritBeatSheetTest` **ne compilait pas** : `build()` renvoie `Document?`,
+   deux tests D42.3 l'utilisaient comme non-null.
+2. Ces mêmes tests lisaient `words[i]["word"]` alors que le moteur produit des
+   triplets `["texte", debut, fin]`, et cherchaient « 25000 » dans tout le JSON
+   (`keywords` conserve volontairement le jeton brut).
+3. `GabaritL10nTest.prix non substitue` exigeait « 5000 » brut alors que le
+   formateur groupe les milliers depuis D42.3.
+4. `TimestampOverlapTest` (correction temporelle) **échouait à
+   l'initialisation** : `KineticTypography` instancie `android.graphics` hors
+   runtime Android. Ajout de Robolectric → les 4 tests s'exécutent vraiment.
+
+La fixture `restaurants_maquis_T1.json` était aussi une copie périmée du
+gabarit livré (sans les deux textes D42.3) : rafraîchie.
+
+### Références
+
+| Dépôt | Réf. |
+|---|---|
+| privé `d42.5` | `863186a` |
+| miroir `main` | `a43485f` |
+| privé `main` / `d42.2` | `74edd98` / `2a6906c` — **intactes** |
