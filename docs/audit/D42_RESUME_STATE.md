@@ -98,3 +98,19 @@ Décomposées sans changer une seule règle :
 
 Le push vers le dépôt privé **n'a pas pu être exécuté**. Patch vérifiable :
 `/home/user/d425-detekt.patch`. Voir le rapport de conversation.
+
+### 4. Inventaire statique des 30 gabarits (préparation du jeudi)
+
+`docs/audit/D42_5_MATRICE_STATIQUE_30_GABARITS.md` : 30/30 gabarits parsés.
+
+| Contrôle statique | Résultat |
+|---|---|
+| gabarits avec champ `prix` | 30/30 |
+| gabarits avec champ `whatsapp` | 30/30 |
+| gabarits avec scène(s) de badge | 30/30 |
+| durées distinctes | 33 s · 35 s · 40 s · 50 s |
+| variables texte utilisées | `{prix}` `{devise}` `{nom_commerce}` `{nom_offre}`... |
+
+⚠️ Cela ne prouve **pas** qu'ils s'affichent : la porte A a montré que `T1`
+avait un champ `prix` pendant que le prix restait invisible. La colonne
+« rendu » ne se remplit que par rendu réel.
