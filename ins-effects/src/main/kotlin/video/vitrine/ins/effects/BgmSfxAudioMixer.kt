@@ -270,12 +270,21 @@ class BgmSfxAudioMixer(
                     musicFedFrames = fed
                 }
             }
+            // D42.6 : budget PROPRE aux SFX. Avant, la boucle SFX partageait le
+            // garde consomme par la musique : une BGM plus longue que la
+            // composition (45 s dans le banc, 33 s de rendu) ne s'epuise jamais,
+            // absorbait les FEED_GUARD blocs a chaque appel et laissait
+            // `guard == 0` a l'entree de la boucle. Les 9 SFX n'etaient donc
+            // jamais alimentes a leur date. Mesure sur le MP4 rendu
+            // immo_auto_T4_en : 15 reperes planifies, seuls les 4 derniers
+            // audibles (la musique est videe en fin de composition).
             val iterator = sfxFeeds.iterator()
-            while (iterator.hasNext() && guard > 0) {
+            var sfxGuard = if (full) FULL_DRAIN_GUARD else FEED_GUARD
+            while (iterator.hasNext() && sfxGuard > 0) {
                 val feed = iterator.next()
                 if (voicePositionUs < feed.atUs && !full) continue
                 var fedFrames = fedBySource[feed.sourceId] ?: 0L
-                guard = feedPcm(feed.sourceId, feed.pcm, fedFrames, guard, channels, null) { fed ->
+                sfxGuard = feedPcm(feed.sourceId, feed.pcm, fedFrames, sfxGuard, channels, null) { fed ->
                     fedFrames = fed
                     fedBySource[feed.sourceId] = fed
                 }

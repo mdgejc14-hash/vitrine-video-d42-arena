@@ -169,6 +169,29 @@ class BgmSfxAudioMixerMultiRushTest {
     }
 
     @Test
+    fun `les SFX sont alimentes meme si la BGM n est jamais epuisee`() {
+        // D42.6 : defaut mesure sur le MP4 rendu (immo_auto_T4 en) — 15 reperes
+        // SFX planifies, seuls les 4 derniers audibles. Cause : la boucle SFX
+        // partageait le garde d'alimentation consomme par la musique. Une BGM
+        // de 45 s pour une composition de 33 s ne s'epuise jamais : elle
+        // prenait les 8 blocs a chaque appel et `guard == 0` a l'entree de la
+        // boucle SFX, qui ne tournait donc jamais.
+        val fake = FakeMixer()
+        val musique = BgmDecoder.Pcm(ShortArray(48000 * 45) { 8000 }, 48000, 1)
+        val cue = BgmSfxAudioMixer.SfxCue(100_000L, BgmDecoder.Pcm(ShortArray(4800) { 12000 }, 48000, 1))
+        val mixer = BgmSfxAudioMixer(fake, musique, listOf(cue), compositionDurationUs = 33_000_000L)
+        mixer.configure(format, 1000, 0L)
+        val voix = mixer.addSource(format, 0L)
+        repeat(20) { mixer.queueInput(voix, voiceBuffer(20000)) } // 200 ms de voix
+        // Ids deterministes du faux delegue : voix=1, musique=2, SFX=3.
+        assertTrue("musique plus alimentee", fake.maxAbsBySource[2].orEmpty().isNotEmpty())
+        assertTrue(
+            "SFX jamais alimente a sa date (BGM plus longue que la composition)",
+            fake.maxAbsBySource[3].orEmpty().isNotEmpty()
+        )
+    }
+
+    @Test
     fun `fade-in musique appliqué à l alimentation (F60)`() {
         val fake = FakeMixer()
         val mixer = newMixer(fake)
