@@ -51,3 +51,50 @@ seulement la matrice.
 - Ne pas re-suspecter la correction temporelle : elle est démontrée.
 - Ne pas conclure depuis `mots_beat_sheet > 0` : lire `D42-SELECTION`.
 - Ne pas injecter de texte après rendu pour « compléter » la porte A.
+
+---
+
+## D42.5 — Detekt à zéro, équivalence prouvée (2026-11-04)
+
+### 1. Contexte de reprise
+
+Le workspace a été **restauré à un état antérieur** : le clone de travail et le
+fichier de jeton ont disparu. Tout le code D42.4 était sur le miroir public
+(`af2388f`) et a été récupéré par clone anonyme. **Aucune perte.**
+
+### 2. Les deux erreurs Detekt
+
+| Fonction | Complexité cyclomatique | Seuil |
+|---|---|---|
+| `segmenter` | 15 | 15 |
+| `estFrontiereDeGrapheme` | 16 | 15 |
+
+Décomposées sans changer une seule règle :
+
+- `segmenter` → `contientSeparateur` · `decouper` · `prochaineCoupe` ·
+  `meilleurCandidat` (parcours unique, même choix de borne) ;
+- `estFrontiereDeGrapheme` → `coupeUnePaireDeSubstitution` ·
+  `estExtensionDeGrapheme` · `estJointParZWJ` · `estSecondeMoitieDeDrapeau` ·
+  `nombreDIndicateursPrecedents`.
+
+`detekt.yml` **non modifié**. Aucun `@Suppress`. Aucun seuil relevé.
+
+### 3. Preuves d'équivalence (exécutées, pas estimées)
+
+- **15 354 sorties identiques** entre l'ancienne et la nouvelle implémentation
+  (segmentation aux largeurs 1/4/7/14 + toutes les frontières de grapheme +
+  les 9 cas de prix), SHA-256 identique : `7cd2e91e…05f60`.
+- 12/12 tests de segmentation verts après refactorisation.
+- **Detekt 1.23.8** (version exacte du projet) avec `detekt.yml` du projet :
+  ancien code → **2 erreurs reproduites** (15/15, 16/15) ; nouveau → **0**.
+- **ktlint : NON vérifiable localement.** Mon ktlint 1.4.1 signale des erreurs
+  sur `GabaritBeatSheet.kt`, fichier pourtant **vert en CI** : sa configuration
+  ne correspond donc pas à celle du projet (aucun `.editorconfig` au dépôt,
+  version épinglée par le plugin). Son verdict n'est pas transférable ; seul le
+  run CI fera foi. Corrigé malgré tout ce qui est vrai quelle que soit la
+  version : ordre des imports du test, virgule finale de `Candidat`.
+
+### 4. Ce qui reste à faire (bloqué par l'absence de jeton)
+
+Le push vers le dépôt privé **n'a pas pu être exécuté**. Patch vérifiable :
+`/home/user/d425-detekt.patch`. Voir le rapport de conversation.

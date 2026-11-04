@@ -65,41 +65,67 @@ internal object TexteCommerce {
      */
     fun segmenter(texte: String, largeurMax: Int = LARGEUR_SEGMENT): List<String> {
         if (texte.isBlank()) return emptyList()
-        if (texte.any { it.isWhitespace() } || texte.any { it == ESPACE_INSECABLE }) {
-            return listOf(texte)
-        }
+        if (contientSeparateur(texte)) return listOf(texte)
         val coupes = positionsDeCoupe(texte)
         if (coupes.isEmpty()) return listOf(texte)
         // La fin de chaine est une borne legitime : elle evite tout cas limite
         // ou aucun candidat ne tient dans le budget.
-        val bornes = coupes + texte.length
+        return decouper(texte, coupes + texte.length, largeurMax)
+    }
+
+    /** Vrai si le texte contient une separation : il reste alors d'un seul bloc
+     *  et le retour a la ligne est l'affaire de `OverlayTextLayout.splitLines`. */
+    private fun contientSeparateur(texte: String): Boolean =
+        texte.any { it.isWhitespace() } || texte.any { it == ESPACE_INSECABLE }
+
+    /** Applique les coupures retenues jusqu'a epuisement du texte. */
+    private fun decouper(texte: String, bornes: List<Int>, largeurMax: Int): List<String> {
         val morceaux = mutableListOf<String>()
         var debut = 0
         while (debut < texte.length) {
-            var fin = -1
-            var frontiereForte = -1
-            for (p in bornes) {
-                if (p <= debut) continue
-                if (largeurEnColonnes(texte, debut, p) <= largeurMax) {
-                    fin = p
-                    // Un changement d'ecriture (kanji -> kana, kana -> latin)
-                    // est une coupure plus lisible qu'une coupe au milieu d'un
-                    // mot japonais : on la prefere si elle remplit assez la ligne.
-                    if (estFrontiereForte(texte, p)) frontiereForte = p
-                } else {
-                    break
-                }
-            }
-            if (fin < 0) fin = bornes.first { it > debut }
-            if (frontiereForte > debut &&
-                largeurEnColonnes(texte, debut, frontiereForte) * 10 >= largeurMax * 6
-            ) {
-                fin = frontiereForte
-            }
+            val fin = prochaineCoupe(texte, debut, bornes, largeurMax)
             morceaux += texte.substring(debut, fin)
             debut = fin
         }
         return morceaux
+    }
+
+    /**
+     * Choix de la coupure suivante : la borne la plus lointaine qui tient dans
+     * le budget, sauf si une frontiere FORTE (changement d'ecriture) remplit au
+     * moins 60 % de la ligne — un changement kanji -> kana -> latin est une
+     * coupure plus lisible qu'une coupe au milieu d'un mot japonais.
+     */
+    private fun prochaineCoupe(texte: String, debut: Int, bornes: List<Int>, largeurMax: Int): Int {
+        val candidat = meilleurCandidat(texte, debut, bornes, largeurMax)
+        if (candidat.derniere < 0) return bornes.first { it > debut }
+        val remplitAssez = candidat.forte > debut &&
+            largeurEnColonnes(texte, debut, candidat.forte) * 10 >= largeurMax * 6
+        return if (remplitAssez) candidat.forte else candidat.derniere
+    }
+
+    /** Une borne de coupure et, parmi celles qui tiennent, la derniere frontiere forte. */
+    private class Candidat(
+        val derniere: Int,
+        val forte: Int,
+    )
+
+    /** Parcourt les bornes une seule fois et retient les deux candidats utiles. */
+    private fun meilleurCandidat(
+        texte: String,
+        debut: Int,
+        bornes: List<Int>,
+        largeurMax: Int
+    ): Candidat {
+        var derniere = -1
+        var forte = -1
+        for (p in bornes) {
+            if (p <= debut) continue
+            if (largeurEnColonnes(texte, debut, p) > largeurMax) break
+            derniere = p
+            if (estFrontiereForte(texte, p)) forte = p
+        }
+        return Candidat(derniere, forte)
     }
 
     /**
@@ -158,27 +184,47 @@ internal object TexteCommerce {
      */
     fun estFrontiereDeGrapheme(texte: String, i: Int): Boolean {
         if (i <= 0 || i >= texte.length) return true
-        val prec = texte[i - 1]
-        val cour = texte[i]
-        if (prec.isHighSurrogate() && cour.isLowSurrogate()) return false
-        val cp = codePointA(texte, i)
-        if (estMarque(cp)) return false
-        if (prec == '\u200D' || cp == 0x200D) return false
-        if (estSelecteurDeVariante(cp)) return false
-        if (cp in 0x1F3FB..0x1F3FF) return false // modificateur de carnation
-        if (cp in 0xE0020..0xE007F) return false // etiquettes emoji
-        if (estIndicateurRegional(cp)) {
-            var n = 0
-            var j = i
-            while (j > 0) {
-                val avant = codePointAvant(texte, j)
-                if (!estIndicateurRegional(avant)) break
-                n++
-                j -= charCount(avant)
-            }
-            if (n % 2 == 1) return false // 2e moitie d'un drapeau
-        }
+        if (coupeUnePaireDeSubstitution(texte, i)) return false
+        val courant = codePointA(texte, i)
+        if (estExtensionDeGrapheme(courant)) return false
+        if (estJointParZWJ(texte, i, courant)) return false
+        if (estSecondeMoitieDeDrapeau(texte, i, courant)) return false
         return true
+    }
+
+    /** Couper entre le demi-codet haut et le demi-codet bas romprait le caractere. */
+    private fun coupeUnePaireDeSubstitution(texte: String, i: Int): Boolean =
+        texte[i - 1].isHighSurrogate() && texte[i].isLowSurrogate()
+
+    /** Code point qui prolonge le precedent au lieu de commencer un grapheme :
+     *  marque combinante, selecteur de variante, carnation, etiquette emoji. */
+    private fun estExtensionDeGrapheme(codePoint: Int): Boolean =
+        estMarque(codePoint) ||
+            estSelecteurDeVariante(codePoint) ||
+            codePoint in 0x1F3FB..0x1F3FF ||
+            codePoint in 0xE0020..0xE007F
+
+    /** Sequence ZWJ : aucune coupure de part et d'autre du liant. */
+    private fun estJointParZWJ(texte: String, i: Int, courant: Int): Boolean =
+        texte[i - 1] == '\u200D' || courant == 0x200D
+
+    /** Deux indicateurs regionaux forment un drapeau : on ne coupe jamais entre eux. */
+    private fun estSecondeMoitieDeDrapeau(texte: String, i: Int, courant: Int): Boolean {
+        if (!estIndicateurRegional(courant)) return false
+        return nombreDIndicateursPrecedents(texte, i) % 2 == 1
+    }
+
+    /** Compte les indicateurs regionaux consecutifs qui precedent la position [i]. */
+    private fun nombreDIndicateursPrecedents(texte: String, i: Int): Int {
+        var nombre = 0
+        var j = i
+        while (j > 0) {
+            val avant = codePointAvant(texte, j)
+            if (!estIndicateurRegional(avant)) break
+            nombre++
+            j -= charCount(avant)
+        }
+        return nombre
     }
 
     /** Vrai si [codePoint] est une marque combinante (Mn, Me, Mc). */

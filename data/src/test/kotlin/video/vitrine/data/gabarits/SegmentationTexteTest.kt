@@ -1,9 +1,9 @@
 package video.vitrine.data.gabarits
 
-import java.util.Random
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.Random
 
 /**
  * D42.4 — segmentation multilingue et invariant de conservation.
