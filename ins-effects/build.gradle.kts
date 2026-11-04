@@ -6,5 +6,6 @@ dependencies {
     implementation(libs.media3.effect)
     implementation(libs.media3.common)
     testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
     testImplementation("org.json:json:20240303")
 }

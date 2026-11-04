@@ -3,6 +3,9 @@ package video.vitrine.ins.effects
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 /**
  * D42-F15 — REGRESSION : horodatages negatifs vers TimestampWrapper.
@@ -18,6 +21,12 @@ import org.junit.Test
  * produire de video a partir des rushs CLIENT (D20bis), alors que la CI D41
  * etait verte — le chemin n'avait jamais ete execute jusqu'au bout.
  */
+// D42.5 : KineticTypography initialise android.graphics (Paint, StaticLayout).
+// Sans runtime Android, la classe echouait a l'initialisation et les 4 tests
+// n'ont JAMAIS tourne (la CI s'arretait avant, faute de keystore). Robolectric
+// fournit ce runtime : la correction temporelle D42-F15 est enfin verifiee.
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 class TimestampOverlapTest {
 
     private fun overlays(words: List<WordStamp>) =
