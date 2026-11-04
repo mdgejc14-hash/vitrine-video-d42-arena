@@ -659,7 +659,7 @@
         "carte_id": "carte_signature_t1_restaurants_maquis"
       },
       "texte_ecran": {
-        "contenu": "À RETENIR",
+        "contenu": "{nom_offre}",
         "position": "tiers_gauche",
         "animation": "reveal_mask_text",
         "apparition_s": 0.0,
@@ -699,7 +699,7 @@
         "vitesse": 1.0
       },
       "texte_ecran": {
-        "contenu": "À DÉCOUVRIR",
+        "contenu": "CONTACTEZ-NOUS",
         "position": "tiers_droit",
         "animation": "pulse_cta_soft",
         "apparition_s": 0.0,

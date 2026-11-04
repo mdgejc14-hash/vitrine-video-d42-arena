@@ -214,7 +214,13 @@ class GabaritL10nTest {
             badgeTexte = donnees.badge("places_limitees", "ja")
         )!!
         val textes = mots(ja.beatSheetJson).map { it.getString(0) }
-        assertTrue("prix non substitue", textes.any { it.contains("5000") && it.contains("FCFA") })
+        // D42.3 : le prix est desormais groupe (« 5000 » -> « 5 000 »). L'intention
+        // du test est inchangee — le prix ET sa devise sont substitues — seule la
+        // forme attendue suit la convention de formatage de l'application.
+        assertTrue(
+            "prix non substitue : ${textes.filter { it.contains("FCFA") }}",
+            textes.any { it.contains("5 000") && it.contains("FCFA") },
+        )
         assertFalse("texte francais residuel", textes.contains("À DÉCOUVRIR"))
         assertTrue("badge japonais absent", textes.any { it.contains("席数限定") })
         // Aucun texte ne doit rester sous forme de variable brute.

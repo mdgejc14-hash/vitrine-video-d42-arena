@@ -22,6 +22,13 @@ class GabaritBeatSheetTest {
     private fun fixture(name: String): String =
         javaClass.getResourceAsStream("/fixtures/$name.json")!!.readBytes().decodeToString()
 
+    /** Textes affiches du beat sheet : `words` est un tableau de triplets
+     *  `["texte", debut, fin]` (structure reelle produite par le moteur). */
+    private fun libellesAffiches(doc: GabaritBeatSheet.Document): List<String> {
+        val mots = org.json.JSONObject(doc.beatSheetJson).getJSONArray("words")
+        return (0 until mots.length()).map { mots.getJSONArray(it).getString(0) }
+    }
+
     @Test
     fun `beat sheet conforme aux portes de montage sur les 3 fixtures`() {
         fixtures.forEach { name ->
@@ -133,14 +140,18 @@ class GabaritBeatSheetTest {
             ),
             null,
             localiser = { cle -> cle },
+        ) ?: error("beat sheet null pour restaurants_maquis_T1")
+        // On controle le TEXTE AFFICHE (words), pas tout le JSON : `keywords`
+        // conserve volontairement le jeton brut (« 25000 ») pour l'indexation,
+        // ce n'est pas de l'affichage.
+        val affiches = libellesAffiches(doc)
+        assertTrue(
+            "prix non groupe dans le texte affiche : $affiches",
+            affiches.any { it.contains("25 000 FCFA") },
         )
         assertTrue(
-            "prix non groupe dans le beat sheet",
-            doc.beatSheetJson.contains("25 000"),
-        )
-        assertTrue(
-            "prix brut encore present",
-            !doc.beatSheetJson.contains("25000"),
+            "prix brut encore affiche : $affiches",
+            affiches.none { it.contains("25000") },
         )
     }
 
@@ -158,9 +169,8 @@ class GabaritBeatSheetTest {
             ),
             null,
             localiser = { cle -> cle },
-        )
-        val mots = org.json.JSONObject(doc.beatSheetJson).getJSONArray("words")
-        val libelles = (0 until mots.length()).map { mots.getJSONObject(it).getString("word") }
+        ) ?: error("beat sheet null pour restaurants_maquis_T1")
+        val libelles = libellesAffiches(doc)
         assertTrue("CTA coupe en morceaux : $libelles", libelles.contains("CONTACTEZ-NOUS"))
         assertTrue("offre absente : $libelles", libelles.contains("OFFRE D42 DIAGNOSTIC"))
     }
