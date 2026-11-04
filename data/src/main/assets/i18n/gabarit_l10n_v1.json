@@ -10,15 +10,15 @@
    "ja": "在庫限定"
   },
   "places_limitees": {
-   "fr": "Places limitées",
-   "en": "Limited seats",
-   "es": "Plazas limitadas",
+   "fr": "PLACES LIMITÉES",
+   "en": "LIMITED SEATS",
+   "es": "PLAZAS LIMITADAS",
    "ja": "席数限定"
   },
   "qualite_garantie": {
-   "fr": "Qualité garantie",
-   "en": "Quality guaranteed",
-   "es": "Calidad garantizada",
+   "fr": "QUALITÉ GARANTIE",
+   "en": "QUALITY GUARANTEED",
+   "es": "CALIDAD GARANTIZADA",
    "ja": "品質保証"
   }
  },

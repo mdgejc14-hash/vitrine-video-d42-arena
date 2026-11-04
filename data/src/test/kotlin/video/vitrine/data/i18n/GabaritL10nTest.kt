@@ -180,7 +180,7 @@ class GabaritL10nTest {
                     localiser = { donnees.resolve(it, "fr") },
                     badgeTexte = donnees.badge("qualite_garantie", "fr")
                 ) ?: error("build null pour ${secteur.name}/$tpl")
-                val badge = mots(doc.beatSheetJson).firstOrNull { it.getString(0) == "Qualité garantie" }
+                val badge = mots(doc.beatSheetJson).firstOrNull { it.getString(0) == "QUALITÉ GARANTIE" }
                 assertNotNull("badge absent ${secteur.name}/$tpl", badge)
                 val debut = badge!!.getDouble(1)
                 val scene = sceneContenant(secteur, tpl, debut)
