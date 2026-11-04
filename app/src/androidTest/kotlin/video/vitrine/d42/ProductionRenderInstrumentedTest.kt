@@ -98,6 +98,12 @@ class ProductionRenderInstrumentedTest {
         fields.forEach { champ ->
             values[champ.id] = when {
                 champ.id == "badge_engagement_actif" -> badge
+                // D42.6 : sans ancien prix SUPERIEUR au prix, le gabarit n'a aucune
+                // reduction a afficher et « -{pourcentage}% » tombait sur « -% ».
+                // L'ancien prix synthetique est donc prix + 25 % (reduction 20 %),
+                // le prix courant reste celui du brief.
+                champ.id == "ancien_prix" ->
+                    ((e.prix.toIntOrNull() ?: 0) * 5 / 4).toString()
                 champ.type == "nombre" -> e.prix
                 champ.type == "telephone" || champ.validation == "format_international" ->
                     "+22997000000"

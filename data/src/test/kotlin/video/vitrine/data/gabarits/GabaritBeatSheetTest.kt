@@ -3,6 +3,7 @@ package video.vitrine.data.gabarits
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -116,6 +117,29 @@ class GabaritBeatSheetTest {
             if (texte.contains("Salon Belle Tresse") || texte.contains("25000")) substitue = true
         }
         assertTrue("valeur du brief presente a l'ecran", substitue)
+    }
+
+    @Test
+    fun `pourcentage - jamais de tiret orphelin a l ecran`() {
+        // D42.6, mesure sur les 120 rendus reels : la scene 6 des six gabarits T4
+        // affiche « -{pourcentage}% ». Sans ancien prix superieur au prix, il n'y
+        // a aucune reduction a calculer et le MP4 montrait « -% ».
+        val base = mapOf(
+            "nom_commerce" to "Chez Test", "nom_offre" to "Offre", "prix" to "25000",
+            "devise" to "FCFA", "quartier_ville" to "Cotonou",
+            "whatsapp" to "+22997000000"
+        )
+        val sansReduction = GabaritBeatSheet.build(fixture("vetements_mode_T4"), base)!!
+        val motsSans = libellesAffiches(sansReduction)
+        assertFalse("tiret orphelin dessine : $motsSans", motsSans.any { it.contains("%") })
+
+        val avecReduction = GabaritBeatSheet.build(
+            fixture("vetements_mode_T4"),
+            base + ("ancien_prix" to "31250")
+        )!!
+        val motsAvec = libellesAffiches(avecReduction)
+        assertTrue("reduction jamais dessinee : $motsAvec", motsAvec.any { it.contains("20") })
+        assertFalse("tiret orphelin restant : $motsAvec", motsAvec.any { it.trim() == "-%" })
     }
 
     @Test

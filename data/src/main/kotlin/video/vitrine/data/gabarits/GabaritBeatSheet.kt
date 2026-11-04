@@ -182,6 +182,11 @@ object GabaritBeatSheet {
             // D42 : traduction d'abord (la cle du dictionnaire est le texte
             // canonique, variables incluses), substitution ensuite.
             val substitue = substitute(localiser(contenu), values)
+            // D42.6 : apres substitution, un texte qui ne contient plus ni lettre
+            // ni chiffre n'est PLUS DESSINE. Mesure sur les 120 rendus : la scene
+            // « -{pourcentage}% » des six gabarits T4 s'affichait « -% » quand le
+            // commercant ne saisit pas d'ancien prix (aucune reduction a calculer).
+            if (substitue.none { it.isLetterOrDigit() }) return
             val apparition = texte.optDouble("apparition_s", 0.0).coerceIn(0.0, duree)
             val disparition = texte.optDouble("disparition_s", duree).coerceIn(apparition, duree)
             val debut = (start + apparition).coerceAtLeast(debutImpose)
