@@ -290,6 +290,36 @@ internal object TexteCommerce {
     // Formatage du prix
     // ------------------------------------------------------------------
 
+    // ------------------------------------------------------------------
+    // Variables calculees
+    // ------------------------------------------------------------------
+
+    /**
+     * Pourcentage de reduction, tel que declare par les gabarits dans
+     * `variables_calculees` : `round((ancien_prix - prix) / ancien_prix * 100)`.
+     *
+     * D42.6 : cette variable etait declaree dans les 30 gabarits mais JAMAIS
+     * calculee par le moteur. Le rendu reel affichait donc « -% » (les six
+     * gabarits T4, scene 6/7) — constate sur les MP4 des 120 combinaisons.
+     *
+     * Conditions du gabarit : `ancien_prix > 0`, `prix >= 0`,
+     * `prix < ancien_prix`. Hors conditions -> null (le segment est omis
+     * plutot que d'afficher un tiret orphelin).
+     */
+    fun pourcentageReduction(ancienPrix: String?, prix: String?): Int? {
+        val avant = entier(ancienPrix) ?: return null
+        val apres = entier(prix) ?: return null
+        if (avant <= 0 || apres < 0 || apres >= avant) return null
+        return Math.round((avant - apres).toDouble() / avant * 100).toInt()
+    }
+
+    /** Entier d'une saisie marchand : chiffres seuls, espaces tolerees. */
+    private fun entier(valeur: String?): Long? {
+        val propre = valeur?.filter { !it.isWhitespace() }?.trim().orEmpty()
+        if (propre.isEmpty() || !propre.all { it.isDigit() }) return null
+        return propre.toLongOrNull()
+    }
+
     /**
      * Groupe les milliers par une espace (convention XOF) : « 25000 » ->
      * « 25 000 ». Ne touche jamais a la devise : le FCFA reste FCFA quelle

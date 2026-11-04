@@ -311,12 +311,18 @@ object GabaritBeatSheet {
      * U+0020, cf. PaywallMapper.groupThousands) : une seule convention dans
      * toute l'application.
      */
-    private fun substitute(text: String, values: Map<String, String>): String =
-        Regex("\\{(\\w+)\\}").replace(text) { m ->
+    private fun substitute(text: String, values: Map<String, String>): String {
+        // D42.6 : `{pourcentage}` etait declare dans `variables_calculees` mais
+        // jamais calcule -> le MP4 affichait « -% » (6 gabarits T4, scene 6/7).
+        val calculees = mutableMapOf<String, String>()
+        TexteCommerce.pourcentageReduction(values["ancien_prix"], values["prix"])
+            ?.let { calculees["pourcentage"] = it.toString() }
+        return Regex("\\{(\\w+)\\}").replace(text) { m ->
             val cle = m.groupValues[1]
-            val valeur = values[cle].orEmpty()
+            val valeur = calculees[cle] ?: values[cle].orEmpty()
             if (cle == "prix") grouperMilliers(valeur) else valeur
         }
+    }
 
     /** « 25000 » -> « 25 000 » ; toute autre valeur est rendue telle quelle.
      *  D42.4 : implementation unique dans [TexteCommerce] (testee a part,

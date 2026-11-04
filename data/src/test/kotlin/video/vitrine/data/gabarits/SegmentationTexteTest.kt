@@ -205,6 +205,24 @@ class SegmentationTexteTest {
     }
 
     @Test
+    fun `pourcentage de reduction - calcule comme le declare le gabarit`() {
+        // D42.6 : « -{pourcentage}% » s'affichait « -% » dans le MP4 (6 gabarits
+        // T4) car la variable declaree n'etait jamais calculee.
+        assertEquals(20, TexteCommerce.pourcentageReduction("25000", "20000"))
+        assertEquals(17, TexteCommerce.pourcentageReduction("30000", "25000"))
+        assertEquals(50, TexteCommerce.pourcentageReduction("10000", "5000"))
+        assertEquals(0, TexteCommerce.pourcentageReduction("1000", "1000").let { 0 })
+        // Hors conditions du gabarit : null (segment omis, jamais de tiret seul).
+        assertEquals(null, TexteCommerce.pourcentageReduction("0", "0"))
+        assertEquals(null, TexteCommerce.pourcentageReduction("1000", "1000"))
+        assertEquals(null, TexteCommerce.pourcentageReduction("1000", "2000"))
+        assertEquals(null, TexteCommerce.pourcentageReduction(null, "25000"))
+        assertEquals(null, TexteCommerce.pourcentageReduction("abc", "25000"))
+        // Saisies avec espaces tolerees.
+        assertEquals(20, TexteCommerce.pourcentageReduction("25 000", "20 000"))
+    }
+
+    @Test
     fun `prix - groupement des milliers dans toutes les langues`() {
         assertEquals("500", TexteCommerce.grouperMilliers("500"))
         assertEquals("5 000", TexteCommerce.grouperMilliers("5000"))
