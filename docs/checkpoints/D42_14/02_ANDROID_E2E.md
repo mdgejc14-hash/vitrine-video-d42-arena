@@ -113,3 +113,22 @@ Restait un échec **causé par le harnais lui-même** : le contrôle invalide la
 → `P1_brief_valide` FAIL. Corrigé dans `918feaa` (le champ est vidé après le
 contrôle) — le run 42252465240 déroule pour la première fois la chaîne complète :
 catalogue → gabarit → brief → caméra → prises → export → MP4 → partage.
+
+## Cause racine FINALE de l'échec de validation du brief (run 42252465240, 88e364e)
+
+Le run 918feaa a porté le record à **21 PASS** mais `P1_brief_valide` échouait encore.
+Les artefacts (dumps + `champs_apres.txt`) ont révélé le pot aux roses :
+
+- les « valeurs » visibles dans le dump (« Robe wax », « Akpakpa, Cotonou ») étaient les
+  **exemples/placeholder** de l'écran — pas nos saisies (« RobeWax », « Akpakpa ») ;
+- `champs_apres.txt` : tous les champs **vides** (sauf la monnaie préremplie) ;
+- `E2E champs remplis : 0` dans le log : `remplir_champ` échouait silencieusement.
+
+**Un mot** : `remplir_champ` cherchait des lignes `E2E FIELD` alors que `$UI champs`
+émet des lignes `E2E CHAMP`. L'awk ne trouvait jamais les coordonnées : **aucune saisie
+n'a jamais eu lieu dans aucun run depuis l'introduction du remplissage par libellé.**
+Le bouton Continuer était donc légitimement désactivé (champs requis vides) —
+l'application avait raison, le harnais mentait par omission.
+
+Corrigé dans `88e364e` (miroir) et `0c7a9f9` (branche privée, pour le `release-e2e`
+de la RC6). Le run suivant est le premier où la saisie a réellement lieu.

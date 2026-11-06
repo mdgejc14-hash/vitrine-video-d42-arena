@@ -80,3 +80,11 @@ défaut produit : c'est l'enchaînement attendu d'un harnais qui dit la vérité
 | C1 | `qemu-system` ne démarrait plus : `libpulse.so.0` absente de l'image `ubuntu-22.04` (run 42242981946, aucun rendu) | `apt-get install libpulse0` avant lancement (3 jobs concernés) — **vérifié : l'émulateur bootte** (run 42245217052) |
 | C2 | Smoke : `Error: Invalid userId -2` dès `am instrument` — seul appel **sans** shard (args `-e` vides) alors que les lots shardés passaient | args vides omis + shard explicite `0/1` dans l'appel smoke (`426dfee`) — **en cours de validation** |
 | C3 | Workflows de rendu jamais déclenchables : `workflow_dispatch` interdit au PAT (403 mesuré) et `on.push` volontairement sans émulateur (D42-BUDGET) | exception étroite documentée sur la branche **jetable** `d42-render-check` |
+
+### Défauts du harnais (suite) — causes racines closes ce tour
+
+| # | Défaut | Impact mesuré | Correctif |
+|---|---|---|---|
+| H7 | `remplir_champ` : awk sur `E2E FIELD` alors que `ui.py champs` émet `E2E CHAMP` | **aucune saisie n'a jamais eu lieu** — validation du brief en échec dans TOUS les runs ; les « valeurs » des dumps étaient des placeholders | `88e364e` (miroir) + `0c7a9f9` (privé) |
+| H8 | le contrôle négatif « prix invalide » laissait « abc » dans le champ (le remplissage valide ne traite que les champs vides) | `P1_brief_valide` FAIL au run 42246994818 | `918feaa` : le champ est vidé après le contrôle |
+| H9 | autotest insensible au adb du runner (`ANDROID_SDK_ROOT` non neutralisé) | `harness-selftest` 3/6 en CI (4 pseudo-PASS) | `94d8f9e` : les deux variables neutralisées + contrôle S0 — **7/7 en CI** |
