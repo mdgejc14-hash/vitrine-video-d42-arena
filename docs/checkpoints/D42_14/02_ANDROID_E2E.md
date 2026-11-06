@@ -132,3 +132,12 @@ l'application avait raison, le harnais mentait par omission.
 
 Corrigé dans `88e364e` (miroir) et `0c7a9f9` (branche privée, pour le `release-e2e`
 de la RC6). Le run suivant est le premier où la saisie a réellement lieu.
+
+## Run 42257226019 (88e364e) — 21 PASS, brief ENFIN validé, crash caméra découvert
+
+**`P1_brief_valide : PASS — brief accepté → écran « Avant de commencer »`** : première
+validation réelle du formulaire de tout le projet (le correctif FIELD/CHAMP a fonctionné —
+les saisies ont réellement eu lieu). Le parcours a alors atteint l'écran de tournage pour
+la première fois… et l'application a **crashé** (`FATAL EXCEPTION`, voir 07 A2) :
+`Unable to find selected quality`. Corrigé dans `56676df` — le run suivant
+(56676df) est le premier à potentiellement dérouler prises → export → MP4 → partage.

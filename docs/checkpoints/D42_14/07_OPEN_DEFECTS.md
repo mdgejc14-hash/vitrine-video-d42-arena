@@ -88,3 +88,15 @@ défaut produit : c'est l'enchaînement attendu d'un harnais qui dit la vérité
 | H7 | `remplir_champ` : awk sur `E2E FIELD` alors que `ui.py champs` émet `E2E CHAMP` | **aucune saisie n'a jamais eu lieu** — validation du brief en échec dans TOUS les runs ; les « valeurs » des dumps étaient des placeholders | `88e364e` (miroir) + `0c7a9f9` (privé) |
 | H8 | le contrôle négatif « prix invalide » laissait « abc » dans le champ (le remplissage valide ne traite que les champs vides) | `P1_brief_valide` FAIL au run 42246994818 | `918feaa` : le champ est vidé après le contrôle |
 | H9 | autotest insensible au adb du runner (`ANDROID_SDK_ROOT` non neutralisé) | `harness-selftest` 3/6 en CI (4 pseudo-PASS) | `94d8f9e` : les deux variables neutralisées + contrôle S0 — **7/7 en CI** |
+
+### Défaut applicatif P1-critique découvert au run 42257226019 (88e364e) — corrigé
+
+| # | Défaut | Preuve | État |
+|---|---|---|---|
+| **A2** | **Crash caméra** : `QualitySelector.from(UHD/FHD)` **sans stratégie de repli** → `IllegalArgumentException: Unable to find selected quality` à `InsCameraBinder.kt:68` → **FATAL EXCEPTION** dès l'écran de tournage. Touchait tout capteur sans FHD/UHD : émulateur de CI **et téléphones d'entrée de gamme** (cible du produit) | `crash.log` du run 42257226019 (première fois que le parcours atteignait la caméra : le crash était masqué depuis l'origine par l'échec de validation du brief) | **CORRIGÉ** (`56676df` miroir, `769c828` privé) : `QualitySelector.from(qualité, fallbackStrategyOf(Quality.LOWEST))` |
+
+**Enchaînement des causes ce tour** (chaque correction a dévoilé la suivante — comportement
+attendu d'un harnais qui dit la vérité) :
+ciblage 1 px → catalogue atteint → doublon d'activités (A1) corrigé → catalogue vert →
+saisie jamais effectuée (H7 : FIELD/CHAMP) corrigée → **brief validé pour la première
+fois** → crash caméra (A2) corrigé → le parcours peut enfin atteindre prises/export.
