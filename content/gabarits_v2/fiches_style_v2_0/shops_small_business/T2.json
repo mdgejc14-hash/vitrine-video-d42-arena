@@ -262,7 +262,7 @@
         "vitesse": 1.0
       },
       "texte": {
-        "contenu": "Regardez le produit avant et après sa présentation.",
+        "contenu": "Le produit, avant et après.",
         "position": "centre_haut",
         "animation": "typing_price_roll",
         "apparition_s": 0.0,

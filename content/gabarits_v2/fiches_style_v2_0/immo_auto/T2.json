@@ -263,7 +263,7 @@
         "vitesse": 1.0
       },
       "texte": {
-        "contenu": "Voici le bien avant et après sa préparation.",
+        "contenu": "Le bien, avant et après.",
         "position": "centre_haut",
         "animation": "reveal_mask_text",
         "apparition_s": 0.0,

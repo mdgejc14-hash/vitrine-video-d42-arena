@@ -205,7 +205,7 @@
         "vitesse": 1.0
       },
       "texte_ecran": {
-        "contenu": "Regardez le produit avant et après sa présentation.",
+        "contenu": "Le produit, avant et après.",
         "position": "centre_haut",
         "animation": "typing_price_roll",
         "apparition_s": 0.0,
@@ -972,7 +972,7 @@
   },
   "copywriting": {
     "hooks": [
-      "Regardez le produit avant et après sa présentation.",
+      "Le produit, avant et après.",
       "Voici le début. Regardez le résultat.",
       "On vous montre ce qui a changé.",
       "Regardez le résultat de près.",
@@ -1059,7 +1059,7 @@
       "temps_s": 2.5,
       "role": "Au début",
       "action": "La vidéo commence par « regarde le produit avant et après sa présentation ». Ça donne envie de regarder.",
-      "texte": "Regardez le produit avant et après sa présentation.",
+      "texte": "Le produit, avant et après.",
       "voix": "Pas de parole nécessaire dans cette scène.",
       "audio": "Petit souffle rapide",
       "guide_parole": {

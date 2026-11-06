@@ -80,3 +80,65 @@ passe les trois langues (les 3 jobs sont `success`).
 
 Trois dessins **originaux**, trois écrans du carrousel, trois slogans différents —
 aucune réutilisation d'une même image sous trois cadrages.
+
+## Correction des 8 `RISQUE_TYPO` (D42.14, ordre du fondateur) — 120/120
+
+### Confirmation du défaut (avant correction)
+
+Les 8 drapeaux portaient tous sur le **texte d'accroche de la scène 1 du gabarit T2**
+(« avant/après »). Comportement réel du moteur (réplication exacte des fonctions pures
+`OverlayTextLayout`, testées unitairement dans le dépôt ; texte espacé = **un seul bloc**,
+donc retaille pour tenir sur une ligne) :
+
+| Combinaison | Chaîne | Taille rendue |
+|---|---|---|
+| batiment_travaux T2 en | « Here is the site at the start and at the end. » | 40 px = **2,1 %** de la hauteur |
+| immo_auto T2 fr | « Voici le bien avant et après sa préparation. » | 41 px = **2,1 %** |
+| immo_auto T2 en | « Here is the property before and after preparation. » | 36 px = **1,9 %** |
+| immo_auto T2 es | « Aquí el inmueble antes y después de su preparación. » | 36 px = **1,9 %** |
+| restaurants_maquis T2 es | « De los ingredientes al plato terminado. » | 47 px = **2,4 %** |
+| shops_small_business T2 fr | « Regardez le produit avant et après sa présentation. » | 36 px = **1,9 %** |
+| shops_small_business T2 en | « See the product before and after its presentation. » | 36 px = **1,9 %** |
+| shops_small_business T2 es | « Mira el producto antes y después de su presentación. » | 35 px = **1,8 %** |
+
+**Défaut confirmé : taille de police 1,8–2,4 % de la hauteur de sortie**, soit moins de la
+moitié du plancher de lisibilité du projet (`FRACTION_MIN_LISIBLE = 5 %`), et ~3× plus petit
+que les équivalents japonais (segmentés sans espaces → taille de base 105 px = 5,5 %).
+Aucun débordement, aucune coupure, aucun caractère perdu : le défaut est la **lisibilité**,
+pas l'intégrité.
+
+### Correction (chaînes raccourcies, sens conservé, aucun sélecteur/variable touché)
+
+| Combinaison | Nouvelle chaîne | Nouvelle taille | Gain |
+|---|---|---|---|
+| batiment_travaux T2 en | « The site, before and after. » | 67 px (3,5 %) | ×1,68 |
+| immo_auto T2 fr | « Le bien, avant et après. » | 76 px (4,0 %) | ×1,85 |
+| immo_auto T2 en | « The property, before and after. » | 59 px (3,1 %) | ×1,64 |
+| immo_auto T2 es | « El inmueble, antes y después. » | 63 px (3,3 %) | ×1,75 |
+| restaurants_maquis T2 es | « De los ingredientes al plato. » | 63 px (3,3 %) | ×1,34 |
+| shops_small_business T2 fr | « Le produit, avant et après. » | 67 px (3,5 %) | ×1,86 |
+| shops_small_business T2 en | « The product, before and after. » | 61 px (3,2 %) | ×1,69 |
+| shops_small_business T2 es | « El producto, antes y después. » | 63 px (3,3 %) | ×1,80 |
+
+Fichiers modifiés : `data/src/main/assets/i18n/gabarit_l10n_v1.json` (2 clés fr renommées,
+traductions japonaises reportées à l'identique ; 2 valeurs en/es raccourcies),
+`data/…/gabarits/{immo_auto,shops_small_business}/T2.json` (3 occurrences chacun :
+scène 1, `copywriting.hooks[0]`, `etapes_montage[0].texte`), plus les copies d'auteur
+`content/gabarits_v2/…`. **Aucun des 112 autres combinaisons n'a été touché.**
+
+### Vérifications
+
+| Contrôle | Résultat |
+|---|---|
+| `tools/e2e/matrix_120.py` | **120/120 `OK_STATIQUE`** (fr 30/30, en 30/30, es 30/30, ja 30/30) |
+| `tools/audit/validate_gabarits.py` | 60 gabarits vérifiés, **0 anomalies** ; 30 signatures, 435 paires, 0 erreur |
+| `content/…/valider_gabarits.py` | **0 anomalie** |
+| Placeholders/variables | aucun des 8 textes n'en contient — parité inchangée |
+| Japonais (kinsoku) | traductions reportées à l'identique — aucun risque nouveau |
+
+**Limite honnête** : la nouvelle taille attendue (3,1–4,0 %) est calculée par réplication
+des fonctions pures du moteur ; la **preuve visuelle par rendu réel** exige le workflow
+`d42-virtual-render` (déclenché sur la branche `audit-d41` — runs en cours, voir 00_STATE).
+Les 8 textes restent sous le plancher de 5 % : le raccourcissement ne peut pas faire
+mieux sans vider le texte de son sens ; porter UNE ligne latine à 5 %+ exigerait de
+changer la mise en page multi-lignes pour **tous** les gabarits — interdit sans nécessité.

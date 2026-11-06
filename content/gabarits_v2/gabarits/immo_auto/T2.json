@@ -205,7 +205,7 @@
         "vitesse": 1.0
       },
       "texte_ecran": {
-        "contenu": "Voici le bien avant et après sa préparation.",
+        "contenu": "Le bien, avant et après.",
         "position": "centre_haut",
         "animation": "reveal_mask_text",
         "apparition_s": 0.0,
@@ -978,7 +978,7 @@
   },
   "copywriting": {
     "hooks": [
-      "Voici le bien avant et après sa préparation.",
+      "Le bien, avant et après.",
       "Voici le début. Regardez le résultat.",
       "On vous montre ce qui a changé.",
       "Regardez le résultat de près.",
@@ -1065,7 +1065,7 @@
       "temps_s": 2.5,
       "role": "Au début",
       "action": "La vidéo commence par « voici le bien avant et après sa préparation ». Ça donne envie de regarder.",
-      "texte": "Voici le bien avant et après sa préparation.",
+      "texte": "Le bien, avant et après.",
       "voix": "Pas de parole nécessaire dans cette scène.",
       "audio": "Petit souffle rapide",
       "guide_parole": {
