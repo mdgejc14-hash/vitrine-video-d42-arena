@@ -107,7 +107,13 @@ else
 fi
 
 # --- S04 écran de connexion ----------------------------------------------------
-if $UI wait --text "Google" --timeout 30 >/dev/null 2>&1; then
+# Un émulateur froid peut manquer le premier appui : on réessaie jusqu'à 3 fois.
+for essai in 1 2 3; do
+  $UI wait --text "Google" --timeout 12 >/dev/null 2>&1 && break
+  echo "E2E retry connexion (essai $essai)"
+  $UI tap --text "Français" --timeout 6 >/dev/null 2>&1
+done
+if $UI wait --text "Google" --timeout 20 >/dev/null 2>&1; then
   record PASS S04_ecran_connexion "titre + bouton Google visibles"
   shot 03_connexion; dump 03_connexion
   $UI probe | sed 's/^/E2E_AUTH /' >> "$OUT/probe_auth.txt"
