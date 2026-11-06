@@ -405,10 +405,13 @@ jobs:
       # palier gratuit est de 20 jobs concurrents.
       max-parallel: 8
       matrix:
-        lang: ${{ fromJSON(github.event_name == 'push' && '["fr","en","es","ja"]' || github.event.inputs.langs_lot == 'fr' && '["fr"]' || github.event.inputs.langs_lot == 'en' && '["en"]' || github.event.inputs.langs_lot == 'es' && '["es"]' || github.event.inputs.langs_lot == 'ja' && '["ja"]' || '["fr","en","es","ja"]') }}
+        # D42.16 : reprise du SEUL lot interrompu (ja 3/8, timeout 240 min apres
+        # un blocage runner sans aucune sortie pendant 239 min — run 42250114616,
+        # les 34 autres lots etaient deja verts). On ne re-depense pas 34 lots.
+        lang: ${{ fromJSON(github.event_name == 'push' && '["ja"]' || github.event.inputs.langs_lot == 'fr' && '["fr"]' || github.event.inputs.langs_lot == 'en' && '["en"]' || github.event.inputs.langs_lot == 'es' && '["es"]' || github.event.inputs.langs_lot == 'ja' && '["ja"]' || '["fr","en","es","ja"]') }}
         # Liste explicite : `range()` n'est pas une fonction documentée des
         # expressions GitHub, on ne parie pas dessus.
-        shard: ${{ fromJSON(github.event_name == 'push' && '[1,2,3,4,5,6,7,8]' || github.event.inputs.shards_json || '[1,2,3,4,5,6,7,8]') }}
+        shard: ${{ fromJSON(github.event_name == 'push' && '[3]' || github.event.inputs.shards_json || '[1,2,3,4,5,6,7,8]') }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
