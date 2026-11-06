@@ -220,9 +220,14 @@ jobs:
     # D42-BUDGET : un push ne doit JAMAIS lancer d'émulateur. 18 min par push,
     # et le smoke peut être sauté quand l'APK app est déjà prouvé : le harnais
     # de rendu vit dans l'APK de test, pas dans l'app.
+    # D42.14 — EXCEPTION ÉTROITE : le PAT du laboratoire n'a pas la portée
+    # Actions (dispatch -> 403, mesuré). La branche JETABLE d42-render-check est
+    # le seul cas où un push lance des rendus : elle n'existe que pour
+    # re-valider visuellement des corrections de gabarits, puis être supprimée.
     if: >-
-      ${{ github.event_name == 'workflow_dispatch'
-          && github.event.inputs.run_smoke != '0' }}
+      ${{ (github.event_name == 'workflow_dispatch'
+           && github.event.inputs.run_smoke != '0')
+          || github.ref == 'refs/heads/d42-render-check' }}
     # 22.04 et non ubuntu-latest : le 02/11, Ubuntu 26.04 exposait /dev/kvm mais
     # laissait QEMU en TCG (constaté, voir rapport section K).
     runs-on: ubuntu-22.04
@@ -374,11 +379,14 @@ jobs:
     # sauf dispatch explicite run_smoke=0 (APK app déjà prouvé, harnais seul
     # modifié). Un smoke sauté SANS run_smoke=0 ne fait jamais partir la matrice.
     if: >-
-      ${{ always() && github.event_name == 'workflow_dispatch'
+      ${{ always()
+          && (github.event_name == 'workflow_dispatch'
+              || github.ref == 'refs/heads/d42-render-check')
           && github.event.inputs.run_matrix != '0'
           && (github.event.inputs.profils || 'validation') != 'production'
           && (needs.smoke.result == 'success'
-              || (github.event.inputs.run_smoke == '0' && needs.smoke.result == 'skipped')) }}
+              || (github.event.inputs.run_smoke == '0' && needs.smoke.result == 'skipped')
+              || (github.ref == 'refs/heads/d42-render-check' && needs.smoke.result == 'success')) }}
     timeout-minutes: 240
     strategy:
       fail-fast: false
