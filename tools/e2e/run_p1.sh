@@ -356,6 +356,28 @@ if [ "$brief_ok" = "1" ]; then
     fi
   done
   echo "E2E champs remplis : $remplis"
+  # D42.14 (run 42264313164) : le quartier — sous le clavier pendant la saisie
+  # du prix — n'etait pas dans les dumps et restait vide : la validation
+  # echouait UNE FOIS SUR DEUX. Passe de completion : tout champ requis encore
+  # vide est rempli directement, avec defilement si necessaire.
+  for passe in 1 2 3; do
+    $UI champs > "$OUT/champs.txt" 2>&1 || true
+    restant=0
+    while IFS= read -r ligne; do
+      idx=$(echo "$ligne" | awk '{print $3}')
+      etat=$(echo "$ligne" | awk '{print $8}')
+      libelle=$(echo "$ligne" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
+      [ "$etat" = "vide" ] || continue
+      val=$(valeur_pour "$libelle")
+      [ -n "$val" ] || continue
+      restant=$((restant+1))
+      echo "E2E complément [$libelle] <- $val"
+      remplir_champ "$idx" "$val" "$OUT/champs.txt" && remplis=$((remplis+1))
+      break
+    done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
+    [ "$restant" = "0" ] && break
+  done
+  echo "E2E champs remplis (après complément) : $remplis"
   $UI champs > "$OUT/champs_apres.txt" 2>&1 || true
   cat "$OUT/champs_apres.txt" | sed 's/^/E2E /'
   # Le bouton est en bas d'un écran défilant. On descend PAR PAS en vérifiant
