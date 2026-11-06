@@ -361,6 +361,13 @@ if [ "$brief_ok" = "1" ]; then
   # echouait UNE FOIS SUR DEUX. Passe de completion : tout champ requis encore
   # vide est rempli directement, avec defilement si necessaire.
   for passe in 1 2 3; do
+    # révéler le BAS du formulaire (quartier) : à la position de saisie du
+    # prix, il est sous le pli et absent des dumps (cause du 4/5 récurrent).
+    if [ "$passe" -gt 1 ]; then
+      adb shell input swipe 540 1700 540 600 250 >/dev/null 2>&1
+      sleep 1
+    fi
+    fermer_clavier
     $UI champs > "$OUT/champs.txt" 2>&1 || true
     restant=0
     while IFS= read -r ligne; do
