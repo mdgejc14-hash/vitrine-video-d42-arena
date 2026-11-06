@@ -67,6 +67,14 @@ def screen_size():
 _PARENT = {}
 
 
+_FENETRE = [0, 0]
+
+
+def fenetre():
+    """Rectangle réel de la fenêtre applicative (tient compte de la rotation)."""
+    return tuple(_FENETRE) if _FENETRE[0] else screen_size()
+
+
 def dump_nodes(retries=3):
     for _ in range(retries):
         adb("shell", "uiautomator", "dump", DUMP_REMOTE)
@@ -78,6 +86,10 @@ def dump_nodes(retries=3):
                 # On retire la déclaration avant de parser.
                 propre = re.sub(r"^<\?xml[^>]*\?>", "", xml).strip()
                 root = ET.fromstring(propre)
+                premier = root.find(".//node")
+                b0 = parse_bounds((premier.get("bounds") if premier is not None else None) or "")
+                if b0 and b0[2] > 0:
+                    _FENETRE[0], _FENETRE[1] = b0[2], b0[3]
                 _PARENT.clear()
                 for parent in root.iter("node"):
                     for child in parent:
@@ -230,7 +242,7 @@ def cmd_inside(args):
     x1, y1, x2, y2 = b
     # marge de 2 px : un pixel d'arrondi ne doit pas faire échouer un bouton visible
     inside = x1 >= -2 and y1 >= -2 and x2 <= w + 2 and y2 <= h + 2 and (y2 - y1) > 8
-    print(f"E2E INSIDE {label!r} bounds=({x1},{y1},{x2},{y2}) screen=({w},{h}) => "
+    print(f"E2E INSIDE {label!r} bounds=({x1},{y1},{x2},{y2}) fenetre=({w},{h}) => "
           f"{'PASS' if inside else 'FAIL_HORS_ECRAN'}")
     # Vérifie aussi que l'élément est cliquable (le bouton épinglé doit l'être)
     clickable = "true" if n.get("clickable") == "true" else _clickable_parent(nodes_ref[0], n)
