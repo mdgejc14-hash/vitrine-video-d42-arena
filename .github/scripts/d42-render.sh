@@ -65,6 +65,14 @@ echo "modele=$(adb shell getprop ro.product.model | tr -d '\r')"
 
 # --- instrumentation --------------------------------------------------------
 set +e
+# D42.14 (06/11/2026, run 42245217052) : le smoke — seul appel SANS shard —
+# échouait sur « Error: Invalid userId -2 » aussitôt après l'installation,
+# alors que les lots de validation (shard non vide) passaient. Les arguments
+# -e à valeur VIDE ne traversent pas intacts la commande adb shell de
+# l'image runner actuelle : on ne les transmet que s'ils existent.
+ARGS_SHARD=()
+if [ -n "${SHARD}" ]; then ARGS_SHARD+=(-e d42_shard "${SHARD}"); fi
+if [ -n "${SHARDS_TOTAL}" ]; then ARGS_SHARD+=(-e d42_shards "${SHARDS_TOTAL}"); fi
 adb shell am instrument -w -r \
   -e class video.vitrine.d42.ProductionRenderInstrumentedTest \
   -e d42_mode "${MODE}" \
@@ -74,8 +82,7 @@ adb shell am instrument -w -r \
   -e d42_badge "${BADGE}" \
   -e d42_profile "${PROFIL}" \
   -e d42_limite "${LIMITE}" \
-  -e d42_shard "${SHARD}" \
-  -e d42_shards "${SHARDS_TOTAL}" \
+  "${ARGS_SHARD[@]}" \
   "${TEST_PKG}/androidx.test.runner.AndroidJUnitRunner" 2>&1 | tee instrumentation.txt
 STATUT_INSTRUMENTATION=$?
 set -e

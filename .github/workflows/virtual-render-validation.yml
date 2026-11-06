@@ -328,7 +328,7 @@ jobs:
           # android-emulator-runner exécute CHAQUE LIGNE du script dans un
           # shell distinct : toute la logique est donc dans un script versionné,
           # appelé ici sur une seule ligne (constat run 41463616121).
-          script: bash .github/scripts/d42-render.sh smoke fr restaurants_maquis_T1 smoke-out 5400 stock_limite
+          script: bash .github/scripts/d42-render.sh smoke fr restaurants_maquis_T1 smoke-out 5400 stock_limite production 0 0 1
 
       - name: Verdict MP4 réel (jamais de succès cosmétique)
         if: always()
