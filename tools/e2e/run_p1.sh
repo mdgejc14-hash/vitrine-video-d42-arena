@@ -382,7 +382,10 @@ if [ "$brief_ok" = "1" ]; then
       remplir_champ "$idx" "$val" "$OUT/champs.txt" && remplis=$((remplis+1))
       break
     done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
-    [ "$restant" = "0" ] && break
+    # On ne s'arrête jamais avant la passe 2 : à la passe 1 (haut du
+    # formulaire), le quartier est SOUS LE PLI et « restant=0 » est un faux
+    # « tout est rempli » (mesuré : 4/5 trois runs de suite).
+    [ "$restant" = "0" ] && [ "$passe" -ge 2 ] && break
   done
   echo "E2E champs remplis (après complément) : $remplis"
   $UI champs > "$OUT/champs_apres.txt" 2>&1 || true
