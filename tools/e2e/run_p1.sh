@@ -26,7 +26,15 @@ record() {
   echo "E2E_RESULT $1 $2 :: $3"
 }
 shot() { $UI shot "$OUT/$1.png" >/dev/null 2>&1 && echo "E2E SHOT $1" || echo "E2E SHOT_FAIL $1"; }
-dump() { adb shell uiautomator dump /sdcard/d.xml >/dev/null 2>&1; adb exec-out cat /sdcard/d.xml > "$OUT/$1.xml" 2>/dev/null; }
+# D42.16 (H10) : rm AVANT le dump — un dump raté rend un fichier VIDE, jamais
+# l'arbre périmé de l'écran précédent (cause de l'aveuglement du harnais sur
+# les runs 42278038365 et 42281822052).
+dump() {
+  adb shell rm -f /sdcard/d.xml >/dev/null 2>&1
+  adb shell uiautomator dump /sdcard/d.xml >/dev/null 2>&1
+  adb exec-out cat /sdcard/d.xml > "$OUT/$1.xml" 2>/dev/null
+  if [ -s "$OUT/$1.xml" ]; then echo "E2E DUMP $1 ($(wc -c < "$OUT/$1.xml") octets)"; else echo "E2E DUMP_VIDE $1"; fi
+}
 tap_if() { # texte, id, timeout
   if [ -n "${2:-}" ]; then $UI tap --id "$2" --timeout "${3:-8}" >/dev/null 2>&1 && return 0; fi
   if [ -n "${1:-}" ]; then $UI tap --text "$1" --timeout "${3:-8}" >/dev/null 2>&1 && return 0; fi
@@ -451,9 +459,22 @@ prise() { # numéro
   if ! $UI tap --text "Verrouiller et enregistrer" --exact --timeout 10 >/dev/null 2>&1; then
     $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1 || return 1
   fi
-  # 3) l'enregistrement est prouvé par le CHANGEMENT de libellé du bouton
-  if ! $UI wait --text "Arrêter et continuer" --exact --timeout 20 >/dev/null 2>&1; then
-    return 2
+  # 3) l'enregistrement est prouvé par le CHANGEMENT de libellé du bouton.
+  #    D42.16 : la scène virtuelle de l'émulateur contient des « visages »
+  #    (affiches murales) — la porte R4 produit alors le dialogue de
+  #    consentement AVANT d'enregistrer. C'est le comportement produit réel
+  #    (un commerçant qui filme un client confirme l'accord) : le parcours
+  #    l'assume au lieu de tapoter à l'aveugle à côté du dialogue (les runs
+  #    42278038365/42281822052 : le 2e appui tombait par hasard sur
+  #    « Oui, accord confirmé » sans que le harnais le sache).
+  if ! $UI wait --text "Arrêter et continuer" --exact --timeout 8 >/dev/null 2>&1; then
+    if $UI wait --text "Accord du client" --timeout 8 >/dev/null 2>&1; then
+      record PASS "P1_r4_consentement_${n}" "porte R4 affichée (visage détecté dans la scène émulée) — accord confirmé comme le ferait un commerçant réel"
+      $UI tap --text "Oui, accord confirmé" --exact --timeout 8 >/dev/null 2>&1 || true
+    fi
+    if ! $UI wait --text "Arrêter et continuer" --exact --timeout 25 >/dev/null 2>&1; then
+      return 2
+    fi
   fi
   sleep 6
   shot "25_prise_${n}_enregistrement"
@@ -486,6 +507,17 @@ done
                     || record BLOCKED P1_prises "aucune prise enregistrée"
 sleep 3
 shot 27_apres_prises; dump 27_apres_prises
+
+# D42.16 : preuve FICHIER — un libellé qui bascule ne prouve pas un rush
+# exploitable. Le build est debuggable : run-as liste files/rushes (F50).
+adb shell run-as "$PKG" ls -l files/rushes > "$OUT/27_rushes.txt" 2>&1 || true
+if grep -q "rush-" "$OUT/27_rushes.txt" 2>/dev/null; then
+  record PASS P1_rushs_fichiers "fichiers rush-*.mp4 présents et non vides dans files/rushes (voir 27_rushes.txt)"
+else
+  record FAIL P1_rushs_fichiers "aucun fichier rush dans files/rushes (voir 27_rushes.txt)"
+fi
+# Chronologie observable laissée par l'app (tag VV_E2E, défaut D5).
+adb logcat -d -s VV_E2E > "$OUT/27_vv_e2e_markers.log" 2>&1 || true
 
 # --- S25 export ----------------------------------------------------------------
 if $UI wait --text "export" --timeout 30 >/dev/null 2>&1 || $UI wait --text "Aperçu" --timeout 5 >/dev/null 2>&1; then

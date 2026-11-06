@@ -77,6 +77,14 @@ def fenetre():
 
 def dump_nodes(retries=3):
     for _ in range(retries):
+        # D42.16 (défaut H10, runs 42278038365 et 42281822052) : quand la thread
+        # UI de l'app est saturée, `uiautomator dump` échoue EN SILENCE et le
+        # fichier distant garde l'ANCIEN arbre — le `cat` rendait alors un écran
+        # périmé et le harnais est resté aveugle du bind caméra à la fin du run
+        # (6 dumps consécutifs au md5 identique, verdicts fantômes). On SUPPRIME
+        # le fichier AVANT de dumper : un dump raté rend du vide, jamais l'écran
+        # d'avant.
+        adb("shell", "rm", "-f", DUMP_REMOTE)
         adb("shell", "uiautomator", "dump", DUMP_REMOTE)
         xml = adb("exec-out", "cat", DUMP_REMOTE).stdout
         if xml and "<hierarchy" in xml:
@@ -98,6 +106,8 @@ def dump_nodes(retries=3):
             except (ET.ParseError, ValueError) as e:
                 print(f"E2E dump_parse_error {e}", file=sys.stderr)
         time.sleep(1)
+    # D42.16 (H10) : échec ASSUMÉ et journalisé — jamais d'arbre périmé.
+    print("E2E DUMP_FAIL aucun dump frais obtenu", file=sys.stderr)
     return [], ""
 
 

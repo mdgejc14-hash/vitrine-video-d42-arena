@@ -46,9 +46,24 @@ FAUX_ADB = textwrap.dedent('''\
     if a[:2] == ["shell", "wm"]:
         print("Physical size: 1080x2340")
         sys.exit(0)
+    if a[:1] == ["shell"] and a[1:2] == ["rm"]:
+        # D42.16 (H10) : le harnais supprime le dump distant AVANT de dumper —
+        # un dump raté doit rendre du vide, jamais l'arbre périmé.
+        with open(LOG + ".state", "w") as f:
+            f.write("gone")
+        sys.exit(0)
     if a[:2] == ["shell", "uiautomator"]:
+        # FAKE_DUMP_CASSE simule un `uiautomator dump` qui ÉCHOUE en silence
+        # (thread UI de l'app saturée, cas réel des runs 42278038365/42281822052) :
+        # le fichier distant n'est PAS réécrit.
+        if not os.environ.get("FAKE_DUMP_CASSE"):
+            with open(LOG + ".state", "w") as f:
+                f.write("ok")
         sys.exit(0)
     if a[:3] == ["exec-out", "cat", "/sdcard/window_dump.xml"] or (a[:1] == ["exec-out"] and a[1:2] == ["cat"]):
+        etat = LOG + ".state"
+        if os.path.exists(etat) and open(etat).read().strip() == "gone":
+            sys.exit(0)   # fichier distant absent : cat rend VIDE
         sys.stdout.write(open(XML).read())
         sys.exit(0)
     if a[:1] == ["shell"] and a[1:3] == ["input", "tap"]:
@@ -123,11 +138,13 @@ class Bac:
         with open(self.log, "w") as f:
             f.write(log)
 
-    def ui(self, *args, timeout=20):
+    def ui(self, *args, timeout=20, dump_casse=False):
         env = dict(os.environ)
         env["PATH"] = self.bin + os.pathsep + env.get("PATH", "")
         env["FAKE_XML"] = self.xml
         env["FAKE_LOG"] = self.log
+        if dump_casse:
+            env["FAKE_DUMP_CASSE"] = "1"
         # Les DEUX variables doivent être neutralisées : sur le runner GitHub,
         # ANDROID_SDK_ROOT pointe vers le vrai adb (mesuré, run 42239265944,
         # job harness-selftest) et le faux adb n'était alors jamais utilisé.
@@ -196,6 +213,23 @@ def main():
         code, sortie, taps = bac.ui("tap", "--text", "Continuer", "--exact", "--timeout", "3")
         verifier("S6 barre de navigation : le bouton d'action reste la cible",
                  code == 0 and "TAP 540 2025" in taps, f"code={code} taps={taps.strip() or '-'}")
+
+        # --- S7 (D42.16, H10) : dump inaccessible -> JAMAIS l'arbre périmé -----
+        # Régression des runs 42278038365/42281822052 : `uiautomator dump` qui
+        # échouait en silence + fichier distant jamais supprimé => le harnais
+        # relisait l'écran d'avant (6 dumps au md5 identique) et « voyait » un
+        # bouton qui n'était plus là. Ici le dump échoue : le wait DOIT échouer.
+        bac.planter(arbre(bouton_compose("Continuer", "btn_continuer")))
+        code, sortie, taps = bac.ui("wait", "--text", "Continuer", "--exact", "--timeout", "2", dump_casse=True)
+        verifier("S7 dump raté : wait échoue au lieu de lire l'écran périmé",
+                 code != 0 and "TAP" not in taps and "DUMP_FAIL" in sortie,
+                 f"code={code} taps={taps.strip() or '(aucun)'}")
+
+        # --- S7b (D42.16, H10) : contrôle positif — dump sain, bouton trouvé ---
+        bac.planter(arbre(bouton_compose("Continuer", "btn_continuer")))
+        code, sortie, taps = bac.ui("wait", "--text", "Continuer", "--exact", "--timeout", "3")
+        verifier("S7b contre-épreuve : dump sain, le libellé EST trouvé",
+                 code == 0, f"code={code}")
 
         if VERBEUX:
             for t in trace:
