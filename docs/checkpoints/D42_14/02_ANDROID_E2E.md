@@ -80,3 +80,36 @@ Le harnais a été testé **sans appareil** par `tools/e2e/selftest_harness.py` 
 vrai `ui.py`) : **6/6 PASS**, dont deux contre-épreuves. Deux défauts de mesure corrigés
 (mode `surface` mort, `surface_reelle` renvoyant la fenêtre entière) — voir
 `11_AUTOTEST_HARNAIS.md`. Le prochain run CI mesurera donc réellement le parcours.
+
+## Run 42241430727 (170ad89) — premier run au harnais corrigé
+
+14 **PASS** (record) : langue, connexion, session locale, carrousel ×3, activité,
+**`P1_activite_continue` PASS — le bouton « Continuer » de 1 px est désormais actionné**
+(correctif `point_de_clic` validé sur émulateur réel), parrainage, permission caméra,
+porte R4, aucun crash. 5 FAIL / 9 BLOCKED : l'échec s'est déplacé au **catalogue**.
+
+Diagnostic par logcat (téléchargeable avec le jeton) : chaque écran d'orchestration était
+démarré **deux fois** (recréation en course) ; l'instance périmée renvoyait un carrousel
+vierge. Corrigé dans `c588993` (voir 07_OPEN_DEFECTS A1) — le run 42246994818 valide.
+
+Les contrôles négatifs du brief (champs vides, prix invalide, retour arrière) sont dans le
+harnais dès `94d8f9e` ; ils s'exécuteront dès que le catalogue sera de nouveau atteint.
+
+## Run 42246994818 (c588993, correctif double-lancement) — 17 PASS, record
+
+Le correctif du double lancement (A1) a été **validé sur émulateur réel** :
+
+| Nouveaux PASS (jamais vus avant ce tour) | Signification |
+|---|---|
+| `P1_catalogue` | **catalogue atteint** — le blocage historique est levé |
+| `P1_gabarit_visible` + `P1_selection_gabarit` | gabarit sélectionné |
+| `P1_brief` (5 champs détectés) | formulaire de brief affiché |
+| **`P1_brief_vide_refuse`** | Continuer sans données : formulaire conservé (ordre du fondateur) |
+| **`P1_brief_retour`** | retour arrière : écran précédent atteint, brief ré-ouvert sans crash |
+| **`P1_brief_invalide_refuse`** | prix « abc » : validation refusée |
+
+Restait un échec **causé par le harnais lui-même** : le contrôle invalide laissait
+« abc » dans le champ prix, et le remplissage valide ne traite que les champs vides
+→ `P1_brief_valide` FAIL. Corrigé dans `918feaa` (le champ est vidé après le
+contrôle) — le run 42252465240 déroule pour la première fois la chaîne complète :
+catalogue → gabarit → brief → caméra → prises → export → MP4 → partage.

@@ -57,3 +57,37 @@ La voie C est la seule qui lève simultanément B1, B2 et B4 (voir `00_STATE.md`
 Tous les résultats Android de D42.14 portent la mention **APK debug** et l'empreinte
 de l'APK testée figure dans chaque `summary.txt` (ex. `68f184b0…`, `89bb986e…`, `bbdb06d3…` :
 trois empreintes différentes pour trois reconstructions — preuve que ce n'est pas la RC6).
+
+## Vérification locale de la RC6 (D42.14, 6 nov. 15 h 05 UTC) — FAITE
+
+Téléchargée depuis la release **privée** 436253697 (tag `v0.8.0-b0-d42.13-rc6`) avec le
+jeton du laboratoire (jamais affiché, jamais committé) :
+
+| Contrôle | Attendu (rapport D42.14) | Obtenu | Verdict |
+|---|---|---|---|
+| SHA-256 | `5c3955731de9765327cc95da3ff2fc098b5dd09dc50a6716819404914c377495` | identique (recalcul local) | **CONFORME** |
+| Taille | 43 134 525 octets | 43 134 525 octets | **CONFORME** |
+| Package | `video.vitrine.app` | présent dans le manifeste binaire (UTF-16) + badging officiel | **CONFORME** |
+| Version | `0.8.0-b0` | manifeste binaire + badging (`versionCode=1`) | **CONFORME** |
+| Signature | v2 | bloc `APK Sig Block 42` présent ; `apksigner verify` : **Verifies**, CN=Vitrine Video, O=EPD HOLDING, L=Cotonou, C=BJ | **CONFORME** |
+
+Fichiers de preuve : `D42_14/rc6/` (APK + `SHA256SUMS.txt` + `badging.txt` +
+`apksigner_verify.txt` + `build-manifest.json` + `preuve_d42_13.txt`).
+
+### Exécution de la RC6 sur émulateur (en cours)
+
+Le workflow `release-e2e.yml` (dépôt privé, branche `d42.14-critical-paths`) n'avait
+**jamais tourné** (D10). Il a été armé ce jour :
+
+1. `718699b` — synchronisation du harnais corrigé (`point_de_clic`, paysage, contrôles
+   négatifs du brief) sur la branche privée (rien du privé n'était spécifique : vérifié
+   par diff, nos versions sont des sur-ensembles stricts) ;
+2. `2f57e67` — **correctif d'un défaut latent** : l'étape P0 n'installait pas l'APK
+   téléchargé (`APK=rc/release.apk` désormais passé) — invisible jusqu'ici puisque le
+   workflow n'avait jamais été exécuté ;
+3. push `1a3e65a..2f57e67` → le déclencheur (`tools/e2e/**`) est satisfait.
+
+Le PAT n'ayant **aucune portée Actions** (lecture ET écriture : 403 mesuré), la seule
+voie d'observation est celle prévue par la conception du workflow : les marqueurs
+committés dans la branche (`docs/checkpoints/D42_14/rc6/00_PREUVE_DE_VIE.txt`, puis
+`01_APK_VERIFIE.txt`, `p0/`, `p1/`). Relevés en cours.

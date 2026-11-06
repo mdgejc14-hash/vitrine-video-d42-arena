@@ -89,3 +89,17 @@ Sans (1) je ne peux plus rien publier ; sans (2) aucun parcours de la RC6 ne peu
 | Ciblage hors appareil | **3/3** |
 | Job CI ajouté | `security-local` (reproductible dès qu'un push est possible) |
 | Publication | toujours bloquée : fichier de jeton absent, push anonyme refusé (mesuré), `gh_api.sh` sort en code 3 |
+
+## Relevé 17 h 00 UTC — chaîne de preuve
+
+| Sujet | État |
+|---|---|
+| Publication | 14 commits poussés sur `d42.13-lab` (38e1fe3 → 918feaa), **vérifiés par API** |
+| RC6 signée | **téléchargée + vérifiée localement** : SHA-256 exact, package, version, signature v2 (01_RELEASE_TESTS) |
+| `release-e2e` (privé) | armé (harnais synchronisé `718699b` + correctif APK `2f57e67`), poussé, **marqueurs pas encore apparus** — suspicion quota/queue Actions du dépôt privé (illisible avec ce PAT) |
+| 8 `RISQUE_TYPO` | **corrigées** (120/120 OK_STATIQUE, valideurs 0 anomalie) — régénération des 120 rendus **en cours** (32 lots, run 42250114616) |
+| Défaut applicatif A1 | double lancement des écrans → **corrigé et validé en réel** (catalogue atteint) |
+| Contrôles négatifs brief | **3/3 PASS** (vide, invalide, retour arrière) |
+| Correctifs CI rendus | libpulse0 (qemu démarre ✓), args vides (smoke ✓), matrice push (32 lots ✓) |
+| Suite sécurité | **64/64** en CI (job `security-local` vert) |
+| Run en cours | 42252465240 (918feaa) : potentiel premier P1 complètement vert |

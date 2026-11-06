@@ -59,3 +59,24 @@ aucun parcours : cela garantit seulement que le prochain run dira la vérité.
 | D9 | Contrôle BGM obsolète : attendait `synthese_procedurale_v1`, la base livrée contient `v2` (générateur `finalize_audio_v2.py`) | attente alignée sur **v2**, documentée dans le code et ici — la base était conforme, le test était en retard |
 | H5 | Adaptateur D1 : `batch()` sans `meta.changes` ⇒ 503 `transition_race_or_event_write_failed` | métadonnées fournies (`__executer`) |
 | H6 | `caches` non défini sous Node ⇒ 500 sur `/api/v1/audio/track` | shim mémoire dans le pont |
+
+### Nouveau défaut applicatif découvert et corrigé (D42.14, 6 nov. 16 h)
+
+| # | Défaut | Preuve | État |
+|---|---|---|---|
+| **A1** | **Double lancement des écrans d'orchestration** (`MainActivity`) : Language ×2 (637 ms), Auth ×2 (32 ms), Onboarding ×2 (12 ms). L'instance périmée restée sur la pile fait réapparaître un carrousel vierge après le `finish()` de l'instance pilotée → **catalogue jamais atteint** (intermittent, ~1 run sur 3) | logcat du run 42241430727 (P1, échec, doublons) **vs** run P0 réussi du même commit (**aucun doublon**) — cause Racine : recréation/course au lancement | **CORRIGÉ** (`c588993`) : lancements initiaux seulement à la création (`savedInstanceState == null`) + garde `lancerUneSeuleFois()` (1 s) sur la chaîne automatique — les retours utilisateur (`stepBack`) gardent leurs lancements directs |
+
+**Chronologie de la découverte** : le harnais corrigé (`point_de_clic`) a d'abord fait PASSER
+`P1_activite_continue` (le bouton 1 px est désormais actionné — **preuve en émulateur réel**),
+14 PASS record, puis l'échec s'est DÉPLACÉ au catalogue. Le diagnostic par logcat (désormais
+téléchargeable avec le jeton) a montré le doublon d'activités — invisible avant, parce que le
+harnais tapait à côté et masquait le symptôme. **Correction d'instrument puis découverte de
+défaut produit : c'est l'enchaînement attendu d'un harnais qui dit la vérité.**
+
+### Incidents CI corrigés ce tour (chaîne de preuve des rendus)
+
+| # | Incident | Correctif |
+|---|---|---|
+| C1 | `qemu-system` ne démarrait plus : `libpulse.so.0` absente de l'image `ubuntu-22.04` (run 42242981946, aucun rendu) | `apt-get install libpulse0` avant lancement (3 jobs concernés) — **vérifié : l'émulateur bootte** (run 42245217052) |
+| C2 | Smoke : `Error: Invalid userId -2` dès `am instrument` — seul appel **sans** shard (args `-e` vides) alors que les lots shardés passaient | args vides omis + shard explicite `0/1` dans l'appel smoke (`426dfee`) — **en cours de validation** |
+| C3 | Workflows de rendu jamais déclenchables : `workflow_dispatch` interdit au PAT (403 mesuré) et `on.push` volontairement sans émulateur (D42-BUDGET) | exception étroite documentée sur la branche **jetable** `d42-render-check` |
