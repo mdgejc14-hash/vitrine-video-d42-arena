@@ -246,8 +246,28 @@ else
 fi
 
 # --- Sélection d'un secteur puis poursuite -------------------------------------
-if $UI tap --text "Commerce" --timeout 8 >/dev/null 2>&1 || $UI tap --text "Boutique" --timeout 8 >/dev/null 2>&1; then
-  record PASS S12_selection_secteur "carte secteur actionnée"
+# D42.14 : en paysage, la carte secteur est sous la ligne de flottaison. On
+# défile avant de taper, sinon `tap` vise un élément hors écran et l'appui se
+# perd (échec S12 du run 42186013775, non expliqué jusque-là).
+taper_carte_secteur() {
+  local t
+  for t in "Commerce" "Boutique" "Vêtements" "Coiffure" "Restauration" "Bâtiment" "Voitures"; do
+    $UI inside --text "$t" --timeout 3 >/dev/null 2>&1 && { $UI tap --text "$t" --timeout 6 >/dev/null 2>&1 && return 0; }
+  done
+  local i
+  for i in 1 2 3; do
+    adb shell input swipe 540 1200 540 500 250 >/dev/null 2>&1
+    sleep 1
+    for t in "Commerce" "Boutique" "Vêtements" "Coiffure" "Restauration" "Bâtiment" "Voitures"; do
+      if $UI inside --text "$t" --timeout 2 >/dev/null 2>&1; then
+        $UI tap --text "$t" --timeout 6 >/dev/null 2>&1 && return 0
+      fi
+    done
+  done
+  return 1
+}
+if taper_carte_secteur; then
+  record PASS S12_selection_secteur "carte secteur actionnée (après défilement si nécessaire)"
   shot 09_secteur_choisi
 else
   record BLOCKED S12_selection_secteur "carte secteur non identifiée (voir probe)"

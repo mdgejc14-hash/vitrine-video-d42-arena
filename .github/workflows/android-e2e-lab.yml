@@ -231,6 +231,33 @@ jobs:
           if-no-files-found: warn
 
   # ---------------------------------------------------------------------------
+  # D42.14 — Contrat AUTHENTIFIÉ du Worker, sans compte Firebase ni secret.
+  # Le Worker est importé tel quel ; seule la JWKS Google est remplacée, dans le
+  # processus de test, par une clé locale. La base est une SQLite issue des 12
+  # migrations. Aucune requête sortante, aucune donnée réelle.
+  # ---------------------------------------------------------------------------
+  auth-local:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Dépendances (jose, wrangler)
+        run: npm install --no-audit --no-fund 2>&1 | tail -3
+      - name: Contrat authentifié (18 contrôles)
+        run: node tools/e2e/auth_harness.mjs --db /tmp/auth-d42.db --json artifacts/auth/auth_report.json
+      - name: Artefact du banc
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: auth-local
+          path: artifacts/auth/**
+          retention-days: 14
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
   # Backend HTTP — Worker réellement démarré (wrangler dev) sur une base D1
   # locale construite par les 12 migrations. Aucun accès réseau externe, aucune
   # donnée de production, aucun jeton Cloudflare.

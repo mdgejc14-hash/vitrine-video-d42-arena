@@ -1,0 +1,99 @@
+{
+  "banc": "D42.14 — Worker réel, JWKS locale interceptée, D1 = SQLite issue des 12 migrations",
+  "statut": "PASS_LOCAL_HARNESS",
+  "total": 18,
+  "ok": 18,
+  "resultats": [
+    {
+      "nom": "Migrations appliquées sur SQLite locale",
+      "ok": true,
+      "detail": "12/12 fichiers"
+    },
+    {
+      "nom": "Bootstrap du compte A",
+      "ok": true,
+      "detail": "HTTP 200 {\"authenticated\":true,\"profile\":{\"id\":\"01a1b131-336c-7cb4-9e5c-9390fc453bfd\",\"em"
+    },
+    {
+      "nom": "Bootstrap du compte B",
+      "ok": true,
+      "detail": "HTTP 200"
+    },
+    {
+      "nom": "GET /me avec jeton valide",
+      "ok": true,
+      "detail": "HTTP 200"
+    },
+    {
+      "nom": "Isolement : identités A et B distinctes",
+      "ok": true,
+      "detail": "A=01a1b131-336c-7cb4-9e5c-9390fc453bfd B=01a1b131-336f-7680-a515-504f37c3bef4"
+    },
+    {
+      "nom": "Signature forgée (même kid) rejetée",
+      "ok": true,
+      "detail": "HTTP 401"
+    },
+    {
+      "nom": "Mauvaise audience rejetée",
+      "ok": true,
+      "detail": "HTTP 401"
+    },
+    {
+      "nom": "Mauvais émetteur rejeté",
+      "ok": true,
+      "detail": "HTTP 401"
+    },
+    {
+      "nom": "Jeton expiré rejeté",
+      "ok": true,
+      "detail": "HTTP 401"
+    },
+    {
+      "nom": "Dotation de bienvenue accordée",
+      "ok": true,
+      "detail": "HTTP 200 {\"granted\":true,\"credits_total\":3}"
+    },
+    {
+      "nom": "Dotation rejouée : pas de second crédit",
+      "ok": true,
+      "detail": "1er={\"granted\":true,\"credits_total\":3} 2e={\"granted\":false,\"credits_left\":3}"
+    },
+    {
+      "nom": "Nouvel appareil refusé pour un compte déjà doté",
+      "ok": true,
+      "detail": "{\"granted\":false,\"credits_left\":3,\"reason\":\"already_granted\"}"
+    },
+    {
+      "nom": "Facturation authentifiée : 501 billing_not_configured",
+      "ok": true,
+      "detail": "HTTP 501 {\"error\":\"billing_not_configured\"}"
+    },
+    {
+      "nom": "Quota consommé une fois",
+      "ok": true,
+      "detail": "HTTP 200 {\"ok\":true}"
+    },
+    {
+      "nom": "Événement rejoué : second débit refusé",
+      "ok": true,
+      "detail": "1er={\"ok\":true} 2e={\"ok\":true,\"dup\":true}"
+    },
+    {
+      "nom": "Compte B ne peut pas débiter l'appareil de A",
+      "ok": true,
+      "detail": "HTTP 403 {\"error\":\"fingerprint non lie a ce compte\"}"
+    },
+    {
+      "nom": "Auto-parrainage refusé par le Worker",
+      "ok": true,
+      "detail": "HTTP 404 {\"error\":\"code invalide\"}"
+    },
+    {
+      "nom": "Aucune requête sortante hors JWKS interceptée",
+      "ok": true,
+      "detail": "0 appel"
+    }
+  ],
+  "limite": "Fournisseur d'identité remplacé par une clé locale : ce banc prouve la chaîne de vérification et le comportement métier, PAS une intégration Google réelle (PASS_PROD exigerait un compte Firebase de test)."
+}

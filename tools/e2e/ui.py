@@ -238,6 +238,50 @@ def cmd_wait(args):
     return 0 if _wait(args) is not None else 1
 
 
+
+def point_de_clic(nodes, n, w, h):
+    """Point (x, y) où taper pour activer `n`, et la façon dont il a été choisi.
+
+    Trois cas, dans cet ordre (on regarde d'ABORD les bornes propres du nœud,
+    jamais celles d'un ancêtre : sinon un texte à [0,0][0,0] hérite du rectangle
+    de la racine et l'on tape au milieu de l'écran) :
+
+      1. "direct"    — bornes propres franches (>= 24 px) ;
+      2. "surface"   — bornes propres DÉGÉNÉRÉES (1 px de haut) : Compose expose
+                       parfois le texte d'un bouton dans [455,2071][625,2072]
+                       (run 42223776656). Taper ce centre tombait sur le bord de
+                       la fenêtre : aucun effet, sans erreur. On reprend la
+                       surface réelle du parent cliquable ;
+      3. "bas_large" — bornes propres nulles ([0,0][0,0], run 42208901429) :
+                       dernier nœud cliquable pleine largeur = bouton d'action.
+    Renvoie (x, y, mode) ou (None, None, "aucun").
+    """
+    propre = parse_bounds(n.get("bounds"))
+    if propre and propre != VIDE:
+        largeur, hauteur = propre[2] - propre[0], propre[3] - propre[1]
+        if hauteur >= 24 and largeur >= 24:
+            return (propre[0] + propre[2]) // 2, (propre[1] + propre[3]) // 2, "direct"
+        surf = surface_reelle(n)
+        if surf and surf != VIDE and (surf[3] - surf[1]) >= 24 and (surf[2] - surf[0]) >= 24:
+            return (surf[0] + surf[2]) // 2, (surf[1] + surf[3]) // 2, "surface"
+    candidats = []
+    for m in nodes or []:
+        if m.get("clickable") != "true":
+            continue
+        bb = parse_bounds(m.get("bounds"))
+        if not bb or bb == VIDE:
+            continue
+        if w and (bb[2] - bb[0]) < w * 0.4:
+            continue
+        if h and (bb[2] - bb[0]) >= w * 0.95 and (bb[3] - bb[1]) > h * 0.9:
+            continue  # la racine n'est pas un bouton
+        candidats.append(bb)
+    if candidats:
+        bb = max(candidats, key=lambda r: r[3])
+        return (bb[0] + bb[2]) // 2, (bb[1] + bb[3]) // 2, "bas_large"
+    return None, None, "aucun"
+
+
 def cmd_tap(args):
     if args.xy:
         x, y = map(int, args.xy.split(","))
@@ -247,35 +291,14 @@ def cmd_tap(args):
     n = _wait(args)
     if n is None:
         return 1
-    b = bounds_utiles(n)
-    if not b or b == VIDE:
-        # Compose expose parfois le TEXTE d'un bouton avec des bornes nulles
-        # ([0,0][0,0]) : le rectangle réel est porté par un noeud frère. On prend
-        # alors le dernier noeud cliquable PLEINE LARGEUR (le bouton d'action est
-        # en bas d'un écran défilant). Constaté au run 42208901429.
-        nodes, _ = dump_nodes()
-        w, h = screen_size()
-        candidats = []
-        for m in nodes:
-            if m.get("clickable") != "true":
-                continue
-            bb = parse_bounds(m.get("bounds"))
-            if not bb or bb == VIDE:
-                continue
-            if (bb[2] - bb[0]) < w * 0.4:
-                continue
-            candidats.append(bb)
-        if candidats:
-            bb = max(candidats, key=lambda r: r[3])
-            x, y = (bb[0] + bb[2]) // 2, (bb[1] + bb[3]) // 2
-            adb("shell", "input", "tap", str(x), str(y))
-            print(f"E2E TAP_FALLBACK_BAS {x},{y} (texte sans surface) bounds={bb}")
-            return 0
+    nodes, _ = dump_nodes()
+    w, h = screen_size()
+    x, y, mode = point_de_clic(nodes, n, w, h)
+    if x is None:
         print(f"E2E FAIL element_sans_surface {n.get('text') or n.get('resource-id')}", file=sys.stderr)
         return 4
-    x, y = (b[0] + b[2]) // 2, (b[1] + b[3]) // 2
     adb("shell", "input", "tap", str(x), str(y))
-    print(f"E2E TAP {x},{y} -> {n.get('text') or n.get('resource-id')}")
+    print(f"E2E TAP {x},{y} [{mode}] -> {n.get('text') or n.get('resource-id')}")
     return 0
 
 

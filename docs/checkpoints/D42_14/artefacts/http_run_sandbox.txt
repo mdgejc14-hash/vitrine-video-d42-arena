@@ -1,0 +1,18 @@
+HTTP PASS H1_health :: attendu=200 obtenu=200 {"service":"vitrine-video-api","status":"ok","database":"connected","schema":"re
+HTTP PASS H2_racine :: attendu=200 obtenu=200 {"service":"vitrine-video-api","version":"0.9.0","status":"online","endpoints":["/health","/api/v1/m
+HTTP PASS SANS_JETON GET /api/v1/me :: attendu=401 obtenu=401 {"error":"unauthorized","message":"A valid Firebase ID token
+HTTP PASS SANS_JETON GET /api/v1/me/entitlements :: attendu=401 obtenu=401 {"error":"unauthorized","message":"A valid Firebase ID token
+HTTP PASS SANS_JETON GET /api/v1/me/referral :: attendu=401 obtenu=401 {"error":"unauthorized","message":"A valid Firebase ID token
+HTTP PASS SANS_JETON POST /api/v1/quota/consume :: attendu=401 obtenu=401 {"error":"unauthorized","message":"A valid Firebase ID token
+HTTP PASS SANS_JETON POST /api/v1/me/welcome-grant :: attendu=401 obtenu=401 {"error":"unauthorized","message":"A valid Firebase ID token
+HTTP PASS H3_alg_none_rejete :: attendu=401 obtenu=401 {"error":"unauthorized","message":"The Firebase ID token is 
+HTTP PASS H4_confusion_algo_rejetee :: attendu=401 obtenu=401 {"error":"unauthorized","message":"The Firebase ID token is 
+HTTP PASS H5_facturation_sans_jeton :: attendu=401 (jamais 501 sans identité) obtenu=401 {"error":"unauthorized","message":"A valid Firebase ID token
+HTTP PASS H6_route_inconnue :: attendu=404 obtenu=404 
+HTTP PASS H7_methode_incorrecte :: attendu=404 ou 405 obtenu=404 
+HTTP PASS H8_preflight_cors :: attendu=200-204 obtenu=204 
+HTTP PASS H9_type_contenu_json :: attendu=application/json obtenu=application/json; charset=utf-8 
+HTTP PASS H10_pas_de_jeton_en_url :: attendu=401 (le jeton d'URL ne suffit pas) obtenu=401 
+
+HTTP_BILAN PASS=15 FAIL=0
+HTTP_LIMITE routes authentifiées : BLOCKED (JWKS Google en dur, src/index.js:8-12)
