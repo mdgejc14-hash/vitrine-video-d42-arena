@@ -140,9 +140,14 @@ else
   record BLOCKED "L_parrainage_$LANGUE" "étape parrainage non atteinte"
 fi
 sleep 2
-$UI tap --text "$CONTINUER" --exact --timeout 20 >/dev/null 2>&1 || true
-sleep 3
-if $UI wait --text "$CATALOGUE" --exact --timeout 40 >/dev/null 2>&1; then
+# Écran de bienvenue intermédiaire : on réessaie jusqu'à voir le catalogue.
+okata=0
+for _ in 1 2 3; do
+  $UI tap --text "$CONTINUER" --exact --timeout 15 >/dev/null 2>&1 || true
+  if $UI wait --text "$CATALOGUE" --exact --timeout 15 >/dev/null 2>&1; then okata=1; break; fi
+  sleep 2
+done
+if [ "$okata" = "1" ]; then
   record PASS "L_catalogue_$LANGUE" "« $CATALOGUE » affiché"
 else
   record FAIL "L_catalogue_$LANGUE" "« $CATALOGUE » absent"

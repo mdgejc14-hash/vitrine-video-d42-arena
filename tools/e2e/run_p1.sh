@@ -179,35 +179,47 @@ fi
 # --- S22 brief : remplir les champs REQUIS, défiler, valider --------------------
 # `GabaritBriefScreen` : un seul écran défilant, bouton « Continuer » tout en bas,
 # DÉSACTIVÉ tant que `filled != requiredIds.size` ou qu'un champ est invalide.
-remplir_champ() { # x1 y1 x2 y2, texte
-  local cx=$(( ($1 + $3) / 2 )) cy=$(( ($2 + $4) / 2 ))
+remplir_champ() { # index, texte  (relit les coordonnées à chaque champ : le
+  # clavier modifie la géométrie de l'écran, donc les positions mémorisées mentent)
+  local idx="$1" val="$2" ligne x1 y1 x2 y2 cx cy
+  ligne=$(awk -v i="$idx" '$1=="E2E" && $2=="FIELD" && $3==i {print $4, $5, $6, $7}' "$OUT/champs.txt")
+  [ -z "$ligne" ] && return 1
+  # shellcheck disable=SC2086
+  set -- $ligne
+  x1=$1; y1=$2; x2=$3; y2=$4
+  cx=$(( (x1 + x2) / 2 )); cy=$(( (y1 + y2) / 2 ))
   adb shell input tap "$cx" "$cy" >/dev/null 2>&1; sleep 1
   adb shell input keyevent KEYCODE_MOVE_END >/dev/null 2>&1
   for _ in 1 2 3 4 5 6 7 8; do adb shell input keyevent KEYCODE_DEL >/dev/null 2>&1; done
-  adb shell input text "$5" >/dev/null 2>&1; sleep 1
+  adb shell input text "$val" >/dev/null 2>&1; sleep 1
+  # ferme le clavier : sinon il masque le bas du formulaire et absorbe les appuis
+  adb shell input keyevent 4 >/dev/null 2>&1; sleep 1
+  return 0
 }
 
 if $UI wait --text "Ma vidéo" --exact --timeout 30 >/dev/null 2>&1; then
   record PASS P1_brief "formulaire de brief affiché (« Ma vidéo », gabarit sélectionné)"
-  $UI fields > "$OUT/champs.txt" 2>&1 || true
-  cat "$OUT/champs.txt" | sed 's/^/E2E /'
   n=0
   for val in "BoutiqueAwa" "+22997000000" "RobeWax" "15000"; do
-    ligne=$(awk -v i="$n" '$1=="E2E" && $2=="FIELD" && $3==i {print $4, $5, $6, $7}' "$OUT/champs.txt")
-    if [ -n "$ligne" ]; then
-      # shellcheck disable=SC2086
-      remplir_champ $ligne "$val"
-      n=$((n+1))
-    fi
+    $UI fields > "$OUT/champs.txt" 2>&1 || true
+    remplir_champ "$n" "$val" || echo "E2E champ $n introuvable"
+    n=$((n+1))
   done
+  $UI fields > "$OUT/champs_apres.txt" 2>&1 || true
+  cat "$OUT/champs_apres.txt" | sed 's/^/E2E /'
   sleep 1
   shot 22_brief_saisi; dump 22_brief_saisi
-  # le bouton est en bas d'un écran défilant : on descend avant de le chercher
-  for _ in 1 2 3; do
-    adb shell input swipe 540 1800 540 700 250 >/dev/null 2>&1
+  # Le bouton est en bas d'un écran défilant. On descend PAR PAS en vérifiant
+  # après chaque geste qu'il est réellement apparu (un nombre fixe de glissements
+  # ne garantit rien : le run 42205571080 est resté bloqué en haut du formulaire).
+  trouve=0
+  for _ in 1 2 3 4 5 6; do
+    if $UI wait --text "Continuer" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
+    adb shell input swipe 540 1700 540 600 250 >/dev/null 2>&1
     sleep 1
   done
   shot 22b_brief_bas; dump 22b_brief_bas
+  [ "$trouve" = "1" ] || echo "E2E bouton Continuer non atteint après 6 glissements"
   if $UI tap --text "Continuer" --exact --timeout 15 >/dev/null 2>&1; then
     if $UI wait --text "Avant de commencer" --exact --timeout 25 >/dev/null 2>&1; then
       record PASS P1_brief_valide "brief accepté → écran « Avant de commencer »"
