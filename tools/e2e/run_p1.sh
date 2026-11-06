@@ -301,6 +301,12 @@ if [ "$brief_ok" = "1" ]; then
   else
     record BLOCKED P1_brief_invalide_refuse "champ Prix introuvable"
   fi
+  # D42.14 (run 42246994818) : le contrôle invalide laisse « abc » dans le prix
+  # et le remplissage valide ne traite que les champs VIDES — la validation
+  # finale échouait pour un champ que NOUS avions sali. On vide le champ.
+  if [ -n "${idx_prix:-}" ]; then
+    remplir_champ "$idx_prix" "" || true
+  fi
   remonter_formulaire
   $UI champs > "$OUT/champs.txt" 2>&1 || true
 
