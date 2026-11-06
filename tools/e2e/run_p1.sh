@@ -90,9 +90,26 @@ sleep 4
 # libellés officiels, puis on choisit « Français » (identique dans les 4 langues).
 etape_any P1_ecran_langue 60 "Choisissez votre langue" "Choose your language" \
   "Elige tu idioma" "言語を選んでください" || true
-$UI tap --text "Français" --exact --timeout 20 >/dev/null 2>&1
-etape_any P1_ecran_connexion 90 "Continuer avec Google" "Continue with Google" \
-  "Continuar con Google" "Googleで続ける" || true
+# Le PREMIER appui sur la carte de langue applique la locale et RECRÉE
+# l'activité : il ne fait pas toujours avancer vers l'authentification
+# (constaté au run 42196966694 : LanguageActivity redessinée, jamais AuthActivity).
+# On réessaie donc, en vérifiant à chaque fois si l'écran suivant est arrivé.
+ecran_connexion=0
+for essai in 1 2 3 4; do
+  $UI tap --text "Français" --exact --timeout 15 >/dev/null 2>&1
+  if $UI wait --text "Continuer avec Google" --exact --timeout 25 >/dev/null 2>&1 \
+     || $UI wait --text "Continue with Google" --exact --timeout 8 >/dev/null 2>&1 \
+     || $UI wait --text "Continuar con Google" --exact --timeout 8 >/dev/null 2>&1 \
+     || $UI wait --text "Googleで続ける" --exact --timeout 8 >/dev/null 2>&1; then
+    ecran_connexion=1; break
+  fi
+  echo "E2E langue: appui $essai sans effet, nouvelle tentative"
+done
+if [ "$ecran_connexion" = "1" ]; then
+  record PASS P1_ecran_connexion "écran d'authentification atteint (langue appliquée)"
+else
+  record FAIL P1_ecran_connexion "authentification non atteinte après 4 appuis sur la langue"
+fi
 
 if tap_if "" "auth_offline_button" 20; then
   if $UI gone --id "auth_offline_button" --timeout 90 >/dev/null 2>&1; then

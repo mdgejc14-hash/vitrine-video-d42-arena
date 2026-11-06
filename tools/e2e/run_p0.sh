@@ -151,21 +151,37 @@ else
 fi
 
 # --- Carrousel 3 écrans --------------------------------------------------------
-if $UI wait --text "Suivant" --timeout 30 >/dev/null 2>&1; then
+# D42.14 : la PREMIÈRE ouverture de l'application sur un émulateur fraîchement
+# démarré met 35-40 s à passer de l'authentification au carrousel (compilation
+# JIT à froid). Un délai de 30 s produisait un `S06 BLOCKED` sur la variante
+# `base` et un PASS sur les variantes suivantes — même build, même code.
+# On attend 90 s et on relance le repli s'il n'a pas été pris.
+if $UI wait --text "Suivant" --timeout 90 >/dev/null 2>&1 \
+   || { $UI tap --id "auth_offline_button" --timeout 10 >/dev/null 2>&1; \
+        $UI wait --text "Suivant" --timeout 60 >/dev/null 2>&1; }; then
   record PASS S06_carrousel_slide1 "premier écran du carrousel"
   shot 04_carrousel_1; dump 04_carrousel_1
   # libellés du bouton selon la langue
   case "$LANGUE" in
     en) SUIVANT="Next" ;; es) SUIVANT="Siguiente" ;; ja) SUIVANT="次へ" ;; *) SUIVANT="Suivant" ;;
   esac
-  $UI tap --text "$SUIVANT" --timeout 10 >/dev/null 2>&1 || $UI tap --text "Suivant" --timeout 5 >/dev/null 2>&1
+  $UI tap --text "$SUIVANT" --exact --timeout 10 >/dev/null 2>&1 || $UI tap --text "Suivant" --exact --timeout 5 >/dev/null 2>&1
   sleep 1
   shot 05_carrousel_2; dump 05_carrousel_2
-  record PASS S07_carrousel_slide2 "deuxième écran atteint"
-  $UI tap --text "$SUIVANT" --timeout 10 >/dev/null 2>&1 || $UI tap --text "Suivant" --timeout 5 >/dev/null 2>&1
+  # D42.14 : un tap réussi ne prouve pas le changement d'écran (défaut du run
+  # 42189554849). On exige le slogan du 2e écran.
+  if $UI wait --text "Filme tes produits, on te guide" --exact --timeout 15 >/dev/null 2>&1 \
+     || $UI wait --text "Tournage guidé" --timeout 5 >/dev/null 2>&1 \
+     || [ "$LANGUE" != "fr" ]; then
+    record PASS S07_carrousel_slide2 "deuxième écran atteint (slogan vérifié)"
+  else
+    record FAIL S07_carrousel_slide2 "le carrousel n'a pas changé d'écran"
+  fi
+  $UI tap --text "$SUIVANT" --exact --timeout 10 >/dev/null 2>&1 || $UI tap --text "Suivant" --exact --timeout 5 >/dev/null 2>&1
   sleep 1
   shot 06_carrousel_3; dump 06_carrousel_3
-  if $UI wait --text "Commencer" --timeout 15 >/dev/null 2>&1; then
+  if $UI wait --text "Une vidéo prête à publier en 30 secondes" --exact --timeout 20 >/dev/null 2>&1 \
+     || $UI wait --text "Commencer" --exact --timeout 10 >/dev/null 2>&1; then
     record PASS S08_carrousel_slide3 "troisième écran + bouton Commencer"
     $UI tap --text "Commencer" --timeout 10 >/dev/null 2>&1
   else
