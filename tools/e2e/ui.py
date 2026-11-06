@@ -164,12 +164,27 @@ def _ancetres(n):
     return out
 
 
-def find(nodes, text=None, rid=None):
+def find(nodes, text=None, rid=None, exact=False):
+    """Recherche un noeud.
+
+    PIEGE CORRIGE EN D42.14 : la comparaison était une SOUS-CHAINE.
+    « Continuer » correspondait donc à « Continuer sans compte » — le harnais
+    a tapé le bouton de repli de l'écran d'authentification puis a déclaré
+    PASS alors que l'écran suivant n'était jamais arrivé (run 42189554849).
+    `exact=True` compare le libellé entier, après normalisation des espaces.
+    """
+    def norm(v):
+        return " ".join((v or "").split()).lower()
+    cible = norm(text) if text is not None else None
     for n in nodes:
         t = n.get("text") or ""
         r = n.get("resource-id") or ""
-        if text is not None and text.lower() in t.lower():
-            return n
+        if cible is not None:
+            if exact:
+                if norm(t) == cible:
+                    return n
+            elif cible in norm(t):
+                return n
         if rid is not None and rid in r:
             return n
     return None
@@ -204,13 +219,14 @@ def _wait(args, must=True, keep=None):
         nodes, _ = dump_nodes()
         if keep is not None:
             keep[0] = nodes
-        n = find(nodes, args.text, args.id)
+        n = find(nodes, args.text, args.id, exact=getattr(args, "exact", False))
         if n is not None:
             print("E2E FOUND " + describe(n))
             return n
         last = len(nodes)
         time.sleep(1.5)
-    msg = f"E2E TIMEOUT text={args.text} id={args.id} after {args.timeout}s (nodes={last})"
+    msg = (f"E2E TIMEOUT text={args.text} id={args.id} exact={getattr(args,'exact',False)} "
+           f"after {args.timeout}s (nodes={last})")
     print(msg, file=sys.stderr if must else sys.stdout)
     return None
 
@@ -279,6 +295,24 @@ def cmd_inside(args):
     return 0 if inside else 3
 
 
+def cmd_gone(args):
+    """Attend la DISPARITION d'un libellé.
+
+    Nécessaire pour distinguer « l'écran a changé » de « le libellé existe encore
+    ailleurs ». Sans ce contrôle, un `tap` peut réussir sur un noeud de l'écran
+    PRÉCÉDENT et l'on croit être passé à l'étape suivante (run 42189554849).
+    """
+    deadline = time.time() + args.timeout
+    while time.time() < deadline:
+        nodes, _ = dump_nodes()
+        if find(nodes, args.text, args.id, exact=getattr(args, "exact", False)) is None:
+            print(f"E2E GONE text={args.text} id={args.id}")
+            return 0
+        time.sleep(1.5)
+    print(f"E2E STILL_PRESENT text={args.text} id={args.id} after {args.timeout}s")
+    return 1
+
+
 def cmd_shot(args):
     with open(args.path, "wb") as f:
         p = subprocess.run([adb_bin(), "exec-out", "screencap", "-p"], stdout=f, timeout=180)
@@ -303,6 +337,8 @@ def build_parser():
         sp.add_argument("--text")
         sp.add_argument("--id")
         sp.add_argument("--timeout", type=int, default=25)
+        sp.add_argument("--exact", action="store_true",
+                        help="libellé entier (évite « Continuer » ⊂ « Continuer sans compte »)")
         return sp
 
     sub.add_parser("probe").set_defaults(func=cmd_probe)
@@ -315,6 +351,7 @@ def build_parser():
     t.set_defaults(func=cmd_tap)
 
     cible(sub.add_parser("inside")).set_defaults(func=cmd_inside)
+    cible(sub.add_parser("gone")).set_defaults(func=cmd_gone)
 
     sh = sub.add_parser("shot")
     sh.add_argument("path")

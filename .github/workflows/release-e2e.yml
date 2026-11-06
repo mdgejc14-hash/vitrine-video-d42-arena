@@ -9,7 +9,17 @@ name: release-e2e
 # Ce workflow n'expose aucun secret : il utilise GITHUB_TOKEN (lecture des
 # releases de CE dépôt) et rien d'autre.
 
+# D42.14 — déclenchement par PUSH : le PAT de la mission n'a AUCUNE portée
+# Actions (GET /actions/workflows et POST /dispatches => 403), et la consigne
+# est de ne pas demander de jeton plus puissant. Un push sur la branche de
+# livraison suffit donc à lancer la preuve sur la vraie release.
 on:
+  push:
+    branches:
+      - d42.14-critical-paths
+    paths:
+      - '.github/workflows/release-e2e.yml'
+      - 'tools/e2e/**'
   workflow_dispatch:
     inputs:
       tag:
@@ -21,6 +31,10 @@ on:
 
 permissions:
   contents: read
+
+env:
+  TAG: ${{ inputs.tag || 'v0.8.0-b0-d42.13-rc6' }}
+  SHA_ATTENDU: ${{ inputs.sha256 || '5c3955731de9765327cc95da3ff2fc098b5dd09dc50a6716819404914c377495' }}
 
 jobs:
   release-rc6:
@@ -40,10 +54,10 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p rc
-          gh release download "${{ inputs.tag }}" --pattern '*.apk' --dir rc
+          gh release download "$TAG" --pattern '*.apk' --dir rc
           ls -la rc
           ACTUAL=$(sha256sum rc/*.apk | cut -d' ' -f1)
-          ATTENDU="${{ inputs.sha256 }}"
+          ATTENDU="$SHA_ATTENDU"
           echo "sha256 attendu : $ATTENDU"
           echo "sha256 obtenu  : $ACTUAL"
           if [ "$ACTUAL" != "$ATTENDU" ]; then

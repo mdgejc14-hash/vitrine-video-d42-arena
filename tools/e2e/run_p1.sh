@@ -32,6 +32,18 @@ tap_if() { # texte, id, timeout
   if [ -n "${1:-}" ]; then $UI tap --text "$1" --timeout "${3:-8}" >/dev/null 2>&1 && return 0; fi
   return 1
 }
+# D42.14 — un PASS n'est enregistré QUE sur constat d'écran, jamais sur le
+# simple fait qu'un `tap` a renvoyé 0. C'est ce qui a produit le faux
+# « P1_activite PASS » du run 42189554849, où le libellé « Continuer »
+# correspondait en réalité à « Continuer sans compte » de l'écran PRÉCÉDENT.
+etape() { # nom, texte exact attendu, timeout
+  if $UI wait --text "$2" --exact --timeout "${3:-40}" >/dev/null 2>&1; then
+    record PASS "$1" "écran constaté : « $2 »"
+    return 0
+  fi
+  record FAIL "$1" "« $2 » absent après ${3:-40}s ($(date -u +%H:%M:%SZ))"
+  return 1
+}
 
 echo "=========== P1 $TAG (APK=$APK) ==========="
 adb devices | sed 's/^/E2E /'
@@ -58,20 +70,49 @@ adb shell am start -W -n "$PKG/.MainActivity" > "$OUT/start.log" 2>&1
 sleep 4
 
 # --- parcours amont : langue -> connexion -> carrousel -> activité -> accueil --
-$UI tap --text "Français" --timeout 20 >/dev/null 2>&1
-for i in 1 2 3; do $UI wait --text "Google" --timeout 10 >/dev/null 2>&1 && break; $UI tap --text "Français" --timeout 5 >/dev/null 2>&1; done
-if tap_if "" "auth_offline_button" 15; then record PASS P1_session_locale "repli sans compte"; else record FAIL P1_session_locale "bouton de repli absent"; fi
-for i in 1 2 3; do
-  if $UI wait --text "Suivant" --timeout 10 >/dev/null 2>&1; then $UI tap --text "Suivant" --timeout 8 >/dev/null 2>&1; else break; fi
-  sleep 1
-done
-tap_if "Commencer" "" 12
-sleep 2
-if tap_if "Continuer" "" 12; then record PASS P1_activite "secteur par défaut puis Continuer"; else record FAIL P1_activite "Continuer introuvable"; fi
-sleep 2
-tap_if "Je n'ai pas de code" "" 10 || true
+# Machine à états VÉRIFIÉE : on attend le marqueur de l'écran attendu, on agit,
+# puis on attend le marqueur de l'écran SUIVANT. Aucune étape ne se contente du
+# code retour d'un tap (cf. défaut du run 42189554849).
+etape P1_ecran_langue "Choisissez votre langue" 60 || true
+$UI tap --text "Français" --exact --timeout 20 >/dev/null 2>&1
+etape P1_ecran_connexion "Continuer avec Google" 60 || true
+
+if tap_if "" "auth_offline_button" 20; then
+  if $UI gone --id "auth_offline_button" --timeout 90 >/dev/null 2>&1; then
+    record PASS P1_session_locale "repli sans compte : écran d'authentification quitté"
+  else
+    record FAIL P1_session_locale "écran d'authentification toujours affiché 90s après le repli"
+  fi
+else
+  record FAIL P1_session_locale "bouton de repli absent"
+fi
+
+# Carrousel : 3 écrans, chacun identifié par SON slogan (jamais par la présence
+# du bouton, qui porte le même libellé d'un écran à l'autre).
+etape P1_carrousel_1 "Filme. Vends. C'est tout." 90 || true
+$UI inside --text "Suivant" --exact --timeout 10 | sed 's/^/E2E /' || true
+$UI tap --text "Suivant" --exact --timeout 10 >/dev/null 2>&1
+etape P1_carrousel_2 "Filme tes produits, on te guide" 30 || true
+$UI tap --text "Suivant" --exact --timeout 10 >/dev/null 2>&1
+etape P1_carrousel_3 "Une vidéo prête à publier en 30 secondes" 30 || true
+$UI tap --text "Commencer" --exact --timeout 10 >/dev/null 2>&1
+
+etape P1_activite "Ton activité principale" 60 || true
+tap_if "Commerce" "" 10 || tap_if "Boutique" "" 8 || true
 sleep 1
-tap_if "Continuer" "" 12 || true
+if $UI tap --text "Continuer" --exact --timeout 15 >/dev/null 2>&1; then
+  record PASS P1_activite_continue "bouton Continuer (libellé entier) actionné"
+else
+  record FAIL P1_activite_continue "bouton Continuer introuvable sur l'écran d'activité"
+fi
+if $UI wait --text "Ton code parrain" --exact --timeout 30 >/dev/null 2>&1; then
+  record PASS P1_parrainage "étape code parrain affichée"
+  tap_if "Je n'ai pas de code" "" 10 >/dev/null 2>&1 ||     $UI tap --text "Je n'ai pas de code" --exact --timeout 8 >/dev/null 2>&1
+else
+  record BLOCKED P1_parrainage "étape parrainage non atteinte"
+fi
+sleep 2
+$UI tap --text "Continuer" --exact --timeout 20 >/dev/null 2>&1 || true
 sleep 2
 
 # --- S20 catalogue -------------------------------------------------------------
@@ -117,8 +158,8 @@ sleep 4
 shot 23_camera; dump 23_camera
 
 # --- S23 caméra guidée ---------------------------------------------------------
-if $UI wait --text "Tourner" --timeout 30 >/dev/null 2>&1 || $UI wait --text "pris" --timeout 5 >/dev/null 2>&1; then
-  record PASS P1_camera_ecran "écran de tournage affiché (caméra virtuelle de l'émulateur)"
+if $UI wait --text "Filme ta prise" --timeout 40 >/dev/null 2>&1; then
+  record PASS P1_camera_ecran "écran « Filme ta prise » affiché (caméra virtuelle de l'émulateur)"
   shot 24_camera_ecran
 else
   record BLOCKED P1_camera_ecran "écran caméra non atteint (voir dump 23)"
@@ -134,11 +175,11 @@ fi
 # --- S24 enregistrement de 2 prises -------------------------------------------
 prises=0
 for n in 1 2; do
-  if tap_if "Tourner" "" 10; then
+  if $UI tap --text "Tourner" --exact --timeout 10 >/dev/null 2>&1; then
     sleep 6
     shot "25_prise_${n}_enregistrement"
     # arrêt : le bouton devient « Arrêter » ou un appui sur l'overlay stoppe
-    tap_if "Arrêter" "" 8 || adb shell input tap 540 1500
+    $UI tap --text "Arrêter" --exact --timeout 8 >/dev/null 2>&1 || adb shell input tap 540 1500
     sleep 4
     prises=$((prises+1))
     record PASS "P1_prise_$n" "enregistrement lancé puis arrêté"
@@ -147,7 +188,7 @@ for n in 1 2; do
     record BLOCKED "P1_prise_$n" "bouton Tourner absent"
     break
   fi
-  tap_if "Suivant" "" 8 || true
+  $UI tap --text "Suivant" --exact --timeout 8 >/dev/null 2>&1 || true
   sleep 2
 done
 [ "$prises" -ge 1 ] && record PASS P1_prises "prises enregistrées: $prises" || record BLOCKED P1_prises "aucune prise"
@@ -161,7 +202,7 @@ if $UI wait --text "export" --timeout 30 >/dev/null 2>&1 || $UI wait --text "Ape
 else
   record BLOCKED P1_apercu_export "écran d'export non atteint"
 fi
-if tap_if "Lancer l'export" "" 15; then record PASS P1_export_lance "export lancé"; else record BLOCKED P1_export_lance "bouton d'export introuvable"; fi
+if $UI tap --text "Lancer l'export local" --timeout 15 >/dev/null 2>&1; then record PASS P1_export_lance "export lancé"; else record BLOCKED P1_export_lance "bouton d'export introuvable"; fi
 if $UI wait --text "Vidéo prête" --timeout 600 >/dev/null 2>&1; then
   record PASS P1_export_termine "« Vidéo prête ! » affiché"
   shot 29_export_termine; dump 29_export_termine
@@ -184,7 +225,7 @@ else
 fi
 
 # --- S27 partage ---------------------------------------------------------------
-if tap_if "Partager" "" 12; then
+if $UI tap --text "Partager" --exact --timeout 12 >/dev/null 2>&1; then
   sleep 3; shot 30_partage; dump 30_partage
   if adb shell dumpsys activity activities 2>/dev/null | grep -qi "chooser\|ResolverActivity"; then
     record PASS P1_partage "feuille de partage Android ouverte"
