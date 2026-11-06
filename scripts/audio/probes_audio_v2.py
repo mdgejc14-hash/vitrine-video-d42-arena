@@ -15,7 +15,7 @@ import sys
 import urllib.request
 
 BASE = "https://vitrine-video-api.mdgejcinfluence.workers.dev"
-FIREBASE_KEY = "AIzaSyCKxfThEwe0e2QXqwXjIDkmrcXIRlK-Hys"
+FIREBASE_KEY = "AIzaSyD42LABDUMMYKEY00000000000000000"
 SONDE_EMAIL = "vv-auth-probe@vitrine.video"
 SONDE_MDP = "Sonde-Auth-2026!prod"
 
