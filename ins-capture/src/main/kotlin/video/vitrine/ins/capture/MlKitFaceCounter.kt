@@ -21,6 +21,16 @@ class MlKitFaceCounter(private val onFaces: (Int) -> Unit) : ImageAnalysis.Analy
             .build()
     )
 
+    // D42.16 (défaut A3, runs 42278038365 et 42281822052) : onFaces était
+    // appelé À CHAQUE frame (~30/s) ; chaque appel déclenchait runOnUiThread +
+    // updateStatus() (findViewById + setText) — une relayout par frame qui
+    // saturait la thread UI au point que les dumps uiautomator ne se terminaient
+    // PLUS (le harnais E2E relisait alors un écran périmé et restait aveugle).
+    // Le comptage n'est publié QUE s'il change : même sémantique pour la porte
+    // R4, sans tempête de layout.
+    @Volatile
+    private var dernierCompte = -1
+
     @OptIn(ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {
         val mediaImage = imageProxy.image
@@ -30,7 +40,12 @@ class MlKitFaceCounter(private val onFaces: (Int) -> Unit) : ImageAnalysis.Analy
         }
         val input = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
         detector.process(input)
-            .addOnSuccessListener { faces -> onFaces(faces.size) }
+            .addOnSuccessListener { faces ->
+                if (faces.size != dernierCompte) {
+                    dernierCompte = faces.size
+                    onFaces(faces.size)
+                }
+            }
             .addOnCompleteListener { imageProxy.close() }
     }
 }

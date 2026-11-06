@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.compose.setContent
@@ -74,6 +75,9 @@ class CameraGuideActivity : VitrineActivity() {
     private var boundCamera: androidx.camera.core.Camera? = null
     private var boundBinder: InsCameraBinder? = null
     private var boundProvider: ProcessCameraProvider? = null
+    // D42.16 (A3) : cache des libellés déjà appliqués — voir updateStatus().
+    private var dernierTexteGuide = 0
+    private var dernierTexteBouton = 0
     private val handler = Handler(Looper.getMainLooper())
     private var sceneStartMs = 0L
     private val ticker: Runnable = object : Runnable {
@@ -173,6 +177,7 @@ class CameraGuideActivity : VitrineActivity() {
                 .build()
             analysis.setAnalyzer(executor, MlKitFaceCounter { count -> onFaces(count) })
             boundCamera = binder.bind(provider, this, cases, analysis)
+            Log.i(TAG_E2E, "caméra liée : preview + videoCapture + analysis attachés")
         }, ContextCompat.getMainExecutor(this))
     }
 
@@ -183,6 +188,7 @@ class CameraGuideActivity : VitrineActivity() {
             minorConsentRecorded = minorConsent,
             minorSuspected = false
         )
+        Log.i(TAG_E2E, "visages détectés : $count -> decision=$decision")
         runOnUiThread {
             overlayFaces = count
             gateAllowed = decision == ConsentGate.Decision.ALLOW
@@ -191,20 +197,31 @@ class CameraGuideActivity : VitrineActivity() {
     }
 
     private fun updateStatus() {
-        val text = findViewById<TextView>(R.id.camera_guide_text)
-        text.setText(
-            when {
-                recording != null -> R.string.camera_recording
-                decision != ConsentGate.Decision.ALLOW -> R.string.camera_blocked
-                else -> R.string.camera_guide
-            }
-        )
-        findViewById<Button>(R.id.camera_record_button).setText(
-            if (recording != null) R.string.camera_stop else R.string.camera_record
-        )
+        val guideRes = when {
+            recording != null -> R.string.camera_recording
+            decision != ConsentGate.Decision.ALLOW -> R.string.camera_blocked
+            else -> R.string.camera_guide
+        }
+        val boutonRes = if (recording != null) R.string.camera_stop else R.string.camera_record
+        // D42.16 (défaut A3) : setText sur un texte IDENTIQUE invalide quand
+        // même le layout. À 30 appels/s (comptage visage par frame avant le
+        // dédoublonnage), la thread UI saturait. On ne touche la vue QUE si le
+        // libellé change réellement.
+        if (guideRes != dernierTexteGuide) {
+            dernierTexteGuide = guideRes
+            findViewById<TextView>(R.id.camera_guide_text).setText(guideRes)
+        }
+        if (boutonRes != dernierTexteBouton) {
+            dernierTexteBouton = boutonRes
+            findViewById<Button>(R.id.camera_record_button).setText(boutonRes)
+        }
     }
 
     private fun onRecord() {
+        Log.i(
+            TAG_E2E,
+            "onRecord finalisation=$priseEnCoursDeFinalisation enregistrement=${recording != null} decision=$decision",
+        )
         if (priseEnCoursDeFinalisation) return          // D41 : attente du fichier finalise
         if (recording != null) {
             stopRecording()
@@ -215,10 +232,12 @@ class CameraGuideActivity : VitrineActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
             PackageManager.PERMISSION_GRANTED
         ) {
+            Log.i(TAG_E2E, "onRecord -> dialogue permission camera")
             showPermissionDialog()
             return
         }
         if (decision != ConsentGate.Decision.ALLOW) {
+            Log.i(TAG_E2E, "onRecord -> porte R4 : consentement requis avant enregistrement")
             AlertDialog.Builder(this)
                 .setTitle(R.string.camera_consent_title)
                 .setMessage(R.string.camera_consent_body)
@@ -245,6 +264,9 @@ class CameraGuideActivity : VitrineActivity() {
                 val provider = boundProvider
                 if (binder != null && camera != null && provider != null) {
                     binder.lockThreeA(provider, camera)
+                    Log.i(TAG_E2E, "verrou 3A appliqué")
+                } else {
+                    Log.i(TAG_E2E, "verrou 3A sauté : caméra non liée (binder=${binder != null} camera=${camera != null} provider=${provider != null})")
                 }
             }
             startRecording()
@@ -262,7 +284,9 @@ class CameraGuideActivity : VitrineActivity() {
         outputFile = file
         val options = FileOutputOptions.Builder(file).build()
         val pending = cases.recorder.prepareRecording(this, options)
+        Log.i(TAG_E2E, "startRecording : start() sur ${file.name}")
         recording = pending.start(ContextCompat.getMainExecutor(this)) { event -> onVideoEvent(event, file) }
+        Log.i(TAG_E2E, "startRecording : ENREGISTREMENT ACTIF -> ${file.absolutePath}")
         overlayRecording = true
         if (guideFlowActive) guideMode = false    // overlay generique = indicateur REC
         overlayIdx = 0
@@ -279,6 +303,7 @@ class CameraGuideActivity : VitrineActivity() {
      */
     private fun onVideoEvent(event: androidx.camera.video.VideoRecordEvent, file: File) {
         if (event !is androidx.camera.video.VideoRecordEvent.Finalize) return
+        Log.i(TAG_E2E, "Finalize : hasError=${event.hasError()} taille=${file.length()} octets -> ${file.name}")
         runOnUiThread {
             if (!event.hasError()) {
                 onPriseFinalisee(file)
@@ -291,6 +316,8 @@ class CameraGuideActivity : VitrineActivity() {
                 // n'atteint le montage).
                 updateStatus()
                 findViewById<TextView>(R.id.camera_guide_text).setText(R.string.camera_take_failed)
+                // D42.16 (A3) : le setText direct invalide le cache de libellés.
+                dernierTexteGuide = 0
             }
         }
     }
@@ -427,5 +454,6 @@ class CameraGuideActivity : VitrineActivity() {
 
     private companion object {
         const val TICK_MS = 100L
+        const val TAG_E2E = "VV_E2E"
     }
 }

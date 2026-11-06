@@ -13,6 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- D42.16 (défaut A4, runs 42278038365/42281822052) : le bouton était le
+         DERNIER élément de la barre et se retrouvait ROGNÉ à 40 px au bas de la
+         fenêtre (le texte de guide, localisé en 4 langues, le repoussait hors
+         écran). L'action critique passe EN PREMIER, avec une hauteur explicite :
+         aucune langue ni taille de police ne peut plus la faire sortir. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,19 +25,21 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <Button
+            android:id="@+id/camera_record_button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/camera_record" />
+
         <TextView
             android:id="@+id/camera_guide_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:background="#CC000000"
             android:padding="8dp"
             android:text="@string/camera_guide"
             android:textColor="#FFFFFF" />
-
-        <Button
-            android:id="@+id/camera_record_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/camera_record" />
     </LinearLayout>
 </FrameLayout>
