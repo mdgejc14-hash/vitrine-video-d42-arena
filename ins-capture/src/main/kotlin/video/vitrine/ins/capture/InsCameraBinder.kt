@@ -6,6 +6,7 @@ import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.Preview
 import androidx.camera.core.SurfaceOrientedMeteringPointFactory
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.video.FallbackStrategy
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
 import androidx.camera.video.Recorder
@@ -29,12 +30,13 @@ class InsCameraBinder(private val context: Context) {
         // bindToLifecycle levait IllegalArgumentException « Unable to find
         // selected quality » des que le capteur n'expose pas FHD/UHD — cas de
         // l'émulateur de CI mais AUSSI des téléphones d'entrée de gamme.
-        // Repli CameraX canonique : accepter la qualité la plus basse
-        // disponible plutôt que de s'effondrer.
+        // Repli CameraX canonique : FallbackStrategy.lowerQualityOrHigherThan.
+        // (Première tentative avec « QualitySelector.fallbackStrategyOf » :
+        // API inexistante, refusée par la compilation — run 42261788337.)
         val quality = if (spec.captureHeight >= 2160) Quality.UHD else Quality.FHD
         val recorder = Recorder.Builder()
             .setQualitySelector(
-                QualitySelector.from(quality, QualitySelector.fallbackStrategyOf(Quality.LOWEST))
+                QualitySelector.from(quality, FallbackStrategy.lowerQualityOrHigherThan(Quality.SD))
             )
             .setTargetVideoEncodingBitRate(spec.captureBitrateBps)
             .build()
