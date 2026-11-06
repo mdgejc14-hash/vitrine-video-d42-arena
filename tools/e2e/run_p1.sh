@@ -194,7 +194,12 @@ remplir_champ() { # index, texte, [fichier de coordonnées]
   # On relit les coordonnées à chaque champ : le clavier modifie la géométrie de
   # l'écran, donc les positions mémorisées mentent.
   local idx="$1" val="$2" src="${3:-$OUT/champs.txt}" ligne x1 y1 x2 y2 cx cy
-  ligne=$(awk -v i="$idx" '$1=="E2E" && $2=="FIELD" && $3==i {print $4, $5, $6, $7}' "$src")
+  # D42.14 (run 42252465240) : le fichier alimenté par `$UI champs` contient des
+  # lignes « E2E CHAMP … » — l'awk cherchait « FIELD » : aucune coordonnée
+  # n'était jamais trouvée, AUCUNE saisie n'avait lieu (les valeurs visibles
+  # dans les dumps étaient les exemples/placeholder). Un mot, depuis l'origine
+  # du remplissage par libellé.
+  ligne=$(awk -v i="$idx" '$1=="E2E" && $2=="CHAMP" && $3==i {print $4, $5, $6, $7}' "$src")
   [ -z "$ligne" ] && return 1
   # shellcheck disable=SC2086
   set -- $ligne
