@@ -35,3 +35,11 @@
 # ── Agressivité R8 (moteur + logique de garde renommés, hiérarchie aplatie)
 -repackageclasses 'vv'
 -allowaccessmodification
+
+# ── D42.9 : diagnostic lisible dans logcat sans dependre de mapping.txt.
+#    L'incident « dq1 » vient de l'affichage d'un nom de classe renomme par R8.
+#    Garder le NOM des exceptions ne coute quasi rien et rend les journaux
+#    exploitables sur le terrain (l'utilisateur lit « ApiException » et non
+#    « dq1 »). Les corps de methodes restent obfusques : l'obfuscation integrale
+#    (D36) n'est pas remise en cause.
+-keepnames class * extends java.lang.Throwable

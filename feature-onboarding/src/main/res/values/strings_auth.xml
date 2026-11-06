@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="auth_title">Connexion</string>
+    <!-- D42.9 : textes reecrits pour un commercant. Aucun terme technique. -->
+    <string name="auth_title">Crée tes vidéos publicitaires</string>
     <string name="auth_google">Continuer avec Google</string>
     <string name="auth_loading">Connexion en cours…</string>
-    <string name="auth_error">Connexion impossible : %1$s — vérifie ton réseau puis réessaie.</string>
-    <string name="auth_subtitle">Ton compte Google te suit.</string>
-    <string name="auth_card_google">Continuer avec Google</string>
-    <string name="auth_card_google_body">Première fois ? On crée ton compte. Déjà inscrit ? Tu retrouves ton espace.</string>
+    <string name="auth_status_default">Aucun numéro de téléphone. Un seul bouton.</string>
+    <string name="auth_subtitle">Connecte-toi pour commencer à créer tes vidéos.</string>
+    <string name="auth_card_google">Continuer avec mon compte Google</string>
+    <string name="auth_card_google_body">Nouveau sur Vitrine Vidéo ? Ton compte sera créé automatiquement. Tu pourras retrouver tes vidéos et tes crédits avec le même compte.</string>
     <string name="auth_card_secure">C\'est sécurisé</string>
     <string name="auth_card_secure_body">Ton compte reste protégé.</string>
-    <string name="auth_offline">Continuer hors connexion</string>
+    <string name="auth_offline">Continuer sans compte</string>
+    <!-- D42.9 : l\'option hors connexion est expliquee, plus seulement nommee. -->
+    <string name="auth_offline_body">Tu peux filmer et monter ta vidéo sans Internet. Crée ton compte plus tard pour retrouver tes vidéos et recevoir tes crédits.</string>
     <string name="auth_ref_detected">Code parrain détecté : %1$s</string>
-    <string name="auth_status_default">Connexion 1-tap, sans téléphone</string>
-    <string name="refcode_invalid">Format attendu : MOTIF-123 (3 à 10 lettres, tiret, 3 chiffres).</string>
+
+    <!-- D42.9 : messages d\'erreur ACTIONNABLES. Le detail technique reste dans les journaux. -->
+    <string name="auth_error_network">La connexion à Internet a échoué. Vérifie ta connexion, puis réessaie.</string>
+    <string name="auth_error_no_google_account">Aucun compte Google n\'est disponible sur ce téléphone. Ajoute-le dans les réglages Android, puis réessaie.</string>
+    <string name="auth_error_cancelled">Connexion annulée. Tu peux réessayer quand tu veux.</string>
+    <string name="auth_error_unavailable">La connexion Google n\'est pas encore disponible sur cette version. Tu peux utiliser « Utiliser sans Internet » en attendant.</string>
+    <string name="auth_error_service">Le service de connexion ne répond pas pour le moment. Réessaie dans un instant.</string>
+    <string name="auth_error_generic">La connexion n\'a pas abouti. Réessaie.</string>
+    <string name="auth_retry">Réessayer</string>
+
+    <string name="refcode_invalid">Ce code n\'a pas l\'air valide. Vérifie-le, ou passe cette étape.</string>
+    <string name="auth_new_here">Nouveau ici ? Ton compte sera créé automatiquement.</string>
 </resources>

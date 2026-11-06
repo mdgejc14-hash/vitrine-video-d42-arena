@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="auth_title">Conexión</string>
+    <string name="auth_title">Crea tus vídeos publicitarios</string>
     <string name="auth_google">Continuar con Google</string>
-    <string name="auth_loading">Iniciando sesión…</string>
-    <string name="auth_error">No se puede conectar: %1$s — revisa tu red e inténtalo de nuevo.</string>
-    <string name="auth_subtitle">Tu cuenta Google te sigue.</string>
-    <string name="auth_card_google">Continuar con Google</string>
-    <string name="auth_card_google_body">¿Primera vez? Creamos tu cuenta. ¿Ya inscrito? Recuperas tu espacio.</string>
+    <string name="auth_loading">Conectando…</string>
+    <string name="auth_status_default">Sin número de teléfono. Un solo botón.</string>
+    <string name="auth_subtitle">Inicia sesión para empezar a crear tus vídeos.</string>
+    <string name="auth_card_google">Continuar con mi cuenta de Google</string>
+    <string name="auth_card_google_body">¿Es tu primera vez en Vitrine Vídeo? Tu cuenta se crea automáticamente. Encontrarás tus vídeos y tus créditos con la misma cuenta.</string>
     <string name="auth_card_secure">Es seguro</string>
     <string name="auth_card_secure_body">Tu cuenta queda protegida.</string>
-    <string name="auth_offline">Continuar sin conexión</string>
+    <string name="auth_offline">Continuar sin cuenta</string>
+    <string name="auth_offline_body">Puedes filmar y editar tu vídeo sin Internet. Crea tu cuenta más tarde para recuperar tus vídeos y recibir tus créditos.</string>
     <string name="auth_ref_detected">Código de referido detectado: %1$s</string>
-    <string name="auth_status_default">Inicio de sesión con 1 toque, sin teléfono</string>
-    <string name="refcode_invalid">Formato esperado: PALABRA-123 (3 a 10 letras, guion, 3 dígitos).</string>
+    <string name="auth_error_network">La conexión a Internet falló. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="auth_error_no_google_account">No hay ninguna cuenta de Google en este teléfono. Añádela en los ajustes de Android e inténtalo de nuevo.</string>
+    <string name="auth_error_cancelled">Conexión cancelada. Puedes reintentarlo cuando quieras.</string>
+    <string name="auth_error_unavailable">La conexión con Google todavía no está disponible en esta versión. Mientras tanto, puedes usar «Usar sin Internet».</string>
+    <string name="auth_error_service">El servicio de conexión no responde en este momento. Inténtalo dentro de un instante.</string>
+    <string name="auth_error_generic">No se pudo conectar. Inténtalo de nuevo.</string>
+    <string name="auth_retry">Reintentar</string>
+    <string name="refcode_invalid">Ese código no parece válido. Revísalo o salta este paso.</string>
+    <string name="auth_new_here">¿Primera vez? Tu cuenta se crea automáticamente.</string>
 </resources>

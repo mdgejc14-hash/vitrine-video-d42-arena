@@ -2573,11 +2573,29 @@ async function routeQuotaConsume(req, env, merchantId) {  // POST /api/v1/quota/
     if (typeof fingerprint !== "string" || fingerprint.length < 16) {
       return json({ error: "fingerprint requis pour source=welcome" }, 400);
     }
+    // D42.8 (P1, mesure sur banc D1 local) : le controle n'etait applique que si
+    // le compte AVAIT deja une ligne merchant_identity. Un compte sans liaison
+    // (`lie` nul) passait donc sans controle et pouvait debiter la dotation de
+    // bienvenue d'un AUTRE marchand en envoyant son empreinte. Reproduit : un
+    // compte B jamais lie a porte les 3 credits de A a zero.
+    // Regle : l'empreinte debitee doit appartenir au compte appelant —
+    // soit par la liaison merchant_identity, soit par la propriete du grant.
     const lie = await env.DB.prepare(
       "SELECT signup_fingerprint fp FROM merchant_identity WHERE user_id=?1"
     ).bind(merchantId).first();
-    if (lie && lie.fp && lie.fp !== fingerprint) {
-      return json({ error: "fingerprint non lie a ce compte" }, 403);
+    if (lie && lie.fp) {
+      if (lie.fp !== fingerprint) {
+        return json({ error: "fingerprint non lie a ce compte" }, 403);
+      }
+    } else {
+      // Compte non lie : seule une dotation dont il est le PREMIER titulaire
+      // peut etre debitee (comptes anterieurs a la liaison 0009).
+      const sien = await env.DB.prepare(
+        "SELECT 1 x FROM welcome_grants WHERE fingerprint=?1 AND merchant_first_id=?2"
+      ).bind(fingerprint, merchantId).first();
+      if (!sien) {
+        return json({ error: "fingerprint non lie a ce compte" }, 403);
+      }
     }
   }
   const led = await env.DB.prepare(`INSERT OR IGNORE INTO quota_ledger

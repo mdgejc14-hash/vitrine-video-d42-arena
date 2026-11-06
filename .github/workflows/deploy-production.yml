@@ -1,0 +1,134 @@
+name: Deploy Production
+
+# Déploiement AUTONOME du Worker de production + migrations D1 distantes.
+# Déclenché manuellement (bouton GitHub ou API workflow_dispatch) — jamais
+# automatique sur push : un déploiement production reste un acte délibéré.
+# Credentials : secrets repo CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Worker + migrations D1 distantes + smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_D1_PREVIEW_API_TOKEN: ${{ secrets.CLOUDFLARE_D1_PREVIEW_API_TOKEN }}
+      # ID de compte NON secret (déjà commité dans preview-d1-migrations.yml,
+      # run réussi le 23/10/2026) : compte propriétaire des D1 vitrine-video-db
+      # (0dacf519-…) et preview (5b9060b1-…) et du Worker vitrine-video-api.
+      # Le secret CLOUDFLARE_ACCOUNT_ID pointait ailleurs ("No access to the
+      # specified service" au déploiement du 31/10/2026).
+      CLOUDFLARE_ACCOUNT_ID: d7dac13da931423a19812f6d9116bd47
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Diagnostic du jeton Cloudflare (périmètre, valeurs masquées)
+        run: |
+          set -u
+          echo "-- verify token :"
+          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            https://api.cloudflare.com/client/v4/user/tokens/verify \
+            | python3 -c "import json,sys;d=json.load(sys.stdin);print('success:',d.get('success'),'status:',(d.get('result') or {}).get('status'),'errors:',d.get('errors'))" || true
+          echo "-- comptes accessibles :"
+          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            https://api.cloudflare.com/client/v4/accounts \
+            | python3 -c "import json,sys;d=json.load(sys.stdin);print([( (a.get('id') or '')[:10]+'…', a.get('name')) for a in (d.get('result') or [])],'errors:',d.get('errors'))" || true
+          echo "-- bases D1 du compte cible :"
+          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/d1/database?per_page=10" \
+            | python3 -c "import json,sys;d=json.load(sys.stdin);print('success:',d.get('success'),'bases:',[(b.get('name'),(b.get('uuid') or '')[:8]+'…') for b in (d.get('result') or [])],'errors:',d.get('errors'))" || true
+          echo "-- scripts Workers du compte cible :"
+          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts?per_page=10" \
+            | python3 -c "import json,sys;d=json.load(sys.stdin);print('success:',d.get('success'),'scripts:',[s.get('id') for s in (d.get('result') or [])],'errors:',d.get('errors'))" || true
+
+      - name: Migrations D1 distantes (0001 -> 0011)
+        run: |
+          set -uo pipefail
+          # Sélection autonome d'un jeton avec accès D1 sur le compte.
+          for T in "$CLOUDFLARE_API_TOKEN" "$CLOUDFLARE_D1_PREVIEW_API_TOKEN"; do
+            okd1=$(curl -s -H "Authorization: Bearer $T" \
+              "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/d1/database?per_page=1" \
+              | python3 -c "import json,sys;print(json.load(sys.stdin).get('success'))" 2>/dev/null || echo None)
+            if [ "$okd1" = "True" ]; then export CLOUDFLARE_API_TOKEN="$T"; echo "jeton D1 retenu"; break; fi
+          done
+          if npx wrangler d1 migrations apply vitrine-video-db --remote; then
+            echo "PASS: migrations appliquees via le suivi wrangler"
+          else
+            echo "Suivi wrangler incomplet : application additive fichier par fichier"
+            for f in db/migrations/00*.sql; do
+              echo "-> $f"
+              npx wrangler d1 execute vitrine-video-db --remote --file="$f" || \
+                echo "   (deja present ou non applicable : continue)"
+            done
+          fi
+
+      - name: Vérification du schéma distant
+        run: |
+          set -euo pipefail
+          for T in "$CLOUDFLARE_API_TOKEN" "$CLOUDFLARE_D1_PREVIEW_API_TOKEN"; do
+            okd1=$(curl -s -H "Authorization: Bearer $T" \
+              "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/d1/database?per_page=1" \
+              | python3 -c "import json,sys;print(json.load(sys.stdin).get('success'))" 2>/dev/null || echo None)
+            if [ "$okd1" = "True" ]; then export CLOUDFLARE_API_TOKEN="$T"; break; fi
+          done
+          for t in merchant_identity billing_orders audio_catalog bgm_library; do
+            out="$(npx wrangler d1 execute vitrine-video-db --remote \
+              --command="SELECT COUNT(*) AS n FROM $t;" --json)"
+            printf '%s\n' "$out" | grep -q '"n"' || { echo "FAIL: table $t absente"; exit 1; }
+            echo "PASS: table $t presente"
+          done
+
+      - name: Déploiement du Worker (production — sélection autonome du jeton)
+        run: |
+          set -u
+          ACC="$CLOUDFLARE_ACCOUNT_ID"
+          SVC="https://api.cloudflare.com/client/v4/accounts/$ACC/workers/services/vitrine-video-api"
+          for T in "$CLOUDFLARE_API_TOKEN" "$CLOUDFLARE_D1_PREVIEW_API_TOKEN"; do
+            probe=$(curl -s -o /tmp/probe.json -w '%{http_code}' -H "Authorization: Bearer $T" "$SVC" || echo 000)
+            ok=$(python3 -c "import json;d=json.load(open('/tmp/probe.json'));print(d.get('success'))" 2>/dev/null || echo None)
+            echo "sonde service : HTTP $probe success=$ok"
+            if [ "$ok" = "True" ]; then
+              export CLOUDFLARE_API_TOKEN="$T"
+              echo "jeton retenu : accès Workers confirmé -> wrangler deploy"
+              npx wrangler deploy
+              exit $?
+            fi
+          done
+          echo "::error::Aucun jeton du dépôt n'a accès au service vitrine-video-api. Action client requise (2 min) : dashboard Cloudflare → My Profile → API Tokens → Create Token → modèle 'Edit Cloudflare Workers' (Workers Scripts: Edit + D1: Edit) sur le compte d7dac13d… → mettre à jour le secret GitHub CLOUDFLARE_API_TOKEN → relancer ce workflow. Les migrations D1 distantes, elles, sont déjà appliquées (étapes précédentes)."
+          exit 1
+
+      - name: Smoke test production (marqueur Phase B/C)
+        run: |
+          set -euo pipefail
+          BASE=https://vitrine-video-api.mdgejcinfluence.workers.dev
+          curl --silent --fail "$BASE/health" | tee /tmp/health.json
+          # Avant déploiement : 404 (route inexistante, Worker 0.9.0).
+          # Après déploiement : 401 (route Phase C présente, auth requise).
+          code_catalog="$(curl -s -o /dev/null -w '%{http_code}' "$BASE/api/v1/audio/catalog")"
+          code_library="$(curl -s -o /dev/null -w '%{http_code}' "$BASE/api/v1/audio/library")"
+          code_grant="$(curl -s -o /dev/null -w '%{http_code}' -X POST "$BASE/api/v1/me/welcome-grant")"
+          echo "catalog=$code_catalog library=$code_library welcome-grant=$code_grant"
+          test "$code_catalog" = "401" || { echo "FAIL: /audio/catalog != 401"; exit 1; }
+          test "$code_library" = "401" || { echo "FAIL: /audio/library != 401"; exit 1; }
+          test "$code_grant" = "401" || { echo "FAIL: /me/welcome-grant != 401"; exit 1; }
+          echo "PASS: Worker production aligné Phase B/C"

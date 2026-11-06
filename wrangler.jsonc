@@ -41,7 +41,7 @@
     {
       "binding": "DB",
       "database_name": "vitrine-video-db",
-      "database_id": "00000000-0000-0000-0000-000000000000"
+      "database_id": "0dacf519-c4bd-40f6-baf7-75d9cdde2af6"
     }
   ],
 
@@ -78,7 +78,7 @@
       {
         "binding": "DB",
         "database_name": "vitrine-video-db-preview",
-        "database_id": "00000000-0000-0000-0000-000000000000"
+        "database_id": "5b9060b1-60c5-460c-b88f-702d3cf6e432"
       }
     ]
   }

@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="auth_title">ログイン</string>
-    <string name="auth_google">Googleで続行</string>
-    <string name="auth_loading">接続中…</string>
-    <string name="auth_error">接続できません: %1$s — ネットワークを確認して再試行してください。</string>
-    <string name="auth_subtitle">Googleアカウントでそのまま続けられます。</string>
-    <string name="auth_card_google">Googleで続行</string>
-    <string name="auth_card_google_body">初めて？アカウントを作成します。登録済み？あなたのスペースに戻れます。</string>
-    <string name="auth_card_secure">セキュアです</string>
-    <string name="auth_card_secure_body">アカウントは保護されます。</string>
-    <string name="auth_offline">オフラインで続行</string>
-    <string name="auth_ref_detected">紹介コードを検出しました：%1$s</string>
-    <string name="auth_status_default">電話番号不要のワンタップサインイン</string>
-    <string name="refcode_invalid">形式：WORD-123（英字3〜10文字、ハイフン、数字3桁）。</string>
+    <string name="auth_title">広告動画をつくろう</string>
+    <string name="auth_google">Googleで続ける</string>
+    <string name="auth_loading">接続しています…</string>
+    <string name="auth_status_default">電話番号は不要です。ボタンはひとつだけ。</string>
+    <string name="auth_subtitle">ログインして動画づくりを始めましょう。</string>
+    <string name="auth_card_google">Googleアカウントで続ける</string>
+    <string name="auth_card_google_body">はじめての方は、アカウントが自動で作成されます。同じアカウントで、動画もクレジットももう一度見つけられます。</string>
+    <string name="auth_card_secure">安全に保護されます</string>
+    <string name="auth_card_secure_body">アカウントは守られます。</string>
+    <string name="auth_offline">アカウントなしで続ける</string>
+    <string name="auth_offline_body">インターネットなしでも撮影と編集ができます。あとでアカウントを作れば、動画とクレジットを受け取れます。</string>
+    <string name="auth_ref_detected">紹介コードを確認しました：%1$s</string>
+    <string name="auth_error_network">インターネットに接続できませんでした。接続を確認して、もう一度お試しください。</string>
+    <string name="auth_error_no_google_account">この端末にGoogleアカウントがありません。Androidの設定で追加してから、もう一度お試しください。</string>
+    <string name="auth_error_cancelled">接続をキャンセルしました。いつでもやり直せます。</string>
+    <string name="auth_error_unavailable">このバージョンではGoogleでの接続はまだご利用いただけません。それまでは「インターネットなしで使う」をご利用ください。</string>
+    <string name="auth_error_service">接続サービスが応答していません。少し時間をおいて、もう一度お試しください。</string>
+    <string name="auth_error_generic">接続できませんでした。もう一度お試しください。</string>
+    <string name="auth_retry">もう一度試す</string>
+    <string name="refcode_invalid">このコードは正しくないようです。確認するか、この手順をとばしてください。</string>
+    <string name="auth_new_here">はじめての方は、アカウントが自動で作成されます。</string>
 </resources>

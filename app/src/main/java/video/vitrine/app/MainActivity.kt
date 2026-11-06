@@ -34,6 +34,7 @@ class MainActivity : VitrineActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+        restaurerEtat(savedInstanceState)
         // Audit D41 (F34/F63) : le deep-link de parrainage https://vitrine.video/r/CODE
         // arrive ICI (seule activite exportee) ; le code est transmis a l'auth puis
         // a l'onboarding. Avant, le filtre etait sur AuthActivity (exportee) : le
@@ -44,11 +45,41 @@ class MainActivity : VitrineActivity() {
                 ?.let { refCode = it }
         }
         nettoyageFichiersPerimes()
+        restaurerSession()
         if (VitrineLocale.saved(this) == null) {
             startActivityForResult(Intent(this, LanguageActivity::class.java), REQ_LANGUAGE)
         } else {
             startActivityForResult(authIntent(), REQ_AUTH)
         }
+    }
+
+    /**
+     * D42.9 : le jeton vivait uniquement en memoire. Apres une mort de process
+     * (memoire insuffisante, changement de configuration, appel entrant) le
+     * parcours repartait de zero et les ecrans suivants recevaient un jeton nul.
+     * On relit la session courte (1 h) deja deposee par AuthActivity.
+     */
+    private fun restaurerSession() {
+        val prefs = getSharedPreferences("vv_session", MODE_PRIVATE)
+        authToken = prefs.getString("token", null)
+        authUid = prefs.getString("uid", null)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // D42.9 : l'etape courante survit a une recreation d'activite.
+        outState.putString(KEY_SECTOR, sectorCode)
+        outState.putString(KEY_GABARIT, gabaritId)
+        outState.putString(KEY_SKIN_NAME, skinName)
+        outState.putInt(KEY_CREDITS, welcomeCredits)
+    }
+
+    private fun restaurerEtat(saved: Bundle?) {
+        if (saved == null) return
+        sectorCode = saved.getString(KEY_SECTOR)
+        gabaritId = saved.getString(KEY_GABARIT)
+        skinName = saved.getString(KEY_SKIN_NAME)
+        welcomeCredits = saved.getInt(KEY_CREDITS, 0)
     }
 
     private fun authIntent(): Intent =
@@ -209,5 +240,10 @@ class MainActivity : VitrineActivity() {
         const val REQ_CAMERA = 14
         const val ACTION_EXPORT = "video.vitrine.action.START_EXPORT"
         const val PERIME_AGE_MS = 24L * 3600L * 1000L
+        // D42.9 : etat de navigation sauve (mort de process / rotation).
+        const val KEY_SECTOR = "main_sector"
+        const val KEY_GABARIT = "main_gabarit"
+        const val KEY_SKIN_NAME = "main_skin_name"
+        const val KEY_CREDITS = "main_credits"
     }
 }

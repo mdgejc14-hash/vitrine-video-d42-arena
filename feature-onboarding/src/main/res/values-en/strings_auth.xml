@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="auth_title">Sign in</string>
+    <string name="auth_title">Create your ad videos</string>
     <string name="auth_google">Continue with Google</string>
     <string name="auth_loading">Signing in…</string>
-    <string name="auth_error">Can\'t connect: %1$s — check your network and try again.</string>
-    <string name="auth_subtitle">Your Google account follows you.</string>
-    <string name="auth_card_google">Continue with Google</string>
-    <string name="auth_card_google_body">First time? We create your account. Already signed up? You get your space back.</string>
+    <string name="auth_status_default">No phone number. Just one button.</string>
+    <string name="auth_subtitle">Sign in to start creating your videos.</string>
+    <string name="auth_card_google">Continue with my Google account</string>
+    <string name="auth_card_google_body">New to Vitrine Video? Your account is created automatically. You\'ll find your videos and your credits again with the same account.</string>
     <string name="auth_card_secure">It\'s secure</string>
     <string name="auth_card_secure_body">Your account stays protected.</string>
-    <string name="auth_offline">Continue offline</string>
+    <string name="auth_offline">Continue without an account</string>
+    <string name="auth_offline_body">You can film and edit your video without Internet. Create your account later to get your videos back and receive your credits.</string>
     <string name="auth_ref_detected">Referral code detected: %1$s</string>
-    <string name="auth_status_default">1-tap sign-in, no phone number</string>
-    <string name="refcode_invalid">Expected format: WORD-123 (3 to 10 letters, dash, 3 digits).</string>
+    <string name="auth_error_network">The Internet connection failed. Check your connection, then try again.</string>
+    <string name="auth_error_no_google_account">No Google account is available on this phone. Add one in your Android settings, then try again.</string>
+    <string name="auth_error_cancelled">Sign-in cancelled. You can try again whenever you like.</string>
+    <string name="auth_error_unavailable">Google sign-in is not available in this version yet. You can use “Use without Internet” in the meantime.</string>
+    <string name="auth_error_service">The sign-in service is not responding right now. Try again in a moment.</string>
+    <string name="auth_error_generic">Sign-in did not go through. Try again.</string>
+    <string name="auth_retry">Try again</string>
+    <string name="refcode_invalid">That code doesn\'t look right. Check it, or skip this step.</string>
+    <string name="auth_new_here">New here? Your account is created automatically.</string>
 </resources>

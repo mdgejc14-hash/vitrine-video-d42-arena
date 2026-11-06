@@ -5,15 +5,18 @@
     <string name="carousel_start">Commencer</string>
     <string name="slide1_slogan">Filme. Vends. C\'est tout.</string>
     <string name="slide1_sub">L\'app vidéo des boutiques et des métiers</string>
-    <string name="slide2_title">Tournage guidé par l\'IA</string>
-    <string name="slide2_sub">Caméra INS 30 FPS, verrous 3A, protection des visages</string>
-    <string name="slide3_slogan">Tes vidéos qui vendent en 30 secondes</string>
-    <string name="slide3_sub">Montage pro automatique, même hors connexion</string>
+    <!-- D42.9 : plus de « INS », « 30 FPS » ni « verrous 3A » devant un commercant. -->
+    <string name="slide2_title">Filme tes produits, on te guide</string>
+    <string name="slide2_sub">Nous te guidons étape par étape pour obtenir de belles images.</string>
+    <string name="slide3_slogan">Une vidéo prête à publier en 30 secondes</string>
+    <string name="slide3_sub">Le montage se fait tout seul. Même sans Internet.</string>
     <string name="sector_title">Votre activité principale</string>
-    <string name="sector_hint">Tapez votre secteur, puis continuez.</string>
+    <string name="sector_hint">Choisis ton activité, puis continue.</string>
     <string name="action_continue">Continuer</string>
     <string name="welcome_title">Bienvenue</string>
-    <string name="welcome_credits">Nous vous offrons %1$d crédits. Bon tournage !</string>
+    <string name="welcome_credits">Nous t\'offrons %1$d crédits. Bon tournage !</string>
+    <string name="welcome_credits_pending">On prépare tes crédits de bienvenue…</string>
+    <string name="welcome_error">Ton compte est créé, mais nous n\'avons pas pu récupérer tes crédits. Ils seront ajoutés dès que la connexion reviendra.</string>
     <string name="lang_change_later">Tu pourras changer ce choix plus tard</string>
     <string name="refcode_title">Ton code parrain</string>
     <string name="refcode_subtitle">Tu peux passer cette étape.</string>

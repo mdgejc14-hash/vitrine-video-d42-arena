@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  D42.12 — ecran de connexion simplifie.
+
+  Avant : logo + titre + sous-titre + 2 cartes de texte (4 phrases) + bouton +
+  bouton secondaire + texte + barre de progression + 2 libelles. Le commercant
+  devait lire six blocs avant de pouvoir agir. Nielsen #8 (design minimaliste) :
+  chaque element retire est un element qu'il n'a pas a comprendre.
+
+  Apres : une promesse, une phrase, un bouton. Le reste n'apparait qu'au besoin
+  (progression pendant la connexion, message en cas d'echec).
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,103 +20,42 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="40dp"
+        android:paddingBottom="24dp">
 
         <ImageView
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
             android:contentDescription="@string/auth_title"
             android:src="@drawable/vitrine_logo" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
             android:text="@string/auth_title"
             android:textColor="#022358"
-            android:textSize="24sp"
+            android:textSize="26sp"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/auth_subtitle"
-            android:textColor="#23467F"
-            android:textSize="15sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/bg_card_auth"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/auth_card_google"
-                android:textColor="#022358"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/auth_card_google_body"
-                android:textColor="#23467F"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_card_auth"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/auth_card_secure"
-                android:textColor="#022358"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/auth_card_secure_body"
-                android:textColor="#23467F"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/auth_google_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:backgroundTint="#F95C0F"
-            android:text="@string/auth_google"
-            android:textColor="#FFFFFF" />
-
-        <Button
-            android:id="@+id/auth_offline_button"
-            style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/auth_offline"
-            android:textColor="#022358" />
+            android:gravity="center"
+            android:text="@string/auth_subtitle"
+            android:textColor="#23467F"
+            android:textSize="16sp" />
 
+        <!-- Barre de progression : visible uniquement pendant la connexion. -->
         <ProgressBar
             android:id="@+id/auth_progress"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="28dp"
             android:indeterminate="true"
             android:indeterminateTint="#F95C0F"
             android:visibility="gone" />
@@ -114,7 +64,10 @@
             android:id="@+id/auth_preparing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="@string/auth_preparing"
+            android:textColor="#022358"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -122,13 +75,68 @@
             android:id="@+id/auth_preparing_sub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="@string/auth_preparing_sub"
+            android:textColor="#5A6B8C"
+            android:textSize="13sp"
             android:visibility="gone" />
 
+        <Button
+            android:id="@+id/auth_google_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="#F95C0F"
+            android:minHeight="52dp"
+            android:text="@string/auth_google"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <!-- Une seule phrase de reassurance, pas un discours. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/auth_new_here"
+            android:textColor="#5A6B8C"
+            android:textSize="13sp" />
+
+        <!--
+          Mode sans compte : conserve (le coeur creatif fonctionne reellement
+          hors ligne) mais DECLARE comme tel, sans laisser croire que le compte
+          et les credits sont disponibles. Nielsen #2 : correspondance avec le
+          monde reel.
+        -->
+        <Button
+            android:id="@+id/auth_offline_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:minHeight="48dp"
+            android:text="@string/auth_offline"
+            android:textAllCaps="false"
+            android:textColor="#23467F"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/auth_offline_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/auth_offline_body"
+            android:textColor="#7A88A3"
+            android:textSize="12sp" />
+
+        <!-- Message d'erreur : actionnable, jamais technique. -->
         <TextView
             android:id="@+id/auth_status"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:textSize="14sp" />
     </LinearLayout>
 </ScrollView>

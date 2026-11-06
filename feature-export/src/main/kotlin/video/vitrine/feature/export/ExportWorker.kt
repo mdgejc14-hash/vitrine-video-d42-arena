@@ -158,8 +158,15 @@ class ExportWorker(
                 continue
             }
             val measurement = ExportVerifier.measure(context, output, expectedMs)
+            // D42.8.1 : l'audio est ATTENDU quand une BGM ou des SFX ont ete
+            // planifies pour ce rendu (mixerFactory non nul). Sinon la video est
+            // muette par construction et l'absence de piste n'est pas un defaut.
+            // Sans ce cablage, AudioChecks n'etait appele nulle part et R8 le
+            // supprimait : le controle audio du contrat 5.2 n'existait pas dans
+            // le binaire livre.
             val checks = ExportVerifier.judge(
-                measurement, tentative.geometry, tentative.targetBitrateBps, expectedMs
+                measurement, tentative.geometry, tentative.targetBitrateBps, expectedMs,
+                audioAttendu = mixerFactory != null
             )
             // D42 : le verdict doit etre lisible dans logcat. Sans cette ligne,
             // un rejet du verificateur se presentait comme « worker=FAILED »
