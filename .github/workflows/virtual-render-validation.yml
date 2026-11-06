@@ -63,7 +63,13 @@ on:
         required: false
         default: "1"
   push:
-    branches: [audit-d41]
+    # D42.14 : re-validation des rendus PAR PUSH. Mesuré : le PAT du laboratoire
+    # n'a pas la portée Actions (workflow_dispatch -> 403 « Resource not
+    # accessible by personal access token »). La branche dédiée d42-render-check
+    # évite de relancer 120 rendus à chaque push e2e sur d42.13-lab ; audit-d41
+    # reste pour l'historique (aucun run n'a jamais été déclenché par création
+    # de branche sans nouveau commit — mesuré le 06/11/2026).
+    branches: [audit-d41, d42-render-check]
     paths:
       - ".github/workflows/virtual-render-validation.yml"
       - "app/src/androidTest/**"
