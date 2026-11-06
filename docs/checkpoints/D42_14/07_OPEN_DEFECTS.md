@@ -93,7 +93,7 @@ défaut produit : c'est l'enchaînement attendu d'un harnais qui dit la vérité
 
 | # | Défaut | Preuve | État |
 |---|---|---|---|
-| **A2** | **Crash caméra** : `QualitySelector.from(UHD/FHD)` **sans stratégie de repli** → `IllegalArgumentException: Unable to find selected quality` à `InsCameraBinder.kt:68` → **FATAL EXCEPTION** dès l'écran de tournage. Touchait tout capteur sans FHD/UHD : émulateur de CI **et téléphones d'entrée de gamme** (cible du produit) | `crash.log` du run 42257226019 (première fois que le parcours atteignait la caméra : le crash était masqué depuis l'origine par l'échec de validation du brief) | **CORRIGÉ** (`56676df` miroir, `769c828` privé) : `QualitySelector.from(qualité, fallbackStrategyOf(Quality.LOWEST))` |
+| **A2** | **Crash caméra** : `QualitySelector.from(UHD/FHD)` **sans stratégie de repli** → `IllegalArgumentException: Unable to find selected quality` à `InsCameraBinder.kt:68` → **FATAL EXCEPTION** dès l'écran de tournage. Touchait tout capteur sans FHD/UHD : émulateur de CI **et téléphones d'entrée de gamme** (cible du produit) | `crash.log` du run 42257226019 (première fois que le parcours atteignait la caméra : le crash était masqué depuis l'origine par l'échec de validation du brief) | **CORRIGÉ en 2 temps** : `56676df` utilisait `fallbackStrategyOf` — **API inexistante, refusée par la compilation** (run 42261788337, « test non exécuté ≠ succès » appliqué à moi-même) ; API correcte `FallbackStrategy.lowerQualityOrHigherThan(SD)` dans `6646c27` (miroir) + `d6e90a0` (privé) |
 
 **Enchaînement des causes ce tour** (chaque correction a dévoilé la suivante — comportement
 attendu d'un harnais qui dit la vérité) :
