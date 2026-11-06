@@ -77,28 +77,30 @@ jobs:
           if-no-files-found: warn
 
       # ---------------------------------------------------------------------
-      # Configuration 2 — petit écran / entrée de gamme (Nexus S, 480x800)
-      #   C'est ici que le défaut P1 « bouton hors écran » se manifestait.
+      # Configuration 2 — petit écran (540x960 @ 240 dpi), simulé sur l'AVD
+      # stable : c'est la configuration où le défaut P1 « bouton hors écran »
+      # se manifestait. Le profil Nexus S a été abandonné : l'image API 30 ne
+      # démarre pas sur ce profil (constaté au run 42175579512, étape bloquée).
       # ---------------------------------------------------------------------
-      - name: Parcours P0 — petit écran (Nexus S 480x800)
+      - name: Parcours P0 — petit écran 540x960 (simulé sur Pixel 5)
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
           target: default
           arch: x86_64
-          profile: Nexus S
+          profile: pixel_5
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
           script: |
             adb devices
-            bash tools/e2e/run_p0.sh nexus_s base
-            bash tools/e2e/run_p0.sh nexus_s rot90
+            bash tools/e2e/run_p0.sh petit_ecran small
+            bash tools/e2e/run_p0.sh petit_ecran font130
 
       - name: Capture des artefacts petit écran
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-nexus-s
+          name: e2e-petit-ecran
           path: artifacts/**
           retention-days: 14
           if-no-files-found: warn

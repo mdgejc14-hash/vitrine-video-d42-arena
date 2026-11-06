@@ -33,7 +33,20 @@ shot() { $UI shot "$OUT/$1.png" >/dev/null 2>&1 || echo "E2E_RESULT BLOCKED shot
 dump() { adb shell uiautomator dump /sdcard/d.xml >/dev/null 2>&1; adb exec-out cat /sdcard/d.xml > "$OUT/$1.xml" 2>/dev/null; }
 
 echo "=========== VARIANTE $VARIANTE ($TAG) ==========="
-$UI size | sed 's/^/E2E /'
+{
+  echo "PATH=$PATH"
+  echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-}"
+  echo "ANDROID_HOME=${ANDROID_HOME:-}"
+  echo "adb=$(command -v adb || echo INTROUVABLE)"
+  echo "python3=$(command -v python3 || echo INTROUVABLE)"
+  echo "pwd=$(pwd)"
+  adb devices 2>&1 || true
+} | tee "$OUT/env.txt"
+if $UI size 2>&1 | tee -a "$OUT/env.txt" | sed 's/^/E2E /'; then
+  record PASS S00_preflight "ui.py opérationnel (adb résolu, écran lu)"
+else
+  record FAIL S00_preflight "ui.py inutilisable — voir env.txt (adb/python)"
+fi
 
 # --- Variantes d'accessibilité -------------------------------------------------
 if [ "$VARIANTE" = "font130" ]; then
@@ -44,6 +57,14 @@ if [ "$VARIANTE" = "rot90" ]; then
   adb shell settings put system accelerometer_rotation 0
   adb shell settings put system user_rotation 1
   record PASS rotation_paysage "user_rotation=$(adb shell settings get system user_rotation | tr -d '\r')"
+fi
+if [ "$VARIANTE" = "small" ]; then
+  # Écran de 540x960 à 240 dpi = téléphone d'entrée de gamme courant en Afrique
+  # de l'Ouest. On simule sur un AVD stable plutôt que d'utiliser un profil
+  # Nexus S que l'émulateur API 30 ne démarre pas.
+  adb shell wm size 540x960
+  adb shell wm density 240
+  record PASS ecran_simule_540x960 "wm size=$(adb shell wm size | tr -d '\r') density=$(adb shell wm density | tr -d '\r')"
 fi
 
 # --- S01 installation ----------------------------------------------------------
@@ -62,7 +83,7 @@ adb shell am start -W -n "$PKG/.MainActivity" > "$OUT/start.log" 2>&1
 t1=$(date +%s%3N)
 sleep 3
 if adb shell pidof "$PKG" >/dev/null 2>&1; then
-  record PASS S02_demarrage "processus vivant, ${t1}-${t0} ms (voir start.log)"
+  record PASS S02_demarrage "processus vivant, démarrage en $((t1-t0)) ms (TotalTime/complet dans start.log)"
 else
   record FAIL S02_demarrage "processus absent après lancement"
 fi
@@ -202,6 +223,10 @@ fi
 if [ "$VARIANTE" = "rot90" ]; then
   adb shell settings put system user_rotation 0
   adb shell settings put system accelerometer_rotation 1
+fi
+if [ "$VARIANTE" = "small" ]; then
+  adb shell wm size reset
+  adb shell wm density reset
 fi
 
 {

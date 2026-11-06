@@ -15,7 +15,9 @@ Commandes :
   size                       taille d'écran déclarée par le système
 """
 import argparse
+import os
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -24,8 +26,30 @@ import xml.etree.ElementTree as ET
 DUMP_REMOTE = "/sdcard/window_dump.xml"
 
 
-def adb(*args, timeout=60):
-    return subprocess.run(["adb", *args], capture_output=True, text=True, timeout=timeout)
+def resolve_adb():
+    """adb n'est pas toujours sur le PATH du runner : on le cherche explicitement."""
+    for base in ("ANDROID_SDK_ROOT", "ANDROID_HOME", "ANDROID_SDK"):
+        root = os.environ.get(base)
+        if root:
+            cand = os.path.join(root, "platform-tools", "adb")
+            if os.path.exists(cand):
+                return cand
+    found = shutil.which("adb")
+    if found:
+        return found
+    for cand in ("/usr/local/lib/android/sdk/platform-tools/adb",
+                 os.path.expanduser("~/Android/Sdk/platform-tools/adb")):
+        if os.path.exists(cand):
+            return cand
+    raise SystemExit("E2E FATAL adb introuvable (PATH=" + os.environ.get("PATH", "") + ")")
+
+
+ADB = resolve_adb()
+
+
+def adb(*args, timeout=180):
+    return subprocess.run([ADB, *args], capture_output=True, text=True, timeout=timeout,
+                          errors="replace")
 
 
 def screen_size():
@@ -75,6 +99,7 @@ def describe(n):
 
 
 def cmd_probe(args):
+    print(f"E2E adb={ADB}")
     nodes, _ = dump_nodes()
     w, h = screen_size()
     print(f"E2E screen={w}x{h} nodes={len(nodes)}")
@@ -145,7 +170,7 @@ def cmd_inside(args):
 
 def cmd_shot(args):
     with open(args.path, "wb") as f:
-        p = subprocess.run(["adb", "exec-out", "screencap", "-p"], stdout=f, timeout=120)
+        p = subprocess.run([ADB, "exec-out", "screencap", "-p"], stdout=f, timeout=180)
     ok = p.returncode == 0
     print(f"E2E SHOT {args.path} {'OK' if ok else 'ECHEC'}")
     return 0 if ok else 1
