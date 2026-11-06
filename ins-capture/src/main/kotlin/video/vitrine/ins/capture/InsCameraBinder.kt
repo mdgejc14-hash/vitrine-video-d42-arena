@@ -25,9 +25,17 @@ class InsCameraBinder(private val context: Context) {
     fun buildUseCases(spec: CaptureSpec): InsUseCases {
         val preview = Preview.Builder().build()
 
+        // D42.14 (crash mesuré, run 42257226019) : sans strategie de repli,
+        // bindToLifecycle levait IllegalArgumentException « Unable to find
+        // selected quality » des que le capteur n'expose pas FHD/UHD — cas de
+        // l'émulateur de CI mais AUSSI des téléphones d'entrée de gamme.
+        // Repli CameraX canonique : accepter la qualité la plus basse
+        // disponible plutôt que de s'effondrer.
         val quality = if (spec.captureHeight >= 2160) Quality.UHD else Quality.FHD
         val recorder = Recorder.Builder()
-            .setQualitySelector(QualitySelector.from(quality))
+            .setQualitySelector(
+                QualitySelector.from(quality, QualitySelector.fallbackStrategyOf(Quality.LOWEST))
+            )
             .setTargetVideoEncodingBitRate(spec.captureBitrateBps)
             .build()
 
