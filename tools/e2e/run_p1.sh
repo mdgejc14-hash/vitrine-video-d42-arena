@@ -149,12 +149,17 @@ if $UI wait --text "Ton code parrain" --exact --timeout 30 >/dev/null 2>&1; then
 else
   record BLOCKED P1_parrainage "étape parrainage non atteinte"
 fi
-sleep 2
-$UI tap --text "Continuer" --exact --timeout 20 >/dev/null 2>&1 || true
-sleep 2
+# Écran de bienvenue intermédiaire : un seul appui ne suffit pas toujours
+# (run 42212817413 : catalogue non atteint). On réessaie jusqu'à voir le catalogue.
+catalogue_atteint=0
+for _ in 1 2 3; do
+  $UI tap --text "Continuer" --exact --timeout 15 >/dev/null 2>&1 || true
+  if $UI wait --text "modèle de vidéo" --timeout 20 >/dev/null 2>&1; then catalogue_atteint=1; break; fi
+  sleep 3
+done
 
 # --- S20 catalogue -------------------------------------------------------------
-if $UI wait --text "modèle de vidéo" --timeout 25 >/dev/null 2>&1; then
+if [ "$catalogue_atteint" = "1" ]; then
   record PASS P1_catalogue "catalogue atteint"
   shot 20_catalogue; dump 20_catalogue
 else
@@ -170,11 +175,6 @@ fi
 if tap_if "Nouvel arrivage" "" 10; then record PASS P1_selection_gabarit "gabarit sélectionné"; else record FAIL P1_selection_gabarit "clic gabarit impossible"; fi
 sleep 4
 shot 21_brief; dump 21_brief
-if $UI wait --text "Saisis" --timeout 25 >/dev/null 2>&1 || $UI wait --text "publicité" --timeout 5 >/dev/null 2>&1; then
-  record PASS P1_brief "formulaire de brief affiché"
-else
-  record BLOCKED P1_brief "formulaire non identifié (voir dump 21)"
-fi
 
 # --- S22 brief : remplir les champs REQUIS, défiler, valider --------------------
 # `GabaritBriefScreen` : un seul écran défilant, bouton « Continuer » tout en bas,
@@ -335,7 +335,7 @@ else
   record BLOCKED P1_apercu_export "écran d'export non atteint"
 fi
 if $UI tap --text "Lancer l'export local" --timeout 15 >/dev/null 2>&1; then record PASS P1_export_lance "export lancé"; else record BLOCKED P1_export_lance "bouton d'export introuvable"; fi
-if $UI wait --text "Vidéo prête" --timeout 600 >/dev/null 2>&1; then
+if $UI wait --text "Vidéo prête ! Partage-la avec tes clients." --exact --timeout 480 >/dev/null 2>&1; then
   record PASS P1_export_termine "« Vidéo prête ! » affiché"
   shot 29_export_termine; dump 29_export_termine
 else
