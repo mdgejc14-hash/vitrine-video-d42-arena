@@ -70,10 +70,14 @@ def dump_nodes(retries=3):
         xml = adb("exec-out", "cat", DUMP_REMOTE).stdout
         if xml and "<hierarchy" in xml:
             try:
-                root = ET.fromstring(xml)
+                # ET refuse une *str* portant une déclaration d'encodage
+                # (« Unicode strings with encoding declaration are not supported »).
+                # On retire la déclaration avant de parser.
+                propre = re.sub(r"^<\?xml[^>]*\?>", "", xml).strip()
+                root = ET.fromstring(propre)
                 return list(root.iter("node")), xml
-            except ET.ParseError:
-                pass
+            except (ET.ParseError, ValueError) as e:
+                print(f"E2E dump_parse_error {e}", file=sys.stderr)
         time.sleep(1)
     return [], ""
 
@@ -121,11 +125,13 @@ def cmd_size(args):
     return 0 if w and h else 1
 
 
-def _wait(args, must=True):
+def _wait(args, must=True, keep=None):
     deadline = time.time() + args.timeout
     last = None
     while time.time() < deadline:
         nodes, _ = dump_nodes()
+        if keep is not None:
+            keep[0] = nodes
         n = find(nodes, args.text, args.id)
         if n is not None:
             print("E2E FOUND " + describe(n))
@@ -138,7 +144,10 @@ def _wait(args, must=True):
 
 
 def cmd_wait(args):
-    return 0 if _wait(args) else 1
+    # PIEGE ElementTree : un Element SANS ENFANT est *faux* en Python.
+    # `if _wait(args)` renvoyait donc 1 (échec) même quand le noeud était trouvé.
+    # C'est la cause racine des S03/S09/S14/S17 en échec au run 42177202362.
+    return 0 if _wait(args) is not None else 1
 
 
 def cmd_tap(args):
@@ -157,9 +166,24 @@ def cmd_tap(args):
     return 0
 
 
+def _clickable_parent(nodes, target):
+    """Compose expose le texte et le clic sur deux noeuds : on remonte au parent."""
+    parent = {}
+    for n in nodes:
+        for c in n:
+            parent[c] = n
+    cur = target
+    while cur in parent:
+        cur = parent[cur]
+        if cur.get("clickable") == "true":
+            return "true (parent)"
+    return "false"
+
+
 def cmd_inside(args):
     """Vérifie qu'un élément est entièrement visible (aucune partie hors écran)."""
-    n = _wait(args)
+    nodes_ref = [None]
+    n = _wait(args, keep=nodes_ref)
     if n is None:
         print("E2E FAIL element_absent", file=sys.stderr)
         return 2
@@ -170,7 +194,8 @@ def cmd_inside(args):
     print(f"E2E INSIDE {label!r} bounds=({x1},{y1},{x2},{y2}) screen=({w},{h}) => "
           f"{'PASS' if inside else 'FAIL_HORS_ECRAN'}")
     # Vérifie aussi que l'élément est cliquable (le bouton épinglé doit l'être)
-    print(f"E2E CLICKABLE {label!r} => {n.get('clickable')}")
+    clickable = "true" if n.get("clickable") == "true" else _clickable_parent(nodes_ref[0], n)
+    print(f"E2E CLICKABLE {label!r} => {clickable}")
     return 0 if inside else 3
 
 

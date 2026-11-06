@@ -18,6 +18,8 @@ UI="python3 tools/e2e/ui.py"
 mkdir -p "$OUT"
 RESULTS="$OUT/results.tsv"
 : > "$RESULTS"
+# Journal complet de la sortie d'erreur (diagnostic des commandes ui.py)
+exec 2> >(tee -a "$OUT/stderr.log" >&2)
 
 pass=0; fail=0; blocked=0
 record() { # statut, id, détail
