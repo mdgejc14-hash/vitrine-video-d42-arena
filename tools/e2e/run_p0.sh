@@ -99,15 +99,45 @@ else
 fi
 shot 01_demarrage; dump 01_demarrage
 
+# D42.14 — verdict de VISIBILITÉ honnête en paysage.
+# Les écrans de langue (Compose + verticalScroll) et de connexion (ScrollView
+# fillViewport) sont DÉFILANTS : en paysage le 4e choix et le bouton principal
+# sont sous la ligne de flottaison. `inside` seul les déclarait « hors écran »
+# alors qu'ils sont atteignables. On distingue donc trois verdicts :
+#   PASS (code 0)            visible sans défiler
+#   PASS (code 2)            atteint APRÈS DÉFILEMENT — le libellé de la ligne le dit
+#   FAIL (code 3)            présent dans la hiérarchie mais introuvable même après défilement
+# Aucun statut nouveau n'est inventé : le vocabulaire PASS/FAIL/BLOCKED reste intact.
+visible_ou_defilant() { # texte|id, valeur, [max_gestes]
+  local mode="$1" cible="$2" max="${3:-4}"
+  if [ "$mode" = "text" ]; then
+    $UI inside --text "$cible" --timeout 6 >/dev/null 2>&1 && return 0
+  else
+    $UI inside --id "$cible" --timeout 6 >/dev/null 2>&1 && return 0
+  fi
+  local i
+  for i in $(seq 1 "$max"); do
+    adb shell input swipe 540 900 540 400 250 >/dev/null 2>&1
+    sleep 1
+    if [ "$mode" = "text" ]; then
+      $UI inside --text "$cible" --timeout 4 >/dev/null 2>&1 && return 2
+    else
+      $UI inside --id "$cible" --timeout 4 >/dev/null 2>&1 && return 2
+    fi
+  done
+  return 3
+}
+
 # --- S03 sélection de langue ---------------------------------------------------
 if $UI wait --text "Français" --timeout 30 >/dev/null 2>&1; then
   record PASS S03_ecran_langue "Français / English / Español / 日本語"
   shot 02_langue; dump 02_langue
-  if $UI inside --text "日本語" --timeout 5 >/dev/null 2>&1; then
-    record PASS S03b_langue_jp_visible "carte 日本語 entièrement dans l'écran"
-  else
-    record FAIL S03b_langue_jp_visible "carte 日本語 hors écran ou absente"
-  fi
+  visible_ou_defilant text "日本語" 4; rc=$?
+  case $rc in
+    0) record PASS S03b_langue_jp_visible "carte 日本語 visible sans défiler" ;;
+    2) record PASS S03b_langue_jp_visible "carte 日本語 atteinte APRÈS DÉFILEMENT (écran défilant)" ;;
+    *) record FAIL S03b_langue_jp_visible "carte 日本語 introuvable même après défilement" ;;
+  esac
   case "$LANGUE" in
     en) LIBELLE="English" ;;
     es) LIBELLE="Español" ;;
@@ -135,11 +165,12 @@ if $UI wait --text "Google" --timeout 20 >/dev/null 2>&1; then
   record PASS S04_ecran_connexion "titre + bouton Google visibles"
   shot 03_connexion; dump 03_connexion
   $UI probe | sed 's/^/E2E_AUTH /' >> "$OUT/probe_auth.txt"
-  if $UI inside --id "auth_google_button" --timeout 10 >/dev/null 2>&1; then
-    record PASS S04b_bouton_google_dans_ecran "bouton principal entièrement visible"
-  else
-    record FAIL S04b_bouton_google_dans_ecran "bouton principal hors écran"
-  fi
+  visible_ou_defilant id "auth_google_button" 4; rc=$?
+  case $rc in
+    0) record PASS S04b_bouton_google_dans_ecran "bouton principal visible sans défiler" ;;
+    2) record PASS S04b_bouton_google_dans_ecran "bouton principal atteint APRÈS DÉFILEMENT" ;;
+    *) record FAIL S04b_bouton_google_dans_ecran "bouton principal introuvable même après défilement" ;;
+  esac
   # Repli hors connexion (session démo locale) pour atteindre l'onboarding sans Google
   if $UI tap --id "auth_offline_button" --timeout 10 >/dev/null 2>&1; then
     record PASS S05_session_locale "repli sans compte actionné (session démo, aucun appel réseau)"
