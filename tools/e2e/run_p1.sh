@@ -179,10 +179,11 @@ fi
 # --- S22 brief : remplir les champs REQUIS, défiler, valider --------------------
 # `GabaritBriefScreen` : un seul écran défilant, bouton « Continuer » tout en bas,
 # DÉSACTIVÉ tant que `filled != requiredIds.size` ou qu'un champ est invalide.
-remplir_champ() { # index, texte  (relit les coordonnées à chaque champ : le
-  # clavier modifie la géométrie de l'écran, donc les positions mémorisées mentent)
-  local idx="$1" val="$2" ligne x1 y1 x2 y2 cx cy
-  ligne=$(awk -v i="$idx" '$1=="E2E" && $2=="FIELD" && $3==i {print $4, $5, $6, $7}' "$OUT/champs.txt")
+remplir_champ() { # index, texte, [fichier de coordonnées]
+  # On relit les coordonnées à chaque champ : le clavier modifie la géométrie de
+  # l'écran, donc les positions mémorisées mentent.
+  local idx="$1" val="$2" src="${3:-$OUT/champs.txt}" ligne x1 y1 x2 y2 cx cy
+  ligne=$(awk -v i="$idx" '$1=="E2E" && $2=="FIELD" && $3==i {print $4, $5, $6, $7}' "$src")
   [ -z "$ligne" ] && return 1
   # shellcheck disable=SC2086
   set -- $ligne
@@ -199,16 +200,36 @@ remplir_champ() { # index, texte  (relit les coordonnées à chaque champ : le
 
 if $UI wait --text "Ma vidéo" --exact --timeout 30 >/dev/null 2>&1; then
   record PASS P1_brief "formulaire de brief affiché (« Ma vidéo », gabarit sélectionné)"
-  n=0
-  for val in "BoutiqueAwa" "+22997000000" "RobeWax" "15000"; do
+  # Remplissage ITÉRATIF : on relit les champs après chaque saisie et on remplit
+  # tous ceux qui sont VIDES, en descendant dans le formulaire. Le run 42208901429
+  # avait laissé « Quartier et ville * » vide — champ requis, donc bouton grisé.
+  valeurs="BoutiqueAwa +22997000000 RobeWax 15000 AkpakpaCotonou"
+  remplis=0
+  for tour in 1 2 3 4 5 6 7 8; do
     $UI fields > "$OUT/champs.txt" 2>&1 || true
-    remplir_champ "$n" "$val" || echo "E2E champ $n introuvable"
-    n=$((n+1))
+    vide=$(awk '$1=="E2E" && $2=="FIELD" && $8=="vide" {print $3; exit}' "$OUT/champs.txt")
+    if [ -n "$vide" ]; then
+      val=$(echo $valeurs | cut -d' ' -f$((remplis+1)))
+      [ "$remplis" -ge 5 ] && val="Cotonou"
+      remplir_champ "$vide" "$val" && remplis=$((remplis+1))
+      continue
+    fi
+    # plus de champ vide visible : on descend d'un cran pour voir la suite
+    adb shell input swipe 540 1700 540 900 250 >/dev/null 2>&1
+    sleep 1
+    $UI fields > "$OUT/champs_bas.txt" 2>&1 || true
+    vide=$(awk '$1=="E2E" && $2=="FIELD" && $8=="vide" {print $3; exit}' "$OUT/champs_bas.txt")
+    if [ -n "$vide" ]; then
+      val=$(echo $valeurs | cut -d' ' -f$((remplis+1)))
+      [ "$remplis" -ge 5 ] && val="Cotonou"
+      remplir_champ "$vide" "$val" && remplis=$((remplis+1))
+      continue
+    fi
+    break
   done
+  echo "E2E champs remplis : $remplis"
   $UI fields > "$OUT/champs_apres.txt" 2>&1 || true
   cat "$OUT/champs_apres.txt" | sed 's/^/E2E /'
-  sleep 1
-  shot 22_brief_saisi; dump 22_brief_saisi
   # Le bouton est en bas d'un écran défilant. On descend PAR PAS en vérifiant
   # après chaque geste qu'il est réellement apparu (un nombre fixe de glissements
   # ne garantit rien : le run 42205571080 est resté bloqué en haut du formulaire).

@@ -249,6 +249,28 @@ def cmd_tap(args):
         return 1
     b = bounds_utiles(n)
     if not b or b == VIDE:
+        # Compose expose parfois le TEXTE d'un bouton avec des bornes nulles
+        # ([0,0][0,0]) : le rectangle réel est porté par un noeud frère. On prend
+        # alors le dernier noeud cliquable PLEINE LARGEUR (le bouton d'action est
+        # en bas d'un écran défilant). Constaté au run 42208901429.
+        nodes, _ = dump_nodes()
+        w, h = screen_size()
+        candidats = []
+        for m in nodes:
+            if m.get("clickable") != "true":
+                continue
+            bb = parse_bounds(m.get("bounds"))
+            if not bb or bb == VIDE:
+                continue
+            if (bb[2] - bb[0]) < w * 0.4:
+                continue
+            candidats.append(bb)
+        if candidats:
+            bb = max(candidats, key=lambda r: r[3])
+            x, y = (bb[0] + bb[2]) // 2, (bb[1] + bb[3]) // 2
+            adb("shell", "input", "tap", str(x), str(y))
+            print(f"E2E TAP_FALLBACK_BAS {x},{y} (texte sans surface) bounds={bb}")
+            return 0
         print(f"E2E FAIL element_sans_surface {n.get('text') or n.get('resource-id')}", file=sys.stderr)
         return 4
     x, y = (b[0] + b[2]) // 2, (b[1] + b[3]) // 2
@@ -326,7 +348,8 @@ def cmd_fields(args):
         if (n.get("class") or "").endswith("EditText"):
             b = parse_bounds(n.get("bounds"))
             if b and b != VIDE:
-                print(f"E2E FIELD {i} {b[0]} {b[1]} {b[2]} {b[3]}")
+                etat = "rempli" if (n.get("text") or "").strip() else "vide"
+                print(f"E2E FIELD {i} {b[0]} {b[1]} {b[2]} {b[3]} {etat}")
                 i += 1
     print(f"E2E FIELDS {i}")
     return 0 if i else 1
