@@ -276,6 +276,14 @@ jobs:
         # avoir déjà payé la compilation. Trois tentatives, puis vérification
         # que le binaire existe vraiment.
         run: |
+          # D42.14 (06/11/2026, run 42242981946) : l'émulateur fraîchement
+          # installé par sdkmanager exige libpulse.so.0, absente de l'image
+          # ubuntu-22.04 actuelle — qemu-system refusait de démarrer
+          # (« error while loading shared libraries: libpulse.so.0 »), aucun
+          # rendu produit. On installe la bibliothèque AVANT tout lancement.
+          sudo apt-get update -qq >/dev/null 2>&1 || true
+          sudo apt-get install -y -qq libpulse0 >/dev/null 2>&1 || \
+            echo "::warning title=LIBPULSE::installation impossible — l'émulateur peut ne pas démarrer"
           SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
           API="${{ github.event.inputs.api_level || '34' }}"
           ok=0
@@ -431,6 +439,14 @@ jobs:
         # avoir déjà payé la compilation. Trois tentatives, puis vérification
         # que le binaire existe vraiment.
         run: |
+          # D42.14 (06/11/2026, run 42242981946) : l'émulateur fraîchement
+          # installé par sdkmanager exige libpulse.so.0, absente de l'image
+          # ubuntu-22.04 actuelle — qemu-system refusait de démarrer
+          # (« error while loading shared libraries: libpulse.so.0 »), aucun
+          # rendu produit. On installe la bibliothèque AVANT tout lancement.
+          sudo apt-get update -qq >/dev/null 2>&1 || true
+          sudo apt-get install -y -qq libpulse0 >/dev/null 2>&1 || \
+            echo "::warning title=LIBPULSE::installation impossible — l'émulateur peut ne pas démarrer"
           SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
           API="${{ github.event.inputs.api_level || '34' }}"
           ok=0
@@ -538,6 +554,14 @@ jobs:
 
       - name: Émulateur + image système (téléchargement avec reprises)
         run: |
+          # D42.14 (06/11/2026, run 42242981946) : l'émulateur fraîchement
+          # installé par sdkmanager exige libpulse.so.0, absente de l'image
+          # ubuntu-22.04 actuelle — qemu-system refusait de démarrer
+          # (« error while loading shared libraries: libpulse.so.0 »), aucun
+          # rendu produit. On installe la bibliothèque AVANT tout lancement.
+          sudo apt-get update -qq >/dev/null 2>&1 || true
+          sudo apt-get install -y -qq libpulse0 >/dev/null 2>&1 || \
+            echo "::warning title=LIBPULSE::installation impossible — l'émulateur peut ne pas démarrer"
           SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
           API="${{ github.event.inputs.api_level || '34' }}"
           ok=0
