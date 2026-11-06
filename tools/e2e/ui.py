@@ -44,12 +44,18 @@ def resolve_adb():
     raise SystemExit("E2E FATAL adb introuvable (PATH=" + os.environ.get("PATH", "") + ")")
 
 
-ADB = resolve_adb()
+_ADB_CACHE = []
+
+
+def adb_bin():
+    if not _ADB_CACHE:
+        _ADB_CACHE.append(resolve_adb())
+    return _ADB_CACHE[0]
 
 
 def adb(*args, timeout=180):
-    return subprocess.run([ADB, *args], capture_output=True, text=True, timeout=timeout,
-                          errors="replace")
+    return subprocess.run([adb_bin(), *args], capture_output=True, text=True,
+                          timeout=timeout, errors="replace")
 
 
 def screen_size():
@@ -99,7 +105,7 @@ def describe(n):
 
 
 def cmd_probe(args):
-    print(f"E2E adb={ADB}")
+    print(f"E2E adb={adb_bin()}")
     nodes, _ = dump_nodes()
     w, h = screen_size()
     print(f"E2E screen={w}x{h} nodes={len(nodes)}")
@@ -170,7 +176,7 @@ def cmd_inside(args):
 
 def cmd_shot(args):
     with open(args.path, "wb") as f:
-        p = subprocess.run([ADB, "exec-out", "screencap", "-p"], stdout=f, timeout=180)
+        p = subprocess.run([adb_bin(), "exec-out", "screencap", "-p"], stdout=f, timeout=180)
     ok = p.returncode == 0
     print(f"E2E SHOT {args.path} {'OK' if ok else 'ECHEC'}")
     return 0 if ok else 1
@@ -188,28 +194,32 @@ def build_parser():
     p = argparse.ArgumentParser(description="Pilotage UI Android (D42.13)")
     sub = p.add_subparsers(dest="cmd", required=True)
 
-    sub.add_parser("probe")
-    sub.add_parser("size")
-
-    def target(sp):
+    def cible(sp):
         sp.add_argument("--text")
         sp.add_argument("--id")
         sp.add_argument("--timeout", type=int, default=25)
+        return sp
 
-    target(sub.add_parser("wait")).set_defaults(func=cmd_wait)
-    t = sub.add_parser("tap")
-    target(t)
+    sub.add_parser("probe").set_defaults(func=cmd_probe)
+    sub.add_parser("size").set_defaults(func=cmd_size)
+
+    cible(sub.add_parser("wait")).set_defaults(func=cmd_wait)
+
+    t = cible(sub.add_parser("tap"))
     t.add_argument("--xy")
     t.set_defaults(func=cmd_tap)
-    target(sub.add_parser("inside")).set_defaults(func=cmd_inside)
-    s = sub.add_parser("shot")
-    s.add_argument("path")
-    s.set_defaults(func=cmd_shot)
-    w = sub.add_parser("swipe")
-    w.add_argument("start")
-    w.add_argument("end")
-    w.add_argument("--ms", type=int, default=300)
-    w.set_defaults(func=cmd_swipe)
+
+    cible(sub.add_parser("inside")).set_defaults(func=cmd_inside)
+
+    sh = sub.add_parser("shot")
+    sh.add_argument("path")
+    sh.set_defaults(func=cmd_shot)
+
+    sw = sub.add_parser("swipe")
+    sw.add_argument("start")
+    sw.add_argument("end")
+    sw.add_argument("--ms", type=int, default=300)
+    sw.set_defaults(func=cmd_swipe)
     return p
 
 

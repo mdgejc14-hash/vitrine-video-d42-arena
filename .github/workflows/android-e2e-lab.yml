@@ -13,6 +13,12 @@ on:
   push:
     branches: [d42.13-lab, main]
 
+# Un seul laboratoire à la fois : un nouveau push annule la run précédente au
+# lieu d'empiler des émulateurs inutiles (coût = temps de runner, pas d'argent).
+concurrency:
+  group: android-e2e-lab-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   android-e2e:
     runs-on: ubuntu-latest
