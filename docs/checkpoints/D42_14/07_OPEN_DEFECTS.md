@@ -17,7 +17,7 @@ Aucun défaut n'est fermé sans preuve, aucun ne l'est sur la foi de « ça comp
 
 | # | Défaut | Statut | Détail |
 |---|---|---|---|
-| D6 | **Paysage** : `S03b` / `S04b` déclarés hors écran | **CORRIGÉ côté mesure** (commits `38e1fe3`) | les écrans défilent ; le test ne défilait pas avant de juger (`10_PAYSAGE.md`) |
+| D6 (F) | **Paysage** : `S03b` / `S04b` déclarés hors écran | **CORRIGÉ côté mesure** (commits `38e1fe3`) | les écrans défilent ; le test ne défilait pas avant de juger (`10_PAYSAGE.md`) |
 | D7 | **Paysage** : `S12_selection_secteur`, `S17_catalogue` échouent en `rot90` | **OUVERT** | captures inaccessibles sans jeton ; hypothèse = verdict pris avant changement d'écran |
 | D8 | Paysage peu confortable (en-tête 88 dp + 4 cartes ne tiennent pas en 1080 px) | **OUVERT** | piste `values-land` (logo réduit) — non appliquée : elle exige un build + test que je ne peux pas lancer aujourd'hui |
 | D9 | **Bouton `Continuer` du brief grisé sans dire ce qui manque** | **OUVERT** (produit) | « Quartier et ville » est hors écran ; Nielsen #1. Piste : libellé dynamique « Il reste 1 champ : Quartier et ville » |
@@ -38,3 +38,15 @@ Aucun défaut n'est fermé sans preuve, aucun ne l'est sur la foi de « ça comp
 - **`501 billing_not_configured`** sur la facturation : état exigé tant que SKYPAY n'a pas d'identifiants.
 - **Le repli « sans compte »** : il fonctionne réellement (mode hors ligne), il est seulement **déclaré** comme tel à l'écran.
 - **Le carrousel lent au premier lancement** : compilation à froid de l'émulateur.
+
+### Défauts du HARNAIS trouvés et fermés ce tour
+
+| # | Défaut | Preuve | État |
+|---|---|---|---|
+| H1 | mode `surface` **mort** (ElementTree compare par identité : cible d'un dump, parents d'un autre) ⇒ repli systématique sur `bas_large`, qui désigne la **barre de navigation** | S6 de `selftest_harness.py` | **CORRIGÉ** |
+| H2 | `surface_reelle()` pouvait renvoyer la **fenêtre entière** ⇒ tap au milieu de l'écran (540,1170) | S1 | **CORRIGÉ** |
+| H3 | dernière ligne du `script:` CI : `[ -s ] && ffprobe` ⇒ job rouge sans MP4, signal brouillé | run 42228009767, exit 2 | **CORRIGÉ** (`2d63761`) |
+| H4 | `T=$(cat …) curl …` : variable non définie pour la suite | — | **CORRIGÉ** (`tools/gh_api.sh`) |
+
+Ces quatre défauts sont des défauts de **mesure**, pas de produit. Les fermer ne valide
+aucun parcours : cela garantit seulement que le prochain run dira la vérité.

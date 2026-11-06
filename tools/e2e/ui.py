@@ -147,13 +147,32 @@ def surface_reelle(n):
         return None
     if (b[3] - b[1]) >= 24 and (b[2] - b[0]) >= 24:
         return b
-    for cand in list(n.iter("node")) + _ancetres(n):
-        if cand is n:
-            continue
+    fw, fh = fenetre()
+
+    def utilisable(bc):
+        """Ni la racine, ni un conteneur plein écran : un vrai bouton."""
+        if not bc or (bc[3] - bc[1]) < 48 or (bc[2] - bc[0]) < 48:
+            return False
+        if fw and fh and (bc[2] - bc[0]) >= fw * 0.95 and (bc[3] - bc[1]) >= fh * 0.9:
+            return False   # la fenêtre entière : son centre est le MILIEU DE L'ÉCRAN
+        return True
+
+    candidats = [c for c in (list(n.iter("node")) + _ancetres(n)) if c is not n]
+    # 1) un ancêtre/descendant explicitement cliquable (cas Compose réel) ;
+    for cand in candidats:
+        if cand.get("clickable") == "true":
+            bc = parse_bounds(cand.get("bounds"))
+            if utilisable(bc):
+                return bc
+    # 2) à défaut, le plus petit conteneur exploitable (jamais la racine).
+    tailles = []
+    for cand in candidats:
         bc = parse_bounds(cand.get("bounds"))
-        if bc and (bc[3] - bc[1]) >= 48 and (bc[2] - bc[0]) >= 48:
-            return bc
-    return b
+        if utilisable(bc):
+            tailles.append(((bc[2] - bc[0]) * (bc[3] - bc[1]), bc))
+    if tailles:
+        return min(tailles)[1]
+    return None
 
 
 def _ancetres(n):
@@ -293,6 +312,17 @@ def cmd_tap(args):
         return 1
     nodes, _ = dump_nodes()
     w, h = screen_size()
+    # PIEGE CORRIGE EN D42.14 : `n` vient du dump fait par _wait(), `nodes` d'un
+    # dump PLUS RÉCENT. ElementTree compare les éléments par identité : le noeud
+    # et sa table de parents ne se correspondaient pas, donc `surface_reelle()`
+    # ne trouvait aucun ancêtre et le mode « surface » était MORT — on retombait
+    # toujours sur « bas_large », qui choisit le dernier élément cliquable pleine
+    # largeur… c'est-à-dire la barre de navigation en bas de l'écran, pas le
+    # bouton d'action. On ré-ancre la cible dans le dump courant.
+    if nodes:
+        n_courant = find(nodes, args.text, args.id, exact=getattr(args, "exact", False))
+        if n_courant is not None:
+            n = n_courant
     x, y, mode = point_de_clic(nodes, n, w, h)
     if x is None:
         print(f"E2E FAIL element_sans_surface {n.get('text') or n.get('resource-id')}", file=sys.stderr)

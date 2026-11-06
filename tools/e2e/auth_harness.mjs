@@ -261,6 +261,60 @@ async function main() {
       `code parrain introuvable (HTTP ${refA.status} ${JSON.stringify(refA.corps).slice(0, 80)})`);
   }
 
+  /* ---- D42.14 : concurrence, contrôle négatif, schéma ---------------------- */
+  const solde = async (t) => {
+    const r = await appeler("/api/v1/me/entitlements", { token: t });
+    return r.status === 200 ? r.corps?.welcome_credits_left : null;
+  };
+  const avant = await solde(jetonA);
+
+  // 8 requêtes SIMULTANÉES avec le MÊME eventId (double clic / retry réseau).
+  const course = await Promise.all(
+    Array.from({ length: 8 }, () =>
+      appeler("/api/v1/quota/consume", {
+        method: "POST", token: jetonA,
+        body: { eventId: "evt-race-d42-014", fingerprint: empreinteA, source: "welcome", kind: "export" }
+      })
+    )
+  );
+  const premier = course.filter((r) => r.status === 200 && r.corps?.ok && !r.corps?.dup).length;
+  const doublons = course.filter((r) => r.corps?.dup === true).length;
+  const apres = await solde(jetonA);
+  verifier("8 requêtes simultanées, même eventId : un seul débit",
+    premier === 1 && doublons === 7 && apres === avant - 1,
+    `débits=${premier} doublons=${doublons} solde ${avant}->${apres}`);
+
+  // Contrôle NÉGATIF : sans lui, un compteur figé passerait le test précédent.
+  const autre = await appeler("/api/v1/quota/consume", {
+    method: "POST", token: jetonA,
+    body: { eventId: "evt-race-d42-015", fingerprint: empreinteA, source: "welcome", kind: "export" }
+  });
+  const apres2 = await solde(jetonA);
+  verifier("Contrôle négatif : un eventId neuf débite bien",
+    autre.status === 200 && autre.corps?.ok === true && !autre.corps?.dup && apres2 === apres - 1,
+    `HTTP ${autre.status} ${JSON.stringify(autre.corps)} solde ${apres}->${apres2}`);
+
+  // Isolation des SOLDES : B, avec SON empreinte, reçoit une dotation PLEINE
+  // alors que A est épuisé — les débits de A ne contaminent pas B.
+  const gB = await appeler("/api/v1/me/welcome-grant", { method: "POST", token: jetonB, body: { fingerprint: "empreinte-appareil-b-0001" } });
+  const soldeB = await solde(jetonB);
+  verifier("Isolation des soldes : dotation pleine pour B pendant qu'A est épuisé",
+    gB.status === 200 && gB.corps?.granted === true && soldeB === 3 && apres2 === 0,
+    `grant B=${JSON.stringify(gB.corps)} solde B=${soldeB} / solde A=${apres2}`);
+
+  // Schéma réellement présent dans la base après migrations + écritures.
+  {
+    const { DatabaseSync } = await import("node:sqlite");
+    const sonde = new DatabaseSync(CHEMIN_DB, { readOnly: true });
+    const tables = sonde.prepare(
+      "SELECT COUNT(*) n FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'").get().n;
+    const index = sonde.prepare(
+      "SELECT COUNT(*) n FROM sqlite_master WHERE type='index' AND name NOT LIKE 'sqlite_%'").get().n;
+    sonde.close();
+    verifier("Schéma : 24 tables et 37 index", tables === 24 && index === 37,
+      `${tables} tables, ${index} index`);
+  }
+
   // Aucune sortie réseau non prévue
   verifier("Aucune requête sortante hors JWKS interceptée", appelsSortants.length === 0,
     appelsSortants.length ? appelsSortants.slice(0, 3).join(", ") : "0 appel");

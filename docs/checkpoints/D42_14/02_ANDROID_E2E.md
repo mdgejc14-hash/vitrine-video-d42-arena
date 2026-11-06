@@ -72,3 +72,11 @@ le bouton devrait dire *ce qui manque*. Piste : libellé du bouton = « Il reste
 
 > Aucun résultat de ce document n'est une preuve de la release : l'APK testée ici est
 > `app-debug.apk`, reconstruite à chaque run (empreinte différente à chaque fois).
+
+
+## Autotest du harnais (D42.14, ce tour)
+
+Le harnais a été testé **sans appareil** par `tools/e2e/selftest_harness.py` (faux `adb`,
+vrai `ui.py`) : **6/6 PASS**, dont deux contre-épreuves. Deux défauts de mesure corrigés
+(mode `surface` mort, `surface_reelle` renvoyant la fenêtre entière) — voir
+`11_AUTOTEST_HARNAIS.md`. Le prochain run CI mesurera donc réellement le parcours.
