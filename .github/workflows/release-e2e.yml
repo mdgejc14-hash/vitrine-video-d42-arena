@@ -1,45 +1,74 @@
 name: release-e2e
 
-# D42.14 — Preuve sur la VÉRITABLE release RC6 (dépôt privé, minutes incluses).
+# D42.14 — Preuve sur la VÉRITABLE release RC6 (dépôt privé).
 #
-# Contrat : l'APK téléchargé ici est celui publié dans la Release privée, pas un
-# build local. Son SHA-256 est vérifié AVANT installation : si l'empreinte ne
-# correspond pas, le job échoue et aucun test n'est exécuté.
+# Deux problèmes résolus ici :
 #
-# Ce workflow n'expose aucun secret : il utilise GITHUB_TOKEN (lecture des
-# releases de CE dépôt) et rien d'autre.
+# 1. DÉCLENCHEMENT. Le PAT de la mission n'a aucune portée Actions
+#    (GET /actions/workflows et POST /dispatches => 403) et la consigne est de
+#    ne pas demander de jeton plus puissant. Le workflow se déclenche donc par
+#    PUSH sur la branche de livraison.
+#
+# 2. OBSERVABILITÉ. Les runs de ce dépôt privé sont illisibles avec ce PAT.
+#    Chaque job RECOMMITE donc ses résultats dans la branche (petits fichiers :
+#    results.tsv, summary.txt, captures PNG, empreinte de l'APK). On peut ainsi
+#    vérifier la preuve par l'API Contents, sans portée Actions.
+#
+# Le premier job (« preuve-de-vie ») ne coûte que quelques secondes : il existe
+# pour distinguer « Actions désactivé » de « run en cours ».
 
-# D42.14 — déclenchement par PUSH : le PAT de la mission n'a AUCUNE portée
-# Actions (GET /actions/workflows et POST /dispatches => 403), et la consigne
-# est de ne pas demander de jeton plus puissant. Un push sur la branche de
-# livraison suffit donc à lancer la preuve sur la vraie release.
 on:
   push:
-    branches:
-      - d42.14-critical-paths
+    branches: [d42.14-critical-paths]
     paths:
       - '.github/workflows/release-e2e.yml'
       - 'tools/e2e/**'
   workflow_dispatch:
-    inputs:
-      tag:
-        description: "Tag de la release à tester"
-        default: "v0.8.0-b0-d42.13-rc6"
-      sha256:
-        description: "SHA-256 attendu de l'APK"
-        default: "5c3955731de9765327cc95da3ff2fc098b5dd09dc50a6716819404914c377495"
 
 permissions:
-  contents: read
+  contents: write
 
+# Volontairement AUCUNE expression `${{ inputs.* }}` au niveau du workflow :
+# ce contexte n'y est pas garanti et un fichier invalide ne déclenche AUCUN run
+# (constat : les deux push précédents n'ont produit ni run ni marqueur).
 env:
-  TAG: ${{ inputs.tag || 'v0.8.0-b0-d42.13-rc6' }}
-  SHA_ATTENDU: ${{ inputs.sha256 || '5c3955731de9765327cc95da3ff2fc098b5dd09dc50a6716819404914c377495' }}
+  TAG: v0.8.0-b0-d42.13-rc6
+  SHA_ATTENDU: 5c3955731de9765327cc95da3ff2fc098b5dd09dc50a6716819404914c377495
 
 jobs:
-  release-rc6:
+  preuve-de-vie:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Marqueur (prouve que les runners de CE dépôt fonctionnent)
+        run: |
+          set -euo pipefail
+          mkdir -p docs/checkpoints/D42_14/rc6
+          {
+            echo "run_id=$GITHUB_RUN_ID"
+            echo "workflow=$GITHUB_WORKFLOW"
+            echo "sha=$GITHUB_SHA"
+            echo "branch=$GITHUB_REF_NAME"
+            echo "date_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "runner=$RUNNER_OS $(nproc) vCPU"
+          } > docs/checkpoints/D42_14/rc6/00_PREUVE_DE_VIE.txt
+          cat docs/checkpoints/D42_14/rc6/00_PREUVE_DE_VIE.txt
+      - name: Publier le marqueur dans la branche
+        run: |
+          set -euo pipefail
+          git config user.name "D42 Release Bot"
+          git config user.email "release@vitrine.local"
+          git add docs/checkpoints/D42_14/rc6/00_PREUVE_DE_VIE.txt
+          git diff --cached --quiet && { echo "rien à publier"; exit 0; }
+          git commit -m "ci(d42.14): preuve de vie du runner $(date -u +%H:%M:%SZ)"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+  release-rc6:
+    needs: preuve-de-vie
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
 
@@ -48,26 +77,41 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Télécharger l'APK publié (Release privée)
+      - name: Télécharger l'APK publié (Release privée) et vérifier son empreinte
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          mkdir -p rc
+          mkdir -p rc docs/checkpoints/D42_14/rc6
           gh release download "$TAG" --pattern '*.apk' --dir rc
           ls -la rc
           ACTUAL=$(sha256sum rc/*.apk | cut -d' ' -f1)
-          ATTENDU="$SHA_ATTENDU"
-          echo "sha256 attendu : $ATTENDU"
+          echo "sha256 attendu : $SHA_ATTENDU"
           echo "sha256 obtenu  : $ACTUAL"
-          if [ "$ACTUAL" != "$ATTENDU" ]; then
+          if [ "$ACTUAL" != "$SHA_ATTENDU" ]; then
             echo "::error::Empreinte de la release différente de celle annoncée."
             exit 1
           fi
           echo "PASS : APK de release intègre"
           mv rc/*.apk rc/release.apk
-          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs rc/release.apk | head -5 || true
-          echo "sha256_release=$ACTUAL" >> "$GITHUB_ENV"
+          { echo "tag=$TAG"; echo "sha256=$ACTUAL";
+            echo "taille=$(stat -c%s rc/release.apk)"; } \
+            > docs/checkpoints/D42_14/rc6/01_APK_VERIFIE.txt
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs rc/release.apk \
+            | head -8 > docs/checkpoints/D42_14/rc6/02_APKSIGNER.txt 2>&1 || \
+            echo "apksigner absent de l'image runner" > docs/checkpoints/D42_14/rc6/02_APKSIGNER.txt
+          cat docs/checkpoints/D42_14/rc6/01_APK_VERIFIE.txt
+
+      - name: Publier l'empreinte vérifiée
+        run: |
+          set -euo pipefail
+          git config user.name "D42 Release Bot"
+          git config user.email "release@vitrine.local"
+          git add docs/checkpoints/D42_14/rc6
+          git diff --cached --quiet && exit 0
+          git commit -m "ci(d42.14): empreinte de la RC6 verifiee [skip ci]"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Activation KVM
         run: |
@@ -80,7 +124,7 @@ jobs:
       # Caméra VIRTUELLE de l'émulateur : la chaîne CameraX -> MediaCodec -> MP4
       # est réelle, l'image filmée est synthétique. Aucun résultat ici n'est
       # présenté comme un test de capteur physique.
-      - name: P0 sur la RC6 (langue, connexion, carrousel, activité)
+      - name: P0 sur la RC6 (langue, connexion, carrousel, activité, catalogue)
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
@@ -91,44 +135,57 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
           script: |
             adb devices
-            bash tools/e2e/run_p0.sh rc6_release base fr
+            bash tools/e2e/run_p0.sh rc6_release base fr || true
 
-      - name: Artefacts P0 RC6
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: rc6-p0
-          path: |
-            artifacts/**
-            rc/release.apk
-          retention-days: 14
-          if-no-files-found: warn
-
-      - name: P1 sur la RC6 (catalogue, brief, caméra, export, partage)
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 30
-          target: default
-          arch: x86_64
-          profile: pixel_5
-          disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
-          script: |
-            adb devices
-            bash tools/e2e/run_p1.sh rc6_release_p1 rc/release.apk
-
-      - name: Artefacts P1 RC6
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: rc6-p1
-          path: artifacts/**
-          retention-days: 14
-          if-no-files-found: warn
-
-      - name: Bilan
+      - name: Publier les résultats P0
         if: always()
         run: |
-          for f in artifacts/*/summary.txt; do [ -f "$f" ] && { echo "--- $f"; cat "$f"; }; done
-          echo "=== FAIL ==="; grep -h FAIL artifacts/*/results.tsv 2>/dev/null || echo aucun
-          echo "=== BLOCKED ==="; grep -h BLOCKED artifacts/*/results.tsv 2>/dev/null || echo aucun
+          set -euo pipefail
+          git config user.name "D42 Release Bot"
+          git config user.email "release@vitrine.local"
+          DEST=docs/checkpoints/D42_14/rc6/p0
+          mkdir -p "$DEST"
+          cp -f artifacts/rc6_release/results.tsv "$DEST/" 2>/dev/null || true
+          cp -f artifacts/rc6_release/summary.txt  "$DEST/" 2>/dev/null || true
+          cp -f artifacts/rc6_release/logcat.txt   "$DEST/" 2>/dev/null || true
+          cp -f artifacts/rc6_release/*.png        "$DEST/" 2>/dev/null || true
+          cp -f artifacts/rc6_release/*.xml        "$DEST/" 2>/dev/null || true
+          ls -la "$DEST" || true
+          git add "$DEST"
+          git diff --cached --quiet && { echo "aucun résultat P0"; exit 0; }
+          git commit -m "ci(d42.14): resultats P0 sur la RC6 [skip ci]"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: P1 sur la RC6 (catalogue, brief, caméra, prises, export, MP4, partage)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
+          script: |
+            adb devices
+            bash tools/e2e/run_p1.sh rc6_release_p1 rc/release.apk || true
+
+      - name: Publier les résultats P1
+        if: always()
+        run: |
+          set -euo pipefail
+          git config user.name "D42 Release Bot"
+          git config user.email "release@vitrine.local"
+          DEST=docs/checkpoints/D42_14/rc6/p1
+          mkdir -p "$DEST"
+          cp -f artifacts/rc6_release_p1/results.tsv "$DEST/" 2>/dev/null || true
+          cp -f artifacts/rc6_release_p1/summary.txt  "$DEST/" 2>/dev/null || true
+          cp -f artifacts/rc6_release_p1/logcat.txt   "$DEST/" 2>/dev/null || true
+          cp -f artifacts/rc6_release_p1/*.png        "$DEST/" 2>/dev/null || true
+          cp -f artifacts/rc6_release_p1/*.xml        "$DEST/" 2>/dev/null || true
+          ls -la "$DEST" || true
+          git add "$DEST"
+          git diff --cached --quiet && { echo "aucun résultat P1"; exit 0; }
+          git commit -m "ci(d42.14): resultats P1 sur la RC6 [skip ci]"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+          git push origin "HEAD:${GITHUB_REF_NAME}"

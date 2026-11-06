@@ -36,6 +36,18 @@ tap_if() { # texte, id, timeout
 # simple fait qu'un `tap` a renvoyé 0. C'est ce qui a produit le faux
 # « P1_activite PASS » du run 42189554849, où le libellé « Continuer »
 # correspondait en réalité à « Continuer sans compte » de l'écran PRÉCÉDENT.
+etape_any() { # nom, timeout, texte1 [texte2 ...] — l'app démarre dans la langue du système
+  local nom="$1" tmo="$2"; shift 2
+  local t
+  for t in "$@"; do
+    if $UI wait --text "$t" --exact --timeout "$tmo" >/dev/null 2>&1; then
+      record PASS "$nom" "écran constaté : « $t »"
+      return 0
+    fi
+  done
+  record FAIL "$nom" "aucun des libellés attendus ($*) après ${tmo}s"
+  return 1
+}
 etape() { # nom, texte exact attendu, timeout
   if $UI wait --text "$2" --exact --timeout "${3:-40}" >/dev/null 2>&1; then
     record PASS "$1" "écran constaté : « $2 »"
@@ -73,9 +85,14 @@ sleep 4
 # Machine à états VÉRIFIÉE : on attend le marqueur de l'écran attendu, on agit,
 # puis on attend le marqueur de l'écran SUIVANT. Aucune étape ne se contente du
 # code retour d'un tap (cf. défaut du run 42189554849).
-etape P1_ecran_langue "Choisissez votre langue" 60 || true
+# L'application démarre dans la langue du SYSTÈME (émulateur = en-US) : le titre
+# de l'écran de langue n'est donc pas forcément en français. On accepte les 4
+# libellés officiels, puis on choisit « Français » (identique dans les 4 langues).
+etape_any P1_ecran_langue 60 "Choisissez votre langue" "Choose your language" \
+  "Elige tu idioma" "言語を選んでください" || true
 $UI tap --text "Français" --exact --timeout 20 >/dev/null 2>&1
-etape P1_ecran_connexion "Continuer avec Google" 60 || true
+etape_any P1_ecran_connexion 90 "Continuer avec Google" "Continue with Google" \
+  "Continuar con Google" "Googleで続ける" || true
 
 if tap_if "" "auth_offline_button" 20; then
   if $UI gone --id "auth_offline_button" --timeout 90 >/dev/null 2>&1; then
