@@ -64,9 +64,16 @@ if [ "$VARIANTE" = "small" ]; then
   # Écran de 540x960 à 240 dpi = téléphone d'entrée de gamme courant en Afrique
   # de l'Ouest. On simule sur un AVD stable plutôt que d'utiliser un profil
   # Nexus S que l'émulateur API 30 ne démarre pas.
-  adb shell wm size 540x960
-  adb shell wm density 240
-  record PASS ecran_simule_540x960 "wm size=$(adb shell wm size | tr -d '\r') density=$(adb shell wm density | tr -d '\r')"
+  adb shell wm size 540x960 2>&1 | tee -a "$OUT/env.txt"
+  adb shell wm density 240 2>&1 | tee -a "$OUT/env.txt"
+  TAILLE=$(adb shell wm size | tr -d '\r' | tr '\n' ' ')
+  DENS=$(adb shell wm density | tr -d '\r' | tr '\n' ' ')
+  echo "E2E wm_apres size=[$TAILLE] density=[$DENS]" | tee -a "$OUT/env.txt"
+  if echo "$TAILLE" | grep -q "Override size: 540x960"; then
+    record PASS ecran_simule_540x960 "$TAILLE / $DENS"
+  else
+    record FAIL ecran_simule_540x960 "override non applique : $TAILLE"
+  fi
 fi
 
 # --- S01 installation ----------------------------------------------------------

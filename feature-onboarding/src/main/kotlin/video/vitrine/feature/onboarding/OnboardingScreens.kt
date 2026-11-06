@@ -131,20 +131,32 @@ fun OnboardingScreen(onDone: (Sector) -> Unit) {
         }
 
         // ---- barre d'action EPINGLEE : toujours visible ----
+        //
+        // D42.13 — deuxieme defaut mesure SUR EMULATEUR : le bouton etait ecrase
+        // a 6 px de haut. Cause : `padding(...).heightIn(min = 48.dp)` inverse
+        // l'ordre des contraintes — le minimum s'appliquait a la boite PADDEE,
+        // donc le bouton lui-meme recevait 48 - 26 = 22 dp, et la barre se
+        // reduisait a la hauteur de ce contenu tronque (68 px sur 2072).
+        // Correctif : padding porte par un conteneur, hauteur minimale portee
+        // DIRECTEMENT par le bouton, et 56 dp (au-dela des 48 dp WCAG) pour
+        // rester confortable avec une police a 130 %.
         Surface(
             tonalElevation = 3.dp,
             color = MaterialTheme.colorScheme.surface
         ) {
-            Button(
-                onClick = { onDone(selected) },
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 12.dp, bottom = 14.dp)
-                    // plancher tactile WCAG 2.2 / Material : 48 dp minimum
-                    .heightIn(min = 48.dp)
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
-                Text(stringResource(R.string.action_continue))
+                Button(
+                    onClick = { onDone(selected) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 56.dp)
+                ) {
+                    Text(stringResource(R.string.action_continue))
+                }
             }
         }
     }
