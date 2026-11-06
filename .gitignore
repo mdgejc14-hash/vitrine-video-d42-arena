@@ -174,3 +174,6 @@ vv-signing/
 # D42 : fixtures d'entrée des rendus instrumentes (deterministes, 7,4 Mo)
 !app/src/androidTest/assets/d42/**
 tools/e2e/__pycache__/
+
+__pycache__/
+*.pyc
