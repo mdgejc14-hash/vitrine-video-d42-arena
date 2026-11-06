@@ -103,3 +103,16 @@ Sans (1) je ne peux plus rien publier ; sans (2) aucun parcours de la RC6 ne peu
 | Correctifs CI rendus | libpulse0 (qemu démarre ✓), args vides (smoke ✓), matrice push (32 lots ✓) |
 | Suite sécurité | **64/64** en CI (job `security-local` vert) |
 | Run en cours | 42252465240 (918feaa) : potentiel premier P1 complètement vert |
+
+## Relevé final du tour — 19 h 50 UTC
+
+| Sujet | État |
+|---|---|
+| Publication | **24 commits** sur `d42.13-lab` (38e1fe3 → 575baba), tous vérifiés par API ; 5 commits sur la branche privée `d42.14-critical-paths` (718699b → c8e04c1 + correctifs caméra/complétion) |
+| RC6 signée | téléchargée, **SHA-256 exact**, package, version, signature v2 vérifiés localement |
+| Parcours P1 | **23 PASS record** — brief validé (5/5 champs), **écran caméra atteint pour la première fois** ; dernier verrou : l'appui sur le bouton d'enregistrement ne démarre pas la prise |
+| Défauts produit corrigés | A1 double-lancement (validé en réel), A2 crash caméra QualitySelector (validé : plus de FATAL) |
+| Défauts harnais corrigés | H7 FIELD/CHAMP (aucune saisie n'avait jamais eu lieu), H8 prix sali, complétion sans défilement, H9 adb du runner |
+| 8 RISQUE_TYPO | corrigées, 120/120 OK_STATIQUE ; **rendus : 34/35 lots verts, 0 échec** (lot ja 3 en cours) |
+| Suites locales en CI | security-local **64/64**, auth-local **22/22**, harness-selftest **7/7**, backend-http **15/15** — verts à chaque run |
+| `release-e2e` (privé) | armé + poussé (3 vagues de correctifs) ; **marqueurs toujours absents après 4 h** — cause la plus probable : quota/queue Actions du dépôt privé (illisible avec ce PAT) ; **à vérifier visuellement dans l'onglet Actions du dépôt privé** |

@@ -141,3 +141,16 @@ les saisies ont réellement eu lieu). Le parcours a alors atteint l'écran de to
 la première fois… et l'application a **crashé** (`FATAL EXCEPTION`, voir 07 A2) :
 `Unable to find selected quality`. Corrigé dans `56676df` — le run suivant
 (56676df) est le premier à potentiellement dérouler prises → export → MP4 → partage.
+
+## Run 42278038365 (575baba) — 23 PASS, ÉCRAN CAMÉA ATTEINT
+
+| Étape franchie ce tour | Résultat |
+|---|---|
+| `P1_brief_valide` | **PASS** — 5/5 champs remplis (complétion avec défilement : le quartier sous le pli) |
+| `P1_camera_ecran` | **PASS — écran « Filme ta prise » affiché (caméra virtuelle)** — première fois de tout le projet |
+
+Dernier verrou ouvert : `P1_prise_1/2 : FAIL — appui sur le bouton sans passage en
+enregistrement`. L'appui est délivré (dump 24/25 dans les artefacts du run) mais le
+libellé du bouton ne bascule pas vers « Arrêter et continuer » : l'enregistrement ne
+démarre pas. **Prochaine étape** : analyser les dumps 24/25 + logcat de ce run (cause
+inconnue — jamais atteinte avant), puis itérer.
