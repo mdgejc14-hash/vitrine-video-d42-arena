@@ -111,14 +111,18 @@ else
   record FAIL P1_ecran_connexion "authentification non atteinte après 4 appuis sur la langue"
 fi
 
-if tap_if "" "auth_offline_button" 20; then
-  if $UI gone --id "auth_offline_button" --timeout 90 >/dev/null 2>&1; then
-    record PASS P1_session_locale "repli sans compte : écran d'authentification quitté"
-  else
-    record FAIL P1_session_locale "écran d'authentification toujours affiché 90s après le repli"
-  fi
+# Le bouton de repli est désactivé le temps de la vérification de session :
+# on réessaie tant que l'écran d'authentification est encore là.
+for essai in 1 2 3 4 5; do
+  $UI tap --id "auth_offline_button" --timeout 10 >/dev/null 2>&1
+  $UI gone --id "auth_offline_button" --timeout 20 >/dev/null 2>&1 && break
+  echo "E2E repli: appui $essai sans effet"
+  sleep 4
+done
+if $UI gone --id "auth_offline_button" --timeout 60 >/dev/null 2>&1; then
+  record PASS P1_session_locale "repli sans compte : écran d'authentification quitté"
 else
-  record FAIL P1_session_locale "bouton de repli absent"
+  record FAIL P1_session_locale "écran d'authentification toujours affiché après 5 appuis"
 fi
 
 # Carrousel : 3 écrans, chacun identifié par SON slogan (jamais par la présence
@@ -172,60 +176,121 @@ else
   record BLOCKED P1_brief "formulaire non identifié (voir dump 21)"
 fi
 
-# --- S22 saisie + validation du brief -----------------------------------------
-if tap_if "" "" 1; then :; fi
-$UI tap --text "Saisis" --timeout 10 >/dev/null 2>&1
-sleep 1
-adb shell input text "Boutique Chez Awa, articles neufs a petits prix" >/dev/null 2>&1
-sleep 1
-shot 22_brief_saisi; dump 22_brief_saisi
-ok=0
-for i in 1 2 3 4 5 6; do
-  if tap_if "Continuer" "" 6; then ok=1; sleep 2; continue; fi
-  if tap_if "Ma vidéo" "" 4; then ok=1; sleep 2; continue; fi
-  if tap_if "Tout est prêt" "" 4; then ok=1; sleep 3; continue; fi
-  if tap_if "C'est parti" "" 4; then ok=1; sleep 3; continue; fi
-  break
-done
-[ "$ok" = "1" ] && record PASS P1_brief_valide "brief soumis" || record BLOCKED P1_brief_valide "aucun bouton de validation trouvé"
-sleep 4
+# --- S22 brief : remplir les champs REQUIS, défiler, valider --------------------
+# `GabaritBriefScreen` : un seul écran défilant, bouton « Continuer » tout en bas,
+# DÉSACTIVÉ tant que `filled != requiredIds.size` ou qu'un champ est invalide.
+remplir_champ() { # x1 y1 x2 y2, texte
+  local cx=$(( ($1 + $3) / 2 )) cy=$(( ($2 + $4) / 2 ))
+  adb shell input tap "$cx" "$cy" >/dev/null 2>&1; sleep 1
+  adb shell input keyevent KEYCODE_MOVE_END >/dev/null 2>&1
+  for _ in 1 2 3 4 5 6 7 8; do adb shell input keyevent KEYCODE_DEL >/dev/null 2>&1; done
+  adb shell input text "$5" >/dev/null 2>&1; sleep 1
+}
+
+if $UI wait --text "Ma vidéo" --exact --timeout 30 >/dev/null 2>&1; then
+  record PASS P1_brief "formulaire de brief affiché (« Ma vidéo », gabarit sélectionné)"
+  $UI fields > "$OUT/champs.txt" 2>&1 || true
+  cat "$OUT/champs.txt" | sed 's/^/E2E /'
+  n=0
+  for val in "BoutiqueAwa" "+22997000000" "RobeWax" "15000"; do
+    ligne=$(awk -v i="$n" '$1=="E2E" && $2=="FIELD" && $3==i {print $4, $5, $6, $7}' "$OUT/champs.txt")
+    if [ -n "$ligne" ]; then
+      # shellcheck disable=SC2086
+      remplir_champ $ligne "$val"
+      n=$((n+1))
+    fi
+  done
+  sleep 1
+  shot 22_brief_saisi; dump 22_brief_saisi
+  # le bouton est en bas d'un écran défilant : on descend avant de le chercher
+  for _ in 1 2 3; do
+    adb shell input swipe 540 1800 540 700 250 >/dev/null 2>&1
+    sleep 1
+  done
+  shot 22b_brief_bas; dump 22b_brief_bas
+  if $UI tap --text "Continuer" --exact --timeout 15 >/dev/null 2>&1; then
+    if $UI wait --text "Avant de commencer" --exact --timeout 25 >/dev/null 2>&1; then
+      record PASS P1_brief_valide "brief accepté → écran « Avant de commencer »"
+      shot 22c_ready; dump 22c_ready
+    else
+      record FAIL P1_brief_valide "bouton Continuer actionné mais écran de vérification absent (champ invalide ?)"
+    fi
+  else
+    record FAIL P1_brief_valide "bouton Continuer introuvable en bas du formulaire"
+  fi
+else
+  record BLOCKED P1_brief "formulaire de brief non atteint (voir dump 21)"
+  record BLOCKED P1_brief_valide "brief non affiché"
+fi
+
+# écran « Avant de commencer » -> caméra
+$UI tap --text "OK, je commence" --exact --timeout 15 >/dev/null 2>&1 || true
+sleep 3
 shot 23_camera; dump 23_camera
 
 # --- S23 caméra guidée ---------------------------------------------------------
+# Deux écrans se succèdent : le GUIDE (« Filme ta prise » + bouton « Tourner »)
+# puis la CAPTURE (CameraGuideActivity : `camera_preview` + `camera_record_button`
+# dont le libellé devient « Arrêter et continuer » pendant l'enregistrement).
 if $UI wait --text "Filme ta prise" --timeout 40 >/dev/null 2>&1; then
   record PASS P1_camera_ecran "écran « Filme ta prise » affiché (caméra virtuelle de l'émulateur)"
-  shot 24_camera_ecran
+  shot 24_camera_ecran; dump 24_camera_ecran
 else
   record BLOCKED P1_camera_ecran "écran caméra non atteint (voir dump 23)"
 fi
+
 # Aucun dialogue de consentement ne doit apparaître sans visage détecté
 if $UI wait --text "Accord du client" --timeout 4 >/dev/null 2>&1; then
   record FAIL P1_porte_r4_intempestive "porte R4 affichée alors qu'aucun visage n'est filmé"
-  tap_if "Oui, accord confirmé" "" 5
+  $UI tap --text "Oui, accord confirmé" --exact --timeout 5 >/dev/null 2>&1 || true
 else
   record PASS P1_porte_r4 "aucune porte de consentement affichée sans visage"
 fi
 
-# --- S24 enregistrement de 2 prises -------------------------------------------
+prise() { # numéro
+  local n="$1"
+  # 1) depuis le guide, lancer la capture
+  $UI tap --text "Tourner" --exact --timeout 12 >/dev/null 2>&1 || true
+  # 2) attendre la vraie caméra
+  if ! $UI wait --id "camera_record_button" --timeout 30 >/dev/null 2>&1; then
+    return 1
+  fi
+  if ! $UI tap --text "Verrouiller et enregistrer" --exact --timeout 10 >/dev/null 2>&1; then
+    $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1 || return 1
+  fi
+  # 3) l'enregistrement est prouvé par le CHANGEMENT de libellé du bouton
+  if ! $UI wait --text "Arrêter et continuer" --exact --timeout 20 >/dev/null 2>&1; then
+    return 2
+  fi
+  sleep 6
+  shot "25_prise_${n}_enregistrement"
+  $UI tap --text "Arrêter et continuer" --exact --timeout 10 >/dev/null 2>&1 || return 3
+  # 4) la reprise en main est prouvée par le retour de « Tourner »/« Verrouiller »
+  sleep 5
+  if $UI wait --text "Tourner" --exact --timeout 25 >/dev/null 2>&1 \
+     || $UI wait --text "Verrouiller et enregistrer" --exact --timeout 10 >/dev/null 2>&1 \
+     || $UI wait --text "Refaire" --exact --timeout 10 >/dev/null 2>&1; then
+    return 0
+  fi
+  return 4
+}
+
 prises=0
 for n in 1 2; do
-  if $UI tap --text "Tourner" --exact --timeout 10 >/dev/null 2>&1; then
-    sleep 6
-    shot "25_prise_${n}_enregistrement"
-    # arrêt : le bouton devient « Arrêter » ou un appui sur l'overlay stoppe
-    $UI tap --text "Arrêter" --exact --timeout 8 >/dev/null 2>&1 || adb shell input tap 540 1500
-    sleep 4
-    prises=$((prises+1))
-    record PASS "P1_prise_$n" "enregistrement lancé puis arrêté"
-    shot "26_prise_${n}_faite"; dump "26_prise_${n}_faite"
-  else
-    record BLOCKED "P1_prise_$n" "bouton Tourner absent"
-    break
-  fi
-  $UI tap --text "Suivant" --exact --timeout 8 >/dev/null 2>&1 || true
-  sleep 2
+  prise "$n"; rc=$?
+  case $rc in
+    0) prises=$((prises+1)); record PASS "P1_prise_$n" "caméra émulée : enregistrement démarré, arrêté, application reprise" ;;
+    1) record BLOCKED "P1_prise_$n" "bouton d'enregistrement introuvable (dump 24)" ;;
+    2) record FAIL "P1_prise_$n" "appui sur le bouton sans passage en enregistrement" ;;
+    3) record FAIL "P1_prise_$n" "arrêt de l'enregistrement impossible" ;;
+    *) record FAIL "P1_prise_$n" "application non revenue à l'écran de guidage après la prise" ;;
+  esac
+  shot "26_prise_${n}_faite"; dump "26_prise_${n}_faite"
+  $UI tap --text "Suivant" --exact --timeout 10 >/dev/null 2>&1 || true
+  sleep 3
 done
-[ "$prises" -ge 1 ] && record PASS P1_prises "prises enregistrées: $prises" || record BLOCKED P1_prises "aucune prise"
+[ "$prises" -ge 1 ] && record PASS P1_prises "$prises prise(s) enregistrée(s) sur caméra émulée" \
+                    || record BLOCKED P1_prises "aucune prise enregistrée"
 sleep 3
 shot 27_apres_prises; dump 27_apres_prises
 

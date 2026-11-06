@@ -40,11 +40,11 @@ case "$LANGUE" in
   es) CARTE="Español";   ATTENDU_AUTH="Continuar con Google";       S1="Filma. Vende. Listo."
       S2="Filma tus productos, te guiamos";                        S3="Un vídeo listo para publicar en 30 segundos"
       SUIVANT="Siguiente"; DEMARRER="Empezar"; SECTEUR="Tu actividad principal"
-      CONTINUAR="Continuar"; SANS_CODE="No tengo código"; CATALOGUE="Elige una plantilla de vídeo" ;;
+      CONTINUER="Continuar"; SANS_CODE="No tengo código"; CATALOGUE="Elige una plantilla de vídeo" ;;
   ja) CARTE="日本語";     ATTENDU_AUTH="Googleで続ける";             S1="撮って、売る。それだけ。"
       S2="商品を撮るだけ、あとはご案内します";                       S3="30秒で公開できる動画に"
       SUIVANT="次へ"; DEMARRER="はじめる"; SECTEUR="あなたの業種"
-      CONTINUAR="次へ"; SANS_CODE="コードを持っていません"; CATALOGUE="動画テンプレートを選択" ;;
+      CONTINUER="次へ"; SANS_CODE="コードを持っていません"; CATALOGUE="動画テンプレートを選択" ;;
   *) echo "langue inconnue : $LANGUE"; exit 2 ;;
 esac
 
@@ -90,8 +90,17 @@ fi
 shot "02_connexion_$LANGUE"; dump "02_connexion_$LANGUE"
 
 # 3. session locale -> carrousel (3 slogans dans la langue choisie)
-$UI tap --id "auth_offline_button" --timeout 20 >/dev/null 2>&1
-if $UI wait --text "$S1" --exact --timeout 120 >/dev/null 2>&1; then
+# AuthActivity DÉSACTIVE ce bouton pendant la vérification de session
+# (`isEnabled = false` puis `true`) : un appui immédiat est sans effet.
+# On réessaie jusqu'à ce que le carrousel apparaisse réellement.
+ok=0
+for essai in 1 2 3 4 5 6; do
+  $UI tap --id "auth_offline_button" --timeout 10 >/dev/null 2>&1
+  if $UI wait --text "$S1" --exact --timeout 20 >/dev/null 2>&1; then ok=1; break; fi
+  echo "E2E langue $LANGUE : repli sans compte, appui $essai sans effet"
+  sleep 4
+done
+if [ "$ok" = "1" ]; then
   record PASS "L_carrousel1_$LANGUE" "« $S1 »"
 else
   record FAIL "L_carrousel1_$LANGUE" "« $S1 » absent"

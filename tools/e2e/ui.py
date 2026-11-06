@@ -313,6 +313,25 @@ def cmd_gone(args):
     return 1
 
 
+def cmd_fields(args):
+    """Liste les champs de saisie visibles avec leurs coordonnées.
+
+    Indispensable au brief : `adb shell input text` doit viser un champ
+    réellement focusé, sinon la saisie part dans le vide (constaté au run
+    42202009301, où un seul champ avait reçu un mot).
+    """
+    nodes, _ = dump_nodes()
+    i = 0
+    for n in nodes:
+        if (n.get("class") or "").endswith("EditText"):
+            b = parse_bounds(n.get("bounds"))
+            if b and b != VIDE:
+                print(f"E2E FIELD {i} {b[0]} {b[1]} {b[2]} {b[3]}")
+                i += 1
+    print(f"E2E FIELDS {i}")
+    return 0 if i else 1
+
+
 def cmd_shot(args):
     with open(args.path, "wb") as f:
         p = subprocess.run([adb_bin(), "exec-out", "screencap", "-p"], stdout=f, timeout=180)
@@ -342,6 +361,7 @@ def build_parser():
         return sp
 
     sub.add_parser("probe").set_defaults(func=cmd_probe)
+    sub.add_parser("fields").set_defaults(func=cmd_fields)
     sub.add_parser("size").set_defaults(func=cmd_size)
 
     cible(sub.add_parser("wait")).set_defaults(func=cmd_wait)
