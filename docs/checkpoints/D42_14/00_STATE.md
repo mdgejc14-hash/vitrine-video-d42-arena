@@ -67,3 +67,14 @@
 2. **Exécuter le protocole physique** (`09_PROTOCOLE_PHYSIQUE.md`, 12 min) sur la RC6 → lève B1, B2, B4.
 
 Sans (1) je ne peux plus rien publier ; sans (2) aucun parcours de la RC6 ne peut être prouvé.
+
+## Relevé 14 h 45 UTC — run 42228009767 et autotest
+
+| Fait | Valeur |
+|---|---|
+| Run 42228009767 | `completed` / **`failure`**, 13:45:02Z → 14:05:11Z, commit `554cb90` |
+| Jobs | `backend-http`, `android-e2e`, 3 × `langues` : **success** · `android-e2e-p1` : **failure** (étape 8) |
+| Artefacts | 7, tous disponibles — **téléchargement 401/403 sans jeton** |
+| Contrat authentifié | **22/22** (ajout: course 8 requêtes, contrôle négatif, isolation des soldes, schéma 24 tables/37 index) |
+| Autotest harnais | **6/6 `PASS_HARNESS_SELFTEST`** — 2 défauts de mesure corrigés |
+| Publication | **aucun jeton sur disque** ⇒ 8 commits locaux, `gh_api.sh` sort en code 3 sans requête |

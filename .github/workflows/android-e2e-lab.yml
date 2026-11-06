@@ -231,6 +231,20 @@ jobs:
           if-no-files-found: warn
 
   # ---------------------------------------------------------------------------
+  # D42.14 — Autotest du harnais : le banc sait-il dire NON ?
+  # Faux `adb`, vrai ui.py. Aucun émulateur, ~10 s.
+  # ---------------------------------------------------------------------------
+  harness-selftest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Autotest du harnais (6 contrôles)
+        run: python3 tools/e2e/selftest_harness.py
+      - name: Ciblage hors appareil (3 contrôles)
+        run: python3 tools/e2e/test_ciblage.py
+
+  # ---------------------------------------------------------------------------
   # D42.14 — Contrat AUTHENTIFIÉ du Worker, sans compte Firebase ni secret.
   # Le Worker est importé tel quel ; seule la JWKS Google est remplacée, dans le
   # processus de test, par une clé locale. La base est une SQLite issue des 12
