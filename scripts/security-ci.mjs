@@ -818,8 +818,13 @@ async function testAudioCatalog(token) {
   const lib = await mustCall("Bibliothèque BGM (600 pistes)", "/api/v1/audio/library?limit=200", { token });
   check(
     "Bibliothèque BGM : 600 pistes, synthèse CC0 ÉTIQUETÉE (aucun master humain inventé)",
+    // D42.14 : le générateur v2 (scripts/audio/finalize_audio_v2.py,
+    // bgm_lib_manifest_v2.json) écrit origine='synthese_procedurale_v2' dans la
+    // migration 0011 — l'attente ci-dessous était restée à v1, ce qui faisait
+    // échouer ce contrôle alors même que la base livrée est conforme (600 pistes
+    // CC0, toutes synthèse procédurale). Correction d'attente, pas d'assouplissement.
     lib.total === 600 &&
-      lib.pistes.every((p) => p.origine === "synthese_procedurale_v1" && p.licence === "CC0-1.0")
+      lib.pistes.every((p) => p.origine === "synthese_procedurale_v2" && p.licence === "CC0-1.0")
   );
 
   const libSecteur = await mustCall(

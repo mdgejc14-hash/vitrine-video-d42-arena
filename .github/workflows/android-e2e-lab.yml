@@ -231,6 +231,29 @@ jobs:
           if-no-files-found: warn
 
   # ---------------------------------------------------------------------------
+  # D42.14 — Suite de sécurité COMPLÈTE en local (64 contrôles), sans Firebase.
+  # IdP local + pont HTTP local ; Worker et base réels. Statut PASS_LOCAL_HARNESS.
+  # ---------------------------------------------------------------------------
+  security-local:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Suite de sécurité (64 contrôles)
+        run: bash tools/e2e/run_security_local.sh artifacts/security/security_ci.txt
+      - name: Artefact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-local
+          path: artifacts/security/**
+          retention-days: 14
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
   # D42.14 — Autotest du harnais : le banc sait-il dire NON ?
   # Faux `adb`, vrai ui.py. Aucun émulateur, ~10 s.
   # ---------------------------------------------------------------------------

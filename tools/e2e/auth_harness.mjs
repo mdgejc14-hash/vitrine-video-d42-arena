@@ -77,6 +77,13 @@ function d1(numero) {
       async run() {
         const r = db.prepare(sql).run(...valeurs);
         return { success: true, meta: { changes: r.changes, last_row_id: r.lastInsertRowid } };
+      },
+      __executer() {
+        if (/^\s*(select|with)/i.test(sql)) {
+          return { results: db.prepare(sql).all(...valeurs), changes: 0, last_row_id: 0 };
+        }
+        const r = db.prepare(sql).run(...valeurs);
+        return { results: [], changes: r.changes, last_row_id: r.lastInsertRowid };
       }
     };
     return st;
@@ -85,7 +92,10 @@ function d1(numero) {
     prepare,
     async batch(liste) {
       const sortie = [];
-      for (const s of liste) sortie.push(await s.all());
+      for (const s of liste) {
+        const r = s.__executer ? s.__executer() : { results: (await s.all()).results, changes: 0, last_row_id: 0 };
+        sortie.push({ results: r.results, success: true, meta: { changes: r.changes, last_row_id: r.last_row_id } });
+      }
       return sortie;
     },
     async exec(sql) {

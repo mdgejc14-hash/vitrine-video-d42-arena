@@ -10,7 +10,7 @@ Aucun défaut n'est fermé sans preuve, aucun ne l'est sur la foi de « ça comp
 | D1 | **La RC6 n'a jamais été exécutée** dans le laboratoire | **OUVERT** | 9 tentatives documentées (`01_RELEASE_TESTS.md` §3) : 403 Actions sur le dépôt privé, pas de KVM local, artefacts publics inaccessibles sans jeton (401) |
 | D2 | **Caméra réelle jamais testée** | **OUVERT** | seuls des tournages sur caméra émulée (`-camera-back emulated`) |
 | D3 | **Connexion Google réelle** non exécutée | **OUVERT** | ni `google-services.json`, ni compte de test |
-| D4 | **Routes authentifiées du Worker** | **PARTIELLEMENT LEVÉ** | banc local **18/18** (`tools/e2e/auth_harness.mjs`) ; reste ouvert : jeton Google réel |
+| D4 | **Routes authentifiées du Worker** | **LEVÉ (banc)** | `auth_harness.mjs` **22/22** + suite de sécurité **64/64** en local ; reste ouvert : jeton **Google réel** (`PASS_PROD`) |
 | D5 | **Brief → caméra → export** non abouti | **CAUSE TROUVÉE, CORRECTIF PRÊT** | le bouton `Continuer` est exposé par Compose dans **1 px de haut** (`[455,2071][625,2072]`) : `tap` visait le bord de la fenêtre. Corrigé par `point_de_clic()` (`mode=surface`), vérifié hors appareil par `test_ciblage.py` **3/3** |
 
 ## P1 — gêne réelle, correctif prêt
@@ -50,3 +50,12 @@ Aucun défaut n'est fermé sans preuve, aucun ne l'est sur la foi de « ça comp
 
 Ces quatre défauts sont des défauts de **mesure**, pas de produit. Les fermer ne valide
 aucun parcours : cela garantit seulement que le prochain run dira la vérité.
+
+### Défauts fermés ce tour (suite sécurité)
+
+| # | Défaut | Résolution |
+|---|---|---|
+| D8 | `security-ci.mjs` **BLOCKED** (5 secrets Firebase) — 64 contrôles jamais exécutés | **LEVÉ** : pont local + IdP local ⇒ **64/64 PASS** (`PASS_LOCAL_HARNESS`) |
+| D9 | Contrôle BGM obsolète : attendait `synthese_procedurale_v1`, la base livrée contient `v2` (générateur `finalize_audio_v2.py`) | attente alignée sur **v2**, documentée dans le code et ici — la base était conforme, le test était en retard |
+| H5 | Adaptateur D1 : `batch()` sans `meta.changes` ⇒ 503 `transition_race_or_event_write_failed` | métadonnées fournies (`__executer`) |
+| H6 | `caches` non défini sous Node ⇒ 500 sur `/api/v1/audio/track` | shim mémoire dans le pont |

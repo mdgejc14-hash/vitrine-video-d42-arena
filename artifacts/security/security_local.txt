@@ -1,0 +1,66 @@
+=== VITRINE VIDEO : TESTS API EN ENVIRONNEMENT LOCAL ===
+PASS Santé API, D1 connectée, 8 tables détectées
+PASS Les comptes Firebase A et B sont distincts
+PASS Profil sans jeton refusé
+PASS Profil avec jeton invalide refusé
+PASS La nouvelle commande est en brouillon
+PASS Idempotence : même commande retournée
+PASS B ne peut pas lire le commerce A
+PASS B ne peut pas lire le projet A
+PASS B ne peut pas lire la commande A
+PASS B ne peut pas modifier le commerce A
+PASS B ne peut pas modifier le projet A
+PASS La collection B ne révèle pas le commerce A
+PASS La collection B ne révèle pas le projet A
+PASS La collection B ne révèle pas la commande A
+PASS La collection de notifications B ne révèle aucune notification A
+PASS B ne peut pas marquer comme lue une notification A
+PASS B ne peut pas signer un upload pour la commande A
+PASS Un rôle inconnu est rejeté
+PASS Un type MIME audio non autorisé est rejeté
+PASS B ne peut pas confirmer le fichier A (04a5972f-1739-41e6-ae93-16a459b6f39f)
+PASS B ne peut pas supprimer le fichier A (04a5972f-1739-41e6-ae93-16a459b6f39f)
+PASS B ne peut pas confirmer le fichier A (31113f33-69fe-4a43-8726-3646c84b1938)
+PASS B ne peut pas supprimer le fichier A (31113f33-69fe-4a43-8726-3646c84b1938)
+PASS B ne peut pas changer le statut de la commande A
+PASS Le statut de A est resté brouillon
+PASS Transition de statut enregistrée
+PASS Une notification est créée pour la transition
+PASS Une transition répétée avec un ancien statut est rejetée
+PASS La répétition ne crée pas de notification supplémentaire
+PASS Bienvenue : 3 crédits octroyés
+PASS Droits voient les 3 crédits (merchant_identity 0009)
+PASS Décompte strict 3 -> 2 (jamais négatif)
+PASS Quota : eventId vide refusé (400) — collision PK globale
+PASS Quota : empreinte non liée au compte refusée (403) — isolation des crédits
+PASS Quota : tentatives refusées n'ont rien décrémenté (toujours 2)
+PASS Empreinte appareil : octroi unique (D13)
+PASS Un compte = un seul octroi de bienvenue (anti multi-appareils)
+PASS Parrainage : code serveur renvoyé (était HTTP 500 avant 0009)
+PASS Catalogue audio : sans jeton refusé (401)
+PASS Catalogue audio : exactement 30 pistes (6 secteurs × T1–T5)
+PASS Catalogue audio : métadonnées gabarit présentes (BPM 100–112, genre, format)
+PASS Catalogue audio : 6 secteurs couverts
+PASS Bibliothèque BGM : sans jeton refusée (401)
+PASS Bibliothèque BGM : 600 pistes, synthèse CC0 ÉTIQUETÉE (aucun master humain inventé)
+PASS Bibliothèque BGM : 100 pistes par secteur (6 secteurs × 100)
+PASS Catalogue audio : piste marquée disponible via bibliothèque
+PASS Morceau : sans jeton refusé (401)
+PASS Morceau : catégorie inconnue refusée (404)
+PASS Morceau : injection de chemin refusée (404)
+PASS Morceau : état d'approvisionnement honnête (404 track_not_uploaded ou 503 storage_not_configured)
+PASS Webhook billing : signature invalide refusée (401)
+PASS Webhook billing : corps malformed refusé (400)
+PASS Webhook billing : montant hors grille officielle refusé (422)
+PASS Webhook billing : plan inconnu refusé (422) — grille stricte 3 forfaits
+PASS Webhook billing : plan absent refusé (422)
+PASS Webhook billing : achat Pass 24 h (500 FCFA) validé
+PASS Webhook billing : replay signé idempotent (200 duplicate, zéro double crédit)
+PASS Checkout : fournisseur non configuré = 501 honnête (pas de faux succès)
+PASS Checkout : plan hors grille refusé (422)
+PASS Checkout : anonyme refusé (401/403) — autorité JWT
+PASS CinetPay notify : corps sans transaction_id refusé (400)
+PASS CinetPay notify : sans clés/Commande inconnue, jamais de crédit (501/404)
+PASS CinetPay notify : méthode inattendue non créditante
+
+PASS : tous les contrôles de sécurité CI ont réussi.

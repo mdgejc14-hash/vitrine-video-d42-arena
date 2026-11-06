@@ -78,3 +78,14 @@ Sans (1) je ne peux plus rien publier ; sans (2) aucun parcours de la RC6 ne peu
 | Contrat authentifié | **22/22** (ajout: course 8 requêtes, contrôle négatif, isolation des soldes, schéma 24 tables/37 index) |
 | Autotest harnais | **6/6 `PASS_HARNESS_SELFTEST`** — 2 défauts de mesure corrigés |
 | Publication | **aucun jeton sur disque** ⇒ 8 commits locaux, `gh_api.sh` sort en code 3 sans requête |
+
+## Relevé ~15 h 10 UTC — suite de sécurité complète exécutée
+
+| Fait | Valeur |
+|---|---|
+| `scripts/security-ci.mjs` (64 contrôles, exigeait Firebase) | **64/64 PASS en local** (`PASS_LOCAL_HARNESS`) — pont HTTP + IdP local, 0 sortie réseau |
+| Banc authentifié dédié | **22/22** (race 8 requêtes, contrôle négatif, isolation des soldes, schéma 24 tables/37 index) |
+| Autotest du harnais | **6/6** — 2 défauts de mesure corrigés (`surface` mort, fenêtre entière) |
+| Ciblage hors appareil | **3/3** |
+| Job CI ajouté | `security-local` (reproductible dès qu'un push est possible) |
+| Publication | toujours bloquée : fichier de jeton absent, push anonyme refusé (mesuré), `gh_api.sh` sort en code 3 |

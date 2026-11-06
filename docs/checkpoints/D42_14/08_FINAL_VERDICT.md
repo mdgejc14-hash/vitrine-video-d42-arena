@@ -16,7 +16,8 @@ des parcours non exécutés. Le NO-GO de D42.13 est donc **maintenu**, pour des 
 |---|---|---|
 | 1 | RC6 intègre : SHA-256 identique sur deux téléchargements, signature v2, ressources identiques au build release (5 476 lignes / 3 674 chaînes) | vérification de fichier |
 | 2 | Worker démarré sur les 12 migrations : **15 contrôles HTTP PASS / 0 FAIL**, reproduits en CI **et** dans le bac à sable | serveur réellement lancé |
-| 2bis | **18 contrôles authentifiés PASS / 0 FAIL** : dotation, idempotence, anti-fraude C16, isolation A/B, auto-parrainage refusé, `501` de facturation | Worker réel importé, JWKS locale, D1 réelle |
+| 2bis | **18 contrôles authentifiés PASS / 0 FAIL** (dotation, idempotence, anti-fraude C16, isolation A/B, `501`) puis **22/22** avec course de 8 requêtes, contrôle négatif et schéma | Worker réel importé, JWKS locale, D1 réelle |
+| 2ter | **Suite de sécurité CI complète : 64/64 PASS** (isolation, webhook billing HMAC + replay, BGM 600 CC0, CinetPay) — jamais exécutée avant ce tour (BLOCKED Firebase) | `scripts/security-ci.mjs` tel quel, pont + IdP locaux |
 | 3 | **4 langues** : chaque écran affiché dans la langue choisie jusqu'au catalogue (fr/en/es/ja), 3 jobs verts | exécution sur appareil |
 | 4 | Parcours amont complet jusqu'à la **sélection de gabarit** (carrousel vérifié écran par écran) | exécution sur appareil |
 | 5 | **6 causes racines** de faux résultats trouvées dans le harnais et corrigées (faux PASS, faux échecs, clavier, défilement) | code + runs |

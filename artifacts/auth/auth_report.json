@@ -1,8 +1,8 @@
 {
   "banc": "D42.14 — Worker réel, JWKS locale interceptée, D1 = SQLite issue des 12 migrations",
   "statut": "PASS_LOCAL_HARNESS",
-  "total": 18,
-  "ok": 18,
+  "total": 22,
+  "ok": 22,
   "resultats": [
     {
       "nom": "Migrations appliquées sur SQLite locale",
@@ -12,7 +12,7 @@
     {
       "nom": "Bootstrap du compte A",
       "ok": true,
-      "detail": "HTTP 200 {\"authenticated\":true,\"profile\":{\"id\":\"01a1b131-336c-7cb4-9e5c-9390fc453bfd\",\"em"
+      "detail": "HTTP 200 {\"authenticated\":true,\"profile\":{\"id\":\"01a1b13f-2340-7176-9d12-ebdf8f72641c\",\"em"
     },
     {
       "nom": "Bootstrap du compte B",
@@ -27,7 +27,7 @@
     {
       "nom": "Isolement : identités A et B distinctes",
       "ok": true,
-      "detail": "A=01a1b131-336c-7cb4-9e5c-9390fc453bfd B=01a1b131-336f-7680-a515-504f37c3bef4"
+      "detail": "A=01a1b13f-2340-7176-9d12-ebdf8f72641c B=01a1b13f-2343-7e51-ad30-e9771b9023fc"
     },
     {
       "nom": "Signature forgée (même kid) rejetée",
@@ -88,6 +88,26 @@
       "nom": "Auto-parrainage refusé par le Worker",
       "ok": true,
       "detail": "HTTP 404 {\"error\":\"code invalide\"}"
+    },
+    {
+      "nom": "8 requêtes simultanées, même eventId : un seul débit",
+      "ok": true,
+      "detail": "débits=1 doublons=7 solde 2->1"
+    },
+    {
+      "nom": "Contrôle négatif : un eventId neuf débite bien",
+      "ok": true,
+      "detail": "HTTP 200 {\"ok\":true} solde 1->0"
+    },
+    {
+      "nom": "Isolation des soldes : dotation pleine pour B pendant qu'A est épuisé",
+      "ok": true,
+      "detail": "grant B={\"granted\":true,\"credits_total\":3} solde B=3 / solde A=0"
+    },
+    {
+      "nom": "Schéma : 24 tables et 37 index",
+      "ok": true,
+      "detail": "24 tables, 37 index"
     },
     {
       "nom": "Aucune requête sortante hors JWKS interceptée",
