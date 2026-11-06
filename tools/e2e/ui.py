@@ -135,6 +135,35 @@ def bounds_utiles(n):
     return b
 
 
+def surface_reelle(n):
+    """Rectangle exploitable pour juger la VISIBILITÉ.
+
+    uiautomator rapporte parfois le texte d'un bouton Compose tronqué à 1 px de
+    haut ([455,2071][625,2072]) alors que le bouton est peint en entier. On prend
+    donc, si la boîte du texte est dégénérée (< 24 px de haut), la boîte du
+    premier ancêtre/descendant cliquable nettement plus grande."""
+    b = bounds_utiles(n)
+    if not b:
+        return None
+    if (b[3] - b[1]) >= 24 and (b[2] - b[0]) >= 24:
+        return b
+    for cand in list(n.iter("node")) + _ancetres(n):
+        if cand is n:
+            continue
+        bc = parse_bounds(cand.get("bounds"))
+        if bc and (bc[3] - bc[1]) >= 48 and (bc[2] - bc[0]) >= 48:
+            return bc
+    return b
+
+
+def _ancetres(n):
+    out, cur = [], _PARENT.get(n)
+    while cur is not None:
+        out.append(cur)
+        cur = _PARENT.get(cur)
+    return out
+
+
 def find(nodes, text=None, rid=None):
     for n in nodes:
         t = n.get("text") or ""
@@ -234,7 +263,7 @@ def cmd_inside(args):
         print("E2E FAIL element_absent", file=sys.stderr)
         return 2
     w, h = screen_size()
-    b = bounds_utiles(n)
+    b = surface_reelle(n)
     label = n.get("text") or n.get("resource-id")
     if not b or b == VIDE:
         print(f"E2E INSIDE {label!r} bounds=VIDE => FAIL_SANS_SURFACE", file=sys.stderr)
