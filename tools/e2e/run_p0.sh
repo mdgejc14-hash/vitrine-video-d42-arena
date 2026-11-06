@@ -11,6 +11,7 @@ set -uo pipefail
 
 TAG="${1:-pixel5}"
 VARIANTE="${2:-base}"
+LANGUE="${3:-fr}"
 APK="${APK:-app/build/outputs/apk/debug/app-debug.apk}"
 PKG="video.vitrine.app"
 OUT="artifacts/${TAG}-${VARIANTE}"
@@ -107,7 +108,17 @@ if $UI wait --text "Français" --timeout 30 >/dev/null 2>&1; then
   else
     record FAIL S03b_langue_jp_visible "carte 日本語 hors écran ou absente"
   fi
-  $UI tap --text "Français" --timeout 10 >/dev/null 2>&1
+  case "$LANGUE" in
+    en) LIBELLE="English" ;;
+    es) LIBELLE="Español" ;;
+    ja) LIBELLE="日本語" ;;
+    *)  LIBELLE="Français" ;;
+  esac
+  if $UI tap --text "$LIBELLE" --timeout 12 >/dev/null 2>&1; then
+    record PASS "S03c_langue_choisie_$LANGUE" "langue sélectionnée : $LIBELLE"
+  else
+    record FAIL "S03c_langue_choisie_$LANGUE" "impossible de sélectionner $LIBELLE"
+  fi
 else
   record FAIL S03_ecran_langue "écran de langue non trouvé"
   $UI probe | head -40
@@ -118,7 +129,7 @@ fi
 for essai in 1 2 3; do
   $UI wait --text "Google" --timeout 12 >/dev/null 2>&1 && break
   echo "E2E retry connexion (essai $essai)"
-  $UI tap --text "Français" --timeout 6 >/dev/null 2>&1
+  $UI tap --text "$LIBELLE" --timeout 6 >/dev/null 2>&1
 done
 if $UI wait --text "Google" --timeout 20 >/dev/null 2>&1; then
   record PASS S04_ecran_connexion "titre + bouton Google visibles"
@@ -143,10 +154,16 @@ fi
 if $UI wait --text "Suivant" --timeout 30 >/dev/null 2>&1; then
   record PASS S06_carrousel_slide1 "premier écran du carrousel"
   shot 04_carrousel_1; dump 04_carrousel_1
-  $UI tap --text "Suivant" --timeout 10 >/dev/null 2>&1; sleep 1
+  # libellés du bouton selon la langue
+  case "$LANGUE" in
+    en) SUIVANT="Next" ;; es) SUIVANT="Siguiente" ;; ja) SUIVANT="次へ" ;; *) SUIVANT="Suivant" ;;
+  esac
+  $UI tap --text "$SUIVANT" --timeout 10 >/dev/null 2>&1 || $UI tap --text "Suivant" --timeout 5 >/dev/null 2>&1
+  sleep 1
   shot 05_carrousel_2; dump 05_carrousel_2
   record PASS S07_carrousel_slide2 "deuxième écran atteint"
-  $UI tap --text "Suivant" --timeout 10 >/dev/null 2>&1; sleep 1
+  $UI tap --text "$SUIVANT" --timeout 10 >/dev/null 2>&1 || $UI tap --text "Suivant" --timeout 5 >/dev/null 2>&1
+  sleep 1
   shot 06_carrousel_3; dump 06_carrousel_3
   if $UI wait --text "Commencer" --timeout 15 >/dev/null 2>&1; then
     record PASS S08_carrousel_slide3 "troisième écran + bouton Commencer"
@@ -212,7 +229,7 @@ if $UI tap --text "Continuer" --timeout 12 >/dev/null 2>&1; then
   record PASS S16_bienvenue_continue "bouton Continuer de l'accueil actionné"
 fi
 sleep 3; shot 12_apres_bienvenue; dump 12_apres_bienvenue
-if $UI wait --text "Catalogue" --timeout 20 >/dev/null 2>&1 || $UI wait --text "catalogue" --timeout 5 >/dev/null 2>&1; then
+if $UI wait --text "modèle de vidéo" --timeout 25 >/dev/null 2>&1 || $UI wait --text "model" --timeout 3 >/dev/null 2>&1 || $UI wait --text "モデル" --timeout 3 >/dev/null 2>&1 || $UI wait --text "modelo" --timeout 3 >/dev/null 2>&1; then
   record PASS S17_catalogue "écran catalogue atteint"
 else
   record BLOCKED S17_catalogue "catalogue non atteint (voir dump 12)"
