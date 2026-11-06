@@ -171,3 +171,56 @@ jobs:
           path: artifacts/**
           retention-days: 14
           if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
+  # Backend HTTP — Worker réellement démarré (wrangler dev) sur une base D1
+  # locale construite par les 12 migrations. Aucun accès réseau externe, aucune
+  # donnée de production, aucun jeton Cloudflare.
+  # ---------------------------------------------------------------------------
+  backend-http:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Dépendances
+        run: npm install --no-audit --no-fund 2>&1 | tail -5
+      - name: Appliquer les 12 migrations sur D1 local
+        run: |
+          set -euo pipefail
+          for m in db/migrations/*.sql; do
+            echo "--- $m"
+            npx wrangler d1 execute vitrine-video-db --local --file="$m" 2>&1 | tail -2
+          done
+          echo "=== tables ==="
+          npx wrangler d1 execute vitrine-video-db --local             --command="SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name" 2>&1 | tail -40
+      - name: Démarrer le Worker local
+        run: |
+          set -euo pipefail
+          echo '{"BILLING_WEBHOOK_SECRET":"d42-lab-secret"}' > .dev.vars
+          nohup npx wrangler dev --local --ip 127.0.0.1 --port 8788 --show-interactive-dev-session=false             > /tmp/worker.log 2>&1 &
+          echo $! > /tmp/worker.pid
+          for i in $(seq 1 40); do
+            if curl -sf http://127.0.0.1:8788/health >/dev/null 2>&1; then echo "Worker prêt"; exit 0; fi
+            sleep 2
+          done
+          echo "::error::Worker non démarré"; tail -40 /tmp/worker.log; exit 1
+      - name: Contrat HTTP
+        run: python3 tools/e2e/http_contract.py http://127.0.0.1:8788 | tee http_run.txt
+      - name: Arrêt
+        if: always()
+        run: |
+          [ -f /tmp/worker.pid ] && kill "$(cat /tmp/worker.pid)" 2>/dev/null || true
+          tail -30 /tmp/worker.log 2>/dev/null || true
+      - name: Artefacts backend
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-http
+          path: |
+            http_contract_report.json
+            http_run.txt
+          retention-days: 14
+          if-no-files-found: warn
