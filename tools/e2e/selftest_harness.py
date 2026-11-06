@@ -128,7 +128,11 @@ class Bac:
         env["PATH"] = self.bin + os.pathsep + env.get("PATH", "")
         env["FAKE_XML"] = self.xml
         env["FAKE_LOG"] = self.log
-        env.setdefault("ANDROID_HOME", "/inexistant")  # force shutil.which -> faux adb
+        # Les DEUX variables doivent être neutralisées : sur le runner GitHub,
+        # ANDROID_SDK_ROOT pointe vers le vrai adb (mesuré, run 42239265944,
+        # job harness-selftest) et le faux adb n'était alors jamais utilisé.
+        env["ANDROID_HOME"] = "/inexistant"
+        env["ANDROID_SDK_ROOT"] = "/inexistant"
         p = subprocess.run([sys.executable, UI, *args], capture_output=True,
                            text=True, env=env, timeout=timeout)
         avec = open(self.log).read() if os.path.exists(self.log) else ""
@@ -147,6 +151,12 @@ def main():
         print(f"{'PASS' if condition else 'FAIL'} {nom} :: {detail}")
 
     try:
+        # --- S0 : le faux adb est bien celui que ui.py résout --------------------
+        code, sortie, _ = bac.ui("probe", timeout=20)
+        verifier("S0 le banc utilise bien le faux adb (pas celui du runner)",
+                 code == 0 and f"{os.path.join(bac.bin, 'adb')}" in sortie,
+                 (sortie.splitlines()[0] if sortie else "(aucune sortie)")[:80])
+
         # --- S1 : bornes dégénérées (1 px) -> tap sur la surface du parent -------
         bac.planter(arbre(bouton_compose("Continuer", "btn_continuer")))
         code, sortie, taps = bac.ui("tap", "--text", "Continuer", "--exact", "--timeout", "3")

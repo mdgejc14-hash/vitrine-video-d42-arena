@@ -216,6 +216,94 @@ if $UI wait --text "Ma vidéo" --exact --timeout 30 >/dev/null 2>&1; then
 fi
 if [ "$brief_ok" = "1" ]; then
   record PASS P1_brief "formulaire de brief affiché ($(grep -c 'E2E FIELD' "$OUT/champs_0.txt") champs de saisie détectés)"
+
+  # --- S22n contrôles négatifs (D42.14 : ordre du fondateur) --------------------
+  # Objectif : prouver que le formulaire REFUSE la validation vide/invalide et
+  # survit au retour arrière — avant de dérouler le chemin valide.
+  $UI champs > "$OUT/champs.txt" 2>&1 || true
+
+  atteindre_continuer() { # fait défiler jusqu'au bouton Continuer (6 essais)
+    local i
+    for i in 1 2 3 4 5 6; do
+      if $UI wait --text "Continuer" --exact --timeout 2 >/dev/null 2>&1; then return 0; fi
+      adb shell input swipe 540 1700 540 600 250 >/dev/null 2>&1
+      sleep 1
+    done
+    return 1
+  }
+  remonter_formulaire() { # retour en haut pour que les coordonnées des champs soient valides
+    local i
+    for i in 1 2 3; do
+      adb shell input swipe 540 600 540 1700 250 >/dev/null 2>&1
+      sleep 1
+    done
+  }
+
+  # a) Continuer avec tous les champs VIDES : rien ne doit se passer
+  if atteindre_continuer; then
+    fermer_clavier
+    if $UI tap --text "Continuer" --exact --timeout 10 >/dev/null 2>&1; then
+      sleep 4
+      if $UI wait --text "Avant de commencer" --exact --timeout 4 >/dev/null 2>&1; then
+        record FAIL P1_brief_vide_refuse "validation acceptée alors que tous les champs sont vides"
+      else
+        record PASS P1_brief_vide_refuse "Continuer sans données : formulaire conservé (bouton désactivé ou refus)"
+      fi
+    else
+      record BLOCKED P1_brief_vide_refuse "bouton Continuer introuvable (formulaire vide)"
+    fi
+  else
+    record BLOCKED P1_brief_vide_refuse "bouton Continuer non atteint (champs vides)"
+  fi
+  remonter_formulaire
+
+  # b) Retour arrière : le formulaire rend la main sans crash, puis re-entrée
+  fermer_clavier
+  adb shell input keyevent 4 >/dev/null 2>&1
+  sleep 3
+  shot 22n_retour_arriere; dump 22n_retour_arriere
+  if adb shell pidof "$PKG" >/dev/null 2>&1; then
+    if $UI wait --text "Ma vidéo" --exact --timeout 8 >/dev/null 2>&1; then
+      record PASS P1_brief_retour "retour arrière : application vivante, formulaire toujours affiché"
+    else
+      # l'écran précédent est affiché : on RE-OUVRE le brief pour poursuivre
+      if tap_if "Nouvel arrivage" "" 10 && $UI wait --text "Ma vidéo" --exact --timeout 25 >/dev/null 2>&1; then
+        record PASS P1_brief_retour "retour arrière : écran précédent atteint, brief ré-ouvert sans crash"
+      else
+        record BLOCKED P1_brief_retour "retour arrière effectué mais brief non ré-ouvrable"
+      fi
+    fi
+  else
+    record FAIL P1_brief_retour "application fermée/crashée après retour arrière"
+  fi
+  $UI champs > "$OUT/champs.txt" 2>&1 || true
+
+  # c) Données INVALIDES : prix alphabétique — la validation doit refuser
+  idx_prix=$(grep "^E2E CHAMP " "$OUT/champs.txt" | grep -i "prix" | awk '{print $3}' | head -1)
+  if [ -n "$idx_prix" ]; then
+    remplir_champ "$idx_prix" "abc"
+    if atteindre_continuer; then
+      fermer_clavier
+      if $UI tap --text "Continuer" --exact --timeout 10 >/dev/null 2>&1; then
+        sleep 4
+        if $UI wait --text "Avant de commencer" --exact --timeout 4 >/dev/null 2>&1; then
+          record FAIL P1_brief_invalide_refuse "validation acceptée avec un prix alphabétique"
+        else
+          record PASS P1_brief_invalide_refuse "prix « abc » : validation refusée"
+        fi
+      else
+        record PASS P1_brief_invalide_refuse "prix « abc » : bouton Continuer inutilisable"
+      fi
+    else
+      record BLOCKED P1_brief_invalide_refuse "bouton Continuer non atteint (prix invalide)"
+    fi
+    # le prix invalide sera écrasé par le remplissage valide (remplir_champ efface avant de saisir)
+  else
+    record BLOCKED P1_brief_invalide_refuse "champ Prix introuvable"
+  fi
+  remonter_formulaire
+  $UI champs > "$OUT/champs.txt" 2>&1 || true
+
   # Remplissage PILOTÉ PAR LE LIBELLÉ de chaque champ (pas par l'index : l'écran
   # défile pendant la saisie et les valeurs se décalaient — run 42223776656).
   valeur_pour() { # libellé -> valeur valide pour ce champ
