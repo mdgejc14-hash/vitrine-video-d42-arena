@@ -94,7 +94,11 @@ fun OnboardingScreen(onDone: (Sector) -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                VitrineLogoHeader()
+                // D42.13 : VitrineLogoHeader impose fillMaxWidth() : il écrasait
+                // le badge « 1 / 3 » qui s'affichait à la verticale, coupé au bord
+                // droit (constaté sur émulateur, run 42179104681). weight(1f) rend
+                // au badge sa place.
+                VitrineLogoHeader(modifier = Modifier.weight(1f))
                 EtapeBadge(etape = 1, total = 3)
             }
             Text(
@@ -135,7 +139,8 @@ fun OnboardingScreen(onDone: (Sector) -> Unit) {
                 onClick = { onDone(selected) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 12.dp, bottom = 14.dp)
                     // plancher tactile WCAG 2.2 / Material : 48 dp minimum
                     .heightIn(min = 48.dp)
             ) {

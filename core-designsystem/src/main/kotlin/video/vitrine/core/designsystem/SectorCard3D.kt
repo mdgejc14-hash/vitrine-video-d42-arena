@@ -57,9 +57,13 @@ fun SectorCard3D(
                 Image(
                     painter = painterResource(illustrationRes),
                     contentDescription = label,
+                    // D42.13 : le carré forcait 156 dp de haut par rangée sur un
+                    // écran de 360 dp ; 3 rangées = 588 dp à elles seules, le
+                    // bouton était poussé hors écran. Le ratio suit la source
+                    // (4:3) : ~39 dp gagnés par rangée, sans perte lisible.
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(1f),
+                        .aspectRatio(4f / 3f),
                     contentScale = ContentScale.Fit
                 )
             } else {

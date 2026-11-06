@@ -64,6 +64,9 @@ def screen_size():
     return (int(m.group(1)), int(m.group(2))) if m else (0, 0)
 
 
+_PARENT = {}
+
+
 def dump_nodes(retries=3):
     for _ in range(retries):
         adb("shell", "uiautomator", "dump", DUMP_REMOTE)
@@ -75,6 +78,10 @@ def dump_nodes(retries=3):
                 # On retire la déclaration avant de parser.
                 propre = re.sub(r"^<\?xml[^>]*\?>", "", xml).strip()
                 root = ET.fromstring(propre)
+                _PARENT.clear()
+                for parent in root.iter("node"):
+                    for child in parent:
+                        _PARENT[child] = parent
                 return list(root.iter("node")), xml
             except (ET.ParseError, ValueError) as e:
                 print(f"E2E dump_parse_error {e}", file=sys.stderr)
@@ -90,12 +97,36 @@ def parse_bounds(b):
     return x1, y1, x2, y2
 
 
+VIDE = (0, 0, 0, 0)
+
+
+def bounds_utiles(n):
+    """Compose expose des noeuds de regroupement à [0,0][0,0] qui portent le texte
+    mais AUCUNE surface. Le vrai rectangle est sur le PARENT cliquable.
+    Sans cette fusion, `inside` concluait « hors écran » sur un bouton pourtant
+    visible — constaté au run 42179104681 (S10/S11)."""
+    b = parse_bounds(n.get("bounds"))
+    if b and b != VIDE:
+        return b
+    for c in n.iter("node"):
+        if c is n:
+            continue
+        bc = parse_bounds(c.get("bounds"))
+        if bc and bc != VIDE:
+            return bc
+    cur = _PARENT.get(n)
+    while cur is not None:
+        bc = parse_bounds(cur.get("bounds"))
+        if bc and bc != VIDE:
+            return bc
+        cur = _PARENT.get(cur)
+    return b
+
+
 def find(nodes, text=None, rid=None):
     for n in nodes:
         t = n.get("text") or ""
         r = n.get("resource-id") or ""
-        if not n.get("bounds") or n.get("package") not in (None, ""):
-            pass
         if text is not None and text.lower() in t.lower():
             return n
         if rid is not None and rid in r:
@@ -104,7 +135,7 @@ def find(nodes, text=None, rid=None):
 
 
 def describe(n):
-    b = parse_bounds(n.get("bounds"))
+    b = bounds_utiles(n)
     return f'text="{n.get("text")}" id="{n.get("resource-id")}" bounds={b} clickable={n.get("clickable")}'
 
 
@@ -159,7 +190,10 @@ def cmd_tap(args):
     n = _wait(args)
     if n is None:
         return 1
-    b = parse_bounds(n.get("bounds"))
+    b = bounds_utiles(n)
+    if not b or b == VIDE:
+        print(f"E2E FAIL element_sans_surface {n.get('text') or n.get('resource-id')}", file=sys.stderr)
+        return 4
     x, y = (b[0] + b[2]) // 2, (b[1] + b[3]) // 2
     adb("shell", "input", "tap", str(x), str(y))
     print(f"E2E TAP {x},{y} -> {n.get('text') or n.get('resource-id')}")
@@ -188,9 +222,14 @@ def cmd_inside(args):
         print("E2E FAIL element_absent", file=sys.stderr)
         return 2
     w, h = screen_size()
-    x1, y1, x2, y2 = parse_bounds(n.get("bounds"))
+    b = bounds_utiles(n)
     label = n.get("text") or n.get("resource-id")
-    inside = x1 >= 0 and y1 >= 0 and x2 <= w and y2 <= h and (y2 - y1) > 0
+    if not b or b == VIDE:
+        print(f"E2E INSIDE {label!r} bounds=VIDE => FAIL_SANS_SURFACE", file=sys.stderr)
+        return 4
+    x1, y1, x2, y2 = b
+    # marge de 2 px : un pixel d'arrondi ne doit pas faire échouer un bouton visible
+    inside = x1 >= -2 and y1 >= -2 and x2 <= w + 2 and y2 <= h + 2 and (y2 - y1) > 8
     print(f"E2E INSIDE {label!r} bounds=({x1},{y1},{x2},{y2}) screen=({w},{h}) => "
           f"{'PASS' if inside else 'FAIL_HORS_ECRAN'}")
     # Vérifie aussi que l'élément est cliquable (le bouton épinglé doit l'être)
