@@ -4,6 +4,7 @@ import video.vitrine.core.designsystem.VitrineActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
 import video.vitrine.core.designsystem.VitrineLocale
 import video.vitrine.feature.catalog.CatalogActivity
 import video.vitrine.feature.onboarding.LanguageActivity
@@ -27,6 +28,25 @@ class MainActivity : VitrineActivity() {
     private var sectorCode: String? = null
     private var welcomeCredits: Int = 0
     private var gabaritId: String? = null
+
+    // D42.14 : anti double-lancement. Mesuré au run 42241430727 (P1) : chaque
+    // ecran d'orchestration etait demarre DEUX fois (Language a 637 ms,
+    // Auth a 32 ms, Onboarding a 12 ms d'intervalle — recréation/course au
+    // lancement). L'instance périmée laissée sur la pile faisait réapparaître
+    // un carrousel vierge après le finish() de l'instance pilotée, et le
+    // catalogue n'était plus jamais atteint (1 run sur 3). Le run P0 réussi
+    // du même commit n'avait qu'UN démarrage par écran : c'est bien le
+    // doublon, et lui seul, qui casse le parcours.
+    private var dernierLancementMs: Long = 0L
+
+    private fun lancerUneSeuleFois(intent: Intent, requestCode: Int) {
+        val maintenant = SystemClock.uptimeMillis()
+        if (dernierLancementMs != 0L && maintenant - dernierLancementMs < 1_000) {
+            return  // second déclenchement d'un même événement : ignoré
+        }
+        dernierLancementMs = maintenant
+        startActivityForResult(intent, requestCode)
+    }
     private val briefValues = mutableMapOf<String, String>()
     private var skinId: String? = null
     private var skinName: String? = null
@@ -46,10 +66,16 @@ class MainActivity : VitrineActivity() {
         }
         nettoyageFichiersPerimes()
         restaurerSession()
-        if (VitrineLocale.saved(this) == null) {
-            startActivityForResult(Intent(this, LanguageActivity::class.java), REQ_LANGUAGE)
-        } else {
-            startActivityForResult(authIntent(), REQ_AUTH)
+        // D42.14 : lors d'une recréation (changement de configuration au
+        // démarrage, mesuré : LanguageActivity demarree deux fois a 637 ms
+        // d'intervalle), l'ecran deja a l'ecran ne doit pas etre relance :
+        // l'instance en double restait sur la pile et cassait la navigation.
+        if (savedInstanceState == null) {
+            if (VitrineLocale.saved(this) == null) {
+                lancerUneSeuleFois(Intent(this, LanguageActivity::class.java), REQ_LANGUAGE)
+            } else {
+                lancerUneSeuleFois(authIntent(), REQ_AUTH)
+            }
         }
     }
 
@@ -111,7 +137,7 @@ class MainActivity : VitrineActivity() {
             return
         }
         when (requestCode) {
-            REQ_LANGUAGE -> startActivityForResult(authIntent(), REQ_AUTH)
+            REQ_LANGUAGE -> lancerUneSeuleFois(authIntent(), REQ_AUTH)
             REQ_AUTH -> {
                 authToken = data?.getStringExtra("firebase_token")
                 authUid = data?.getStringExtra("firebase_uid")
@@ -195,7 +221,7 @@ class MainActivity : VitrineActivity() {
     }
 
     private fun launchOnboarding() {
-        startActivityForResult(
+        lancerUneSeuleFois(
             Intent(this, OnboardingActivity::class.java)
                 .putExtra("firebase_token", authToken)
                 .putExtra("firebase_uid", authUid)
@@ -205,7 +231,7 @@ class MainActivity : VitrineActivity() {
     }
 
     private fun launchCatalog() {
-        startActivityForResult(
+        lancerUneSeuleFois(
             Intent(this, CatalogActivity::class.java)
                 .putExtra("sector", sectorCode)
                 .putExtra("welcome_credits", welcomeCredits)
