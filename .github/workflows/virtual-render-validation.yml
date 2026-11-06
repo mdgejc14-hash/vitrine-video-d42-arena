@@ -386,15 +386,18 @@ jobs:
     # Le smoke reste le garde-fou : les rendus ne partent que s'il est vert,
     # sauf dispatch explicite run_smoke=0 (APK app déjà prouvé, harnais seul
     # modifié). Un smoke sauté SANS run_smoke=0 ne fait jamais partir la matrice.
+    # D42.14 : sur push (branche jetable d42-render-check), AUCUNE référence à
+    # github.event.inputs — ce contexte n'existe pas hors workflow_dispatch et
+    # la matrice ne s'étendait pas (constat run 42247456354 : smoke vert mais
+    # 32 lots « skipped », nom de job non résolu).
     if: >-
       ${{ always()
-          && (github.event_name == 'workflow_dispatch'
-              || github.ref == 'refs/heads/d42-render-check')
-          && github.event.inputs.run_matrix != '0'
-          && (github.event.inputs.profils || 'validation') != 'production'
+          && (github.ref == 'refs/heads/d42-render-check'
+              || (github.event_name == 'workflow_dispatch'
+                  && github.event.inputs.run_matrix != '0'
+                  && (github.event.inputs.profils || 'validation') != 'production'))
           && (needs.smoke.result == 'success'
-              || (github.event.inputs.run_smoke == '0' && needs.smoke.result == 'skipped')
-              || (github.ref == 'refs/heads/d42-render-check' && needs.smoke.result == 'success')) }}
+              || (github.event.inputs.run_smoke == '0' && needs.smoke.result == 'skipped')) }}
     timeout-minutes: 240
     strategy:
       fail-fast: false
@@ -402,10 +405,10 @@ jobs:
       # palier gratuit est de 20 jobs concurrents.
       max-parallel: 8
       matrix:
-        lang: ${{ fromJSON(github.event.inputs.langs_lot == 'fr' && '["fr"]' || github.event.inputs.langs_lot == 'en' && '["en"]' || github.event.inputs.langs_lot == 'es' && '["es"]' || github.event.inputs.langs_lot == 'ja' && '["ja"]' || '["fr","en","es","ja"]') }}
+        lang: ${{ fromJSON(github.event_name == 'push' && '["fr","en","es","ja"]' || github.event.inputs.langs_lot == 'fr' && '["fr"]' || github.event.inputs.langs_lot == 'en' && '["en"]' || github.event.inputs.langs_lot == 'es' && '["es"]' || github.event.inputs.langs_lot == 'ja' && '["ja"]' || '["fr","en","es","ja"]') }}
         # Liste explicite : `range()` n'est pas une fonction documentée des
         # expressions GitHub, on ne parie pas dessus.
-        shard: ${{ fromJSON(github.event.inputs.shards_json || '[1,2,3,4,5,6,7,8]') }}
+        shard: ${{ fromJSON(github.event_name == 'push' && '[1,2,3,4,5,6,7,8]' || github.event.inputs.shards_json || '[1,2,3,4,5,6,7,8]') }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
