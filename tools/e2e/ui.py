@@ -355,6 +355,42 @@ def cmd_fields(args):
     return 0 if i else 1
 
 
+def cmd_champs(args):
+    """Liste les champs de saisie AVEC LEUR LIBELLÉ (le texte juste au-dessus).
+
+    L'index seul ne suffit pas : quand l'écran défile pendant la saisie, l'ordre
+    des champs visibles change et les valeurs atterrissent dans le mauvais champ
+    (constaté au run 42223776656 — « AkpakpaCotonou » est allé dans « Prix »).
+    En connaissant le libellé, le harnais peut choisir une valeur VALIDE.
+    """
+    nodes, _ = dump_nodes()
+    textes = []
+    champs = []
+    for n in nodes:
+        b = parse_bounds(n.get("bounds"))
+        t = (n.get("text") or "").strip()
+        cls = n.get("class") or ""
+        if not b or b == VIDE:
+            continue
+        if cls.endswith("EditText"):
+            champs.append((b, t))
+        elif t:
+            textes.append((b, t))
+    i = 0
+    for b, t in champs:
+        candidats = [(b[1] - tb[3], tb, tt) for tb, tt in textes
+                     if tb[3] <= b[1] + 4 and len(tt) < 60 and tb[1] < b[1]]
+        label = ""
+        if candidats:
+            candidats.sort(key=lambda c: c[0])
+            label = candidats[0][2]
+        etat = "rempli" if t.strip() else "vide"
+        print(f'E2E CHAMP {i} {b[0]} {b[1]} {b[2]} {b[3]} {etat} |{label}|')
+        i += 1
+    print(f"E2E CHAMPS {i}")
+    return 0 if i else 1
+
+
 def cmd_shot(args):
     with open(args.path, "wb") as f:
         p = subprocess.run([adb_bin(), "exec-out", "screencap", "-p"], stdout=f, timeout=180)
@@ -385,6 +421,7 @@ def build_parser():
 
     sub.add_parser("probe").set_defaults(func=cmd_probe)
     sub.add_parser("fields").set_defaults(func=cmd_fields)
+    sub.add_parser("champs").set_defaults(func=cmd_champs)
     sub.add_parser("size").set_defaults(func=cmd_size)
 
     cible(sub.add_parser("wait")).set_defaults(func=cmd_wait)

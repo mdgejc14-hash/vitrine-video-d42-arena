@@ -216,35 +216,48 @@ if $UI wait --text "Ma vidéo" --exact --timeout 30 >/dev/null 2>&1; then
 fi
 if [ "$brief_ok" = "1" ]; then
   record PASS P1_brief "formulaire de brief affiché ($(grep -c 'E2E FIELD' "$OUT/champs_0.txt") champs de saisie détectés)"
-  # Remplissage ITÉRATIF : on relit les champs après chaque saisie et on remplit
-  # tous ceux qui sont VIDES, en descendant dans le formulaire. Le run 42208901429
-  # avait laissé « Quartier et ville * » vide — champ requis, donc bouton grisé.
-  valeurs="BoutiqueAwa +22997000000 RobeWax 15000 AkpakpaCotonou"
-  remplis=0
-  for tour in 1 2 3 4 5 6 7 8; do
-    $UI fields > "$OUT/champs.txt" 2>&1 || true
-    vide=$(awk '$1=="E2E" && $2=="FIELD" && $8=="vide" {print $3; exit}' "$OUT/champs.txt")
-    if [ -n "$vide" ]; then
-      val=$(echo $valeurs | cut -d' ' -f$((remplis+1)))
-      [ "$remplis" -ge 5 ] && val="Cotonou"
-      remplir_champ "$vide" "$val" && remplis=$((remplis+1))
-      continue
+  # Remplissage PILOTÉ PAR LE LIBELLÉ de chaque champ (pas par l'index : l'écran
+  # défile pendant la saisie et les valeurs se décalaient — run 42223776656).
+  valeur_pour() { # libellé -> valeur valide pour ce champ
+    local l
+    l=$(echo "$1" | tr 'A-Z' 'a-z')
+    case "$l" in
+      *commerce*|*boutique*)            echo "BoutiqueAwa" ;;
+      *whatsapp*|*num*ro*|*t*l*phone*)  echo "+22997000000" ;;
+      *prix*|*montant*)                 echo "15000" ;;
+      *monnaie*)                        echo "" ;;   # déjà préremplie (FCFA)
+      *quartier*|*ville*|*adresse*)     echo "Akpakpa" ;;
+      *nom*|*v*tement*|*produit*|*plat*|*travail*|*article*) echo "RobeWax" ;;
+      *)                                echo "Essai" ;;
+    esac
+  }
+  remplis=0; deja=" "; sans_effet=0
+  for tour in 1 2 3 4 5 6 7 8 9 10 11 12; do
+    $UI champs > "$OUT/champs.txt" 2>&1 || true
+    progresse=0
+    while IFS= read -r ligne; do
+      idx=$(echo "$ligne" | awk '{print $3}')
+      etat=$(echo "$ligne" | awk '{print $8}')
+      libelle=$(echo "$ligne" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
+      [ "$etat" = "vide" ] || continue
+      case "$deja" in *"|$libelle|"*) continue ;; esac
+      val=$(valeur_pour "$libelle")
+      deja="$deja|$libelle|"
+      progresse=1
+      if [ -z "$val" ]; then echo "E2E champ laissé prérempli : [$libelle]"; continue; fi
+      echo "E2E remplissage [$libelle] <- $val"
+      remplir_champ "$idx" "$val" "$OUT/champs.txt" && remplis=$((remplis+1))
+      break
+    done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
+    if [ "$progresse" = "0" ]; then
+      sans_effet=$((sans_effet+1))
+      [ "$sans_effet" -ge 2 ] && break
+      adb shell input swipe 540 1700 540 1000 250 >/dev/null 2>&1
+      sleep 1
     fi
-    # plus de champ vide visible : on descend d'un cran pour voir la suite
-    adb shell input swipe 540 1700 540 900 250 >/dev/null 2>&1
-    sleep 1
-    $UI fields > "$OUT/champs_bas.txt" 2>&1 || true
-    vide=$(awk '$1=="E2E" && $2=="FIELD" && $8=="vide" {print $3; exit}' "$OUT/champs_bas.txt")
-    if [ -n "$vide" ]; then
-      val=$(echo $valeurs | cut -d' ' -f$((remplis+1)))
-      [ "$remplis" -ge 5 ] && val="Cotonou"
-      remplir_champ "$vide" "$val" && remplis=$((remplis+1))
-      continue
-    fi
-    break
   done
   echo "E2E champs remplis : $remplis"
-  $UI fields > "$OUT/champs_apres.txt" 2>&1 || true
+  $UI champs > "$OUT/champs_apres.txt" 2>&1 || true
   cat "$OUT/champs_apres.txt" | sed 's/^/E2E /'
   # Le bouton est en bas d'un écran défilant. On descend PAR PAS en vérifiant
   # après chaque geste qu'il est réellement apparu (un nombre fixe de glissements
