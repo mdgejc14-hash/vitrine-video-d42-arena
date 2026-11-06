@@ -179,6 +179,17 @@ shot 21_brief; dump 21_brief
 # --- S22 brief : remplir les champs REQUIS, défiler, valider --------------------
 # `GabaritBriefScreen` : un seul écran défilant, bouton « Continuer » tout en bas,
 # DÉSACTIVÉ tant que `filled != requiredIds.size` ou qu'un champ est invalide.
+fermer_clavier() {
+  # PIÈGE CORRIGÉ : `input keyevent 4` (RETOUR) ferme le clavier **s'il est ouvert**,
+  # mais sinon il NAVIGUE EN ARRIÈRE. Au run 42219775013, quatre appuis « pour
+  # fermer le clavier » ont ramené l'application du formulaire de brief au
+  # catalogue — le test croyait ensuite être « bloqué en bas du formulaire ».
+  if adb shell dumpsys input_method 2>/dev/null | grep -q "mInputShown=true"; then
+    adb shell input keyevent 4 >/dev/null 2>&1
+    sleep 1
+  fi
+}
+
 remplir_champ() { # index, texte, [fichier de coordonnées]
   # On relit les coordonnées à chaque champ : le clavier modifie la géométrie de
   # l'écran, donc les positions mémorisées mentent.
@@ -194,12 +205,17 @@ remplir_champ() { # index, texte, [fichier de coordonnées]
   for _ in 1 2 3 4 5 6 7 8; do adb shell input keyevent KEYCODE_DEL >/dev/null 2>&1; done
   adb shell input text "$val" >/dev/null 2>&1; sleep 1
   # ferme le clavier : sinon il masque le bas du formulaire et absorbe les appuis
-  adb shell input keyevent 4 >/dev/null 2>&1; sleep 1
+  fermer_clavier
   return 0
 }
 
+brief_ok=0
 if $UI wait --text "Ma vidéo" --exact --timeout 30 >/dev/null 2>&1; then
-  record PASS P1_brief "formulaire de brief affiché (« Ma vidéo », gabarit sélectionné)"
+  $UI fields > "$OUT/champs_0.txt" 2>&1 || true
+  if grep -q "E2E FIELD" "$OUT/champs_0.txt"; then brief_ok=1; fi
+fi
+if [ "$brief_ok" = "1" ]; then
+  record PASS P1_brief "formulaire de brief affiché ($(grep -c 'E2E FIELD' "$OUT/champs_0.txt") champs de saisie détectés)"
   # Remplissage ITÉRATIF : on relit les champs après chaque saisie et on remplit
   # tous ceux qui sont VIDES, en descendant dans le formulaire. Le run 42208901429
   # avait laissé « Quartier et ville * » vide — champ requis, donc bouton grisé.
