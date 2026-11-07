@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- D42.18 : export en service de premier plan (type dataSync). Avant, le
+         job JobScheduler était arrêté au quota ~10 min (rc8 : 4 interruptions,
+         reprise de zéro) — la promesse T1 « éteins ton écran, la notification
+         te prévient » n'était pas tenue. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <!-- API 33+ : sans octroi, le service de premier plan tourne quand même ;
+         la notification n'est simplement pas affichée (choix documenté :
+         aucune demande runtime dans le parcours d'export). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application>
         <activity
             android:name=".ExportActivity"
@@ -9,6 +22,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!-- Fusion avec la déclaration WorkManager : type requis pour démarrer
+             un FGS sur API 34+ (targetSdk 36). -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

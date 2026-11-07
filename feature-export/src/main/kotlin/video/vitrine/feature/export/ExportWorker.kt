@@ -68,6 +68,23 @@ class ExportWorker(
         if (exportId == null || journal == null || journal.state != "RESERVED") {
             return Result.failure()
         }
+        // D42.18 : promotion en service de premier plan (type dataSync) AVANT
+        // l'encodage. Défaut rc8 (run 42377890560) : sans FGS, le job
+        // JobScheduler est arrêté au quota ~10 min (raison -512) et media3
+        // Transformer, incapable de reprendre à mi-encode, repart de zéro —
+        // boucle sans fin pour un gabarit long sur codec lent. C'est aussi la
+        // promesse T1 déjà affichée à l'utilisateur (export_t1 : « éteins ton
+        // écran, la notification te prévient ») jusqu'ici non tenue.
+        // Repli silencieux : si le démarrage FGS est interdit (app passée en
+        // arrière-plan avant le lancement du worker, Android 12+), l'export
+        // continue en job classique — statu quo antérieur, jamais pire.
+        runCatching { setForeground(createExportForegroundInfo(context)) }
+            .onFailure {
+                android.util.Log.w(
+                    TAG_EXPORT,
+                    "service de premier plan non démarré (repli job classique) : ${it.message}"
+                )
+            }
         val outcome = doWorkInner()
         return when (outcome) {
             is Result.Success -> {
@@ -531,4 +548,61 @@ class ExportWorker(
         private const val MAX_ATTEMPTS = 3
         private const val TAG_VERIF = "D42-VERIF"
     }
+}
+
+// ── D42.18 : service de premier plan de l'export (type dataSync) ──────────────
+// Top-level et internal pour être testés unitairement sans instancier le worker.
+
+/** Identifiant stable de la notification d'export (et du ForegroundInfo). */
+internal const val EXPORT_NOTIF_ID = 4201
+
+/** Canal unique de l'export (« l'appareil peut être verrouillé », T1). */
+internal const val EXPORT_CHANNEL_ID = "vv_export"
+
+internal const val EXPORT_CHANNEL_IMPORTANCE = android.app.NotificationManager.IMPORTANCE_LOW
+
+private const val TAG_EXPORT = "D42-EXPORT"
+
+/**
+ * ForegroundInfo de l'export : notification ongoing « Export en cours… » sur
+ * le canal vv_export, type FOREGROUND_SERVICE_TYPE_DATA_SYNC dès API 29
+ * (obligatoire à déclarer sur API 34+ ; permission FOREGROUND_SERVICE_DATA_SYNC
+ * posée au manifeste). En-dessous de API 29, forme sans type.
+ */
+internal fun createExportForegroundInfo(context: android.content.Context): androidx.work.ForegroundInfo {
+    ensureExportChannel(context)
+    val notification = androidx.core.app.NotificationCompat.Builder(context, EXPORT_CHANNEL_ID)
+        .setSmallIcon(R.drawable.ic_stat_export)
+        .setContentTitle(context.getString(R.string.export_notif_title))
+        .setContentText(context.getString(R.string.export_notif_text))
+        .setOngoing(true)
+        // Le « % » d'encodage n'est pas encore branché (Transformer n'offre pas
+        // de progression exploitable en 1.11.1 sans 2e composant modifié) :
+        // barre indéterminée, honnête sur l'état.
+        .setProgress(0, 0, true)
+        .setOnlyAlertOnce(true)
+        .build()
+    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+        androidx.work.ForegroundInfo(
+            EXPORT_NOTIF_ID,
+            notification,
+            android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC,
+        )
+    } else {
+        androidx.work.ForegroundInfo(EXPORT_NOTIF_ID, notification)
+    }
+}
+
+/** Crée le canal vv_export si nécessaire (idempotent, requis dès API 26). */
+internal fun ensureExportChannel(context: android.content.Context) {
+    if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) return
+    val manager = context.getSystemService(android.app.NotificationManager::class.java) ?: return
+    if (manager.getNotificationChannel(EXPORT_CHANNEL_ID) != null) return
+    manager.createNotificationChannel(
+        android.app.NotificationChannel(
+            EXPORT_CHANNEL_ID,
+            context.getString(R.string.export_notif_channel_name),
+            EXPORT_CHANNEL_IMPORTANCE,
+        )
+    )
 }
