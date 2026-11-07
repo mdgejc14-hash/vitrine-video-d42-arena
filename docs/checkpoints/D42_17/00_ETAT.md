@@ -81,3 +81,13 @@ les 120 combinaisons, backend et sécurité ne sont pas rejoués.
   SUCCESS** (certificat officiel constaté indépendamment), ffprobe + KVM OK,
   parcours P1 sur l'APK officiel EN COURS. Release GitHub 437474823
   (prerelease) : https://github.com/mdgejc14-hash/vitrine-video-d42-arena/releases/tag/d42.17-rc1
+
+## Run 42360568497 — analyse et itération 2
+
+30 PASS (parcours complet sur APK officiel : prises, guide, E7→E8) ;
+refus d'export IDENTIQUE. Recroisement décisif : les builds debug n'avaient
+pas d'empreinte injectée (porte en mode dev) → leurs refus venaient des
+heuristiques ; l'APK officiel a expected == certificat → reste uniquement
+tamperHints : **/system/bin/su présent sur l'image AOSP userdebug**.
+Itération 2 : -writable-system + retrait de su avant le parcours (preuve
+avant/après dans l'artefact), certificat toujours contrôlé. Tag d42.17-rc2.
