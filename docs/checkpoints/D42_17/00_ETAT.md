@@ -125,3 +125,12 @@ appelé en une ligne. APK inchangé (896240dc…683c).
   android.media.metrics.LogSessionId (API 31+) sur émulateur API 30 en
   release R8 (fusion de classes hors garde de version). J3 tournait en
   debug/API 34 : invisible. Correctif : -keep androidx.media3.**.
+
+## Build 3 + rc6 — correctif media3/R8 en place
+
+Build 42373116948 SUCCESS : APK 44 109 697 o (media3 conservé),
+re-signé officiellement (758077eb…33e192, v2+v3, zipalign OK),
+SHA-256 2a6980b8801a492125f2f933b1c62fd23e3aab87e829890a6398ab38511a5038.
+Preuve crédits rc5 : export_journal = 1 ligne RESERVED, balanceAfter=2
+(mono-débit). Objectif rc6 : export complet RESERVED->CONFIRMÉ, MP4,
+ffprobe, décodage, partage.
