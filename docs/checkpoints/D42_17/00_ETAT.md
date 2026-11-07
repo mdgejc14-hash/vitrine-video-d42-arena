@@ -50,3 +50,34 @@ c083978 lui-même (bundle/patch fournis dans `D42_17/livraison/`).
 L'export n'a PAS été démontré avant 10 h (Porto-Novo) : **NO-GO conditionnel
 conservé** — aucune preuve fabriquée. Les 30 PASS D42.16 ne sont pas refaits ;
 les 120 combinaisons, backend et sécurité ne sont pas rejoués.
+
+---
+
+## Journal d'exécution option C (07/11, ~09:45 UTC)
+
+- **Commit** `92eb7a9` poussé avec `[skip ci]` (aucun run des 9 jobs verts) :
+  workflows `release-official-build.yml` + `release-official-e2e.yml`, retrait
+  du job à secrets (voie refusée par le fondateur), checkpoint 01 (évaluation
+  A/B/C). Évaluation : A écartée (privé bloqué par facturation, PAT limité au
+  miroir), B écartée (sandbox 1,9 Go, R8 OOM probable, et E2E impossible sans
+  KVM), **C retenue** (clé hors dépôt, seul l'artefact signé transite).
+- **Étage 1** — tag `d42.17-build-1` → 92eb7a9 : AUCUN run (piège : le commit
+  porte `[skip ci]`, GitHub saute aussi les tags pointant sur lui). Correctif :
+  commit de déclenchement `f7d93a1` (sans skip-ci, poussé via le tag seul) →
+  tag `d42.17-build-2` → **run 42359988260 SUCCESS en ~7 min** : APK release
+  R8 complet, empreinte officielle injectée, zéro secret, artefact
+  `release-build-unsigned` (SHA-256 69be1e22…1bcb0, 43 134 545 o, signé clé
+  debug de recette comme attendu sans signing.properties).
+- **Étape 2** — re-signature locale (sandbox = poste de confiance) :
+  build-tools r34 (apksigner 0.9/Java 11), zipalign OK 4 o, signature
+  keystore officiel. **Vérification autoritaire** : `apksigner verify
+  --print-certs` → DN CN=Vitrine Video/O=EPD HOLDING, SHA-256
+  758077eb…33e192, SHA-1 89fab9b6…, MD5 78fdbd60… — tous conformes D42.14 ;
+  Verifies, v2+v3, **1 signataire**. APK final
+  `vitrine-video-0.8.0-b0-d42.17-rc1-official.apk`, 43 162 274 o,
+  **SHA-256 896240dc7343b9599f3cfc63f9a8684cb52eb05ecd5398458f79f5b2e875683c**.
+- **Étape 3** — tag `d42.17-rc1` (f7d93a1) → **run 42360568497
+  `release-official-e2e`** : asset téléchargé, **contrôle apksigner en CI
+  SUCCESS** (certificat officiel constaté indépendamment), ffprobe + KVM OK,
+  parcours P1 sur l'APK officiel EN COURS. Release GitHub 437474823
+  (prerelease) : https://github.com/mdgejc14-hash/vitrine-video-d42-arena/releases/tag/d42.17-rc1
