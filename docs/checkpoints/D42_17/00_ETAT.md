@@ -98,3 +98,10 @@ Run rc2 : parcours 30 PASS, refus identique. PREUVE : su est en
 /system/xbin/su et « rm: Read-only file system » — l'overlayfs exige un
 reboot. rc3 : disable-verity + reboot + attente boot_completed + remount
 + retrait, preuve avant/après. APK inchangé (896240dc…683c).
+
+## Itération 4 (rc4) — masquage su par bind-mount, sans reboot
+
+rc3 : adb reboot a tué l'émulateur (wait-for-device 88 min, annulation au
+timeout). rc4 : bind-mount d'un répertoire vide sur /system/xbin (su
+invisible pour les heuristiques, aucune écriture /system, aucun reboot).
+APK inchangé (896240dc…683c).
