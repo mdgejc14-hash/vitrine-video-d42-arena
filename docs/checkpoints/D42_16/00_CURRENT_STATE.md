@@ -75,3 +75,55 @@ au relevé de 20 h 30 UTC. Vérification de son issue prévue avant livraison
   artefacts non téléchargeables sans jeton.
 - Statut : correctifs **committés localement**, push impossible sans moyen
   d'authentification — procédure d'application par le fondateur fournie.
+
+---
+
+## Samedi 7 novembre 2026 — publication directe (ordre exécutif fondateur ~07:05 UTC)
+
+**Jeton fondateur temporaire** (fine-grained, miroir seul, Contents RW) stocké
+hors dépôt chmod 600, jamais affiché/committé/loggé. Publication directe :
+
+- `26fdfea` — « fix(d42.16): A5 guide accessible + completion E2E + H12 partage »
+  (8 fichiers : A5 PriseGuideScreen, completer_guide, H12, checkpoints 02/03/06/08/09,
+  maj 00) — poussé, distant vérifié == local, 0 secret dans le commit.
+- `a6e4521` — « fix(d42.16): S25 révéler Créer ma vidéo puis Lancer l'export local »
+  (harnais seul, +32/−5).
+
+**Run 42348472147 (26fdfea) — 29 PASS / 2 FAIL / 2 BLOCKED (artefact 13564648723)** :
+
+- ✅ **P0 caméra ÉLIMINÉ** : P1_prise_1, P1_prise_2, P1_prises, **P1_guide_termine**
+  (« 3 prise(s) en fichiers, écran suivant atteint »), P1_rushs_fichiers (rush-
+  1794034692736.mp4 1 046 649 o, rush-1794034777195.mp4 990 816 o,
+  rush-1794034857058.mp4 968 785 o), P1_aucun_crash.
+- ✅ Chronologie VV_E2E : 3× `startRecording : ENREGISTREMENT ACTIF` →
+  `Finalize : hasError=false` ; verrou 3A ; R4 ALLOW (0 visage).
+- ✅ selftest 9/9, auth 22/22, backend 15/15, security 64/64, langues en/ja/es,
+  P0 android-e2e, petit-écran, pixel5 : tous success.
+- ❌ Verrou restant, cause prouvée (dumps 26z/29 + strings_e7.xml +
+  ExportActivity.showPreview) : l'écran après le guide est **E7 « Aperçu de ta
+  vidéo »**, dont l'action « Créer ma vidéo » (e7_create) bascule vers l'UI
+  d'export E8 (« Lancer l'export local »). Le harnais attendait E8 sur E7 →
+  P1_export_lance BLOCKED → export_termine/mp4_extrait FAIL, partage BLOCKED.
+- ℹ️ Captures 26z/28/29 vides : **FLAG_SECURE** (anti-capture P2) bloque
+  screencap sur ExportActivity — par conception ; les dumps XML font foi.
+
+**Run de validation du correctif S25 : 42350538945 (a6e4521).**
+
+---
+
+## Clôture 07/11 ~08:40 UTC — runs 42352327163 puis 42354247351 (0295a35)
+
+- 42352327163 : 12 grands swipes = arrêt identique à 6 (bouton 2 px) → cause :
+  les grands swipes traversent la vignette vidéo (zone de geste du lecteur).
+- **42354247351 : P1_apercu_valide PASS** — « Créer ma vidéo » (partiellement
+  visible) actionné, **E8 affichée**. Bilan P1 : **30 PASS / 3 FAIL / 1 BLOCKED**.
+- **Verrou final IDENTIFIÉ ET PROUVÉ (dump 29_export_timeout.xml)** : statut E8 =
+  « Vérification de sécurité échouée. Réinstallez l'application officielle. » →
+  `export_gate_integrity`. `IntegrityGuard.kt` auto-contrôle le SHA-256 du
+  certificat signataire (spec V2.0 s22, anti-modding MASVS) : l'APK de CI est
+  signé de la clé **debug** ≠ certificat officiel → l'export est refusé **par
+  conception**. Bouton entièrement visible et tapé ; aucun Worker lancé.
+- **Conséquence** : l'export via l'UI ne peut passer que sur l'APK **release
+  signé** (keystore local disponible, RC6 signé 0.8.0-b0) — voie de remédiation
+  documentée, hors délai D42.16. Le moteur d'export lui-même est prouvé par
+  J3 (120/120 MP4, run 42292707845) et les 3 rushs réels.

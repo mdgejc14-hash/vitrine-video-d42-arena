@@ -37,3 +37,26 @@
   sandbox) : la compilation sera prouvée par le job CI du prochain push.
 - Aucun défaut corrigé n'est masqué par le harnais : `completer_guide()`\
   enregistre `P1_guide_termine` en FAIL si le guide reste affiché.
+
+---
+
+## Mise à jour 07/11 (runs 42350538945 + 42352327163)
+
+**Défaut harnais résolu en 2 itérations (aucun défaut produit nouveau)** :
+
+1. Run 42350538945 — S25 révélait bien « Créer ma vidéo » mais à **2 px du bas**
+   ([410,2070][670,2072], écran 1080×2072) : 6 défilements insuffisants d'un
+   cheveu (~44 px). Budget porté à 12 cycles.
+2. Run 42352327163 — **12 cycles produisent exactement le même arrêt** (dumps
+   28/29 identiques aux précédents) : le défilement s'arrête ~172 px avant la
+   fin car les grands swipes (1700→500) **traversent la vignette vidéo** dont
+   la zone de geste (lecteur ▶) interrompt le drag. Correctif 0295a35 : petits
+   drags lents (2010→1840, 600 ms) sous la vignette + tap sur le nœud
+   matérialisé — la preuve reste l'écran suivant (E8) ou le statut
+   « Export local en cours… », jamais le rc du tap.
+
+**Point produit à surveiller (non bloquant, preuves requises)** : si les petits
+drags ne suffisent pas non plus, la colonne E7 serait physiquement incapable
+d'amener « Créer ma vidéo » entièrement à l'écran sur 1080×2072 (défaut
+d'accessibilité produit à documenter) — le tap sur le nœud matérialisé reste
+la voie de preuve fonctionnelle, l'écran suivant faisant foi.
