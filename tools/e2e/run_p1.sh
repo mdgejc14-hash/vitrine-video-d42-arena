@@ -674,13 +674,15 @@ if $UI wait --text "Lancer l'export local" --exact --timeout 5 >/dev/null 2>&1; 
 else
   record BLOCKED P1_export_lance "bouton d'export introuvable (E8 absente ?)"
 fi
-# D42.17 rc7 : l encodage sur GPU logiciel (swiftshader) dépasse 8 min — run rc6 :
-# MP4 complet trouvé juste APRÈS la fenêtre. Fenêtre portée à 15 min.
-if $UI wait --text "Vidéo prête ! Partage-la avec tes clients." --exact --timeout 900 >/dev/null 2>&1; then
+# D42.17 rc8 : chronologie mesurée — l encodage swiftshader prend 8 à 12 min
+# (rc6 : complété à ~8 min, juste après la fenêtre de 8 ; rc7 : tentative 1
+# interrompue par le quota JobScheduler de 10 min puis relancée). Fenêtre
+# portée à 40 min pour couvrir jusqu à 3-4 tentatives WorkManager.
+if $UI wait --text "Vidéo prête ! Partage-la avec tes clients." --exact --timeout 2400 >/dev/null 2>&1; then
   record PASS P1_export_termine "« Vidéo prête ! » affiché"
   shot 29_export_termine; dump 29_export_termine
 else
-  record FAIL P1_export_termine "aucune fin d'export en 15 min"; shot 29_export_timeout; dump 29_export_timeout
+  record FAIL P1_export_termine "aucune fin d'export en 40 min"; shot 29_export_timeout; dump 29_export_timeout
 fi
 
 # --- S26 fichier MP4 (uniquement si l'APK est débuggable) ----------------------
