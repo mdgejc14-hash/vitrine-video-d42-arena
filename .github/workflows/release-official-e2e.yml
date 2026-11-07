@@ -93,22 +93,35 @@ jobs:
             adb devices
             # D42.17 : simulation d'un APPAREIL CLIENT PROPRE pour les heuristiques
             # anti-falsification d'IntegrityGuard (V2.0 §22 : fichiers su = indice
-            # de root). L'image AOSP userdebug du lab embarque /system/bin/su —
-            # on le retire de l'image de TEST (transparence : preuve dumpée avant/
-            # après). Le contrôle de CERTIFICAT reste pleinement actif : un APK
-            # non officiel serait toujours refusé. IntegrityGuard n'est ni modifié
-            # ni contourné.
+            # de root). L'image AOSP userdebug du lab embarque /system/xbin/su —
+            # run rc2 : le retrait a ÉCHOUÉ (overlayfs exige un REBOOT :
+            # « rm: /system/xbin/su: Read-only file system », preuve dans
+            # l'artefact rc2). Séquence éprouvée : disable-verity + REBOOT +
+            # remount + retrait + preuve avant/après. Le contrôle de CERTIFICAT
+            # reste pleinement actif : un APK non officiel serait toujours
+            # refusé. IntegrityGuard n'est ni modifié ni contourné.
             adb root >/dev/null 2>&1 || true
             sleep 2
-            echo "=== environnement avant nettoyage ===" | tee su_removal_proof.txt
-            adb shell 'ls -la /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1' | tee -a su_removal_proof.txt || true
-            adb remount 2>&1 | tee -a su_removal_proof.txt || true
+            adb disable-verity 2>&1 | head -2 || true
+            adb reboot
+            adb wait-for-device >/dev/null 2>&1 || true
+            n=0
+            while [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" != "1" ] && [ $n -lt 60 ]; do
+              sleep 5; n=$((n+1))
+            done
+            echo "boot_completed après reboot (cycles d'attente : $n)"
+            adb root >/dev/null 2>&1 || true
+            sleep 2
+            adb remount 2>&1 | tail -2 || true
             adb shell mount -o rw,remount /system 2>/dev/null || true
-            adb shell rm -f /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1 | tee -a su_removal_proof.txt || true
-            echo "=== environnement après nettoyage ===" | tee -a su_removal_proof.txt
-            adb shell 'ls -la /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1' | tee -a su_removal_proof.txt || true
             mkdir -p artifacts/p1-official
-            cp su_removal_proof.txt artifacts/p1-official/ 2>/dev/null || true
+            {
+              echo "=== environnement avant nettoyage ==="
+              adb shell 'ls -la /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1'
+              adb shell rm -f /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1
+              echo "=== environnement après nettoyage ==="
+              adb shell 'ls -la /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1'
+            } | tee artifacts/p1-official/su_removal_proof.txt
             bash tools/e2e/run_p1.sh p1-official release.apk
             echo "=== ffprobe + décodage intégral du MP4 exporté ==="
             for f in artifacts/p1-official/export.mp4; do
