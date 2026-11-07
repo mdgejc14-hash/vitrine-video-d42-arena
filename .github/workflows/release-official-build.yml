@@ -31,9 +31,18 @@ jobs:
       - name: Tests unitaires feature-export (non-régression FGS D42.18)
         run: |
           set -euo pipefail
+          # Journal INTÉGRAL en fichier : en cas d'échec, extraire les vraies
+          # erreurs (le tail -40 du build-1 les avait tronquées — leçon D42.18).
           ./gradlew :feature-export:testReleaseUnitTest \
             -PvvApkSha256=758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192 \
-            --stacktrace 2>&1 | tail -40
+            --stacktrace > gradle_unit_tests.log 2>&1 || {
+              echo "=== ÉCHEC gradle : lignes d'erreur ==="
+              grep -nE "^e: |error: |What went wrong|Execution failed for|Caused by:|FAILED" gradle_unit_tests.log | head -60 || true
+              echo "=== 80 dernières lignes ==="
+              tail -80 gradle_unit_tests.log
+              exit 1
+            }
+          tail -5 gradle_unit_tests.log
           echo "=== verdict des tests unitaires ==="
           python3 - <<'PYV'
           import glob, xml.etree.ElementTree as ET
@@ -62,5 +71,6 @@ jobs:
             app/build/outputs/mapping/release/mapping.txt
             build_apk_sha256.txt
             feature-export/build/test-results/testReleaseUnitTest/*.xml
+            gradle_unit_tests.log
           retention-days: 7
           if-no-files-found: error

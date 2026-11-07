@@ -559,7 +559,7 @@ internal const val EXPORT_NOTIF_ID = 4201
 /** Canal unique de l'export (« l'appareil peut être verrouillé », T1). */
 internal const val EXPORT_CHANNEL_ID = "vv_export"
 
-internal const val EXPORT_CHANNEL_IMPORTANCE = android.app.NotificationManager.IMPORTANCE_LOW
+internal val EXPORT_CHANNEL_IMPORTANCE = android.app.NotificationManager.IMPORTANCE_LOW
 
 private const val TAG_EXPORT = "D42-EXPORT"
 
