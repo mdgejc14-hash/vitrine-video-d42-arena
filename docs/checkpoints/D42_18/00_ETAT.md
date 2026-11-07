@@ -68,3 +68,7 @@ Budget : 0 FCFA — aucune action payante.
 - build-2 (42385542924) : FAILURE — tâche testReleaseUnitTest inexistante
   sous AGP 9 pour ce module ; passage à testDebugUnitTest (convention du
   dépôt, 9 jobs verts). Variant release validé par assembleRelease.
+
+- build-3 (42385848577) : code principal compile (compileDebugKotlin PASS) ;
+  2 défauts dans le fichier de TEST corrigés (getApplication non générique,
+  smallIcon est un Icon).
