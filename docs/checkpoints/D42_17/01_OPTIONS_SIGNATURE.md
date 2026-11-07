@@ -85,3 +85,11 @@ Option C exécutée (autorisation fondateur : « la poursuite de la qualificatio
 est autorisée, pas l'exposition de la clé »). Options A et B documentées ci-
 dessus. En cas d'échec de C : NO-GO conditionnel conservé + documentation
 précise du blocage, conformément à l'ordre.
+
+## Journal d'exécution
+
+- Tag `d42.17-build-1` → 92eb7a9 : AUCUN run — le commit porte `[skip ci]`,
+  GitHub saute également les workflows déclenchés par un tag pointant sur lui.
+- Correctif : commit de déclenchement sans skip-ci, poussé par le tag seul
+  (la branche `d42.13-lab` ne bouge pas : les 9 jobs verts ne sont pas
+  relancés). Tag : `d42.17-build-2`.
