@@ -64,3 +64,7 @@ Budget : 0 FCFA — aucune action payante.
 
 - build-1 (42385184417) : FAILURE 63 s à l'étape tests — erreur réelle
   tronquée par le tail -40 (défaut de MESURE, corrigé). Rebuid prévu.
+
+- build-2 (42385542924) : FAILURE — tâche testReleaseUnitTest inexistante
+  sous AGP 9 pour ce module ; passage à testDebugUnitTest (convention du
+  dépôt, 9 jobs verts). Variant release validé par assembleRelease.
