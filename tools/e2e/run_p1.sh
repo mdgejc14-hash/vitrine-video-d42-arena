@@ -595,13 +595,40 @@ fi
 adb logcat -d -s VV_E2E > "$OUT/27_vv_e2e_markers.log" 2>&1 || true
 
 # --- S25 export ----------------------------------------------------------------
-if $UI wait --text "export" --timeout 30 >/dev/null 2>&1 || $UI wait --text "Aperçu" --timeout 5 >/dev/null 2>&1; then
-  record PASS P1_apercu_export "écran d'aperçu / export atteint"
-  shot 28_apercu
+# E7 (« Aperçu de ta vidéo ») porte « Créer ma vidéo » (e7_create), en bas d'une
+# colonne défilante (vignette 9:16). Ce bouton bascule vers l'UI d'export (E8)
+# qui porte « Lancer l'export local », elle aussi en bas d'un ScrollView. Règle
+# D42.16 : cmd_tap renvoie 0 même hors écran — défiler jusqu'à visibilité
+# RÉELLE (inside) puis taper le libellé exact, et prouver l'écran suivant.
+if $UI wait --text "Aperçu de ta vidéo" --timeout 30 >/dev/null 2>&1 || $UI wait --text "export" --timeout 10 >/dev/null 2>&1; then
+  record PASS P1_apercu_export "écran d'aperçu E7 atteint"
+  shot 28_apercu; dump 28_apercu
+  ok_create=""
+  for i in 1 2 3 4 5 6; do
+    if $UI inside --text "Créer ma vidéo" --exact --timeout 3 >/dev/null 2>&1; then ok_create=1; break; fi
+    adb shell input swipe 540 1700 540 500 300 >/dev/null 2>&1; sleep 1
+  done
+  if [ -n "$ok_create" ] && $UI tap --text "Créer ma vidéo" --exact --timeout 8 >/dev/null 2>&1 && $UI wait --text "Lancer l'export local" --timeout 25 >/dev/null 2>&1; then
+    record PASS P1_apercu_valide "« Créer ma vidéo » actionné : UI d'export (E8) affichée"
+  else
+    record FAIL P1_apercu_valide "« Créer ma vidéo » jamais révélé ou E8 non atteinte"
+  fi
+  sleep 2
 else
-  record BLOCKED P1_apercu_export "écran d'export non atteint"
+  record BLOCKED P1_apercu_export "écran d'aperçu non atteint"
 fi
-if $UI tap --text "Lancer l'export local" --timeout 15 >/dev/null 2>&1; then record PASS P1_export_lance "export lancé"; else record BLOCKED P1_export_lance "bouton d'export introuvable"; fi
+# « Lancer l'export local » est en bas du ScrollView E8 : le révéler, taper,
+# puis prouver le démarrage par le statut « Export local en cours… ».
+ok_start=""
+for i in 1 2 3 4 5 6; do
+  if $UI inside --text "Lancer l'export local" --exact --timeout 3 >/dev/null 2>&1; then ok_start=1; break; fi
+  adb shell input swipe 540 1700 540 500 300 >/dev/null 2>&1; sleep 1
+done
+if [ -n "$ok_start" ] && $UI tap --text "Lancer l'export local" --exact --timeout 8 >/dev/null 2>&1 && $UI wait --text "Export local en cours" --timeout 25 >/dev/null 2>&1; then
+  record PASS P1_export_lance "export lancé (statut « Export local en cours… » constaté)"
+else
+  record BLOCKED P1_export_lance "bouton d'export introuvable"
+fi
 if $UI wait --text "Vidéo prête ! Partage-la avec tes clients." --exact --timeout 480 >/dev/null 2>&1; then
   record PASS P1_export_termine "« Vidéo prête ! » affiché"
   shot 29_export_termine; dump 29_export_termine
