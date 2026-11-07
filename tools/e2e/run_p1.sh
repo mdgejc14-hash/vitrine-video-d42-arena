@@ -602,6 +602,11 @@ adb logcat -d -s VV_E2E > "$OUT/27_vv_e2e_markers.log" 2>&1 || true
 # RÉELLE (inside) puis taper le libellé exact, et prouver l'écran suivant.
 # Run 42350538945 : 6 défilements laissaient « Créer ma vidéo » à 2 px du bas
 # ([410,2070][670,2072]) — inside exige >8 px, à juste titre. Budget 12 cycles.
+# Run 42352327163 : 12 cycles ne changent RIEN — la colonne s'arrête ~172 px
+# avant sa fin car les grands swipes traversent la vignette vidéo (zone de
+# geste du lecteur ▶) qui interrompt le défilement. Remèdes : petits drags
+# lents SOUS la vignette, puis tap sur le nœud matérialisé — LA PREUVE RESTE
+# L'ÉCRAN SUIVANT, jamais le rc du tap.
 revele() {  # $1 = libellé exact -> rc 0 si entièrement visible
   local lbl="$1" i
   for i in $(seq 1 12); do
@@ -609,19 +614,22 @@ revele() {  # $1 = libellé exact -> rc 0 si entièrement visible
     adb shell input swipe 540 1700 540 500 400 >/dev/null 2>&1
     sleep 1
   done
+  for i in 1 2 3 4; do
+    $UI inside --text "$lbl" --exact --timeout 3 >/dev/null 2>&1 && return 0
+    adb shell input swipe 540 2010 540 1840 600 >/dev/null 2>&1
+    sleep 1
+  done
   $UI inside --text "$lbl" --exact --timeout 3 >/dev/null 2>&1
 }
 if $UI wait --text "Aperçu de ta vidéo" --timeout 30 >/dev/null 2>&1 || $UI wait --text "export" --timeout 10 >/dev/null 2>&1; then
   record PASS P1_apercu_export "écran d'aperçu E7 atteint"
   shot 28_apercu; dump 28_apercu
-  if revele "Créer ma vidéo"; then
-    if $UI tap --text "Créer ma vidéo" --exact --timeout 8 >/dev/null 2>&1 && $UI wait --text "Lancer l'export local" --timeout 25 >/dev/null 2>&1; then
-      record PASS P1_apercu_valide "« Créer ma vidéo » actionné : UI d'export (E8) affichée"
-    else
-      record FAIL P1_apercu_valide "« Créer ma vidéo » visible mais E8 jamais atteinte"
-    fi
+  if revele "Créer ma vidéo"; then etat_btn="révélé"; else etat_btn="partiellement visible"; fi
+  $UI tap --text "Créer ma vidéo" --exact --timeout 8 >/dev/null 2>&1
+  if $UI wait --text "Lancer l'export local" --timeout 25 >/dev/null 2>&1; then
+    record PASS P1_apercu_valide "« Créer ma vidéo » ($etat_btn) actionné : UI d'export (E8) affichée"
   else
-    record FAIL P1_apercu_valide "« Créer ma vidéo » jamais entièrement révélé par le défilement"
+    record FAIL P1_apercu_valide "« Créer ma vidéo » $etat_btn, tap émis, E8 jamais atteinte"
   fi
   sleep 2
 else
@@ -630,7 +638,8 @@ fi
 # « Lancer l'export local » est en bas du ScrollView E8 : le révéler, taper,
 # puis prouver le démarrage par le statut « Export local en cours… ». Si la
 # porte crédits refuse (session locale), le dire — jamais de message trompeur.
-if revele "Lancer l'export local"; then
+if $UI wait --text "Lancer l'export local" --exact --timeout 5 >/dev/null 2>&1; then
+  if revele "Lancer l'export local"; then etat_btn2="révélé"; else etat_btn2="partiellement visible"; fi
   $UI tap --text "Lancer l'export local" --exact --timeout 8 >/dev/null 2>&1
   sleep 2
   if $UI wait --text "Export local en cours" --timeout 25 >/dev/null 2>&1; then
@@ -638,10 +647,10 @@ if revele "Lancer l'export local"; then
   elif $UI wait --text "Plus de crédits export disponibles" --timeout 5 >/dev/null 2>&1; then
     record FAIL P1_export_lance "porte crédits : export refusé en session locale (export_gate_no_credit)"
   else
-    record FAIL P1_export_lance "bouton actionné sans statut « Export local en cours… » constaté"
+    record FAIL P1_export_lance "bouton $etat_btn2, tap émis, aucun statut de démarrage constaté"
   fi
 else
-  record BLOCKED P1_export_lance "bouton d'export introuvable"
+  record BLOCKED P1_export_lance "bouton d'export introuvable (E8 absente ?)"
 fi
 if $UI wait --text "Vidéo prête ! Partage-la avec tes clients." --exact --timeout 480 >/dev/null 2>&1; then
   record PASS P1_export_termine "« Vidéo prête ! » affiché"
