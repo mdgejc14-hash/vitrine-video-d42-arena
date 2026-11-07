@@ -134,3 +134,18 @@ SHA-256 2a6980b8801a492125f2f933b1c62fd23e3aab87e829890a6398ab38511a5038.
 Preuve crédits rc5 : export_journal = 1 ligne RESERVED, balanceAfter=2
 (mono-débit). Objectif rc6 : export complet RESERVED->CONFIRMÉ, MP4,
 ffprobe, décodage, partage.
+
+## Run 42373712852 (rc6) — MP4 RÉEL PRODUIT
+
+- P1_export_lance PASS (« Export local en cours… » constaté) — la porte
+  intégrité est passée sur APK officiel : A5/H12/H13 + certificat
+  758077eb… + empreinte injectée + appareil propre.
+- **P1_mp4_extrait PASS : export-0.mp4 (4 974 437 octets)**, ffprobe :
+  h264, 1920x1080, 19,56 s, conteneur mp4/mov.
+- 32 PASS / 1 FAIL / 1 BLOCKED : l'écran au timeout affichait encore
+  « Export local en cours… » (encodage swiftshader > 8 min, fichier
+  complet trouvé juste après) ; partage bloqué en conséquence ;
+  décodage : coquille ffprobe/-f null (ffmpeg requis).
+- Crédits : export_journal = 1 ligne RESERVED, solde 3->2 (mono-débit) ;
+  rc5 avait prouvé le remboursement à l'échec.
+- rc7 : fenêtre 900 s, décodage ffmpeg, APK inchangé (2a6980b8…5038).
