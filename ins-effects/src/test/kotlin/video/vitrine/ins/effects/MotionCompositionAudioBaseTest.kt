@@ -4,6 +4,9 @@ import android.net.Uri
 import androidx.media3.common.util.UnstableApi
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 /**
  * D42.21 — régression du défaut D42.18 : quand les rushs du client n'ont
@@ -14,6 +17,8 @@ import org.junit.Test
  * historique inchangé — les rushs portent l'audio).
  */
 @UnstableApi
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 class MotionCompositionAudioBaseTest {
 
     private val sheet = MotionJson.BeatSheet(

@@ -466,25 +466,38 @@ class ExportWorker(
         val echantillons = (dureeCappee * rate / 1_000L).toInt() * canaux
         val octetsData = echantillons * 2
         val fichier = File(context.cacheDir, "base-silence-d4221.wav")
+
+        // Petits entiers little-endian (WAV) — écritures octet par octet, sans
+        // ambiguïté de type Short/Int.
+        fun le16(sortie: java.io.DataOutputStream, v: Int) {
+            sortie.write(v and 0xFF)
+            sortie.write((v shr 8) and 0xFF)
+        }
+
+        fun le32(sortie: java.io.DataOutputStream, v: Int) {
+            sortie.write(v and 0xFF)
+            sortie.write((v shr 8) and 0xFF)
+            sortie.write((v shr 16) and 0xFF)
+            sortie.write((v shr 24) and 0xFF)
+        }
+
         java.io.DataOutputStream(
             java.io.BufferedOutputStream(fichier.outputStream())
         ).use { sortie ->
-            val ascii = { s: String -> s.toByteArray(Charsets.US_ASCII) }
-            sortie.writeInt(0x52494646)                       // "RIFF"
-            sortie.writeInt(Integer.reverseBytes(36 + octetsData))
-            sortie.writeInt(0x57415645)                       // "WAVE"
-            sortie.writeInt(0x666D7420)                       // "fmt "
-            sortie.writeInt(Integer.reverseBytes(16))
-            sortie.writeShort(java.lang.Short.reverseBytes(1).toInt())    // PCM
-            sortie.writeShort(java.lang.Short.reverseBytes(canaux).toInt())
-            sortie.writeInt(Integer.reverseBytes(rate))
-            sortie.writeInt(Integer.reverseBytes(rate * canaux * 2))
-            sortie.writeShort(java.lang.Short.reverseBytes(canaux * 2).toInt())
-            sortie.writeShort(java.lang.Short.reverseBytes(16).toInt())
-            sortie.writeInt(0x64617461)                       // "data"
-            sortie.writeInt(Integer.reverseBytes(octetsData))
-            // Silence : le tampon zéro est implicite, on force la taille.
-            val tampon = ByteArray(64 * 1024)
+            sortie.writeBytes("RIFF")
+            le32(sortie, 36 + octetsData)
+            sortie.writeBytes("WAVE")
+            sortie.writeBytes("fmt ")
+            le32(sortie, 16)                    // taille du bloc fmt
+            le16(sortie, 1)                     // PCM
+            le16(sortie, canaux)
+            le32(sortie, rate)
+            le32(sortie, rate * canaux * 2)     // débit octets/s
+            le16(sortie, canaux * 2)            // alignement bloc
+            le16(sortie, 16)                    // bits/échantillon
+            sortie.writeBytes("data")
+            le32(sortie, octetsData)
+            val tampon = ByteArray(64 * 1024)   // silence = zéros
             var restant = octetsData
             while (restant > 0) {
                 val n = minOf(tampon.size, restant)
