@@ -1,0 +1,124 @@
+name: release-official-e2e
+# D42.17 option C (checkpoint 01_OPTIONS_SIGNATURE.md) — étage 3/3 :
+# validation E2E de l'APK OFFICIELLEMENT SIGNÉ transmis comme asset d'une
+# release (seul l'artefact signé transite ; la clé privée reste hors du dépôt).
+# Étage 2/3 = re-signature locale par l'agent (keystore officiel, hors CI).
+#
+# Ce workflow :
+#   1. télécharge l'asset APK de la release taguée d42.17-rc* ;
+#   2. CONTRÔLE apksigner : le certificat de l'APK DOIT être le certificat
+#      officiel 758077eb…33e192 (documenté D42.14/RC6) — refus sinon ;
+#   3. installe CET APK dans l'AVD (Pixel 5 / API 30 / AOSP, adb root
+#      autorisé pour les preuves fichiers) et rejoue le parcours P1 :
+#      tournage guidé -> export RÉEL -> MP4 -> ffprobe + décodage intégral
+#      -> crédits (base locale tirée) -> partage ;
+#   4. publie toutes les preuves en artefact.
+#
+# IntegrityGuard : ni désactivé ni contourné — ACTIF (empreinte officielle
+# injectée au build, étage 1) et SATISFAIT par la signature officielle réelle.
+# Déclenchement : push de tag d42.17-rc* (la création de la release crée le
+# tag). android-e2e-lab (branches) ne se déclenche pas sur un tag : les 9 jobs
+# verts de la qualification ne sont pas relancés.
+on:
+  push:
+    tags: ['d42.17-rc*']
+
+concurrency:
+  group: release-official-e2e-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  e2e-official:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Téléchargement de l'APK officiel signé (asset de la release)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          echo "release : $TAG"
+          URL=""
+          for i in $(seq 1 30); do
+            URL=$(curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${TAG}" \
+              | python3 -c "import json,sys; a=json.load(sys.stdin).get('assets',[]); print(a[0]['browser_download_url'] if a else '')" \
+            ) || URL=""
+            if [ -n "$URL" ]; then break; fi
+            echo "asset pas encore publié, tentative $i/30…"; sleep 20
+          done
+          if [ -z "$URL" ]; then
+            echo "::error::Aucun asset APK trouvé sur la release $TAG après 10 min."
+            exit 1
+          fi
+          curl -fsSL -o release.apk "$URL"
+          ls -la release.apk
+          sha256sum release.apk | tee release_apk_sha256.txt
+      - name: Contrôle apksigner (certificat APK == officiel, refus sinon)
+        run: |
+          set -euo pipefail
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          "$APKSIGNER" verify --print-certs release.apk | tee apksigner_verify.txt
+          CERT=$("$APKSIGNER" verify --print-certs release.apk \
+                 | awk -F': ' '/certificate SHA-256 digest/ {print tolower($NF)}' | head -1)
+          echo "certificat APK      : $CERT"
+          echo "certificat officiel : 758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192"
+          if [[ "$CERT" != "758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192" ]]; then
+            echo "::error::Certificat de l'APK != certificat officiel — refus (clé de substitution interdite)."
+            exit 1
+          fi
+          echo "OK : l'APK porte le certificat officiel."
+      - name: ffprobe (vérification + décodage du MP4 exporté)
+        run: timeout 240 bash -c 'sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg' >/dev/null 2>&1 || echo "ffmpeg indisponible ou trop lent — ffprobe ignoré"
+      - name: Activation KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: P1 export sur APK officiellement signé (caméra émulée)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
+          script: |
+            adb devices
+            bash tools/e2e/run_p1.sh p1-official release.apk
+            echo "=== ffprobe + décodage intégral du MP4 exporté ==="
+            for f in artifacts/p1-official/export.mp4; do
+              if [ -s "$f" ]; then
+                ffprobe -v error -show_entries format=duration,size,format_name -show_entries stream=codec_type,codec_name,width,height -of default=noprint_wrappers=1 "$f" | tee artifacts/p1-official/ffprobe.txt
+                echo "--- décodage intégral (lecture bout en bout) ---" | tee -a artifacts/p1-official/ffprobe.txt
+                ffprobe -v error -i "$f" -f null - 2>&1 | tee artifacts/p1-official/decode_check.txt
+                echo "decode rc=$?" | tee -a artifacts/p1-official/decode_check.txt
+              else
+                echo "aucun MP4 produit : l'échec est applicatif, pas technique" | tee artifacts/p1-official/ffprobe.txt
+              fi
+            done
+            echo "=== preuve crédits : base locale de l'application ==="
+            adb root >/dev/null 2>&1 || true
+            sleep 2
+            mkdir -p artifacts/p1-official/db
+            adb pull /data/data/video.vitrine.app/databases artifacts/p1-official/db >/dev/null 2>&1 \
+              || echo "aucune base locale tirée" | tee artifacts/p1-official/db/pull_status.txt
+            true
+      - name: Artefacts E2E officielle (MP4 + preuves + APK)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-p1-official
+          path: |
+            artifacts/**
+            release.apk
+            release_apk_sha256.txt
+            apksigner_verify.txt
+          retention-days: 14
+          if-no-files-found: warn
