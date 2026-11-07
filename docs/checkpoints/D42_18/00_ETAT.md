@@ -72,3 +72,8 @@ Budget : 0 FCFA — aucune action payante.
 - build-3 (42385848577) : code principal compile (compileDebugKotlin PASS) ;
   2 défauts dans le fichier de TEST corrigés (getApplication non générique,
   smallIcon est un Icon).
+
+- build-4 (42386176290) : SUCCESS — compilation + tests unitaires 5/5
+  (ExportForegroundInfoTest 4/4 inclus) + APK R8 (d4daa7e3…bd4da) ;
+  re-signé officiellement : 0fbe5241…439e8 (44 141 502 o, cert 758077eb…,
+  v2+v3, zipalign OK). Release d42.18-rc9 publiée avec l'asset.
