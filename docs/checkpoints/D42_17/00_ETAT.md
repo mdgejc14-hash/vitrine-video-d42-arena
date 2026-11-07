@@ -91,3 +91,10 @@ heuristiques ; l'APK officiel a expected == certificat → reste uniquement
 tamperHints : **/system/bin/su présent sur l'image AOSP userdebug**.
 Itération 2 : -writable-system + retrait de su avant le parcours (preuve
 avant/après dans l'artefact), certificat toujours contrôlé. Tag d42.17-rc2.
+
+## Itération 3 (rc3) — retrait EFFECTIF de su
+
+Run rc2 : parcours 30 PASS, refus identique. PREUVE : su est en
+/system/xbin/su et « rm: Read-only file system » — l'overlayfs exige un
+reboot. rc3 : disable-verity + reboot + attente boot_completed + remount
++ retrait, preuve avant/après. APK inchangé (896240dc…683c).
