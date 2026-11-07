@@ -43,3 +43,14 @@
 #    « dq1 »). Les corps de methodes restent obfusques : l'obfuscation integrale
 #    (D36) n'est pas remise en cause.
 -keepnames class * extends java.lang.Throwable
+
+# ── D42.17 : media3 + R8 full sur API 30 (Android 11) ─────────────────────────
+# Run 42371123494 (APK officiel signé, release R8) : ExportWorker lève
+# java.lang.NoClassDefFoundError: android.media.metrics.LogSessionId (API 31+)
+# dans le Transformer media3 — la fusion de classes R8 (-repackageclasses 'vv',
+# -allowaccessmodification) hisse la référence hors de sa garde de version.
+# Les 120 rendus J3 tournaient en DEBUG sur API 34 : le défaut était invisible.
+# Correctif : conserver les classes media3 intactes (garde de version
+# préservée). L'obfuscation intégrale du reste (D36) est inchangée ; media3
+# est du code open source, le coût est un léger surcroît de taille.
+-keep class androidx.media3.** { *; }
