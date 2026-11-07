@@ -33,11 +33,11 @@ jobs:
           set -euo pipefail
           # Journal INTÉGRAL en fichier : en cas d'échec, extraire les vraies
           # erreurs (le tail -40 du build-1 les avait tronquées — leçon D42.18).
-          ./gradlew :feature-export:testReleaseUnitTest \
+          ./gradlew :feature-export:testDebugUnitTest \
             -PvvApkSha256=758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192 \
             --stacktrace > gradle_unit_tests.log 2>&1 || {
-              echo "=== ÉCHEC gradle : lignes d'erreur ==="
-              grep -nE "^e: |error: |What went wrong|Execution failed for|Caused by:|FAILED" gradle_unit_tests.log | head -60 || true
+              echo "=== ÉCHEC gradle : lignes d'erreur (avec contexte) ==="
+              grep -nE -A6 "What went wrong|^e: |error: |Execution failed for|Caused by:|FAILED" gradle_unit_tests.log | head -80 || true
               echo "=== 80 dernières lignes ==="
               tail -80 gradle_unit_tests.log
               exit 1
@@ -47,7 +47,7 @@ jobs:
           python3 - <<'PYV'
           import glob, xml.etree.ElementTree as ET
           total = failures = 0
-          for f in glob.glob('feature-export/build/test-results/testReleaseUnitTest/*.xml'):
+          for f in glob.glob('feature-export/build/test-results/testDebugUnitTest/*.xml'):
               r = ET.parse(f).getroot()
               total += int(r.get('tests', 0)); failures += int(r.get('failures', 0)) + int(r.get('errors', 0))
           print(f'tests={total} échecs={failures}')
@@ -63,6 +63,7 @@ jobs:
           ls -la "$APK"
           sha256sum "$APK" | tee build_apk_sha256.txt
       - name: Artefact build (re-signature locale ensuite)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: release-build-unsigned
@@ -70,7 +71,7 @@ jobs:
             app/build/outputs/apk/release/*.apk
             app/build/outputs/mapping/release/mapping.txt
             build_apk_sha256.txt
-            feature-export/build/test-results/testReleaseUnitTest/*.xml
+            feature-export/build/test-results/testDebugUnitTest/*.xml
             gradle_unit_tests.log
           retention-days: 7
           if-no-files-found: error
