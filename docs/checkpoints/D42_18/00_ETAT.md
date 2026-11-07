@@ -77,3 +77,25 @@ Budget : 0 FCFA — aucune action payante.
   (ExportForegroundInfoTest 4/4 inclus) + APK R8 (d4daa7e3…bd4da) ;
   re-signé officiellement : 0fbe5241…439e8 (44 141 502 o, cert 758077eb…,
   v2+v3, zipalign OK). Release d42.18-rc9 publiée avec l'asset.
+
+## Run E2E rc9 (42387189875) — en cours
+
+Incidents de publication réparés (traçabilité complète) :
+- la release a été créée AVANT le tag → GitHub a auto-créé d42.18-rc9 sur
+  la tête de main (a2a3c47, mauvais commit) ; aucun workflow ne s'est
+  déclenché sur ce tag erroné (vérifié) ;
+- tag distant supprimé puis repoussé au bon commit 445fc97 (tag annoté
+  d6c5679) → E2E déclenché sur le bon code ;
+- la suppression du tag avait passé la release en brouillon (invisible
+  pour /releases/tags/) → republiée (draft=false) dans la fenêtre de
+  réessai du workflow (asset intact, 44 141 502 o).
+Leçon rétablie : TOUJOURS pousser le tag avant de créer la release.
+
+Attendus du run (critères 02_DECISION_ARCHITECTURE.md) :
+- 0 « WorkerWrapper interrupted » (rc8 : 4) ; 1 seul démarrage de worker ;
+- P1_notif_fgs PASS (notification vv_export via dumpsys) ;
+- P1_ecran_etaint PASS (45 s écran éteint, export poursuivi) ;
+- P1_export_termine PASS (« Vidéo prête ! ») ;
+- P1_partage PASS (sélecteur Android) ;
+- P1_credit_confirme PASS (journal CONFIRMED, solde 2) ;
+- MP4 + ffprobe + décodage rc=0 ; aucun crash ; 30 PASS initiaux intacts.
