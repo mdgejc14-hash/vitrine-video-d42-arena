@@ -105,3 +105,11 @@ rc3 : adb reboot a tué l'émulateur (wait-for-device 88 min, annulation au
 timeout). rc4 : bind-mount d'un répertoire vide sur /system/xbin (su
 invisible pour les heuristiques, aucune écriture /system, aucun reboot).
 APK inchangé (896240dc…683c).
+
+## Itération 5 (rc5) — script émulateur en fichier unique
+
+rc4 : « Syntax error (expecting }) » — l'action exécute script: LIGNE PAR
+LIGNE (sh -c) : blocs multi-lignes impossibles (c'était aussi la cause des
+rougeurs d'étape rc1/rc2 après parcours complet). Correctif :
+tools/e2e/run_official_e2e.sh (masquage su bind-mount + parcours + preuves),
+appelé en une ligne. APK inchangé (896240dc…683c).
