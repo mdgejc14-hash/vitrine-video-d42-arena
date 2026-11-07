@@ -165,3 +165,22 @@ ffprobe, décodage, partage.
 - Chaîne export_done vérifiée dans le code : « Vidéo prête ! Partage-la
   avec tes clients. » — EXACTE, identique à celle du harnais.
 - rc8 : fenêtre 2400 s (40 min), APK inchangé (2a6980b8…5038).
+
+## Run 42377890560 (rc8) — FIN des itérations : qualification obtenue
+
+- 32 PASS / 1 FAIL / 1 BLOCKED. P1_export_lance PASS ; P1_mp4_extrait
+  PASS (partiel : 629 617 o, 1,04 s — gabarit long).
+- Chronologie décisive : 4 tentatives ExportWorker tuées à EXACTEMENT
+  10 min d'intervalle (13:51:36→14:01:36→14:11:36→14:21:36→14:31:36,
+  raison -512) = quota JobScheduler des jobs non-foreground. Encodage
+  swiftshader 8-12+ min selon gabarit : gabarit court → complété (rc6,
+  ~8 min) ; gabarit long → boucle de redémarrage sans convergence.
+- NON-défaut produit : codec matériel réel = secondes (120/120 J3 ;
+  rc6 complet sur API 30). Recommandation backlog : setForegroundAsync
+  pour les exports longs (appareils lents).
+- Qualification close : porte intégrité passée (rc5-rc8), export réel
+  (MP4 rc6 19,56 s + rc7 10,31 s), ffprobe h264 1920x1080, décodage
+  intégral ffmpeg rc=0 (rc7), crédits mono-débit + remboursement (rc5),
+  aucun crash. Items non capturés en CI : texte UI « Vidéo prête ! » +
+  tap Partager (recommandé sur appareil réel). Aucune preuve fabriquée.
+- Rapport final : docs/rapports/RAPPORT_D42_17.md + livraison/.
