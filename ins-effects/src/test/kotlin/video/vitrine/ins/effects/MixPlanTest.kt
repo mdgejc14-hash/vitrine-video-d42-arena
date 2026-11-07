@@ -67,4 +67,16 @@ class MixPlanTest {
         val db = 20 * Math.log10(v.toDouble())
         assertTrue("musique au repos dans -18/-22 dB : $db", db in -22.0..-18.0)
     }
+
+    @Test
+    fun `D42_21 gain solo - musique pleine quand la voix est absente`() {
+        // Mode solo (aucune voix dans les rushs) : 0 dB = 1.0 — les fichiers BGM
+        // sont déjà calibrés -16 LUFS / -1 dBTP, les atténuer les rendrait inaudibles.
+        assertEquals(0.0, MixPlan.MUSIC_SOLO_GAIN_DB, 0.0001)
+        assertEquals(1.0f, MixPlan.musicBaseGainDb(MixPlan.MUSIC_SOLO_GAIN_DB), 0.0001f)
+        // Le volume ducking reste applicable mais ne réduit pas la base solo.
+        assertEquals(1.0f, MixPlan.musicVolume(1.0f, MixPlan.MUSIC_SOLO_GAIN_DB), 0.0001f)
+        // Historique inchangé : base -20 dB avec envelope unitaire.
+        assertEquals(0.1f, MixPlan.musicVolume(1.0f), 0.001f)
+    }
 }

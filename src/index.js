@@ -1927,7 +1927,8 @@ async function routeAudioLibrary(url, env) {
   binds.push(limite);
   const { results } = await env.DB.prepare(`
     SELECT piste_id, categorie_audio, gabarit_id, secteur, format, variation,
-           bpm, genre, origine, licence, duree_s, taille_octets, statut
+           bpm, genre, origine, licence, duree_s, taille_octets, statut,
+           sha256
     FROM bgm_library
     ${where.length ? "WHERE " + where.join(" AND ") : ""}
     ORDER BY secteur, format, variation
@@ -1954,10 +1955,25 @@ async function routeAudioTrack(request, env, categorie) {
     return json({ error: "unknown_track" }, 404);
   }
 
+  // D42.21 — variation explicite ?v=N (1..20) : sélection parmi les 20 musiques
+  // du gabarit (bgm_library). Sans ?v : comportement historique inchangé
+  // (master titulaire prioritaire, sinon repli variation 1).
+  const variationParam = new URL(request.url).searchParams.get("v");
+  let variationDemandee = null;
+  if (variationParam !== null) {
+    const v = Number(variationParam);
+    if (!Number.isInteger(v) || v < 1 || v > 20) {
+      return json({ error: "invalid_variation" }, 400);
+    }
+    variationDemandee = v;
+  }
+
   const cache = caches.default;
   const cacheKey = new Request(
     new URL(request.url).origin +
-      "/api/v1/audio/track/" + categorie + "?cv=" + AUDIO_CACHE_EPOCH
+      "/api/v1/audio/track/" + categorie +
+      (variationDemandee ? "?v=" + variationDemandee : "") +
+      "&cv=" + AUDIO_CACHE_EPOCH
   );
   // Une requete Range (lecteur progressif) ne doit JAMAIS recevoir une reponse
   // complete mise en cache : le cache bord ne varie pas selon Range. On le
@@ -1981,24 +1997,47 @@ async function routeAudioTrack(request, env, categorie) {
   if (!row) return json({ error: "unknown_track" }, 404);
 
   const range = request.headers.get("range") ?? undefined;
-  let found = await b2GetMedia(env, row.object_key, range);
-  let usedKey = row.object_key;
-  if (found.status === 404) {
-    found = await b2GetMedia(env, row.object_key_mp3, range);
-    usedKey = row.object_key_mp3;
-  }
-  if (found.status === 404) {
-    // Repli honnete : variation de la bibliotheque BGM (synthese CC0 etiquetee).
-    // Un master humain depose sur le chemin titulaire garde la priorite.
+  let found;
+  let usedKey;
+  if (variationDemandee) {
+    // Chemin variation : STRICTEMENT limité aux pistes EN_LIGNE de cette
+    // catégorie (jamais de bascule silencieuse vers un autre gabarit).
     const variante = await env.DB.prepare(`
       SELECT object_key FROM bgm_library
-      WHERE categorie_audio = ? AND statut = 'EN_LIGNE'
-      ORDER BY variation
+      WHERE categorie_audio = ? AND variation = ? AND statut = 'EN_LIGNE'
       LIMIT 1
-    `).bind(categorie).first();
-    if (variante) {
-      found = await b2GetMedia(env, variante.object_key, range);
-      usedKey = variante.object_key;
+    `).bind(categorie, variationDemandee).first();
+    if (!variante) {
+      return json({ error: "variation_not_available" }, 404);
+    }
+    found = await b2GetMedia(env, variante.object_key, range);
+    usedKey = variante.object_key;
+    if (found.status === 503 || found.status === 502) {
+      return json({ error: found.error }, found.status);
+    }
+    if (found.status !== 200 && found.status !== 206) {
+      return json({ error: "track_not_uploaded" }, 404);
+    }
+  } else {
+    found = await b2GetMedia(env, row.object_key, range);
+    usedKey = row.object_key;
+    if (found.status === 404) {
+      found = await b2GetMedia(env, row.object_key_mp3, range);
+      usedKey = row.object_key_mp3;
+    }
+    if (found.status === 404) {
+      // Repli honnete : variation de la bibliotheque BGM (synthese CC0 etiquetee).
+      // Un master humain depose sur le chemin titulaire garde la priorite.
+      const variante = await env.DB.prepare(`
+        SELECT object_key FROM bgm_library
+        WHERE categorie_audio = ? AND statut = 'EN_LIGNE'
+        ORDER BY variation
+        LIMIT 1
+      `).bind(categorie).first();
+      if (variante) {
+        found = await b2GetMedia(env, variante.object_key, range);
+        usedKey = variante.object_key;
+      }
     }
   }
   if (found.status === 503 || found.status === 502) {
@@ -2008,7 +2047,7 @@ async function routeAudioTrack(request, env, categorie) {
     return json({ error: "track_not_uploaded" }, 404);
   }
 
-  if (row.statut !== "EN_LIGNE") {
+  if (!variationDemandee && row.statut !== "EN_LIGNE") {
     await env.DB.prepare(`
       UPDATE audio_catalog
       SET statut = 'EN_LIGNE',

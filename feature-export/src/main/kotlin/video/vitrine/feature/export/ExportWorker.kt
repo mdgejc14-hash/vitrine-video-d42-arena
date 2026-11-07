@@ -156,13 +156,40 @@ class ExportWorker(
         // Audit D40 (B3) : duree attendue = beat sheet (composition) ou duree
         // REELLE du rush (retriever) — plus l'heuristique taille/1000.
         val expectedMs = expectedDurationMs(input, sheet)
+        // D42.21 — défaut D42.18 corrigé à la racine : quand une musique est
+        // planifiée mais qu'AUCUN rush ne porte de piste audio (voix
+        // facultative — le commerçant peut ne pas parler), on ajoute une
+        // séquence audio parallèle (WAV silencieux) pour que le graphe audio
+        // du Transformer existe : le mixeur BGM/SFX y superpose la musique en
+        // gain solo (0 dB). Sans cela, l'export sortait MUET bien que visuellement
+        // réussi (BGM jamais EditedMediaItem, graphe audio jamais créé).
+        val rushes = inputData.getStringArray(KEY_CLIENT_RUSHES)
+        val rushAudioPresente = rushesAudioPresente(rushes)
+        // "Audio planifié" = BGM OU SFX transmis par l'appelant (même critère que
+        // audioMixerFactory ci-dessous : mixer non null).
+        val mixerFactoryPrevu = inputData.getString(KEY_BGM_PATH) != null ||
+            !inputData.getString(KEY_SFX_EVENTS).isNullOrBlank()
+        val baseSilencieuse = mixerFactoryPrevu && !rushAudioPresente && expectedMs > 0L
+        val fichierBaseSilence = if (baseSilencieuse) ecrireWavSilencieux(expectedMs) else null
+        if (baseSilencieuse) {
+            android.util.Log.i(
+                TAG_VERIF,
+                "D42.21 : rushs sans audio + BGM planifiée — base silencieuse ${expectedMs}ms, musique en gain solo"
+            )
+        }
         // Audit D40 (A4) : BGM duckee + SFX du gabarit mixees au rendu.
         // Audit D41 (F59/F60) : profondeur de ducking du GABARIT + duree de
         // composition transmises au mixeur (fade-out musique avant la fin).
-        val mixerFactory = audioMixerFactory(expectedMs)
+        // D42.21 : gain solo (0 dB) quand la musique porte seule la vidéo.
+        val mixerFactory = audioMixerFactory(expectedMs, musicSolo = baseSilencieuse)
 
+        try {
         while (attempt < MAX_ATTEMPTS) {
-            val tentative = preparerTentative(sheet, geometry, exportClass, attempt)
+            val tentative = preparerTentative(
+                sheet, geometry, exportClass, attempt,
+                baseAudioUri = fichierBaseSilence?.let { android.net.Uri.fromFile(it) },
+                baseAudioDureeMs = if (fichierBaseSilence != null) expectedMs else 0L
+            )
             val output = File(context.cacheDir, "export-$attempt.mp4")
             val exported = runAttempt(
                 tentative, input, rotation, output, mixerFactory
@@ -212,6 +239,10 @@ class ExportWorker(
             }
         }
         return Result.failure()
+        } finally {
+            // D42.21 : le WAV silencieux est un artefact de cache, jamais conservé.
+            runCatching { fichierBaseSilence?.delete() }
+        }
     }
 
     /**
@@ -293,10 +324,12 @@ class ExportWorker(
         sheet: MotionJson.BeatSheet?,
         primaire: ExportSpec.ExportGeometry,
         exportClass: ExportSpec.ExportClass,
-        attempt: Int
+        attempt: Int,
+        baseAudioUri: android.net.Uri? = null,
+        baseAudioDureeMs: Long = 0L
     ): Tentative {
         val geometry = if (attempt == 1) ExportSpec.repli(primaire) else primaire
-        val composition = buildClientComposition(sheet, geometry)
+        val composition = buildClientComposition(sheet, geometry, baseAudioUri, baseAudioDureeMs)
         val grain = attempt < 2 && composition == null
         return Tentative(
             geometry = geometry,
@@ -312,7 +345,9 @@ class ExportWorker(
      *  remplace par la prise voisine AVANT l'indexation rid du beat sheet. */
     private fun buildClientComposition(
         sheet: MotionJson.BeatSheet?,
-        geometry: ExportSpec.ExportGeometry
+        geometry: ExportSpec.ExportGeometry,
+        baseAudioUri: android.net.Uri? = null,
+        baseAudioDureeMs: Long = 0L
     ): Composition? {
         val rushes = inputData.getStringArray(KEY_CLIENT_RUSHES)
         // D42.2 — tracabilite : ce que le MOTEUR recoit reellement, et non ce
@@ -342,7 +377,9 @@ class ExportWorker(
             alignes.map { android.net.Uri.parse(it) },
             sheet,
             cadrage,
-            geometry
+            geometry,
+            audioBaseUri = baseAudioUri,
+            audioBaseDurationMs = baseAudioDureeMs
         )
     }
 
@@ -364,7 +401,10 @@ class ExportWorker(
      * historique (audio rush traverse seul) — jamais d'echec d'export a cause
      * de l'audio (BgmSfxAudioMixer retombe en pass-through).
      */
-    private fun audioMixerFactory(expectedMs: Long): androidx.media3.transformer.AudioMixer.Factory? {
+    private fun audioMixerFactory(
+        expectedMs: Long,
+        musicSolo: Boolean = false
+    ): androidx.media3.transformer.AudioMixer.Factory? {
         val music = inputData.getString(KEY_BGM_PATH)?.let { path ->
             video.vitrine.ins.effects.BgmDecoder.decodeMusic(File(path))
         }
@@ -375,9 +415,85 @@ class ExportWorker(
             music,
             cues,
             duckDb,
-            expectedMs * 1000L
+            expectedMs * 1000L,
+            musicBaseGainDb = if (musicSolo) {
+                video.vitrine.ins.effects.MixPlan.MUSIC_SOLO_GAIN_DB
+            } else {
+                video.vitrine.ins.effects.AudioChain.MUSIC_VOLUME_DB
+            }
         )
     }
+
+    /**
+     * D42.21 — les rushs portent-ils au moins une piste audio (voix) ?
+     * Sonde MediaExtractor conservative : en cas d'erreur de lecture, on
+     * répond VRAI (comportement historique, ducking actif) — on ne passe en
+     * mode solo que si TOUTES les pistes de TOUS les rushs sont clairement
+     * sans audio.
+     */
+    private fun rushesAudioPresente(rushes: Array<String>?): Boolean {
+        if (rushes.isNullOrEmpty()) return true // hors chemin composition : inchangé
+        return rushes.any { rush ->
+            runCatching {
+                val extractor = android.media.MediaExtractor()
+                try {
+                    if (rush.startsWith("content://")) {
+                        extractor.setDataSource(context, android.net.Uri.parse(rush), null)
+                    } else {
+                        extractor.setDataSource(rush)
+                    }
+                    (0 until extractor.trackCount).any {
+                        extractor.getTrackFormat(it)
+                            .getString(android.media.MediaFormat.KEY_MIME)
+                            ?.startsWith("audio/") == true
+                    }
+                } finally {
+                    extractor.release()
+                }
+            }.getOrDefault(true) // erreur de sonde = considérer la voix présente
+        }
+    }
+
+    /**
+     * D42.21 — WAV PCM silencieux (44,1 kHz stéréo 16 bits) dans cacheDir :
+     * séquence audio parallèle garantissant le graphe audio du Transformer
+     * quand les rushs sont muets. Durée bornée à 120 s par sécurité.
+     */
+    private fun ecrireWavSilencieux(dureeMs: Long): File? = runCatching {
+        val dureeCappee = dureeMs.coerceIn(1_000L, 120_000L)
+        val rate = 44_100
+        val canaux = 2
+        val echantillons = (dureeCappee * rate / 1_000L).toInt() * canaux
+        val octetsData = echantillons * 2
+        val fichier = File(context.cacheDir, "base-silence-d4221.wav")
+        java.io.DataOutputStream(
+            java.io.BufferedOutputStream(fichier.outputStream())
+        ).use { sortie ->
+            val ascii = { s: String -> s.toByteArray(Charsets.US_ASCII) }
+            sortie.writeInt(0x52494646)                       // "RIFF"
+            sortie.writeInt(Integer.reverseBytes(36 + octetsData))
+            sortie.writeInt(0x57415645)                       // "WAVE"
+            sortie.writeInt(0x666D7420)                       // "fmt "
+            sortie.writeInt(Integer.reverseBytes(16))
+            sortie.writeShort(java.lang.Short.reverseBytes(1).toInt())    // PCM
+            sortie.writeShort(java.lang.Short.reverseBytes(canaux).toInt())
+            sortie.writeInt(Integer.reverseBytes(rate))
+            sortie.writeInt(Integer.reverseBytes(rate * canaux * 2))
+            sortie.writeShort(java.lang.Short.reverseBytes(canaux * 2).toInt())
+            sortie.writeShort(java.lang.Short.reverseBytes(16).toInt())
+            sortie.writeInt(0x64617461)                       // "data"
+            sortie.writeInt(Integer.reverseBytes(octetsData))
+            // Silence : le tampon zéro est implicite, on force la taille.
+            val tampon = ByteArray(64 * 1024)
+            var restant = octetsData
+            while (restant > 0) {
+                val n = minOf(tampon.size, restant)
+                sortie.write(tampon, 0, n)
+                restant -= n
+            }
+        }
+        fichier
+    }.getOrNull()
 
     private fun loadSfxCues(json: String?): List<video.vitrine.ins.effects.BgmSfxAudioMixer.SfxCue> {
         if (json.isNullOrBlank()) return emptyList()

@@ -17,6 +17,16 @@ object MixPlan {
     /** Gain lineaire musique au repos : MUSIC_VOLUME_DB = -20 dB -> 0,1. */
     fun musicBaseGain(): Float = dbToLinear(AudioChain.MUSIC_VOLUME_DB)
 
+    /**
+     * D42.21 — gain musique en mode SOLO (aucune voix dans les rushs) : la
+     * musique porte seule la vidéo. 0 dB : les fichiers BGM sont déjà calibrés
+     * à −16 LUFS intégré / −1 dBTP (BS.1770-4, mesuré après encodage par le
+     * générateur v2) — les atténuer les rendrait inaudibles.
+     */
+    const val MUSIC_SOLO_GAIN_DB = 0.0
+
+    fun musicBaseGainDb(db: Double): Float = dbToLinear(db)
+
     /** Gain lineaire SFX : -25 dB (banc ffmpeg) -> ~0,0562. */
     const val SFX_GAIN_DB = -25.0
     fun sfxGain(): Float = dbToLinear(SFX_GAIN_DB)
@@ -76,6 +86,10 @@ object MixPlan {
 
     /** Volume final musique = base (-20 dB) x envelope ducking. */
     fun musicVolume(duckEnvelope: Float): Float = musicBaseGain() * duckEnvelope
+
+    /** Volume final musique avec base paramétrable (D42.21 : mode solo). */
+    fun musicVolume(duckEnvelope: Float, baseDb: Double): Float =
+        musicBaseGainDb(baseDb) * duckEnvelope
 
     /** Resampling lineaire PCM 16 bits mono->mono (44,1k -> 48k etc.). */
     fun resampleLinear(input: ShortArray, fromRate: Int, toRate: Int): ShortArray {

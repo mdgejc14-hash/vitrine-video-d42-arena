@@ -26,7 +26,15 @@ object MotionComposition {
         rushUris: List<Uri>,
         sheet: MotionJson.BeatSheet,
         globalVideoEffects: List<Effect> = emptyList(),
-        geometry: ExportSpec.ExportGeometry = ExportSpec.ExportGeometry(1080, 1920)
+        geometry: ExportSpec.ExportGeometry = ExportSpec.ExportGeometry(1080, 1920),
+        /**
+         * D42.21 — base audio parallèle (WAV silencieux) : garantie l'existence
+         * du graphe audio quand AUCUN rush ne porte de piste sonore (voix
+         * facultative). Le mixeur BGM/SFX y superpose alors la musique seule.
+         * null = comportement historique (l'audio vient des rushs).
+         */
+        audioBaseUri: Uri? = null,
+        audioBaseDurationMs: Long = 0L
     ): Composition {
         require(rushUris.isNotEmpty()) { "motion : aucun rush client" }
         val items = sheet.plans.mapIndexed { index, plan ->
@@ -74,6 +82,21 @@ object MotionComposition {
                 .build()
         }
         val sequence = EditedMediaItemSequence.Builder().addItems(items).build()
-        return Composition.Builder(listOf(sequence)).build()
+        val sequences = mutableListOf(sequence)
+        // D42.21 : séquence audio parallèle quand les rushs sont muets — sinon
+        // le Transformer ne crée AUCUN graphe audio et le mixeur BGM/SFX (qui
+        // s'y superpose) ne sort jamais : MP4 sans piste audio (défaut D42.18).
+        if (audioBaseUri != null && audioBaseDurationMs > 0L) {
+            val clippingAudio = MediaItem.ClippingConfiguration.Builder()
+                .setEndPositionMs(audioBaseDurationMs)
+                .build()
+            val audioItem = EditedMediaItem.Builder(
+                MediaItem.Builder().setUri(audioBaseUri)
+                    .setClippingConfiguration(clippingAudio)
+                    .build()
+            ).build()
+            sequences += EditedMediaItemSequence.Builder().addItem(audioItem).build()
+        }
+        return Composition.Builder(sequences.toList()).build()
     }
 }

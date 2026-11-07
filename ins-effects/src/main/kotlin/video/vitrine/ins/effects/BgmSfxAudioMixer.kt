@@ -33,7 +33,14 @@ class BgmSfxAudioMixer(
     /** Profondeur de ducking du gabarit (audio.mix.ducking_musique_sous_voix_db, D41 F59). */
     private val duckDepthDb: Double = MixPlan.DUCK_DEPTH_DB_DEFAULT,
     /** Duree de la composition (µs) : pilote le fade-out musique (D41 F60). 0 = inconnue. */
-    private val compositionDurationUs: Long = 0L
+    private val compositionDurationUs: Long = 0L,
+    /**
+     * D42.21 — gain de base de la musique (dB). Défaut historique -20 dB
+     * (AudioChain.MUSIC_VOLUME_DB, musique sous voix). Quand les rushs n'ont
+     * AUCUNE piste audio, l'appelant passe MixPlan.MUSIC_SOLO_GAIN_DB (0 dB) :
+     * la musique porte seule la vidéo (calibrage -16 LUFS déjà dans le fichier).
+     */
+    private val musicBaseGainDb: Double = AudioChain.MUSIC_VOLUME_DB
 ) : AudioMixer {
 
     /** Repere SFX : instant composition (µs) + PCM maître (48 kHz mono attendu). */
@@ -80,7 +87,9 @@ class BgmSfxAudioMixer(
         private val music: BgmDecoder.Pcm?,
         private val sfxCues: List<SfxCue>,
         private val duckDepthDb: Double = MixPlan.DUCK_DEPTH_DB_DEFAULT,
-        private val compositionDurationUs: Long = 0L
+        private val compositionDurationUs: Long = 0L,
+        /** D42.21 : gain musique de base (0 dB = mode solo sans voix). */
+        private val musicBaseGainDb: Double = AudioChain.MUSIC_VOLUME_DB
     ) : AudioMixer.Factory {
         override fun create(): AudioMixer =
             BgmSfxAudioMixer(
@@ -88,7 +97,8 @@ class BgmSfxAudioMixer(
                 music,
                 sfxCues,
                 duckDepthDb,
-                compositionDurationUs
+                compositionDurationUs,
+                musicBaseGainDb
             )
     }
 
@@ -154,7 +164,7 @@ class BgmSfxAudioMixer(
             val target = MixPlan.duckTargetGain(rms, duckDepthDb)
             duckEnvelope = MixPlan.approachGain(duckEnvelope, target, dtMs)
             if (musicSourceId != C.INDEX_UNSET) {
-                delegate.setSourceVolume(musicSourceId, MixPlan.musicVolume(duckEnvelope))
+                delegate.setSourceVolume(musicSourceId, MixPlan.musicVolume(duckEnvelope, musicBaseGainDb))
             }
         }
         delegate.queueInput(sourceId, sourceBuffer)
@@ -199,7 +209,7 @@ class BgmSfxAudioMixer(
             val id = delegate.addSource(outputPcmFormat(), voiceStartTimeUs)
             musicSourceId = id
             musicPcm = adapted
-            delegate.setSourceVolume(id, MixPlan.musicBaseGain())
+            delegate.setSourceVolume(id, MixPlan.musicBaseGainDb(musicBaseGainDb))
         }
         runSafe {
             pendingSfx.forEach { cue ->
