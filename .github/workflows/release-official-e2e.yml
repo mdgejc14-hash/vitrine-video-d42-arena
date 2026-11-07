@@ -89,55 +89,7 @@ jobs:
           profile: pixel_5
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
-          script: |
-            adb devices
-            # D42.17 rc4 : appareil client propre SANS REBOOT. Runs rc2/rc3 :
-            # - rc2 : rm /system/xbin/su -> « Read-only file system » (overlayfs
-            #   exige un reboot) ;
-            # - rc3 : disable-verity + adb reboot -> l'émulateur n'est JAMAIS
-            #   revenu (adb wait-for-device suspendu 88 min, run annulé au
-            #   timeout — preuve dans le log du job).
-            # Correctif : bind-mount d'un répertoire VIDE sur /system/xbin —
-            # le fichier su devient invisible pour les heuristiques
-            # anti-falsification d'IntegrityGuard (V2.0 §22), sans écrire dans
-            # /system ni redémarrer. Le contrôle de CERTIFICAT reste pleinement
-            # actif : un APK non officiel serait toujours refusé. Preuve
-            # avant/après dans l'artefact. IntegrityGuard n'est ni modifié ni
-            # contourné.
-            adb root >/dev/null 2>&1 || true
-            sleep 3
-            adb shell setenforce 0 2>/dev/null || true
-            adb shell mkdir -p /data/local/tmp/vv_xbin_vide
-            mkdir -p artifacts/p1-official
-            {
-              echo "=== avant masquage (su visible = heuristique anti-root active) ==="
-              adb shell 'ls -la /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1'
-              echo "=== masquage : bind-mount d'un répertoire vide sur /system/xbin ==="
-              adb shell mount -o bind /data/local/tmp/vv_xbin_vide /system/xbin 2>&1 \
-                || adb shell mount --bind /data/local/tmp/vv_xbin_vide /system/xbin 2>&1
-              echo "=== après masquage (attendu : su invisible) ==="
-              adb shell 'ls -la /system/xbin/ 2>&1'
-              adb shell 'ls /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1'
-            } | tee artifacts/p1-official/su_mask_proof.txt
-            bash tools/e2e/run_p1.sh p1-official release.apk
-            echo "=== ffprobe + décodage intégral du MP4 exporté ==="
-            for f in artifacts/p1-official/export.mp4; do
-              if [ -s "$f" ]; then
-                ffprobe -v error -show_entries format=duration,size,format_name -show_entries stream=codec_type,codec_name,width,height -of default=noprint_wrappers=1 "$f" | tee artifacts/p1-official/ffprobe.txt
-                echo "--- décodage intégral (lecture bout en bout) ---" | tee -a artifacts/p1-official/ffprobe.txt
-                ffprobe -v error -i "$f" -f null - 2>&1 | tee artifacts/p1-official/decode_check.txt
-                echo "decode rc=$?" | tee -a artifacts/p1-official/decode_check.txt
-              else
-                echo "aucun MP4 produit : l'échec est applicatif, pas technique" | tee artifacts/p1-official/ffprobe.txt
-              fi
-            done
-            echo "=== preuve crédits : base locale de l'application ==="
-            adb root >/dev/null 2>&1 || true
-            sleep 2
-            mkdir -p artifacts/p1-official/db
-            adb pull /data/data/video.vitrine.app/databases artifacts/p1-official/db >/dev/null 2>&1 \
-              || echo "aucune base locale tirée" | tee artifacts/p1-official/db/pull_status.txt
-            true
+          script: bash tools/e2e/run_official_e2e.sh
       - name: Artefacts E2E officielle (MP4 + preuves + APK)
         if: always()
         uses: actions/upload-artifact@v4
