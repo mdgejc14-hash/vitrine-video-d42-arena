@@ -61,3 +61,6 @@ Budget : 0 FCFA — aucune action payante.
 - Déclenchement : tag d42.18-build-1 -> release-official-build
   (compilation + tests + APK non signé) -> signature officielle locale ->
   release d42.18-rc9 -> E2E (API 30, appareil propre, parcours complet).
+
+- build-1 (42385184417) : FAILURE 63 s à l'étape tests — erreur réelle
+  tronquée par le tail -40 (défaut de MESURE, corrigé). Rebuid prévu.
