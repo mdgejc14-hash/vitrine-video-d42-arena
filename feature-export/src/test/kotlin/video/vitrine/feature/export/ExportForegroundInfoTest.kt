@@ -29,7 +29,7 @@ import org.robolectric.annotation.Config
 @Config(sdk = [34])
 class ExportForegroundInfoTest {
 
-    private val app = RuntimeEnvironment.getApplication<android.app.Application>()
+    private val app: android.app.Application = RuntimeEnvironment.getApplication()
 
     @Test
     fun `canal cree puis idempotent`() {
@@ -83,7 +83,7 @@ class ExportForegroundInfoTest {
             "notification ongoing (non balayable pendant l'export)",
             (n.flags and Notification.FLAG_ONGOING_EVENT) != 0,
         )
-        assertTrue("petite icône présente", n.smallIcon != 0)
+        assertNotNull("petite icône présente (ic_stat_export)", n.smallIcon)
     }
 
     /** Avant API 29, ForegroundInfo se construit sans type (garde de version). */
