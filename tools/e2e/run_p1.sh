@@ -508,6 +508,81 @@ done
 sleep 3
 shot 27_apres_prises; dump 27_apres_prises
 
+# --- S24b completer_guide (D42.16, défauts A5/H13) ------------------------------
+# Le gabarit exige N prises (badge « PRISE n/N ») ; la boucle ci-dessus en filme
+# 2 par le bouton classique. Si l'écran « Filme ta prise » est ENCORE affiché,
+# le parcours n'est pas terminé (runs 42278038365/42281822052/42292290440 :
+# l'application restait sur PRISE 3/3 et l'export n'était jamais atteint).
+# On termine le guide COMME UN COMMERÇANT : filmer les prises manquantes, puis
+# faire défiler la colonne pour amener « Suivant » DANS l'écran (cmd_tap tape
+# le centre des bornes même hors écran : un code retour 0 ne prouve pas un clic
+# utile), cliquer le libellé exact, et vérifier l'écran SUIVANT.
+completer_guide() {
+  # 1) encore sur le guide ?
+  if ! $UI wait --text "Filme ta prise" --timeout 6 >/dev/null 2>&1; then
+    echo "E2E guide déjà quitté : rien à compléter"
+    return 0
+  fi
+  # 2) prises exigées (badge « PRISE n/N ») et prises déjà en fichiers
+  local badge requis rush_count cycle i
+  rush_count=$(adb shell run-as "$PKG" ls files/rushes 2>/dev/null | tr -d '\r' | grep -c '^rush-')
+  requis=$($UI probe 2>/dev/null | grep -o 'PRISE [0-9]*/[0-9]*' | head -1 | sed 's|.*/||')
+  case "$requis" in ''|*[!0-9]*) requis=3 ;; esac
+  echo "E2E guide : $rush_count prise(s) en fichiers, $requis exigée(s) par le gabarit"
+  # 3) filmer les prises manquantes (max 4 cycles), par le bouton classique
+  cycle=0
+  while [ "$rush_count" -lt "$requis" ] && [ "$cycle" -lt 4 ]; do
+    cycle=$((cycle+1))
+    if ! $UI wait --id "camera_record_button" --timeout 20 >/dev/null 2>&1; then
+      echo "E2E completer : bouton d'enregistrement introuvable (cycle $cycle)"
+      break
+    fi
+    $UI tap --text "Verrouiller et enregistrer" --exact --timeout 10 >/dev/null 2>&1 \
+      || $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1 || true
+    # porte R4 éventuelle (scène émulée = visages sur les affiches)
+    if ! $UI wait --text "Arrêter et continuer" --exact --timeout 8 >/dev/null 2>&1; then
+      if $UI wait --text "Accord du client" --timeout 8 >/dev/null 2>&1; then
+        record PASS "P1_r4_consentement_c${cycle}" "porte R4 (complétion cycle $cycle) — accord confirmé"
+        $UI tap --text "Oui, accord confirmé" --exact --timeout 8 >/dev/null 2>&1 || true
+      fi
+      $UI wait --text "Arrêter et continuer" --exact --timeout 25 >/dev/null 2>&1 || break
+    fi
+    sleep 6
+    $UI tap --text "Arrêter et continuer" --exact --timeout 10 >/dev/null 2>&1 || break
+    sleep 4
+    rush_count=$(adb shell run-as "$PKG" ls files/rushes 2>/dev/null | tr -d '\r' | grep -c '^rush-')
+    echo "E2E completer : cycle $cycle -> $rush_count prise(s) en fichiers"
+    # après la DERNIÈRE prise exigée, l'application avance seule (finishWithPrises)
+    $UI wait --text "Filme ta prise" --timeout 6 >/dev/null 2>&1 || break
+  done
+  # 4-6) guide toujours affiché : défiler pour révéler « Suivant », vérifier sa
+  #      visibilité RÉELLE (inside), puis cliquer le libellé exact
+  if $UI wait --text "Filme ta prise" --timeout 4 >/dev/null 2>&1; then
+    for i in 1 2 3 4 5 6; do
+      $UI inside --text "Suivant" --exact --timeout 3 >/dev/null 2>&1 && break
+      adb shell input swipe 540 1700 540 500 300 >/dev/null 2>&1
+      sleep 1
+    done
+    if $UI inside --text "Suivant" --exact --timeout 3 >/dev/null 2>&1; then
+      $UI tap --text "Suivant" --exact --timeout 8 >/dev/null 2>&1
+      sleep 3
+    else
+      echo "E2E completer : « Suivant » jamais révélé par le défilement"
+    fi
+  fi
+  # 7-9) l'écran SUIVANT fait foi : le guide doit avoir disparu, captures à l'appui
+  if $UI wait --text "Filme ta prise" --timeout 6 >/dev/null 2>&1; then
+    record FAIL P1_guide_termine "guide toujours affiché après complétion (prise manquante ou « Suivant » inopérant — dump 26z)"
+    shot 26z_guide_bloque; dump 26z_guide_bloque
+    return 1
+  fi
+  rush_count=$(adb shell run-as "$PKG" ls files/rushes 2>/dev/null | tr -d '\r' | grep -c '^rush-')
+  record PASS P1_guide_termine "guide terminé : $rush_count prise(s) en fichiers, écran suivant atteint"
+  shot 26z_guide_termine; dump 26z_guide_termine
+  return 0
+}
+completer_guide
+
 # D42.16 : preuve FICHIER — un libellé qui bascule ne prouve pas un rush
 # exploitable. Le build est debuggable : run-as liste files/rushes (F50).
 adb shell run-as "$PKG" ls -l files/rushes > "$OUT/27_rushes.txt" 2>&1 || true
@@ -549,7 +624,9 @@ else
 fi
 
 # --- S27 partage ---------------------------------------------------------------
-if $UI tap --text "Partager" --exact --timeout 12 >/dev/null 2>&1; then
+# D42.16 (H12) : le libellé réel du bouton est « Partager la vidéo »
+# (export_share) — « Partager » en exact ne matchait JAMAIS (BLOCKED systématique).
+if $UI tap --text "Partager la vidéo" --exact --timeout 12 >/dev/null 2>&1; then
   sleep 3; shot 30_partage; dump 30_partage
   if adb shell dumpsys activity activities 2>/dev/null | grep -qi "chooser\|ResolverActivity"; then
     record PASS P1_partage "feuille de partage Android ouverte"

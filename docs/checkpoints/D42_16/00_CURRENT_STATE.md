@@ -57,3 +57,21 @@ non gérée + bouton rogné). Correctifs appliqués dans le commit associé.
 Le run `42250114616` (branche `d42-render-check`) était encore `in_progress`
 au relevé de 20 h 30 UTC. Vérification de son issue prévue avant livraison
 (voir `06_120_COMBINATIONS.md`).
+
+---
+
+## Mise à jour samedi 7 novembre 2026, ~06 h 40 UTC (après panne plateforme)
+
+- Panne de la plateforme d'exécution (~2 h 15) : tous les outils sandbox en
+  échec (signature de stockage). Reprise : sandbox fonctionnel, mais le
+  workspace restauré a perdu **tous les `.git`** des clones et **le fichier
+  jeton** `~/.d42_secrets/gh_token.txt` — cohérent avec l'ordre du fondateur
+  de ne plus réutiliser le PAT compromis.
+- Reprise : clonage anonyme du miroir public (`lab16`, tête `8af1c10`
+  vérifiée), application des correctifs A5/H13/H12 + checkpoints 02/03/06/08/09.
+- Validations locales : `bash -n` OK, harnais 9/9, ciblage 3/3.
+- Runs `42292290440` (P1, 2 FAIL restants, cause identifiée) et `42292707845`
+  (J3 vert, 120/120 complets) : résultats récupérés en lecture publique,
+  artefacts non téléchargeables sans jeton.
+- Statut : correctifs **committés localement**, push impossible sans moyen
+  d'authentification — procédure d'application par le fondateur fournie.

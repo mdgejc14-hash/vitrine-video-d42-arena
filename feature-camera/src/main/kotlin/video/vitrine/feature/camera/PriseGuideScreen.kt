@@ -55,7 +55,16 @@ fun PriseGuideScreen(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            // D42.16 (A5, run 42292290440) : la barre d'action classique (bouton
+            // « Verrouiller et enregistrer » + texte de guide) recouvre le bas de
+            // cette colonne défilante — « Refaire / Tourner / Suivant » restaient
+            // sous le pli, derrière la barre, inaccessibles au doigt comme au
+            // harnais (tap au centre de bornes hors écran = code 0 trompeur).
+            // Réserve de défilement de 180 dp : les commandes remontent au-dessus
+            // de la barre sur écran standard, petit écran et paysage. Aucun bouton
+            // supprimé : le cercle « Tourner » et le bouton classique partagent
+            // le même onRecord() gardé contre la double capture.
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 180.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         PriseHeader(prise, priseIdx, prises.size, sectorLabel, formatLabel)
