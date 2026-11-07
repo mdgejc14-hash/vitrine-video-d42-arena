@@ -88,9 +88,27 @@ jobs:
           arch: x86_64
           profile: pixel_5
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none -writable-system
           script: |
             adb devices
+            # D42.17 : simulation d'un APPAREIL CLIENT PROPRE pour les heuristiques
+            # anti-falsification d'IntegrityGuard (V2.0 §22 : fichiers su = indice
+            # de root). L'image AOSP userdebug du lab embarque /system/bin/su —
+            # on le retire de l'image de TEST (transparence : preuve dumpée avant/
+            # après). Le contrôle de CERTIFICAT reste pleinement actif : un APK
+            # non officiel serait toujours refusé. IntegrityGuard n'est ni modifié
+            # ni contourné.
+            adb root >/dev/null 2>&1 || true
+            sleep 2
+            echo "=== environnement avant nettoyage ===" | tee su_removal_proof.txt
+            adb shell 'ls -la /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1' | tee -a su_removal_proof.txt || true
+            adb remount 2>&1 | tee -a su_removal_proof.txt || true
+            adb shell mount -o rw,remount /system 2>/dev/null || true
+            adb shell rm -f /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1 | tee -a su_removal_proof.txt || true
+            echo "=== environnement après nettoyage ===" | tee -a su_removal_proof.txt
+            adb shell 'ls -la /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1' | tee -a su_removal_proof.txt || true
+            mkdir -p artifacts/p1-official
+            cp su_removal_proof.txt artifacts/p1-official/ 2>/dev/null || true
             bash tools/e2e/run_p1.sh p1-official release.apk
             echo "=== ffprobe + décodage intégral du MP4 exporté ==="
             for f in artifacts/p1-official/export.mp4; do
