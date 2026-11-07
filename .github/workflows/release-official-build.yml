@@ -11,7 +11,7 @@ name: release-official-build
 # qualification D42.16/D42.17 ne sont pas relancés).
 on:
   push:
-    tags: ['d42.17-build-*']
+    tags: ['d42.17-build-*', 'd42.18-build-*']
 
 concurrency:
   group: release-official-build-${{ github.ref }}
@@ -28,6 +28,22 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
+      - name: Tests unitaires feature-export (non-régression FGS D42.18)
+        run: |
+          set -euo pipefail
+          ./gradlew :feature-export:testReleaseUnitTest \
+            -PvvApkSha256=758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192 \
+            --stacktrace 2>&1 | tail -40
+          echo "=== verdict des tests unitaires ==="
+          python3 - <<'PYV'
+          import glob, xml.etree.ElementTree as ET
+          total = failures = 0
+          for f in glob.glob('feature-export/build/test-results/testReleaseUnitTest/*.xml'):
+              r = ET.parse(f).getroot()
+              total += int(r.get('tests', 0)); failures += int(r.get('failures', 0)) + int(r.get('errors', 0))
+          print(f'tests={total} échecs={failures}')
+          assert failures == 0, 'des tests unitaires ont échoué'
+          PYV
       - name: APK release R8 (empreinte officielle injectée, zéro secret)
         run: |
           set -euo pipefail
@@ -45,5 +61,6 @@ jobs:
             app/build/outputs/apk/release/*.apk
             app/build/outputs/mapping/release/mapping.txt
             build_apk_sha256.txt
+            feature-export/build/test-results/testReleaseUnitTest/*.xml
           retention-days: 7
           if-no-files-found: error

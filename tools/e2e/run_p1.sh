@@ -674,6 +674,29 @@ if $UI wait --text "Lancer l'export local" --exact --timeout 5 >/dev/null 2>&1; 
 else
   record BLOCKED P1_export_lance "bouton d'export introuvable (E8 absente ?)"
 fi
+# --- D42.18 : correctif FGS — notification + survie à l'écran éteint -----------
+# Le correctif (ExportWorker en service de premier plan dataSync) doit :
+#  (a) poser la notification « Export en cours… » (canal vv_export) ;
+#  (b) poursuivre l'encodage écran éteint (promesse T1) — on éteint 45 s,
+#      on rallume, et l'état d'export doit rester visible.
+sleep 20
+if adb shell dumpsys notification 2>/dev/null | grep -q "vv_export"; then
+  record PASS P1_notif_fgs "notification du canal vv_export présente (dumpsys)"
+else
+  record FAIL P1_notif_fgs "aucune notification vv_export (FGS non démarré ?)"
+fi
+adb shell input keyevent 26 >/dev/null 2>&1
+sleep 45
+adb shell input keyevent 26 >/dev/null 2>&1
+adb shell wm dismiss-keyguard >/dev/null 2>&1
+sleep 3
+if $UI wait --text "Export local en cours" --timeout 90 >/dev/null 2>&1 \
+   || $UI wait --text "Vidéo prête !" --timeout 5 >/dev/null 2>&1; then
+  record PASS P1_ecran_etaint "export poursuivi après 45 s d'écran éteint (réveil OK)"
+else
+  record FAIL P1_ecran_etaint "état d'export invisible après réveil de l'écran"
+fi
+
 # D42.17 rc8 : chronologie mesurée — l encodage swiftshader prend 8 à 12 min
 # (rc6 : complété à ~8 min, juste après la fenêtre de 8 ; rc7 : tentative 1
 # interrompue par le quota JobScheduler de 10 min puis relancée). Fenêtre
