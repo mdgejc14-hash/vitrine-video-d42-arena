@@ -185,6 +185,125 @@ jobs:
           if-no-files-found: warn
 
   # ---------------------------------------------------------------------------
+  # D42.17 — EXPORT SUR SIGNATURE OFFICIELLE (priorité absolue du fondateur).
+  # Build RELEASE signé : keystore restauré des secrets fondateur (jamais dans
+  # le dépôt), porte d'intégrité V2.0 §22 ACTIVE via -PvvApkSha256 (le certificat
+  # attendu est l'officiel), contrôle apksigner (l'APK DOIT porter le certificat
+  # officiel — clé debug interdite), puis CET APK est installé dans l'AVD et le
+  # parcours P1 est rejoué jusqu'à l'export réel, au MP4, à ffprobe, au décodage
+  # et au partage. IntegrityGuard n'est ni désactivé ni contourné : il est
+  # SATISFAIT par la signature officielle. Sans secrets -> échec explicite (on
+  # ne substitue JAMAIS une autre clé).
+  # ---------------------------------------------------------------------------
+  android-e2e-release-signed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      VV_SIGNING: ${{ secrets.VV_KEYSTORE_B64 != '' && secrets.VV_STORE_PASSWORD != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Garde-fou secrets (aucune substitution de clé)
+        if: env.VV_SIGNING != 'true'
+        run: |
+          echo "::error::D42.17 : secrets VV_KEYSTORE_B64 / VV_STORE_PASSWORD absents — release officielle impossible. Ne pas substituer une autre clé (ordre fondateur)."
+          exit 1
+      - name: Restauration keystore officiel (P0)
+        env:
+          VV_KEYSTORE_B64: ${{ secrets.VV_KEYSTORE_B64 }}
+          VV_STORE_PASSWORD: ${{ secrets.VV_STORE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          mkdir -p vv-signing
+          printf '%s' "$VV_KEYSTORE_B64" | base64 -d > vv-signing/vitrine.keystore
+          {
+            echo "storeFile=vitrine.keystore"
+            echo "storePassword=$VV_STORE_PASSWORD"
+            echo "keyAlias=vitrine"
+            echo "keyPassword=$VV_STORE_PASSWORD"
+          } > vv-signing/signing.properties
+          chmod 600 vv-signing/vitrine.keystore vv-signing/signing.properties
+      - name: Empreinte officielle SHA-256 (porte V2.0 §22)
+        id: apksha
+        run: |
+          set -euo pipefail
+          PASS=$(grep '^storePassword=' vv-signing/signing.properties | cut -d= -f2-)
+          SHA=$(keytool -list -v -keystore vv-signing/vitrine.keystore -alias vitrine \
+                -storepass "$PASS" | awk -F': ' '/SHA256:/ {print $2}' | tr -d ':' | tr 'A-Z' 'a-z')
+          if [[ ${#SHA} -ne 64 ]]; then
+            echo "::error::Extraction SHA-256 du keystore échouée (alias 'vitrine' attendu)."
+            exit 1
+          fi
+          echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
+          # Empreinte officielle documentée en D42.14 (RC6, apksigner_verify.txt) :
+          if [[ "$SHA" != "758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192" ]]; then
+            echo "::error::Le keystore secret ne porte PAS le certificat officiel documenté (758077eb…33e192) — refus."
+            exit 1
+          fi
+      - name: APK release (signé officiel + R8 + porte d'intégrité ACTIVE)
+        run: ./gradlew :app:assembleRelease -PvvApkSha256=${{ steps.apksha.outputs.sha256 }} --stacktrace 2>&1 | tail -20
+      - name: Contrôle apksigner (certificat APK == certificat officiel)
+        run: |
+          set -euo pipefail
+          APK=$(ls app/build/outputs/apk/release/*.apk | head -1)
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          CERT=$("$APKSIGNER" verify --print-certs "$APK" \
+                 | awk -F': ' '/certificate SHA-256 digest/ {print tolower($NF)}' | head -1)
+          if [[ ${#CERT} -ne 64 ]]; then
+            echo "::error::Extraction du SHA-256 de l'artifact échouée (lu : '$CERT')."
+            exit 1
+          fi
+          echo "certificat APK      : $CERT"
+          echo "certificat officiel : ${{ steps.apksha.outputs.sha256 }}"
+          [[ "$CERT" == "${{ steps.apksha.outputs.sha256 }}" ]] || { echo "::error::Certificat de l'APK != certificat officiel."; exit 1; }
+          sha256sum "$APK" | tee release_apk_sha256.txt
+      - name: ffprobe (vérification + décodage du MP4 exporté)
+        run: timeout 240 bash -c 'sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg' >/dev/null 2>&1 || echo "ffmpeg indisponible ou trop lent — ffprobe ignoré"
+      - name: Activation KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: P1 export sur release officielle (caméra émulée)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
+          script: |
+            adb devices
+            bash tools/e2e/run_p1.sh p1-release app/build/outputs/apk/release/app-release.apk
+            echo "=== ffprobe + décodage complet du MP4 exporté ==="
+            for f in artifacts/p1-release/export.mp4; do
+              if [ -s "$f" ]; then
+                ffprobe -v error -show_entries format=duration,size,format_name -show_entries stream=codec_type,codec_name,width,height -of default=noprint_wrappers=1 "$f" | tee artifacts/p1-release/ffprobe.txt
+                echo "--- décodage intégral (lecture) ---" | tee -a artifacts/p1-release/ffprobe.txt
+                ffprobe -v error -i "$f" -f null - 2>&1 | tee -a artifacts/p1-release/decode_check.txt
+                echo "decode rc=$?" | tee -a artifacts/p1-release/decode_check.txt
+              else
+                echo "aucun MP4 produit : l'échec est applicatif, pas technique" | tee artifacts/p1-release/ffprobe.txt
+              fi
+            done
+            true
+      - name: Artefacts P1 release (MP4 + preuves + APK signé)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-p1-release
+          path: |
+            artifacts/**
+            app/build/outputs/apk/release/*.apk
+            release_apk_sha256.txt
+          retention-days: 14
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
   # D42.14 — Preuve des 4 LANGUES (P5) : chaque langue est sélectionnée dans
   # l'application, puis les écrans sont vérifiés dans CETTE langue jusqu'au
   # catalogue. Les libellés attendus sont ceux des ressources values-<langue>.

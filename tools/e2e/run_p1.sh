@@ -13,6 +13,28 @@ TAG="${1:-p1}"
 APK="${2:-app/build/outputs/apk/debug/app-debug.apk}"
 PKG="video.vitrine.app"
 OUT="artifacts/${TAG}"
+
+# D42.17 — APK release (non debuggable) : run-as est indisponible. L'émulateur
+# AOSP « default » du lab autorise adb root : même mesure, même preuve, seule la
+# voie d'accès ADB change. Aucun contournement produit (IntegrityGuard intact).
+app_ls() {  # app_ls <rep-relatif> [flags ls] -> liste sur stdout
+  local rep="$1"; shift || true
+  if adb shell run-as "$PKG" ls "$rep" >/dev/null 2>&1; then
+    adb shell run-as "$PKG" ls "$@" "$rep" 2>/dev/null
+  else
+    adb root >/dev/null 2>&1 || true
+    sleep 2; adb wait-for-device >/dev/null 2>&1 || true
+    adb shell ls "$@" "/data/data/$PKG/$rep" 2>/dev/null
+  fi
+}
+app_cat() {  # app_cat <chemin-relatif> -> contenu binaire sur stdout (exec-out)
+  if adb shell run-as "$PKG" ls "$(dirname "$1")" >/dev/null 2>&1; then
+    adb exec-out run-as "$PKG" cat "$1" 2>/dev/null
+  else
+    adb root >/dev/null 2>&1 || true
+    adb exec-out cat "/data/data/$PKG/$1" 2>/dev/null
+  fi
+}
 UI="python3 tools/e2e/ui.py"
 mkdir -p "$OUT"
 RESULTS="$OUT/results.tsv"
@@ -525,7 +547,7 @@ completer_guide() {
   fi
   # 2) prises exigées (badge « PRISE n/N ») et prises déjà en fichiers
   local badge requis rush_count cycle i
-  rush_count=$(adb shell run-as "$PKG" ls files/rushes 2>/dev/null | tr -d '\r' | grep -c '^rush-')
+  rush_count=$(app_ls files/rushes | tr -d '\r' | grep -c '^rush-')
   requis=$($UI probe 2>/dev/null | grep -o 'PRISE [0-9]*/[0-9]*' | head -1 | sed 's|.*/||')
   case "$requis" in ''|*[!0-9]*) requis=3 ;; esac
   echo "E2E guide : $rush_count prise(s) en fichiers, $requis exigée(s) par le gabarit"
@@ -550,7 +572,7 @@ completer_guide() {
     sleep 6
     $UI tap --text "Arrêter et continuer" --exact --timeout 10 >/dev/null 2>&1 || break
     sleep 4
-    rush_count=$(adb shell run-as "$PKG" ls files/rushes 2>/dev/null | tr -d '\r' | grep -c '^rush-')
+    rush_count=$(app_ls files/rushes | tr -d '\r' | grep -c '^rush-')
     echo "E2E completer : cycle $cycle -> $rush_count prise(s) en fichiers"
     # après la DERNIÈRE prise exigée, l'application avance seule (finishWithPrises)
     $UI wait --text "Filme ta prise" --timeout 6 >/dev/null 2>&1 || break
@@ -576,7 +598,7 @@ completer_guide() {
     shot 26z_guide_bloque; dump 26z_guide_bloque
     return 1
   fi
-  rush_count=$(adb shell run-as "$PKG" ls files/rushes 2>/dev/null | tr -d '\r' | grep -c '^rush-')
+  rush_count=$(app_ls files/rushes | tr -d '\r' | grep -c '^rush-')
   record PASS P1_guide_termine "guide terminé : $rush_count prise(s) en fichiers, écran suivant atteint"
   shot 26z_guide_termine; dump 26z_guide_termine
   return 0
@@ -584,8 +606,8 @@ completer_guide() {
 completer_guide
 
 # D42.16 : preuve FICHIER — un libellé qui bascule ne prouve pas un rush
-# exploitable. Le build est debuggable : run-as liste files/rushes (F50).
-adb shell run-as "$PKG" ls -l files/rushes > "$OUT/27_rushes.txt" 2>&1 || true
+# exploitable. Debug : run-as (F50) ; release : adb root (émulateur AOSP).
+app_ls files/rushes -l > "$OUT/27_rushes.txt" 2>&1 || true
 if grep -q "rush-" "$OUT/27_rushes.txt" 2>/dev/null; then
   record PASS P1_rushs_fichiers "fichiers rush-*.mp4 présents et non vides dans files/rushes (voir 27_rushes.txt)"
 else
@@ -660,17 +682,19 @@ else
 fi
 
 # --- S26 fichier MP4 (uniquement si l'APK est débuggable) ----------------------
-if adb shell run-as "$PKG" ls cache >/dev/null 2>&1; then
-  MP4=$(adb shell run-as "$PKG" ls cache 2>/dev/null | tr -d '\r' | grep -m1 'export-.*\.mp4')
-  if [ -n "${MP4:-}" ]; then
-    adb exec-out run-as "$PKG" cat "cache/$MP4" > "$OUT/export.mp4" 2>/dev/null
-    TAILLE=$(stat -c%s "$OUT/export.mp4" 2>/dev/null || echo 0)
+# D42.17 : extraction identique en debug (run-as) et release (adb root sur
+# l'émulateur AOSP du lab). Le fichier tiré est celui du moteur de production.
+MP4=$(app_ls cache | tr -d '\r' | grep -m1 'export-.*\.mp4' || true)
+if [ -n "${MP4:-}" ]; then
+  app_cat "cache/$MP4" > "$OUT/export.mp4"
+  TAILLE=$(stat -c%s "$OUT/export.mp4" 2>/dev/null || echo 0)
+  if [ "${TAILLE:-0}" -gt 0 ]; then
     record PASS P1_mp4_extrait "$MP4 ($TAILLE octets)"
   else
-    record FAIL P1_mp4_extrait "aucun fichier export-*.mp4 dans cache"
+    record FAIL P1_mp4_extrait "$MP4 extrait mais vide (0 octet)"
   fi
 else
-  record BLOCKED P1_mp4_extrait "APK release non débuggable : extraction du MP4 impossible (attendu)"
+  record FAIL P1_mp4_extrait "aucun fichier export-*.mp4 dans cache (run-as et adb root consultés)"
 fi
 
 # --- S27 partage ---------------------------------------------------------------
