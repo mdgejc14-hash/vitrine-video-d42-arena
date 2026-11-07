@@ -51,8 +51,8 @@ if [ -s artifacts/p1-official/export.mp4 ]; then
     -show_entries stream=codec_type,codec_name,width,height \
     -of default=noprint_wrappers=1 artifacts/p1-official/export.mp4 \
     | tee artifacts/p1-official/ffprobe.txt
-  echo "--- décodage intégral (lecture bout en bout) ---" | tee -a artifacts/p1-official/ffprobe.txt
-  ffprobe -v error -i artifacts/p1-official/export.mp4 -f null - 2>&1 \
+  echo "--- décodage intégral (lecture bout en bout, ffmpeg) ---" | tee -a artifacts/p1-official/ffprobe.txt
+  ffmpeg -v error -i artifacts/p1-official/export.mp4 -f null - 2>&1 \
     | tee artifacts/p1-official/decode_check.txt
   echo "decode rc=$?" | tee -a artifacts/p1-official/decode_check.txt
 else
