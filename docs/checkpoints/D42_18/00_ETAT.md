@@ -99,3 +99,21 @@ Attendus du run (critères 02_DECISION_ARCHITECTURE.md) :
 - P1_partage PASS (sélecteur Android) ;
 - P1_credit_confirme PASS (journal CONFIRMED, solde 2) ;
 - MP4 + ffprobe + décodage rc=0 ; aucun crash ; 30 PASS initiaux intacts.
+
+## Verdict final D42.18 (07/11)
+
+- **Objectif priorité 1 ATTEINT** : le mécanisme FGS élimine les
+  redémarrages destructeurs (rc9 : 0 interruption vs rc8 : 4 ; worker unique ;
+  notification T1 ; survie écran éteint). Run 42387189875, 34 PASS.
+- **Défaut latent découvert (indépendant du FGS)** : pas de piste audio en
+  export quand le gabarit en attend une (rushs CI vidéo-seuls + BGM jamais
+  item de composition) — analyse complète 06_RUN_RC9.md §3 ; le test
+  physique est décisif ; correctif produit le cas échéant : BGM en
+  EditedMediaItem (cycle dédié).
+- P2/P6 : protocoles prêts (04 complet, 07 court sur rc9) ; APK rc9 signé
+  officiellement, publié (release 437663102), vérifié.
+- P3 : partage toujours BLOCKED en CI (dépend de « Vidéo prête ! », non
+  atteint sur ce tirage de gabarit) — à prouver sur téléphone.
+- P5 : mono-débit reconfirmé ; CONFIRMED non atteint faute de fin d'export
+  (cohérent) ; aucune perte.
+- SKYPAY : inchangé (501 billing_not_configured). Backend : non modifié.
