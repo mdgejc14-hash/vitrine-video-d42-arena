@@ -149,3 +149,19 @@ ffprobe, décodage, partage.
 - Crédits : export_journal = 1 ligne RESERVED, solde 3->2 (mono-débit) ;
   rc5 avait prouvé le remboursement à l'échec.
 - rc7 : fenêtre 900 s, décodage ffmpeg, APK inchangé (2a6980b8…5038).
+
+## Run 42375434118 (rc7) — MP4 réel n°2, décodage OK, fenêtre encore courte
+
+- P1_export_lance PASS ; P1_mp4_extrait PASS : export-0.mp4
+  (3 126 009 o, h264 1920x1080, 10,31 s) ; DÉCODAGE INTÉGRAL ffmpeg rc=0
+  (lecture bout en bout) ; aucun crash.
+- Chronologie : worker 13:19:25 ; tentative 1 interrompue à 13:29:25 par
+  le quota JobScheduler (10 min, raison -512), relancée aussitôt ;
+  capture logcat 13:34:48 = tentative 2 encore en encode. Le MP4 complet
+  provient de la passe 1 (fichier finalisé, moov valide).
+- rc6 (vérif) : tentative unique 12:56:01, complétée ~8 min — encode
+  swiftshader = 8-12 min selon gabarit ; la fenêtre d'attente UI était
+  trop courte dans les deux cas.
+- Chaîne export_done vérifiée dans le code : « Vidéo prête ! Partage-la
+  avec tes clients. » — EXACTE, identique à celle du harnais.
+- rc8 : fenêtre 2400 s (40 min), APK inchangé (2a6980b8…5038).
