@@ -12,9 +12,9 @@ audit SaaS global, qualification commerciale.
 | # | Phase | Statut | Preuve / note |
 |---|---|---|---|
 | 1 | Inventaire : retrouver les 600 compositions | **TERMINÉE** | cp. 01 (sondes production vertes + déterminisme prouvé ; nuance : ~39 fichiers de la 1re vague pré-patch non reproductibles à l'octet, v01 vérifié DIRECTEMENT contre la production) |
-| 2 | Étude des 30 gabarits AVANT régénération | EN COURS | matrice D42.19 lue (matrice_30_gabarits_bpm_styles_sfx.csv) ; recherche pro (TikTok/Meta/Oakes/Galan/EBU R128) À FAIRE |
+| 2 | Étude des 30 gabarits AVANT régénération | EN COURS | JSON gabarits riches localisés (content/gabarits_v2/gabarits/{secteur}/{T*}.json : scène par scène) ; **recherche documentaire TERMINÉE → cp. 03** (TikTok/Meta/Oakes 2007/Oakes&North 2006/Galan 2009/EBU R128 s1-s2/AES TD1004/BS.1770-4) ; fiches de direction À ÉCRIRE (après mesures) |
 | 3 | Direction musicale par secteur ET gabarit | À FAIRE | base = matrice + mesures Phase 4 + écoutes fondateur |
-| 4 | Audit des 600 (mesures objectives + écoute) | EN COURS | régénération locale : 129/600 (continue en arrière-plan, resumable) ; outil `audio_v2_outils/audit600.py` écrit et testé ; 1re mesure : silence numérique 0–0,5 s + première attaque 2,39 s (corrobore la plainte fondateur) |
+| 4 | Audit des 600 (mesures objectives + écoute) | EN COURS | pipeline relancé 08/11 (correction lameenc → /home/user/pylibs persistant) ; progression = lignes de `audio_v2_mesures/mesures600.jsonl` ; méthodologie complète → cp. 02 ; 1re mesure (07/11) : silence numérique 0–0,5 s + première attaque 2,39 s (corrobore la plainte) |
 | 5 | Synchronisation musique/montage | À FAIRE | repères riser/drop par gabarit dans la matrice (fenêtres 30 i/s) |
 | 6 | Régénération KEEP/IMPROVE/REGENERATE | À FAIRE | générateur déterministe local = coût 0 FCFA ; jamais toucher aux originaux |
 | 7 | Validation comparative dans les vrais gabarits | À FAIRE | aveugle si possible ; décisions du fondateur |
@@ -28,18 +28,25 @@ audit SaaS global, qualification commerciale.
 - Bibliothèque `audio/bgm_v2/` si régénération validée (jamais de bascule production sans validation).
 
 ## Verrous actifs
-1. **PAT GitHub supprimé à la clôture D42.18** → aucun push possible ; les checkpoints sont
-   écrits localement (`lab20/docs/checkpoints/D42_20/` + copie de secours `/home/user/D42_20_backup/`).
-   → **ACTION FONDATEUR** : fournir un PAT neuf (portée repo) pour pousser le travail D42.20.
-2. **Aucune clé B2 en local** (env. requises par `ingest_bgm.py`, jamais committées — conforme).
-   Conséquence : pas de listing B2 direct. CONTOURNÉ : régénération déterministe locale prouvée
-   octet-identique (voir cp. 01) + routes Worker authentifiées pour vérifier la production.
-3. Workspace persistant ~428 Mo > plafond snapshot 128 Mo (best-effort) → `lab16/.git`+`docs/`
-   déjà perdus 2×. Mitigation : repo re-cloné (`lab20`, miroir public), copies de secours des
-   checkpoints, tout dans `.cache` exclu du snapshot = régénérable.
-4. Défaut latent audio D42.18 (export sans piste audio si gabarit attend BGM — musique jamais
-   `EditedMediaItem`) : NON CORRIGÉ à ce stade — phase 5/9 de D42.20, cycle CI dédié requis
-   (et PAT nécessaire).
+1. ~~PAT GitHub supprimé~~ → **JETON FOURNI PAR LE FONDATEUR le 08/11** (ancien jeton,
+   transmis dans la messagerie). Vérifié auprès de GitHub : authentifié `mdgejc14-hash`,
+   push autorisé sur le miroir public. Stocké `~/.d42_secrets/gh_token.txt` (chmod 600),
+   jamais affiché, jamais dans une URL/commit/fichier versionné. **Risque signalé** : le
+   jeton a circulé en clair dans la messagerie → révocation recommandée après la mission.
+   Premier commit D42.20 poussé et vérifié distant : `bc42731`.
+2. **Aucune clé B2 en local** → les ~38 originaux exacts de la première vague (hors v01
+   déjà récupéré) ne sont pas téléchargeables sans clés B2 lecture (canal sécurisé requis).
+3. Workspace persistant > plafond snapshot 128 Mo : **3e incident au tour du 08/11**
+   (lab20/.git + arbre presque entier, D42_18 amputé à 349 Ko). Mitigations : re-clone
+   systématique, sauvegardes `D42_20_backup/`, jsonl de reprise, installs pip dans
+   `/home/user/pylibs` (persistant).
+4. Défaut latent audio D42.18 (export sans piste audio si BGM attendue) : NON CORRIGÉ —
+   phases 5/9, cycle CI dédié (jeton maintenant disponible).
+5. **Écart architecture identifié (ordre §5)** : l'app télécharge 1 piste/catégorie et le
+   Worker sert la variation 1 en repli (`src/index.js:1996`, fallback `ORDER BY variation
+   LIMIT 1` dans `routeAudioTrack` l.1952 ; client `BgmStore.kt:46` `ensureGabaritCached`
+   → `downloadTrack` l.68) — la spécification « choisir parmi les 20 du gabarit » n'est
+   pas implémentée. Correction à concevoir (Worker + BgmStore + export Media3 + tests).
 
 ## Décisions structurantes prises ce tour
 - **A1** : l'audit des 600 se fait sur copies locales régénérées, PAS sur des téléchargements B2
