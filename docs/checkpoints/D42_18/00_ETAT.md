@@ -52,3 +52,12 @@ chmod 600 hors dépôt, jamais en clair dans commandes/logs/commits ;
 suppression + confirmation à la fin des opérations. Keystore officiel et
 mots de passe : jamais publiés, jamais extraits. IntegrityGuard : intact.
 Budget : 0 FCFA — aucune action payante.
+
+## Cycle rc9 (en cours)
+
+- fbc78d9 : correctif FGS régénéré et poussé (récupération d'incident).
+- commit suivant : workflows (tests unitaires au build, tags d42.18) +
+  mesures harnais (notification, écran éteint, verdict crédits).
+- Déclenchement : tag d42.18-build-1 -> release-official-build
+  (compilation + tests + APK non signé) -> signature officielle locale ->
+  release d42.18-rc9 -> E2E (API 30, appareil propre, parcours complet).
