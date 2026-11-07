@@ -87,6 +87,18 @@ class ExportActivity : VitrineActivity() {
         setContentView(R.layout.activity_export)
         findViewById<TextView>(R.id.export_status).setText(R.string.export_t1)
         findViewById<Button>(R.id.export_start).setOnClickListener { enqueue() }
+        // D42.21 : la préparation (beat sheet, SFX, BGM, warm-up Room) démarre
+        // DÈS l'affichage de l'écran E8, en arrière-plan — pas au moment du
+        // tap. Sur appareil lent, préparer au tap laissait le statut « en
+        // cours » attendre un travail de dizaines de secondes (E2E run
+        // 42413207174 : la fenêtre de feedback expirait avant même le premier
+        // accès SQLite) et le travail non-FGS pouvait être gelé par l'écran
+        // éteint avant tout enqueue. La préparation reste annulée si
+        // l'utilisateur quitte l'écran (lifecycleScope) ; le tap attend la
+        // fin du travail (join) puis enqueue.
+        preparationJob = lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            runCatching { prepareGabaritPipeline() }
+        }
 
         val script = intent.getStringExtra("script").orEmpty()
         val durationS = intent.getIntExtra("duration_s", 30)
@@ -114,10 +126,15 @@ class ExportActivity : VitrineActivity() {
     private fun reconcileOrphelines() {
         lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             runCatching {
-                val enCours = WorkManager.getInstance(this@ExportActivity)
-                    .getWorkInfosForUniqueWork(ExportWorker.UNIQUE_NAME).get()
-                    .any { !it.state.isFinished }
-                if (enCours) return@runCatching
+                // D42.21 : requête WorkManager BORNÉE (15 s). Au premier
+                // lancement du processus sur émulateur lent, l'appel non borné
+                // a mis ~90 s (run 42413207174) : la réconciliation ne doit
+                // jamais retarder le parcours — en cas de lenteur on REPORTE
+                // au prochain lancement (les orphelines ne sont pas perdues).
+                val infos = WorkManager.getInstance(this@ExportActivity)
+                    .getWorkInfosForUniqueWork(ExportWorker.UNIQUE_NAME)
+                    .get(15, java.util.concurrent.TimeUnit.SECONDS)
+                if (infos.any { !it.state.isFinished }) return@runCatching
                 val db = VitrineLocalDatabase.get(this@ExportActivity)
                 val cutoff = System.currentTimeMillis() - ORPHELINE_AGE_MS
                 db.journal().reservedBefore(cutoff).forEach { entree ->
@@ -132,6 +149,9 @@ class ExportActivity : VitrineActivity() {
     }
 
     /* ----- Audit D40 : preparation gabarit -> moteur (A4/A5/B3/B9) ----- */
+
+    /** Travail de préparation lancé à l'affichage E8 (D42.21), cf. initExportUi. */
+    private var preparationJob: kotlinx.coroutines.Job? = null
 
     private var pendingBeatSheet: String? = null
     private var pendingSfxJson: String? = null
@@ -221,9 +241,15 @@ class ExportActivity : VitrineActivity() {
         pendingDuckDb = doc.duckingDb
         val store = video.vitrine.data.audio.BgmStore(this, BuildConfig.API_BASE_URL)
         val token = intent.getStringExtra("firebase_token")
+        // D42.21 : la SÉLECTION PARMI LES 20 VARIATIONS passe avant le cache
+        // legacy — sinon un fichier {categorie}.mp3 d'époque verrouillerait le
+        // gabarit sur la variation 1 pour toujours. ensureGabaritCached
+        // adopte lui-même le legacy si son sha correspond à la variation
+        // choisie, puis replie sur le titulaire ; sans token (hors-ligne),
+        // localFile reste la source.
         pendingBgmPath = runCatching {
-            (doc.bgmCategorie?.let { store.localFile(it) }
-                ?: (token?.let { store.ensureGabaritCached(gabaritId, it) }))?.absolutePath
+            (token?.let { store.ensureGabaritCached(gabaritId, it) }
+                ?: doc.bgmCategorie?.let { store.localFile(it) })?.absolutePath
         }.getOrNull()
     }
 
@@ -387,7 +413,14 @@ class ExportActivity : VitrineActivity() {
 
     private fun enqueue() {
         gateThen {
-            prepareGabaritPipeline()
+            // D42.21 : retour visuel IMMÉDIAT au tap — le statut « Export local
+            // en cours… » et la barre indéterminée n'attendent plus la fin de
+            // la préparation (lancée à l'affichage E8, cf. initExportUi) ;
+            // l'export est bien « en cours » dès l'instant où la porte crédits
+            // a autorisé le lancement.
+            findViewById<TextView>(R.id.export_status).setText(R.string.export_running)
+            findViewById<ProgressBar>(R.id.export_progress).isIndeterminate = true
+            preparationJob?.join()
             enqueueNow()
         }
     }

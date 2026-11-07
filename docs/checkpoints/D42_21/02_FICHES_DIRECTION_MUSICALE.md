@@ -2,9 +2,9 @@
 
 Construites à partir des TIMELINES RÉELLES (donnees/timelines_30_gabarits.json, extraits des
 JSON gabarits V2.0 scène par scène), de la matrice audio D42.19 (BPM/genre/énergie/riser/drop/
-SFX — sources : JSON gabarits), des mesures objectives v2 (audit en cours) et de la recherche
-documentaire (cp. D42.20-03 : TikTok/Meta/Oakes 2007/Oakes & North 2006/Galan 2009/EBU R128
-s1-s2/AES TD1004/ITU-R BS.1770-4).
+SFX — sources : JSON gabarits), des mesures objectives v2 (600/600 pistes mesurées) et de la
+recherche documentaire (cp. D42.20-03 : TikTok/Meta/Oakes 2007/Oakes & North 2006/Galan 2009/
+EBU R128 s1-s2/AES TD1004/ITU-R BS.1770-4).
 
 Principes transverses (chacun justifié par une source identifiée dans le cp. D42.20-03) :
 - hook sonore immédiat (≤ 0,3 s) — TikTok : l'accroche se joue dans les 3 premières secondes ;
@@ -69,7 +69,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 40 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.52 s, densité 0.91 év/s, LRA 5.5 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ### vetements_mode_T4 — T4_promo_flash (vetements_mode, T4)
 
@@ -86,7 +86,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 33 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 1.03 s, densité 0.70 év/s, LRA 4.5 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ### vetements_mode_T5 — T5_temoignage_client (vetements_mode, T5)
 
@@ -103,7 +103,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 50 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.79 s, densité 1.71 év/s, LRA 3.4 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ## Restaurants & maquis
 
@@ -156,7 +156,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 40 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.47 s, densité 1.85 év/s, LRA 2.3 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ### restaurants_maquis_T4 — T4_promo_flash (restaurants_maquis, T4)
 
@@ -173,7 +173,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 33 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.03 s, densité 1.62 év/s, LRA 2.8 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ### restaurants_maquis_T5 — T5_temoignage_client (restaurants_maquis, T5)
 
@@ -190,7 +190,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 50 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.77 s, densité 0.58 év/s, LRA 5.2 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ## Immobilier & auto
 
@@ -243,7 +243,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 40 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.47 s, densité 1.73 év/s, LRA 2.9 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ### immo_auto_T4 — T4_promo_flash (immo_auto, T4)
 
@@ -260,7 +260,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 33 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 1.01 s, densité 1.04 év/s, LRA 3.7 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ### immo_auto_T5 — T5_temoignage_client (immo_auto, T5)
 
@@ -277,7 +277,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 50 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.77 s, densité 0.58 év/s, LRA 4.8 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ## Coiffure & beauté
 
@@ -330,7 +330,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 40 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.51 s, densité 1.64 év/s, LRA 4.0 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ### coiffure_beaute_T4 — T4_promo_flash (coiffure_beaute, T4)
 
@@ -347,7 +347,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 33 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.01 s, densité 1.00 év/s, LRA 3.9 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ### coiffure_beaute_T5 — T5_temoignage_client (coiffure_beaute, T5)
 
@@ -364,7 +364,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 50 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.85 s, densité 0.81 év/s, LRA 4.2 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ## Shops & petits commerces
 
@@ -417,7 +417,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 40 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.46 s, densité 1.71 év/s, LRA 2.7 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ### shops_small_business_T4 — T4_promo_flash (shops_small_business, T4)
 
@@ -434,7 +434,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 33 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.04 s, densité 1.04 év/s, LRA 4.7 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ### shops_small_business_T5 — T5_temoignage_client (shops_small_business, T5)
 
@@ -451,7 +451,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 50 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.76 s, densité 1.60 év/s, LRA 2.7 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ## Bâtiment & travaux
 
@@ -504,7 +504,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 40 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** (9/20 pistes de ce gabarit) : première attaque médiane 2.60 s, densité 1.52 év/s, LRA 2.5 LU — écarts vs direction ci-dessus documentés pour la v3.
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.48 s, densité 1.54 év/s, LRA 2.3 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ### batiment_travaux_T4 — T4_promo_flash (batiment_travaux, T4)
 
@@ -521,7 +521,7 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 33 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 1.82 s, densité 1.02 év/s, LRA 3.8 LU — écarts vs direction ci-dessus documentés pour la v3.
 
 ### batiment_travaux_T5 — T5_temoignage_client (batiment_travaux, T5)
 
@@ -538,4 +538,4 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Fin** : fondu de sortie propre sous la carte CTA (fin nominale 50 s), jamais de coupe franche en plein accord.
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
-**Réalité mesurée v2** : mesures en cours (complétées avant classement final).
+**Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.81 s, densité 0.59 év/s, LRA 4.8 LU — écarts vs direction ci-dessus documentés pour la v3.
