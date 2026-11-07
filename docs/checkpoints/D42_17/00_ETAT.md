@@ -113,3 +113,15 @@ LIGNE (sh -c) : blocs multi-lignes impossibles (c'était aussi la cause des
 rougeurs d'étape rc1/rc2 après parcours complet). Correctif :
 tools/e2e/run_official_e2e.sh (masquage su bind-mount + parcours + preuves),
 appelé en une ligne. APK inchangé (896240dc…683c).
+
+## Run 42371123494 (rc5) — analyse : porte PASSÉE, défaut produit révélé
+
+- Masquage su PARFAIT (preuve artefact : /system/xbin/su invisible).
+- **IntegrityGuard SATISFAIT** : le statut passe de « Vérification de
+  sécurité échouée » à « Export interrompu. Tes crédits ont été rendus —
+  réessaie » : l'export a été lancé (WM-WorkerWrapper 12:21:05), crédits
+  débités puis REMBOURSÉS à l'échec (pas de double consommation).
+- Défaut produit : ExportWorker → NoClassDefFoundError
+  android.media.metrics.LogSessionId (API 31+) sur émulateur API 30 en
+  release R8 (fusion de classes hors garde de version). J3 tournait en
+  debug/API 34 : invisible. Correctif : -keep androidx.media3.**.
