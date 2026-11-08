@@ -7,10 +7,13 @@ re-signature locale → release `d42.21-rc-audio-v1` (étage 3 = PREUVE A) → r
 
 ## Fait nouveau (depuis la dernière révision)
 
-1. **Cause racine export verrouillée (02_EXPORT_ROOT_CAUSE.md, mise à jour finale)** :
-   tempête de dumps uiautomator (1020 dumps / 55 min, 1 par 3,1 s) — le tap n'atteint
-   jamais le listener sur la voie debug ; PAS un défaut applicatif ; PAS une régression
-   D42.21 ; la prep E8 a fonctionné (terminée 22:19:37.66, avant le tap ~22:19:55).
+1. **CORRECTION cause racine export (02, §CORRECTION 08/11 ~02:30)** : le dump 29
+   contenait « Vérification de sécurité échouée. Réinstallez l'application
+   officielle. » (71 car., masqué par le filtre regex {2,70}) — **le tap A été
+   livré et la porte IntegrityGuard a REFUSÉ (DENY_INTEGRITY)** : indice
+   `su`/`debugger` évalué AVANT le mode dev. PAS un défaut applicatif ; la
+   tempête de dumps est du bruit harnais, pas la cause. La voie release
+   (non-debuggable, preuve rc9) franchit la garde → chaîne de preuve valide.
 2. Renommage canonique des checkpoints (noms fondateur 00–09) + annexes : 01 (récupération
    workspace), 08 (défauts ouverts D1–D6), 09 (verdict final 17 items, à figer 20:00).
 3. `donnees/` complété : mesures600 + classement600 + shards regen + timelines 30 gabarits

@@ -129,3 +129,72 @@ avec le MÊME harnais). La voie P1-debug n'a jamais été verte depuis sa créat
 de l'app, et sans cycle debug supplémentaire (règle : un cycle CI par
 correctif). Amélioration harnais (espacer les dumps pendant les attentes
 longues) : documentée en D1 de 08_OPEN_DEFECTS.md, hors périmètre D42.21.
+
+---
+
+# CORRECTION (08/11 ~02:30) — LA CAUSE RÉELLE EST UN REFUS INTÉGRITÉ (DENY_INTEGRITY)
+
+Ré-extraction de l'arbre COMPLET du dump 29 (artefact 13594745867 re-téléchargé
+après le 5e effacement, **sans filtre de longueur** cette fois) :
+
+```
+[110,902][970,1001] id=export_status
+  text="Vérification de sécurité échouée. Réinstallez l'application officielle."
+```
+
+**Le texte de refus intégrité (71 caractères) était PRÉSENT dans le dump 29.**
+Les deux analyses précédentes (regex `text="…{2,70}"`) l'ont masqué — le même
+défaut d'extraction qui masquait `export_t1` (84 car.) a masqué le message
+`export_gate_integrity` (71 car.).
+
+## Ce que cela change
+
+1. **Le tap A été livré au listener.** La conclusion « tap non livré / tempête
+   de dumps » est INVALIDÉE comme cause de l'échec export. La chronologie
+   réelle : tap ~22:19:55 → `gateThen` s'exécute (bouton désactivé) →
+   réservation → `IntegrityGuard.isOk()` = **false** → `deny()` → statut =
+   `export_gate_integrity` + **bouton réactivé** (d'où `enabled=true` au dump
+   final — `deny()` compense la réservation et réactive, conformément au code).
+2. **L'app n'a jamais gelé.** Processus vivant, thread UI réactif, zéro log :
+   l'app était simplement OISIVE après le refus. Tout est cohérent.
+3. **Le harnais ne reconnaît pas ce refus** : `P1_export_lance` attend
+   « Export local en cours… » (25 s) ou « Plus de crédits export disponibles »
+   (5 s) — pas `export_gate_integrity`. D'où « aucun statut de démarrage
+   constaté » à 22:20:26 → cascade. La tempête de dumps (1020/55 min, réelle)
+   est du bruit harnais, PAS la cause.
+4. **Cause exacte du `isOk()=false` (code IntegrityGuard.kt, inchangé depuis
+   dbf3e58/03-11)** : `tamperHints()` est évalué AVANT le mode dev :
+   ```kotlin
+   if (tamperHints().isNotEmpty()) return false   // ← EN PREMIER
+   if (expectedSha256.isBlank()) return true      // mode dev ensuite
+   ```
+   Le build debug (VV_APK_SHA256 vide — e2e-lab assemble SANS `-PvvApkSha256`)
+   devrait passer en mode dev, MAIS un indice suffit à refuser. Éliminations :
+   - `su` **improbable** : aucune trace SELinux (`avc`) sur `su_exec` dans le
+     logcat cycle 3 ; et le run release rc9 (même code de garde, même spec
+     d'image `default`/API 30) a FRANCHI la porte — si `su` existait sur
+     l'image, rc9 aurait été refusé aussi ;
+   - `debugger` : aucun outillage débogueur dans le harnais (`ui.py` = ADB +
+     uiautomator legacy, zéro `am instrument`/jdb) ; aucune ligne JDWP/
+     Debugger dans le logcat ; l'attachement JDWP n'est de toute façon pas
+     journalisé — **non déterminable depuis le sandbox** ;
+   - différentiel debug/release = `debuggable=true` (agent JDWP serveur
+     présent dans le process debug) — mécanisme précis (pourquoi
+     `Debug.isDebuggerConnected()` aurait répondu vrai) NON ÉLUCIDÉ, à
+     sonder sur un futur run (D1) avec un log dédié.
+5. **Pourquoi la voie release passe (rc9, 42387189875)** : même image, même
+   code de garde — l'app RELEASE (non debuggable) a franchi la porte le
+   07/11 (export démarré, MP4 8,5 Mo). Le différenciateur debug/release reste
+   à élucider précisément (debuggable ? image effective ?), MAIS LE FAIT EST
+   PROUVÉ : **la voie release franchit la garde sur cet émulateur** → la
+   chaîne de preuve `d42.21-rc-audio-v1` est valide telle quelle.
+6. **AUCUN contournement de la garde** : le refus sur émulateur AOSP-rooté est
+   un comportement VOLONTAIRE de IntegrityGuard (spec V2.0 §22). Le défaut est
+   celui de la VOIE DE TEST debug (image/root), pas de la protection. Correctif
+   éventuel (futur) : image `google_apis` pour le job P1-debug + reconnaissance
+   du message intégrité par le harnais — documenté en D1, hors périmètre D42.21.
+
+## Conséquence pour la mission
+La preuve du correctif audio reste **la voie release** (inchangé). Le diagnostic
+« PAS un défaut applicatif » est RENFORCÉ : l'app a refusé proprement (comportement
+de sécurité attendu), l'export n'a jamais été tenté sur la voie debug.

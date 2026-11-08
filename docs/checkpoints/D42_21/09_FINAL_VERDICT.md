@@ -6,12 +6,23 @@
 
 ## Items (numérotation fondateur)
 
-1. **Diagnostic gel export (P1-debug)** — CAUSE RACINE ÉTABLIE : tempête de dumps
-   uiautomator (1020 dumps / 55 min, 1 par 3,1 s) qui sérialise le thread UI sur
-   émulateur lent ; le tap n'atteint jamais le listener. PAS un défaut applicatif ;
-   PAS une régression D42.21 (voie jamais verte depuis sa création ; cycles D42.21 =
-   plus loin jamais atteint, 30 PASS). Prep E8 fonctionnelle (terminée avant le tap,
-   preuve 22:19:37.66 vs tap ~22:19:55). [VALIDÉ — diagnostic ; artefacts 13594745867]
+1. **Diagnostic gel export (P1-debug)** — CAUSE RACINE ÉTABLIE **(corrigée 08/11
+   ~02:30)** : le dump final 29 contenait le statut « Vérification de sécurité
+   échouée. Réinstallez l'application officielle. » (71 car., masqué jusqu'ici
+   par un filtre regex) : **le tap A été livré, la porte IntegrityGuard a REFUSÉ
+   (DENY_INTEGRITY)** — `tamperHints()` évalué AVANT le mode dev (code inchangé
+   depuis le 03/11). `deny()` réactive le bouton et pose le statut → tout le
+   tableau (enabled=true, app vivante, zéro log) est expliqué. Indice exact
+   (`su` improbable — aucune trace avc et rc9 release passait sur la même
+   image ; `debugger` non prouvable depuis le sandbox ; différentiel
+   debug/release = debuggable) : non élucidé, sonde future D1. PAS un défaut
+   applicatif (refus propre d'une protection volontaire) ; PAS une régression
+   D42.21 (voie jamais verte depuis sa création) ; prep E8 fonctionnelle
+   (terminée à 22:19:37.66, avant le tap). La « tempête de dumps » (1020/55 min)
+   est du bruit harnais réel mais PAS la cause. Correctif voie debug
+   (reconnaissance du message intégrité par le harnais + sonde indice) : D1,
+   hors périmètre.
+   [VALIDÉ — diagnostic ; artefacts 13594745867 + code IntegrityGuard.kt]
 2. **Correctif robustesse export (c242d99)** — préparation lancée à l'affichage E8
    (plus au clic), statut posé dès ALLOW, `preparationJob` rejouable. Tests JVM verts.
    [VALIDÉ tests ; E2E debug bloqué par D1 → preuve par voie release item 12]
