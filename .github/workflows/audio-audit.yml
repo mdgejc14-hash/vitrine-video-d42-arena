@@ -83,6 +83,11 @@ jobs:
             exit 1
           fi
           echo "PASS: secrets requis présents (valeurs jamais affichées)"
+      - name: ffmpeg (analyse acoustique P1-D)
+        # ubuntu-latest n'embarque PAS ffmpeg (leçon audio-audit-2 : spawnSync
+        # « exit null ») — installation rapide avant l'audit.
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
       - name: Audit audio production (script lecture seule)
         env:
           API_BASE_URL: https://vitrine-video-api.mdgejcinfluence.workers.dev

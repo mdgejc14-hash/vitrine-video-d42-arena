@@ -255,34 +255,53 @@ if (B2_KEY_ID && B2_APP_KEY) {
     }
     rec("b2_tailles_croisees", true, `${tailleVerif} clés bgm_library présentes côté B2 (croisement taille via réponses track sondées)`);
 
-    // 9d. D42.25 (leçon audio-audit-1 / run 42492361577) : le ListObjectsV2
-    // peut revenir 200 mais VIDE (clé d'application restreinte en
-    // capabilities/préfixe — B2 liste alors vide SANS erreur). Réconciliation
-    // DÉCISIVE par HEAD direct sur CHAQUE clé D1 : existence + taille octet.
+    // 9d. D42.25 (leçons audio-audit-1/2 / runs 42492361577, 42492979146) :
+    // le ListObjectsV2 peut revenir 200 mais VIDE (clé d'application
+    // restreinte — B2 liste vide SANS erreur). Réconciliation DÉCISIVE par
+    // HEAD direct sur CHAQUE clé D1, SÉPARÉE par famille :
+    //   - bgm_library (600 pistes servies) : l'exigence P1-C « 600 comp. » ;
+    //   - audio_catalog (clés titulaires) : divergence historique connue —
+    //     routeAudioTrack sert « master titulaire prioritaire, SINON REPLI
+    //     variation 1 » (src/index.js) : les 404 titulaires sont couverts
+    //     par conception mais restent une divergence D1↔B2 à trancher côté
+    //     produit (uploader les masters ou purger les clés).
     if (objetsB2.size === 0 && clesD1.size > 0) {
       console.log("listing B2 vide → réconciliation par HEAD direct (une requête par clé D1)…");
       const t0 = Date.now();
-      let presentes = 0, absentesReelles = [], tailles = [];
+      const statutHead = new Map(); // clé → { ok, code, taille }
       const toutes = [...clesD1];
       for (let i = 0; i < toutes.length; i += 20) {
         const lot = toutes.slice(i, i + 20);
         await Promise.all(lot.map(async (k) => {
           try {
             const r = await client.fetch(`${base}/${k.split("/").map(encodeURIComponent).join("/")}`, { method: "HEAD" });
-            if (r.status === 200) { presentes++; const cl = Number(r.headers.get("content-length") || 0); if (cl > 0) tailles.push([k, cl]); }
-            else absentesReelles.push(`${k} → HTTP ${r.status}`);
-          } catch (e) { absentesReelles.push(`${k} → ${String(e).slice(0, 80)}`); }
+            statutHead.set(k, { ok: r.status === 200, code: r.status, taille: Number(r.headers.get("content-length") || 0) });
+          } catch (e) { statutHead.set(k, { ok: false, code: String(e).slice(0, 60), taille: 0 }); }
         }));
       }
-      rapport.b2_head_presentes = presentes;
-      rapport.b2_head_absentes_echantillon = absentesReelles.slice(0, 20);
-      rec("b2_reconciliation_head", presentes === clesD1.size,
-          `HEAD direct : ${presentes}/${clesD1.size} clés D1 présentes en B2 (listing non autorisé/vide pour cette clé — ${Math.round((Date.now() - t0) / 1000)} s) ; absentes réelles : ${absentesReelles.length}${absentesReelles.length ? " — ex. " + absentesReelles.slice(0, 3).join(" ; ") : ""}`);
-      // Le contrôle b2_reconciliation initial est REQUALIFIÉ par le HEAD :
-      if (absentesReelles.length === 0) {
+      const clesBgm = [...new Set(rowsBgm.map(r => r.object_key).filter(Boolean))];
+      const clesCat = [...new Set(rowsCat.flatMap(r => [r.object_key, r.object_key_mp3]).filter(Boolean))];
+      const bgmOk = clesBgm.filter(k => statutHead.get(k)?.ok).length;
+      const catKo = clesCat.filter(k => !statutHead.get(k)?.ok);
+      rapport.b2_head_bgm = `${bgmOk}/${clesBgm.length}`;
+      rapport.b2_head_titulaires_absents = catKo.length;
+      rapport.b2_head_titulaires_echantillon = catKo.slice(0, 20);
+      rapport.b2_head_presentes = [...statutHead.values()].filter(v => v.ok).length;
+      rapport.b2_head_absentes_echantillon = [...statutHead.entries()].filter(([, v]) => !v.ok).slice(0, 20).map(([k, v]) => `${k} → HTTP ${v.code}`);
+      rec("b2_reconciliation_bgm", clesBgm.length > 0 && bgmOk === clesBgm.length,
+          `HEAD direct : ${bgmOk}/${clesBgm.length} pistes bgm_library PRÉSENTES en B2 (l'exigence 600 composants est satisfaite — listing non autorisé pour cette clé, ${Math.round((Date.now() - t0) / 1000)} s)`);
+      rec("b2_titulaires_catalogue", catKo.length === 0,
+          `${catKo.length}/${clesCat.length} clés titulaires audio_catalog ABSENTES de B2 (404) — service couvert par repli v01 (routeAudioTrack : « master titulaire prioritaire, sinon repli variation 1 ») ; divergence D1↔B2 à trancher côté produit : uploader les masters ou purger les clés titulaires. Ex. : ${catKo.slice(0, 3).join(" ; ")}`);
+      // Requalification du contrôle global : la bibliothèque servie doit être
+      // complète ; la divergence titulaires reste un échec documenté.
+      if (bgmOk === clesBgm.length && catKo.length > 0) {
+        rapport.controles["b2_reconciliation"] = { ok: false,
+          detail: `Bibliothèque bgm_library réconciliée par HEAD : ${bgmOk}/${clesBgm.length} ✓ ; DIVERGENCE titulaires : ${catKo.length} clés audio_catalog 404 (repli v01 par conception) — voir b2_titulaires_catalogue` };
+        console.log("FAIL b2_reconciliation :: bibliothèque 600/600 ✓ mais divergence titulaires (voir b2_titulaires_catalogue)");
+      } else if (bgmOk === clesBgm.length) {
         rapport.controles["b2_reconciliation"] = { ok: true,
-          detail: `D1 : ${clesD1.size} clés ; listing B2 vide (clé restreinte) MAIS HEAD direct : ${presentes}/${clesD1.size} présentes — réconciliation RÉUSSIE par HEAD` };
-        console.log("PASS b2_reconciliation :: requalifié par HEAD direct (voir b2_reconciliation_head)");
+          detail: `HEAD direct : ${bgmOk}/${clesBgm.length} bgm + ${clesCat.length - catKo.length}/${clesCat.length} titulaires présents` };
+        console.log("PASS b2_reconciliation :: requalifié par HEAD direct (voir b2_reconciliation_bgm)");
       }
     }
   } catch (e) {
