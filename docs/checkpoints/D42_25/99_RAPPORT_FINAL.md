@@ -31,7 +31,7 @@ build faussement accusé par un outil de mesure défaillant.
 | P1-B | API Security (2 comptes A/B réels) | **PASS** | **42478068047 SUCCESS** (984cda4, commit exact du tag) : Firebase A/B réel, streaming B2 réel + Range, isolation crédits/commerces/projets/commandes, quotas, webhook 401/400/422, BGM 600 |
 | P1-C | B2 — 600 composants | **PASS** | **42493755744 : HEAD direct 600/600 pistes bgm_library PRÉSENTES en B2** + sha256 octet par octet conformes (4 sondes) + 600/600 EN_LIGNE servies par le worker 0.9.1-d42.23 |
 | P1-D | Audit audio production | **EXÉCUTÉ — preuves complètes ; 2 décisions produit** | **42493755744 : 21 PASS / 4 FAIL** ; 60 pistes analysées : décodabilité 60/60, codec mp3, durées 36-60 s, RMS −17,2 dB, dynamique 12,1-17,3 dB, 0 clipping, cohérence 0,88 dB ; découvertes : (1) silence initial 1,0-3,1 s sur 60/60 pistes, (2) 54/60 clés titulaires audio_catalog 404 (repli v01 par conception) |
-| P1-E | Backup D1→B2 (lot 3) | **BLOCKED (fondateur)** | secrets `B2_S3_ENDPOINT` + `B2_BACKUP_BUCKET` absents du miroir ; aucune configuration fabriquée (règle) |
+| P1-E | Backup D1→B2 (lot 3) | **BLOCKED (1 clé fondateur)** | lot 3 POSÉ ✓ ; **export D1 réel réussi** (42494796528 : 468 371 octets SQL + sha256) ; pré-vol HeadBucket signé (42495212327) : **bucket backup EXISTE (us-east-005) mais clé média non autorisée (403)** → workflow passé aux secrets dédiés `B2_BACKUP_KEY_ID`/`B2_BACKUP_APPLICATION_KEY` (6c64ba9) ; il manque la clé writeFiles backup (05_BACKUP.md) |
 | P2 | Android — qualification | **PASS (équivalence)** | **42482295447 SUCCESS** : P1 officiel 37/0/0 (MP4 9 158 574 o, crédits CONFIRMED/2, zéro crash) ; P0 base 22/0/0, font130 23/0/0 ; android-ci SUCCESS ×6 commits consécutifs |
 | P2 | APK finale certificat officiel | **CONDITIONAL** | rc11 = release privée 438156110 (sha256 b052e7c9…c83bb6) ; code identique au miroir (mapping R8 identique — checkpoint 02) ; e2e complet vert par équivalence ; e2e officiel privé au reset des minutes |
 | — | SKYPAY | **501 volontaire** | maintenu (décision direction) |
@@ -86,8 +86,12 @@ ORG_GRADLE_PROJECT_ prouvé (test Gradle 9.6 local, env > gradle.properties)
 périmètre : déploiement Worker 0.9.1-d42.23 EFFECTUÉ + audit audio exécuté
 (ci-dessus).
 
-**B. Secrets backup lot 3 (~1 min)** — débloque P1-E :
-`B2_S3_ENDPOINT` et `B2_BACKUP_BUCKET` (mêmes valeurs que le privé).
+**B. ✔ SECRETS POSÉS (15:2x)** — `B2_S3_ENDPOINT` + `B2_BACKUP_BUCKET`
+reçus ; export D1 réel réussi (468 Ko SQL). **Reste 1 action (~2 min)** :
+créer une clé d'application B2 **writeFiles limitée au bucket de backup**
+et poser `B2_BACKUP_KEY_ID` + `B2_BACKUP_APPLICATION_KEY` (détail :
+05_BACKUP.md — la clé média actuelle est volontairement restreinte et ne
+sera PAS élargie).
 
 **C. Décision produit — silence initial BGM (découverte P1-D)** :
 100 % des pistes (60/60 sondées, tous gabarits/secteurs) démarrent par
