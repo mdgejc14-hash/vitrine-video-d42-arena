@@ -254,12 +254,152 @@ if (B2_KEY_ID && B2_APP_KEY) {
       }
     }
     rec("b2_tailles_croisees", true, `${tailleVerif} clés bgm_library présentes côté B2 (croisement taille via réponses track sondées)`);
+
+    // 9d. D42.25 (leçon audio-audit-1 / run 42492361577) : le ListObjectsV2
+    // peut revenir 200 mais VIDE (clé d'application restreinte en
+    // capabilities/préfixe — B2 liste alors vide SANS erreur). Réconciliation
+    // DÉCISIVE par HEAD direct sur CHAQUE clé D1 : existence + taille octet.
+    if (objetsB2.size === 0 && clesD1.size > 0) {
+      console.log("listing B2 vide → réconciliation par HEAD direct (une requête par clé D1)…");
+      const t0 = Date.now();
+      let presentes = 0, absentesReelles = [], tailles = [];
+      const toutes = [...clesD1];
+      for (let i = 0; i < toutes.length; i += 20) {
+        const lot = toutes.slice(i, i + 20);
+        await Promise.all(lot.map(async (k) => {
+          try {
+            const r = await client.fetch(`${base}/${k.split("/").map(encodeURIComponent).join("/")}`, { method: "HEAD" });
+            if (r.status === 200) { presentes++; const cl = Number(r.headers.get("content-length") || 0); if (cl > 0) tailles.push([k, cl]); }
+            else absentesReelles.push(`${k} → HTTP ${r.status}`);
+          } catch (e) { absentesReelles.push(`${k} → ${String(e).slice(0, 80)}`); }
+        }));
+      }
+      rapport.b2_head_presentes = presentes;
+      rapport.b2_head_absentes_echantillon = absentesReelles.slice(0, 20);
+      rec("b2_reconciliation_head", presentes === clesD1.size,
+          `HEAD direct : ${presentes}/${clesD1.size} clés D1 présentes en B2 (listing non autorisé/vide pour cette clé — ${Math.round((Date.now() - t0) / 1000)} s) ; absentes réelles : ${absentesReelles.length}${absentesReelles.length ? " — ex. " + absentesReelles.slice(0, 3).join(" ; ") : ""}`);
+      // Le contrôle b2_reconciliation initial est REQUALIFIÉ par le HEAD :
+      if (absentesReelles.length === 0) {
+        rapport.controles["b2_reconciliation"] = { ok: true,
+          detail: `D1 : ${clesD1.size} clés ; listing B2 vide (clé restreinte) MAIS HEAD direct : ${presentes}/${clesD1.size} présentes — réconciliation RÉUSSIE par HEAD` };
+        console.log("PASS b2_reconciliation :: requalifié par HEAD direct (voir b2_reconciliation_head)");
+      }
+    }
   } catch (e) {
     rec("b2_reconciliation", false, `erreur : ${String(e).slice(0, 300)}`);
   }
 } else {
   rec("b2_reconciliation", false, "secrets B2 absents de l'environnement");
 }
+
+// ---------- 9bis. Analyse ACOUSTIQUE réelle (P1-D — preuves nouvelles D42.25) ----------
+// Échantillon stratifié : 30 gabarits × 2 variations (v01 = référence du
+// gabarit, v20 = dernière). Mesures ffmpeg/ffprobe : silence début/fin,
+// attaque, niveau RMS, dynamique (Peak−RMS), saturation (clipping),
+// décodabilité intégrale, cohérence inter-pistes. Fichiers analysés en
+// /tmp (JAMAIS dans les artefacts — la bibliothèque reste privée).
+{
+  const { spawnSync } = await import("node:child_process");
+  const fs2 = await import("node:fs");
+  const os2 = await import("node:os");
+  const path2 = await import("node:path");
+  const dir = path2.join(os2.tmpdir(), "audio-audit-acoustique");
+  fs2.mkdirSync(dir, { recursive: true });
+
+  function sh(cmd, args) {
+    const r = spawnSync(cmd, args, { encoding: "utf8", timeout: 120_000, maxBuffer: 32 * 1024 * 1024 });
+    return { code: r.status, out: (r.stdout || "") + (r.stderr || "") };
+  }
+  const num = (re, s) => { const m = (s || "").match(re); return m ? Number(m[1]) : null; };
+
+  // Échantillon : v1 et v20 de chaque gabarit.
+  const parGabarit = new Map();
+  for (const p of pistes) {
+    if (!parGabarit.has(p.categorie_audio)) parGabarit.set(p.categorie_audio, new Map());
+    parGabarit.get(p.categorie_audio).set(p.variation, p);
+  }
+  const echantillon = [];
+  for (const [cat, vs] of parGabarit) {
+    for (const v of [1, VARIATIONS_ATTENDUES]) if (vs.has(v)) echantillon.push(vs.get(v));
+  }
+  rapport.acoustique_echantillon = echantillon.length;
+  rapport.acoustique_detail = [];
+
+  const mesures = [];
+  let decodables = 0, codeNonConforme = [];
+  for (const p of echantillon) {
+    const f = path2.join(dir, `${p.categorie_audio}_v${String(p.variation).padStart(2, "0")}.mp3`);
+    const url = `${API}/api/v1/audio/track/${encodeURIComponent(p.categorie_audio)}?v=${p.variation}`;
+    const dl = await fetch(url, { headers: auth });
+    if (dl.status !== 200 && dl.status !== 206) { mesures.push({ cat: p.categorie_audio, v: p.variation, erreur: `téléchargement HTTP ${dl.status}` }); continue; }
+    const buf = Buffer.from(await dl.arrayBuffer());
+    fs2.writeFileSync(f, buf);
+
+    // a) décodabilité intégrale (aucune erreur de décodage)
+    const dec = sh("ffmpeg", ["-hide_banner", "-v", "error", "-i", f, "-f", "null", "-"]);
+    const decOk = dec.code === 0 && !/error|invalid|corrupt/i.test(dec.out);
+    if (decOk) decodables++; else codeNonConforme.push(`${p.categorie_audio} v${p.variation}: ${(dec.out || "exit " + dec.code).slice(0, 80)}`);
+
+    // b) format : codec/durée/bitrate via ffprobe (json)
+    const probe = sh("ffprobe", ["-hide_banner", "-v", "quiet", "-print_format", "json", "-show_format", "-show_streams", f]);
+    let fmt = {};
+    try { fmt = JSON.parse(probe.out); } catch {}
+    const stream = (fmt.streams || []).find(s => s.codec_type === "audio") || {};
+    const duree = Number((fmt.format || {}).duration) || null;
+
+    // c) niveau / dynamique / saturation via astats
+    const ast = sh("ffmpeg", ["-hide_banner", "-i", f, "-af", "astats=metadata=0", "-f", "null", "-"]);
+    const rms = num(/RMS level dB:\s*(-?[\d.]+)/, ast.out);
+    const peak = num(/Peak level dB:\s*(-?[\d.]+)/, ast.out);
+    const clipped = num(/Number of Clipped samples:\s*(\d+)/, ast.out);
+
+    // d) silence début/fin (seuil -40 dB, ≥ 1 s) + attaque (premier son)
+    const sil = sh("ffmpeg", ["-hide_banner", "-i", f, "-af", "silencedetect=noise=-40dB:d=1", "-f", "null", "-"]);
+    const starts = [...sil.out.matchAll(/silence_start: (-?[\d.]+)/g)].map(m => Number(m[1]));
+    const ends = [...sil.out.matchAll(/silence_end: (-?[\d.]+)/g)].map(m => Number(m[1]));
+    const silenceDebut = starts.length && starts[0] <= 0.02 ? (ends[0] ?? 0) : 0;
+    const silenceFin = ends.length && Math.abs((ends[ends.length - 1]) - (starts[starts.length - 1] ?? 0)) >= 1 && Math.abs(duree - (ends[ends.length - 1])) < 0.05 ? duree - starts[starts.length - 1] : 0;
+    const attaque = silenceDebut > 0 ? silenceDebut : 0;
+
+    mesures.push({
+      cat: p.categorie_audio, v: p.variation, octets: buf.length,
+      codec: stream.codec_name, sr: stream.sample_rate, duree,
+      rms, peak, clipped: clipped || 0, silenceDebut: +silenceDebut.toFixed(2),
+      silenceFin: +silenceFin.toFixed(2), attaque: +attaque.toFixed(2), decodable: decOk,
+    });
+  }
+  const ok = mesures.filter(m => !m.erreur);
+  rapport.acoustique_detail = mesures;
+
+  const rmsOk = ok.filter(m => m.rms !== null && m.peak !== null);
+  const rmss = rmsOk.map(m => m.rms);
+  const moyenne = rmss.length ? rmss.reduce((a, b) => a + b, 0) / rmss.length : null;
+  const ecart = rmss.length > 1 ? Math.sqrt(rmss.reduce((a, b) => a + (b - moyenne) ** 2, 0) / rmss.length) : null;
+  const dyns = rmsOk.map(m => m.peak - m.rms);
+
+  rec("acoustique_decodabilite", ok.length > 0 && decodables === ok.length,
+      `${decodables}/${ok.length} fichiers intégralement décodés (ffmpeg -f null sans erreur)${codeNonConforme.length ? " — échecs : " + codeNonConforme.slice(0, 3).join(" ; ") : ""}`);
+  rec("acoustique_codec", ok.length > 0 && ok.every(m => m.codec === "mp3"),
+      `codec audio : ${[...new Set(ok.map(m => m.codec))].join(", ")} (attendu mp3) ; échantillons ${ok.length} — ${echantillon.length} visées`);
+  const dMin = Math.min(...ok.map(m => m.duree || 0)), dMax = Math.max(...ok.map(m => m.duree || 0));
+  rec("acoustique_durees", ok.every(m => m.duree >= 10 && m.duree <= 120),
+      `durées ${dMin.toFixed(1)}–${dMax.toFixed(1)} s (garde-fou 10–120 s)`);
+  rec("acoustique_silence_bord", ok.every(m => m.silenceDebut < 1 && m.silenceFin < 1),
+      `silence initial/terminal max : début ${Math.max(0, ...ok.map(m => m.silenceDebut)).toFixed(2)} s, fin ${Math.max(0, ...ok.map(m => m.silenceFin)).toFixed(2)} s (seuil < 1 s @ -40 dB)`);
+  rec("acoustique_attaque", ok.every(m => m.attaque < 1),
+      `attaque (premier son) max : ${Math.max(0, ...ok.map(m => m.attaque)).toFixed(2)} s (seuil < 1 s)`);
+  rec("acoustique_niveau", rmsOk.length === ok.length && rmss.length > 0 && moyenne >= -30 && moyenne <= -8,
+      `niveau RMS moyen ${moyenne !== null ? moyenne.toFixed(1) : "n/a"} dB (garde-fou −30…−8 dB), plage ${rmss.length ? Math.min(...rmss).toFixed(1) + "…" + Math.max(...rmss).toFixed(1) : "n/a"} dB`);
+  rec("acoustique_dynamique", dyns.length === ok.length && dyns.length > 0 && dyns.every(d => d >= 3 && d <= 25),
+      `dynamique (Peak−RMS) : ${dyns.length ? Math.min(...dyns).toFixed(1) + "…" + Math.max(...dyns).toFixed(1) : "n/a"} dB (garde-fou 3–25 dB)`);
+  rec("acoustique_saturation", ok.every(m => m.clipped === 0 && (m.peak === null || m.peak <= -0.3)),
+      `clipping : ${ok.reduce((a, m) => a + m.clipped, 0)} échantillon(s) clippé(s) au total, peak max ${ok.length ? Math.max(...ok.map(m => m.peak || -99)).toFixed(2) : "n/a"} dB (aucun à 0 dBFS)`);
+  rec("acoustique_cohérence", ecart !== null && ecart <= 6,
+      `cohérence inter-pistes : écart-type RMS ${ecart !== null ? ecart.toFixed(2) : "n/a"} dB (seuil ≤ 6 dB) sur ${rmss.length} mesures`);
+
+  try { fs2.rmSync(dir, { recursive: true, force: true }); } catch {}
+}
+
 
 // ---------- 10. Écriture ----------
 rapport.fini = new Date().toISOString();
@@ -271,7 +411,8 @@ const lignesMd = [
   `Total bibliothèque : ${rapport.total_declare} (recueilli ${rapport.total_recueilli}) — EN_LIGNE ${rapport.en_ligne}`,
   `Secteurs : ${rapport.secteurs ? rapport.secteurs.length : 0} — Gabarits : ${rapport.gabarits} — Variations par gabarit : ${VARIATIONS_ATTENDUES} attendues`,
   `Divergences intra-gabarit (sha ≠ v01) : ${rapport.divergentes_intra_gabarit ? rapport.divergentes_intra_gabarit.length : 0}`,
-  `B2 : ${rapport.b2_objets_listes ?? "n/a"} objets listés / ${rapport.b2_cles_d1 ?? "n/a"} clés D1 — absents ${rapport.b2_absents_depuis_d1 ?? "n/a"}`,
+  `B2 : ${rapport.b2_objets_listes ?? "n/a"} objets listés / ${rapport.b2_cles_d1 ?? "n/a"} clés D1 — absents ${rapport.b2_absents_depuis_d1 ?? "n/a"}${rapport.b2_head_presentes !== undefined ? ` — réconciliation HEAD : ${rapport.b2_head_presentes}/${rapport.b2_cles_d1} présentes` : ""}`,
+  `Acoustique (P1-D) : échantillon ${rapport.acoustique_echantillon ?? 0} pistes (30 gabarits × v01+v20) — détail dans report.json (acoustique_detail)`,
   "",
   "## Contrôles",
   ...Object.entries(rapport.controles).map(([k, v]) => `- ${v.ok ? "PASS" : "FAIL"} — ${k} : ${v.detail}`),
