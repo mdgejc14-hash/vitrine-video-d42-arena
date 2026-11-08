@@ -1,0 +1,28 @@
+name: B2 Quota Probe
+
+# D42.26 — sonde de discrimination : quota B2 Class B épuisé vs défaut de
+# données. Dispatch manuel uniquement, ~40 s, lecture seule.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    if: github.repository == 'mdgejc14-hash/vitrine-video-d42-arena' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      API_BASE_URL: https://vitrine-video-api.mdgejcinfluence.workers.dev
+      FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
+      FIREBASE_TEST_A_EMAIL: ${{ secrets.FIREBASE_TEST_A_EMAIL }}
+      FIREBASE_TEST_A_PASSWORD: ${{ secrets.FIREBASE_TEST_A_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Sonde 6 pistes (3 anciennes OK + 3 anciennes 404)
+        run: node scripts/b2-quota-probe.mjs
