@@ -95,16 +95,18 @@ une clé B2 writeFiles (bucket backup) et poser `B2_BACKUP_KEY_ID` +
 `B2_BACKUP_APPLICATION_KEY` **sur le miroir** (ou mettre à jour
 `B2_KEY_ID`/`B2_APPLICATION_KEY`). Détail : 05_BACKUP.md.
 
-**C. Décision produit — silence initial BGM (découverte P1-D)** :
-100 % des pistes (60/60 sondées, tous gabarits/secteurs) démarrent par
-1,0-3,1 s de silence. Options : (a) prouver que le montage auto absorbe
-(fondu/décalage BGM) ; (b) trim/fade-in des sources (SANS régénération) ;
-(c) accepter comme choix documenté.
+**C. Décision produit — silence initial BGM** : 100 % des pistes
+(60/60) démarrent par 1,0-3,1 s de silence ; diagnostic code : le montage
+auto NE L'ABSORBE PAS (BgmDecoder depuis l'échantillon 0 + fade-in 0,45 s
+à la frame 0 → musique audible ~1,5-3,5 s). Options A1/A2/A3, conséquences
+et recommandation détaillées dans **07_ARBITRAGES_PRODUIT.md** — aucune
+modification sans décision fondateur.
 
-**D. Décision produit — clés titulaires audio_catalog (découverte P1-D)** :
-54/60 masters titulaires absents de B2 (404), service couvert par repli
-v01 (conception routeAudioTrack). Options : uploader les masters, ou
-purger/aligner les clés titulaires dans D1.
+**D. Décision produit — clés titulaires audio_catalog** : 54/60 masters
+absents de B2 (404), service couvert par repli v01. Options B1 (aligner
+D1, recommandé APRÈS P1-E vert — la sauvegarde devient le filet)/B2/B3
+détaillées dans **07_ARBITRAGES_PRODUIT.md** — aucune modification sans
+décision fondateur.
 
 ## 6. État de production réel (aucune fiction)
 

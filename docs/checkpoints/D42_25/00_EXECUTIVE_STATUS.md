@@ -145,6 +145,16 @@ CONDITIONAL.
     **smoke live 16:09Z** : /health 200 version 0.9.1-d42.23 +
     401×3 routes protégées. Livraison qualifiée (P1-E restant = 1 clé
     writeFiles backup à poser sur le miroir).
+23. **Reprise (instruction fondateur)** : attente active des SEULES secrets
+    B2_BACKUP_KEY_ID/B2_BACKUP_APPLICATION_KEY (guide pas-à-pas exact :
+    06_GUIDE_CLE_B2_BACKUP.md) ; **arbitrages produit documentés SANS
+    aucune modification** (07_ARBITRAGES_PRODUIT.md) — diagnostic code
+    nouveau : BgmDecoder décode depuis l'échantillon 0, mixeur fade-in
+    0,45 s à la frame 0 → le silence initial 1-3 s n'est PAS absorbé par
+    le montage (musique audible ~1,5-3,5 s) ; les 600 compositions, D1 et
+    le code restent intouchés. Leçon outillage : le .git du snapshot
+    peut être périmé → vérifier HEAD vs origin/main avant tout travail
+    (reset --hard vérifié octet par octet ce tour).
 
 ## Blocage fondateur unique (requête précise et minimale)
 **Recréer le jeton Cloudflare principal avec le périmètre Workers** (~2 min) :
