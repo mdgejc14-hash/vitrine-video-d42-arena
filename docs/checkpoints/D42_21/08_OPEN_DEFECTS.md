@@ -63,3 +63,25 @@ divergences documentées dans `06_TEMPLATE_MUSIC_DIRECTION.md` (shas v2 dans D1/
 
 Aucun appareil Android physique disponible ; toutes les validations E2E sont émulateur
 CI (api 34, x86_64). À marquer NON TESTÉ dans le rapport final.
+
+## D7 — Divergence main ↔ d42.13-lab (découverte 08/11 ~01:55, fusion DIFFÉRÉE)
+
+- **Fait** : `git push d42.13-lab:main` rejeté (non-fast-forward). main (`a2a3c47`)
+  contient **34 commits absents du lab** (synchros miroir « source privée » de l'ère
+  D42.6 : MANIFESTE_MIROIR.md, docs/ALIGNEMENT_V2.md, docs/AUDIO_BGM_TELEVERSEMENT.md,
+  retouches MainActivity.kt +7/-69, BgmStore.kt +20/-154, T2.json immo_auto/
+  shops_small_business, gabarit_l10n_v1.json, gh_api.sh supprimé côté main,
+  virtual-render-validation.yml…). Réciproquement le lab a 51 commits que main n'a pas
+  (tout D42.13→D42.21 : audio v2, robustesse export, checkpoints).
+- **Contenu chevauchant** : BgmSfxAudioMixer.kt et BgmSfxAudioMixerMultiRushTest.kt
+  sont IDENTIQUES entre main et lab (diff vide) — les versions lab descendent bien
+  du même état D42.6.
+- **Décision** : NE PAS fusionner avant la chaîne release (BgmStore.kt est sur le
+  chemin critique audio ; une fusion mal résolée détruirait la preuve A). La mémoire
+  durable = branche lab + tags + releases (tous poussés/vérifiés). La fusion main←lab
+  (ou main←merge) est à trancher par le fondateur avec l'analyse ci-dessus ; android-ci
+  (tests 120, déclenché par main) restera donc non rejoué sur ces contenus en D42.21 —
+  la non-régression export est couverte par l'étage 1 release-official-build
+  (`:feature-export:testDebugUnitTest`) sur `d42.21-build-1`.
+- **Impact rapport final** : item à marquer explicitement (main non synchronisé,
+  divergence documentée, raison : protection de la preuve release).
