@@ -1,5 +1,12 @@
 # D42.23 — 10. DÉFAUTS OUVERTS
 
+## Incident résolu : workflow preview-d1-migrations invalide (1 run)
+- Run 42465876563 (miroir, `68a31fb`) : failure sans jobs — la garde
+  D42.23 a été ajoutée ALORS que ce workflow en portait déjà une
+  (clé `if:` dupliquée = YAML invalide pour GitHub). Corrigé au commit
+  suivant (doublon retiré — la garde d'origine suffit). Le run d'api-security
+  `42465877627` = **skipped** confirme que le cadrage fonctionne ailleurs.
+
 ## D23-1 [BLOQUANT production] Minutes GitHub Actions épuisées (dépôts privés)
 - **Symptôme** : tout workflow du dépôt privé `vitrine-video` meurt en
   3-5 s — zéro étape exécutée, aucun runner attribué. Vérifié en direct :
@@ -29,6 +36,15 @@
   export+SFX, PAS le téléchargement BGM (login → token → catalog →
   variation → B2 → cache → mix). Voir 02/§découverte. Validation via
   audio-audit-1 + test physique (points B2/B3/C1 de la checklist D42.22).
+
+## D23-3 [CRITIQUE, corrigé] APK public avec clé Firebase factice
+- L'APK rc10-audio-v2 (release publique 438084850) embarque la clé
+  FACTICE (preuve : extraction dex ; sonde contrastée identitytoolkit —
+  factice = « API key not valid », réelle = « INVALID_LOGIN_CREDENTIALS »).
+  Sans correctif : connexion Google impossible au premier test physique.
+- Correctif : clé réelle dans la branche privée `d42.23-production`
+  (commit `2cd6991`) + APK production reconstruit/signé localement +
+  release dans le privé (détails checkpoint 04).
 
 ## Hérités
 - D22-1 (secrets miroir public) : REQUALIFIÉ — les secrets existent dans

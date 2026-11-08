@@ -35,6 +35,13 @@ de vérité. Aucun acquis D42.15-22 recommencé.
 3. Checkpoints 03-09 au fil des validations.
 4. Verdict + rapport + paquet fondateur (action facturation unique).
 
+## Découverte D23-3 (critique, corrigée en cours)
+- **APK rc10-audio-v2 = clé Firebase FACTICE** (`AIzaSyD42LABDUMMYKEY…`,
+  extraite du dex de l'asset publié) : la connexion Google aurait échoué
+  au premier test physique. Correctif : clé réelle (privé) committée en
+  branche `d42.23-production` (commit `2cd6991`), APK reconstruit +
+  signé localement, release dans le PRIVÉ (voir 04).
+
 ## Blocage unique
 **D23-1 (facturation Actions dépôts privés)** — déploiement Worker, tests
 API réels (security-ci 2 comptes), audit audio production (audio-audit-1),
