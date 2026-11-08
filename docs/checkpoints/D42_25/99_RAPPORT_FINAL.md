@@ -108,12 +108,18 @@ purger/aligner les clés titulaires dans D1.
 
 - **D1 prod (vitrine-video-db)** : schéma complet 0001→0012, tables
   vérifiées (merchant_identity, billing_orders, audio_catalog, bgm_library
-  V2/600 pistes).
-- **Worker prod** : 0.9.0 inchangé (échec propre AVANT tout deploy — aucun
-  demi-état).
+  V2/600 pistes) ; export backup réel de 468 371 octets SQL réussi
+  (42494796528).
+- **Worker prod** : **0.9.1-d42.23 DÉPLOYÉ et FUMÉ** (42492066614 :
+  /health version + database connected + 8 tables, auth 401, billing/return
+  200 SKYPAY).
+- **B2 média** : 600/600 pistes bgm_library présentes (HEAD direct,
+  42493755744), sha256 conformes ; 54/60 clés titulaires 404 (repli v01).
 - **APK rc11** : release privée 438156110, référence distribution.
-- **Secrets miroir** : 9 posés + OPS_ENABLED ; CF principal valide/D1,
-  CF preview invalide (fallback) ; lot 3 absent.
+- **Secrets miroir** : 12 posés + OPS_ENABLED=true ; CF principal avec
+  périmètre Workers ✓, CF preview valide ✓, lot 3 backup posé ✓ ;
+  manquent uniquement `B2_BACKUP_KEY_ID`/`B2_BACKUP_APPLICATION_KEY`
+  (clé writeFiles dédiée au bucket backup).
 
 ## 7. Leçons durables du tour (extraits)
 
@@ -127,3 +133,15 @@ purger/aligner les clés titulaires dans D1.
   success:true) : sonder le service NOMMÉ.
 - Flakes infra (DeadSystemException émulateur, timeout services.gradle.org)
   : re-run du job avant toute inculpation du code.
+- Clé d'application B2 restreinte : ListObjectsV2 répond **200 VIDE**
+  sans erreur — prouver l'existence par HEAD direct par clé.
+- ubuntu-latest n'embarque PAS ffmpeg : l'installer dans le workflow avant
+  toute analyse acoustique (sinon spawnSync « exit null » silencieux).
+- La console B2 affiche l'endpoint S3 SANS schéma : normaliser plutôt que
+  rejeter, puis revalider strictement le domaine.
+- `ConnectionClosedError` B2 sans réponse HTTP est non-diagnostique : un
+  HeadBucket SIGNÉ discrimine 404/403/connexion fermée avec un message
+  actionnable par cas.
+- Ne jamais élargir une clé restreinte qui sert un contrôle : créer une clé
+  dédiée par usage (moindre privilège — audit lecture média vs backup
+  écriture).
