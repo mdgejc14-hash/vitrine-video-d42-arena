@@ -81,8 +81,21 @@ jobs:
             echo "Add all required repository secrets before running the workflow."
             exit 1
           fi
-          if [[ "$B2_S3_ENDPOINT" != https://s3.*.backblazeb2.com ]]; then
+          # D42.25 (run 42494678205) : la console Backblaze affiche
+          # l'endpoint S3 SANS schéma (« s3.<region>.backblazeb2.com ») —
+          # on NORMALISE au lieu de rejeter, puis on revalide le domaine.
+          ep="${B2_S3_ENDPOINT%%\"}"
+          ep="${ep%% }"
+          ep="${ep## }"
+          ep="${ep%%/}"
+          ep="${ep#https://}"
+          ep="${ep#http://}"
+          if [[ "${ep}" == s3.*.backblazeb2.com ]]; then
+            echo "B2_S3_ENDPOINT normalisé (schéma https ajouté) — domaine valide."
+            echo "B2_S3_ENDPOINT=https://${ep}" >> "$GITHUB_ENV"
+          else
             echo "ERROR: B2_S3_ENDPOINT must look like https://s3.<region>.backblazeb2.com"
+            echo "Sur la page du bucket B2 → « Endpoint », collez : s3.<region>.backblazeb2.com (ou avec https://) — PAS l'URL apiNNN.backblazeb2.com (API native)."
             exit 1
           fi
           test -f wrangler.jsonc -o -f wrangler.toml -o -f wrangler.json
