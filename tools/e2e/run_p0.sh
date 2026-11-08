@@ -7,6 +7,26 @@
 # Chaque étape produit une ligne PASS / FAIL / BLOCKED dans results.tsv,
 # une capture PNG et un dump uiautomator. Aucune étape ne masque un échec :
 # le script continue et le bilan est calculé à la fin.
+
+# D42.26 — swipes ADAPTATIFS à la taille d'écran : les coordonnées absolues
+# (1080x2340) tombaient hors écran en 540x960 (FAIL S07/S08 small du run
+# 42509265951 : y=1200 > 960). Sur écran standard 1080x2340, les pourcentages
+# recalculent EXACTEMENT les anciennes coordonnées (aucun changement).
+lire_taille_ecran() { # override prioritaire sur la taille physique
+  EFF_W=1080; EFF_H=2340
+  local sz ov ph
+  sz=$(adb shell wm size 2>/dev/null | tr -d '\r')
+  ov=$(printf '%s\n' "$sz" | sed -n 's/.*Override size: \([0-9]*\)x\([0-9]*\).*/\1 \2/p')
+  if [ -n "$ov" ]; then EFF_W=${ov% *}; EFF_H=${ov#* }; else
+    ph=$(printf '%s\n' "$sz" | sed -n 's/.*Physical size: \([0-9]*\)x\([0-9]*\).*/\1 \2/p')
+    [ -n "$ph" ] && { EFF_W=${ph% *}; EFF_H=${ph#* }; }
+  fi
+}
+lire_taille_ecran
+swipe_v() { # y1pct y2pct [ms] — swipe VERTICAL au centre, relatif à la hauteur
+  adb shell input swipe $(( EFF_W / 2 )) $(( EFF_H * $1 / 100 )) \
+    $(( EFF_W / 2 )) $(( EFF_H * $2 / 100 )) "${3:-250}" >/dev/null 2>&1
+}
 set -uo pipefail
 
 TAG="${1:-pixel5}"
@@ -66,6 +86,7 @@ if [ "$VARIANTE" = "small" ]; then
   # de l'Ouest. On simule sur un AVD stable plutôt que d'utiliser un profil
   # Nexus S que l'émulateur API 30 ne démarre pas.
   adb shell wm size 540x960 2>&1 | tee -a "$OUT/env.txt"
+  lire_taille_ecran   # D42.26 : les swipes relatifs doivent voir l'override
   adb shell wm density 240 2>&1 | tee -a "$OUT/env.txt"
   TAILLE=$(adb shell wm size | tr -d '\r' | tr '\n' ' ')
   DENS=$(adb shell wm density | tr -d '\r' | tr '\n' ' ')
@@ -117,7 +138,7 @@ visible_ou_defilant() { # texte|id, valeur, [max_gestes]
   fi
   local i
   for i in $(seq 1 "$max"); do
-    adb shell input swipe 540 900 540 400 250 >/dev/null 2>&1
+    swipe_v 38 17 250 >/dev/null 2>&1
     sleep 1
     if [ "$mode" = "text" ]; then
       $UI inside --text "$cible" --timeout 4 >/dev/null 2>&1 && return 2
@@ -233,7 +254,7 @@ if $UI wait --text "activité" --timeout 25 >/dev/null 2>&1; then
     record FAIL S10_bouton_continuer_visible "bouton Continuer absent ou hors écran (défaut P1)"
   fi
   # défilement : le contenu doit défiler sans perdre le bouton
-  adb shell input swipe 540 1200 540 400 300 >/dev/null 2>&1; sleep 1
+  swipe_v 51 17 300 >/dev/null 2>&1; sleep 1
   shot 08_activite_defilee; dump 08_activite_defilee
   if $UI inside --text "Continuer" --timeout 10 >/dev/null 2>&1; then
     record PASS S11_bouton_apres_defilement "bouton toujours visible après défilement"
@@ -256,7 +277,7 @@ taper_carte_secteur() {
   done
   local i
   for i in 1 2 3; do
-    adb shell input swipe 540 1200 540 500 250 >/dev/null 2>&1
+    swipe_v 51 21 250 >/dev/null 2>&1
     sleep 1
     for t in "Commerce" "Boutique" "Vêtements" "Coiffure" "Restauration" "Bâtiment" "Voitures"; do
       if $UI inside --text "$t" --timeout 2 >/dev/null 2>&1; then
@@ -325,6 +346,7 @@ if [ "$VARIANTE" = "rot90" ]; then
 fi
 if [ "$VARIANTE" = "small" ]; then
   adb shell wm size reset
+  lire_taille_ecran
   adb shell wm density reset
 fi
 

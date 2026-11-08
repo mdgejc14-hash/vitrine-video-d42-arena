@@ -7,6 +7,26 @@
 # Ce n'est PAS un capteur physique : la chaîne testée est réelle (CameraX ->
 # MediaCodec -> fichier MP4), l'image filmée est synthétique. Tout résultat est
 # donc PASS_EMULATOR, jamais PASS_DEVICE.
+
+# D42.26 — swipes ADAPTATIFS à la taille d'écran : les coordonnées absolues
+# (1080x2340) tombaient hors écran en 540x960 (FAIL S07/S08 small du run
+# 42509265951 : y=1200 > 960). Sur écran standard 1080x2340, les pourcentages
+# recalculent EXACTEMENT les anciennes coordonnées (aucun changement).
+lire_taille_ecran() { # override prioritaire sur la taille physique
+  EFF_W=1080; EFF_H=2340
+  local sz ov ph
+  sz=$(adb shell wm size 2>/dev/null | tr -d '\r')
+  ov=$(printf '%s\n' "$sz" | sed -n 's/.*Override size: \([0-9]*\)x\([0-9]*\).*/\1 \2/p')
+  if [ -n "$ov" ]; then EFF_W=${ov% *}; EFF_H=${ov#* }; else
+    ph=$(printf '%s\n' "$sz" | sed -n 's/.*Physical size: \([0-9]*\)x\([0-9]*\).*/\1 \2/p')
+    [ -n "$ph" ] && { EFF_W=${ph% *}; EFF_H=${ph#* }; }
+  fi
+}
+lire_taille_ecran
+swipe_v() { # y1pct y2pct [ms] — swipe VERTICAL au centre, relatif à la hauteur
+  adb shell input swipe $(( EFF_W / 2 )) $(( EFF_H * $1 / 100 )) \
+    $(( EFF_W / 2 )) $(( EFF_H * $2 / 100 )) "${3:-250}" >/dev/null 2>&1
+}
 set -uo pipefail
 
 TAG="${1:-p1}"
@@ -289,7 +309,7 @@ if [ "$brief_ok" = "1" ]; then
     local i
     for i in 1 2 3 4 5 6; do
       if $UI wait --text "Continuer" --exact --timeout 2 >/dev/null 2>&1; then return 0; fi
-      adb shell input swipe 540 1700 540 600 250 >/dev/null 2>&1
+      swipe_v 73 26 250 >/dev/null 2>&1
       sleep 1
     done
     return 1
@@ -297,7 +317,7 @@ if [ "$brief_ok" = "1" ]; then
   remonter_formulaire() { # retour en haut pour que les coordonnées des champs soient valides
     local i
     for i in 1 2 3; do
-      adb shell input swipe 540 600 540 1700 250 >/dev/null 2>&1
+      swipe_v 26 73 250 >/dev/null 2>&1
       sleep 1
     done
   }
@@ -409,7 +429,7 @@ if [ "$brief_ok" = "1" ]; then
     if [ "$progresse" = "0" ]; then
       sans_effet=$((sans_effet+1))
       [ "$sans_effet" -ge 2 ] && break
-      adb shell input swipe 540 1700 540 1000 250 >/dev/null 2>&1
+      swipe_v 73 43 250 >/dev/null 2>&1
       sleep 1
     fi
   done
@@ -422,7 +442,7 @@ if [ "$brief_ok" = "1" ]; then
     # révéler le BAS du formulaire (quartier) : à la position de saisie du
     # prix, il est sous le pli et absent des dumps (cause du 4/5 récurrent).
     if [ "$passe" -gt 1 ]; then
-      adb shell input swipe 540 1700 540 600 250 >/dev/null 2>&1
+      swipe_v 73 26 250 >/dev/null 2>&1
       sleep 1
     fi
     fermer_clavier
@@ -454,7 +474,7 @@ if [ "$brief_ok" = "1" ]; then
   trouve=0
   for _ in 1 2 3 4 5 6; do
     if $UI wait --text "Continuer" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
-    adb shell input swipe 540 1700 540 600 250 >/dev/null 2>&1
+    swipe_v 73 26 250 >/dev/null 2>&1
     sleep 1
   done
   shot 22b_brief_bas; dump 22b_brief_bas
@@ -610,7 +630,7 @@ completer_guide() {
   if $UI wait --text "Filme ta prise" --timeout 4 >/dev/null 2>&1; then
     for i in 1 2 3 4 5 6; do
       $UI inside --text "Suivant" --exact --timeout 3 >/dev/null 2>&1 && break
-      adb shell input swipe 540 1700 540 500 300 >/dev/null 2>&1
+      swipe_v 73 21 300 >/dev/null 2>&1
       sleep 1
     done
     if $UI inside --text "Suivant" --exact --timeout 3 >/dev/null 2>&1; then
@@ -661,12 +681,12 @@ revele() {  # $1 = libellé exact -> rc 0 si entièrement visible
   local lbl="$1" i
   for i in $(seq 1 12); do
     $UI inside --text "$lbl" --exact --timeout 3 >/dev/null 2>&1 && return 0
-    adb shell input swipe 540 1700 540 500 400 >/dev/null 2>&1
+    swipe_v 73 21 400 >/dev/null 2>&1
     sleep 1
   done
   for i in 1 2 3 4; do
     $UI inside --text "$lbl" --exact --timeout 3 >/dev/null 2>&1 && return 0
-    adb shell input swipe 540 2010 540 1840 600 >/dev/null 2>&1
+    swipe_v 86 79 600 >/dev/null 2>&1
     sleep 1
   done
   $UI inside --text "$lbl" --exact --timeout 3 >/dev/null 2>&1
