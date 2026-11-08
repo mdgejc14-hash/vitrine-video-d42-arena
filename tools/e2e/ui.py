@@ -377,7 +377,21 @@ def point_de_clic(nodes, n, w, h):
     if propre and propre != VIDE:
         largeur, hauteur = propre[2] - propre[0], propre[3] - propre[1]
         if hauteur >= 24 and largeur >= 24:
-            return (propre[0] + propre[2]) // 2, (propre[1] + propre[3]) // 2, "direct"
+            # D42.26-15 (small, run 42528862955) : uiautomator expose parfois
+            # un texte de bouton avec les BOUNDS DU CONTENT ENTIER
+            # (« Continuer » bounds=(0,145,540,752)) : le mode direct tapait
+            # le centre de l'écran — au milieu de la grille des cartes, pas
+            # sur le bouton. Même garde que surface_reelle/utilisable() :
+            # un rectangle couvrant ~toute la fenêtre n'est pas un bouton.
+            fw, fh = fenetre()
+            if fw and fh and largeur >= fw * 0.95 and hauteur >= fh * 0.9:
+                surf = surface_reelle(n)
+                if surf and surf != VIDE and (surf[3] - surf[1]) >= 24 and (surf[2] - surf[0]) >= 24:
+                    return (surf[0] + surf[2]) // 2, (surf[1] + surf[3]) // 2, "surface"
+                # sinon : tomber sur bas_large ci-dessous (ne pas taper le
+                # centre de l'écran).
+            else:
+                return (propre[0] + propre[2]) // 2, (propre[1] + propre[3]) // 2, "direct"
         surf = surface_reelle(n)
         if surf and surf != VIDE and (surf[3] - surf[1]) >= 24 and (surf[2] - surf[0]) >= 24:
             return (surf[0] + surf[2]) // 2, (surf[1] + surf[3]) // 2, "surface"

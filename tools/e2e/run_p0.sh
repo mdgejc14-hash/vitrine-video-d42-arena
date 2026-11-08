@@ -302,52 +302,53 @@ fi
 # défile avant de taper, sinon `tap` vise un élément hors écran et l'appui se
 # perd (échec S12 du run 42186013775, non expliqué jusque-là).
 taper_carte_secteur() {
-  # D42.26-14 : le run 42522089646 a montré S12 BLOCKED sur les 5 variantes :
-  # pendant ~10 min, les dumps live ne contenaient plus les textes des cartes
-  # (alors que « Continuer » y était trouvé à S10/S11, et que le dump 08 les
-  # contenait une minute plus tôt). Cause non élucidée à ce stade → on rend
-  # l'échec OBSERVABLE : sorties non redirigées (E2E FOUND / E2E TIMEOUT
-  # nodes=N dans le log du job), capture + dump de sauvetage à l'échec.
-  # Fallback assumé : le produit PRÉ-SÉLECTIONNE un secteur (Sector.MODE,
-  # design « jamais bloquant », OnboardingScreens.kt) — ne rien taper et
-  # laisser S13 actionner « Continuer » est un parcours produit légitime,
-  # distinct du parcours « tap d'une carte » (validé sur les runs
-  # 42509265951/42512514439 quand le dump expose les cartes).
+  # D42.26-15 : le run 42528862955 a TOUT éclairé :
+  #  (a) les cartes SONT localisables (FOUND avec bounds exacts, emojis
+  #      compris) quand les timeouts sont assez larges — l'ancien échec du
+  #      run 42522089646 venait de dumps uiautomator en échec silencieux
+  #      (UI saturée) bouclés sur des timeouts de 3 s ;
+  #  (b) mais TAPER une carte ne CHANGE PAS d'écran : la sélection reste sur
+  #      la grille (le passage au parrain se fait par « Continuer »). L'ancienne
+  #      preuve post-tap immédiate (« Ton code parrain ») était mal conçue et
+  #      faisait taper les 6 cartes puis recommencer.
+  # NOUVELLE LOGIQUE : on tape UNE carte (la 1re visible). La PREUVE est
+  # DIFFÉRÉE : S13 (Continuer) mène au parrain, et le dump 10_etape_suivante
+  # doit montrer « Tu as choisi : <carte> » — le secteur retenu est bien
+  # celui tapé. Fallback inchangé si aucune carte n'est localisable :
+  # le produit pré-sélectionne Sector.MODE (design « jamais bloquant »).
   SECTEUR_PRESEL=""
-  local t
+  local t carte_tapee=""
   for t in "Boutique & Petit Commerce" "Vêtements & Mode" "Coiffure & Beauté" \
            "Restauration & Maquis" "Bâtiment & Travaux" "Vente de Voitures & Maisons"; do
     if $UI inside --text "$t" --timeout 12; then
       if $UI tap --text "$t" --timeout 12; then
-        sleep 1
-        if $UI wait --text "Ton code parrain" --timeout 15 >/dev/null 2>&1 \
-           || $UI wait --text "Tu as choisi" --timeout 5 >/dev/null 2>&1; then
-          return 0
-        fi
+        carte_tapee="$t"
+        break
       fi
     fi
   done
-  # SAUVETAGE DIAGNOSTIC : ce que l'écran ET le dump voyaient à l'instant
-  # exact de l'échec de la première passe (captures de preuve).
-  shot 12b_ecran_s12; dump 12b_ecran_s12
-  adb shell uiautomator dump /sdcard/probe_s12.xml >/dev/null 2>&1
-  adb pull /sdcard/probe_s12.xml "$OUT/12_probe_cartes.xml" >/dev/null 2>&1
-  local i
-  for i in 1 2; do
+  if [ -z "$carte_tapee" ]; then
+    # une passe de défilement puis une seconde tentative
     swipe_v 51 21 250; sleep 1
     for t in "Boutique & Petit Commerce" "Vêtements & Mode" "Coiffure & Beauté" \
              "Restauration & Maquis" "Bâtiment & Travaux" "Vente de Voitures & Maisons"; do
       if $UI inside --text "$t" --timeout 8; then
         if $UI tap --text "$t" --timeout 12; then
-          sleep 1
-          if $UI wait --text "Ton code parrain" --timeout 15 >/dev/null 2>&1 \
-             || $UI wait --text "Tu as choisi" --timeout 5 >/dev/null 2>&1; then
-            return 0
-          fi
+          carte_tapee="$t"
+          break
         fi
       fi
     done
-  done
+  fi
+  if [ -n "$carte_tapee" ]; then
+    SECTEUR_TAPE="$carte_tapee"
+    return 0
+  fi
+  # SAUVETAGE DIAGNOSTIC : ce que l'écran ET le dump voyaient à l'instant
+  # exact de l'échec (captures de preuve).
+  shot 12b_ecran_s12; dump 12b_ecran_s12
+  adb shell uiautomator dump /sdcard/probe_s12.xml >/dev/null 2>&1
+  adb pull /sdcard/probe_s12.xml "$OUT/12_probe_cartes.xml" >/dev/null 2>&1
   # FALLBACK PRODUIT : aucune carte localisable, mais « Continuer » est là —
   # on NE TAPE PAS (S13 s'en charge) : le secteur pré-sélectionné (MODE)
   # sera prouvé par l'écran parrain « Tu as choisi : … » au moment du S13.
@@ -358,10 +359,10 @@ taper_carte_secteur() {
   return 1
 }
 if taper_carte_secteur; then
-  if [ -n "$SECTEUR_PRESEL" ]; then
-    record PASS S12_selection_secteur "cartes NON localisables par uiautomator ce run (voir 12_probe_cartes.xml) — parcours produit : secteur PRÉ-SÉLECTIONNÉ (Sector.MODE, design jamais bloquant), Continuer présent ; sélection manuelle de carte prouvée sur runs antérieurs (42509265951)"
+  if [ -n "${SECTEUR_TAPE:-}" ]; then
+    record PASS S12_selection_secteur "carte secteur actionnée : « $SECTEUR_TAPE » — preuve différée : écran parrain (S14) + « Tu as choisi » au dump 10"
   else
-    record PASS S12_selection_secteur "carte secteur actionnée, écran parrain ATTEINT (preuve post-tap)"
+    record PASS S12_selection_secteur "aucune carte localisable par uiautomator ce run (voir 12_probe_cartes.xml) — parcours produit : secteur PRÉ-SÉLECTIONNÉ (Sector.MODE, design jamais bloquant), Continuer présent ; sélection manuelle de carte prouvée sur runs antérieurs (42509265951)"
   fi
   shot 09_secteur_choisi
 else

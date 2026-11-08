@@ -1,0 +1,818 @@
+PASS	catalogue/batiment_travaux	5 gabarits (T1..T5 attendus : OK)
+PASS	batiment_travaux_T1/identite	id=batiment_travaux_T1 secteur=batiment_travaux format=T1_nouvel_arrivage fichier=batiment_travaux/T1.json
+PASS	batiment_travaux_T1/secteur_libelle	présent
+PASS	batiment_travaux_T1/notes_adaptation	présent
+PASS	batiment_travaux_T1/copywriting	présent
+PASS	batiment_travaux_T1/montage_signature	présent
+PASS	batiment_travaux_T1/etalonnage	présent
+PASS	batiment_travaux_T1/style_visuel	présent
+PASS	batiment_travaux_T1/signature_montage	présent
+PASS	batiment_travaux_T1/axes_signature	présent
+PASS	batiment_travaux_T1/formulaire_ui	présent
+PASS	batiment_travaux_T1/nom_format_affiche	présent
+PASS	batiment_travaux_T1/interface_commercant	présent
+PASS	batiment_travaux_T1/duree_coherente	déclarée 35s vs somme des scènes 35.0s
+PASS	batiment_travaux_T1/nombre_scenes	déclaré 15 vs réel 15
+PASS	batiment_travaux_T1/ordre_sequences	numéros [1, 2, 3, 4, 5]…[13, 14, 15] séquentiels 1..N
+PASS	batiment_travaux_T1/champs_uniques	7 champs, ids uniques
+PASS	batiment_travaux_T1/variables_resolues	6 variables utilisées, toutes définies
+PASS	batiment_travaux_T1/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	batiment_travaux_T1/guide_tournage	3 prises à filmer, 3 étapes
+PASS	batiment_travaux_T1/musique	genre=afro-house percussif instrumental, bpm 100-112, catégorie=musique_t1_batiment_travaux
+PASS	batiment_travaux_T1/sfx	6 effets sonores sur 6 scènes
+PASS	batiment_travaux_T1/modes_audio_3	voix active sur 1/15 scènes ; musique présente ; mode musique seule représentable (14 scènes sans voix)
+PASS	batiment_travaux_T1/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	batiment_travaux_T1/transitions	14/14 transitions de sortie définies
+PASS	batiment_travaux_T1/effets	15 effets de scène
+PASS	batiment_travaux_T1/structure_montage	15 étapes de montage horodatées
+PASS	batiment_travaux_T1/ratio	ratio=9:16
+PASS	batiment_travaux_T2/identite	id=batiment_travaux_T2 secteur=batiment_travaux format=T2_avant_apres fichier=batiment_travaux/T2.json
+PASS	batiment_travaux_T2/secteur_libelle	présent
+PASS	batiment_travaux_T2/notes_adaptation	présent
+PASS	batiment_travaux_T2/copywriting	présent
+PASS	batiment_travaux_T2/montage_signature	présent
+PASS	batiment_travaux_T2/etalonnage	présent
+PASS	batiment_travaux_T2/style_visuel	présent
+PASS	batiment_travaux_T2/signature_montage	présent
+PASS	batiment_travaux_T2/axes_signature	présent
+PASS	batiment_travaux_T2/formulaire_ui	présent
+PASS	batiment_travaux_T2/nom_format_affiche	présent
+PASS	batiment_travaux_T2/interface_commercant	présent
+PASS	batiment_travaux_T2/duree_coherente	déclarée 35s vs somme des scènes 35.0s
+PASS	batiment_travaux_T2/nombre_scenes	déclaré 17 vs réel 17
+PASS	batiment_travaux_T2/ordre_sequences	numéros [1, 2, 3, 4, 5]…[15, 16, 17] séquentiels 1..N
+PASS	batiment_travaux_T2/champs_uniques	7 champs, ids uniques
+PASS	batiment_travaux_T2/variables_resolues	5 variables utilisées, toutes définies
+PASS	batiment_travaux_T2/prises_coherentes	4 prises définies, 4 référencées, toutes résolues
+PASS	batiment_travaux_T2/guide_tournage	4 prises à filmer, 4 étapes
+PASS	batiment_travaux_T2/musique	genre=afrobeats chantier instrumental, bpm 94-108, catégorie=musique_t2_batiment_travaux
+PASS	batiment_travaux_T2/sfx	13 effets sonores sur 13 scènes
+PASS	batiment_travaux_T2/modes_audio_3	voix active sur 1/17 scènes ; musique présente ; mode musique seule représentable (16 scènes sans voix)
+PASS	batiment_travaux_T2/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	batiment_travaux_T2/transitions	16/16 transitions de sortie définies
+PASS	batiment_travaux_T2/effets	17 effets de scène
+PASS	batiment_travaux_T2/structure_montage	17 étapes de montage horodatées
+PASS	batiment_travaux_T2/ratio	ratio=9:16
+PASS	batiment_travaux_T3/identite	id=batiment_travaux_T3 secteur=batiment_travaux format=T3_presentation_produit fichier=batiment_travaux/T3.json
+PASS	batiment_travaux_T3/secteur_libelle	présent
+PASS	batiment_travaux_T3/notes_adaptation	présent
+PASS	batiment_travaux_T3/copywriting	présent
+PASS	batiment_travaux_T3/montage_signature	présent
+PASS	batiment_travaux_T3/etalonnage	présent
+PASS	batiment_travaux_T3/style_visuel	présent
+PASS	batiment_travaux_T3/signature_montage	présent
+PASS	batiment_travaux_T3/axes_signature	présent
+PASS	batiment_travaux_T3/formulaire_ui	présent
+PASS	batiment_travaux_T3/nom_format_affiche	présent
+PASS	batiment_travaux_T3/interface_commercant	présent
+PASS	batiment_travaux_T3/duree_coherente	déclarée 40s vs somme des scènes 40.0s
+PASS	batiment_travaux_T3/nombre_scenes	déclaré 14 vs réel 14
+PASS	batiment_travaux_T3/ordre_sequences	numéros [1, 2, 3, 4, 5]…[12, 13, 14] séquentiels 1..N
+PASS	batiment_travaux_T3/champs_uniques	7 champs, ids uniques
+PASS	batiment_travaux_T3/variables_resolues	6 variables utilisées, toutes définies
+PASS	batiment_travaux_T3/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	batiment_travaux_T3/guide_tournage	3 prises à filmer, 3 étapes
+PASS	batiment_travaux_T3/musique	genre=percussions afro industrielles, bpm 88-104, catégorie=musique_t3_batiment_travaux
+PASS	batiment_travaux_T3/sfx	5 effets sonores sur 5 scènes
+PASS	batiment_travaux_T3/modes_audio_3	voix active sur 1/14 scènes ; musique présente ; mode musique seule représentable (13 scènes sans voix)
+PASS	batiment_travaux_T3/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	batiment_travaux_T3/transitions	13/13 transitions de sortie définies
+PASS	batiment_travaux_T3/effets	14 effets de scène
+PASS	batiment_travaux_T3/structure_montage	14 étapes de montage horodatées
+PASS	batiment_travaux_T3/ratio	ratio=9:16
+PASS	batiment_travaux_T4/identite	id=batiment_travaux_T4 secteur=batiment_travaux format=T4_promo_flash fichier=batiment_travaux/T4.json
+PASS	batiment_travaux_T4/secteur_libelle	présent
+PASS	batiment_travaux_T4/notes_adaptation	présent
+PASS	batiment_travaux_T4/copywriting	présent
+PASS	batiment_travaux_T4/montage_signature	présent
+PASS	batiment_travaux_T4/etalonnage	présent
+PASS	batiment_travaux_T4/style_visuel	présent
+PASS	batiment_travaux_T4/signature_montage	présent
+PASS	batiment_travaux_T4/axes_signature	présent
+PASS	batiment_travaux_T4/formulaire_ui	présent
+PASS	batiment_travaux_T4/nom_format_affiche	présent
+PASS	batiment_travaux_T4/interface_commercant	présent
+PASS	batiment_travaux_T4/duree_coherente	déclarée 33s vs somme des scènes 33.0s
+PASS	batiment_travaux_T4/nombre_scenes	déclaré 17 vs réel 17
+PASS	batiment_travaux_T4/ordre_sequences	numéros [1, 2, 3, 4, 5]…[15, 16, 17] séquentiels 1..N
+PASS	batiment_travaux_T4/champs_uniques	9 champs, ids uniques
+PASS	batiment_travaux_T4/variables_resolues	9 variables utilisées, toutes définies
+PASS	batiment_travaux_T4/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	batiment_travaux_T4/guide_tournage	3 prises à filmer, 3 étapes
+PASS	batiment_travaux_T4/musique	genre=highlife énergique instrumental, bpm 110-126, catégorie=musique_t4_batiment_travaux
+PASS	batiment_travaux_T4/sfx	11 effets sonores sur 11 scènes
+PASS	batiment_travaux_T4/modes_audio_3	voix active sur 1/17 scènes ; musique présente ; mode musique seule représentable (16 scènes sans voix)
+PASS	batiment_travaux_T4/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	batiment_travaux_T4/transitions	16/16 transitions de sortie définies
+PASS	batiment_travaux_T4/effets	17 effets de scène
+PASS	batiment_travaux_T4/structure_montage	17 étapes de montage horodatées
+PASS	batiment_travaux_T4/ratio	ratio=9:16
+PASS	batiment_travaux_T5/identite	id=batiment_travaux_T5 secteur=batiment_travaux format=T5_temoignage_client fichier=batiment_travaux/T5.json
+PASS	batiment_travaux_T5/secteur_libelle	présent
+PASS	batiment_travaux_T5/notes_adaptation	présent
+PASS	batiment_travaux_T5/copywriting	présent
+PASS	batiment_travaux_T5/montage_signature	présent
+PASS	batiment_travaux_T5/etalonnage	présent
+PASS	batiment_travaux_T5/style_visuel	présent
+PASS	batiment_travaux_T5/signature_montage	présent
+PASS	batiment_travaux_T5/axes_signature	présent
+PASS	batiment_travaux_T5/formulaire_ui	présent
+PASS	batiment_travaux_T5/nom_format_affiche	présent
+PASS	batiment_travaux_T5/interface_commercant	présent
+PASS	batiment_travaux_T5/duree_coherente	déclarée 50s vs somme des scènes 50.0s
+PASS	batiment_travaux_T5/nombre_scenes	déclaré 13 vs réel 13
+PASS	batiment_travaux_T5/ordre_sequences	numéros [1, 2, 3, 4, 5]…[11, 12, 13] séquentiels 1..N
+PASS	batiment_travaux_T5/champs_uniques	10 champs, ids uniques
+PASS	batiment_travaux_T5/variables_resolues	5 variables utilisées, toutes définies
+PASS	batiment_travaux_T5/prises_coherentes	2 prises définies, 2 référencées, toutes résolues
+PASS	batiment_travaux_T5/guide_tournage	2 prises à filmer, 2 étapes
+PASS	batiment_travaux_T5/musique	genre=afro-soul confiance instrumental, bpm 76-94, catégorie=musique_t5_batiment_travaux
+PASS	batiment_travaux_T5/sfx	5 effets sonores sur 5 scènes
+PASS	batiment_travaux_T5/modes_audio_3	voix active sur 5/13 scènes ; musique présente ; mode musique seule représentable (8 scènes sans voix)
+PASS	batiment_travaux_T5/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	batiment_travaux_T5/transitions	12/12 transitions de sortie définies
+PASS	batiment_travaux_T5/effets	13 effets de scène
+PASS	batiment_travaux_T5/structure_montage	13 étapes de montage horodatées
+PASS	batiment_travaux_T5/ratio	ratio=9:16
+PASS	catalogue/coiffure_beaute	5 gabarits (T1..T5 attendus : OK)
+PASS	coiffure_beaute_T1/identite	id=coiffure_beaute_T1 secteur=coiffure_beaute format=T1_nouvel_arrivage fichier=coiffure_beaute/T1.json
+PASS	coiffure_beaute_T1/secteur_libelle	présent
+PASS	coiffure_beaute_T1/notes_adaptation	présent
+PASS	coiffure_beaute_T1/copywriting	présent
+PASS	coiffure_beaute_T1/montage_signature	présent
+PASS	coiffure_beaute_T1/etalonnage	présent
+PASS	coiffure_beaute_T1/style_visuel	présent
+PASS	coiffure_beaute_T1/signature_montage	présent
+PASS	coiffure_beaute_T1/axes_signature	présent
+PASS	coiffure_beaute_T1/formulaire_ui	présent
+PASS	coiffure_beaute_T1/nom_format_affiche	présent
+PASS	coiffure_beaute_T1/interface_commercant	présent
+PASS	coiffure_beaute_T1/duree_coherente	déclarée 35s vs somme des scènes 35.0s
+PASS	coiffure_beaute_T1/nombre_scenes	déclaré 15 vs réel 15
+PASS	coiffure_beaute_T1/ordre_sequences	numéros [1, 2, 3, 4, 5]…[13, 14, 15] séquentiels 1..N
+PASS	coiffure_beaute_T1/champs_uniques	7 champs, ids uniques
+PASS	coiffure_beaute_T1/variables_resolues	6 variables utilisées, toutes définies
+PASS	coiffure_beaute_T1/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	coiffure_beaute_T1/guide_tournage	3 prises à filmer, 3 étapes
+PASS	coiffure_beaute_T1/musique	genre=afro-R&B doux instrumental, bpm 101-113, catégorie=musique_t1_coiffure_beaute
+PASS	coiffure_beaute_T1/sfx	10 effets sonores sur 10 scènes
+PASS	coiffure_beaute_T1/modes_audio_3	voix active sur 1/15 scènes ; musique présente ; mode musique seule représentable (14 scènes sans voix)
+PASS	coiffure_beaute_T1/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	coiffure_beaute_T1/transitions	14/14 transitions de sortie définies
+PASS	coiffure_beaute_T1/effets	15 effets de scène
+PASS	coiffure_beaute_T1/structure_montage	15 étapes de montage horodatées
+PASS	coiffure_beaute_T1/ratio	ratio=9:16
+PASS	coiffure_beaute_T2/identite	id=coiffure_beaute_T2 secteur=coiffure_beaute format=T2_avant_apres fichier=coiffure_beaute/T2.json
+PASS	coiffure_beaute_T2/secteur_libelle	présent
+PASS	coiffure_beaute_T2/notes_adaptation	présent
+PASS	coiffure_beaute_T2/copywriting	présent
+PASS	coiffure_beaute_T2/montage_signature	présent
+PASS	coiffure_beaute_T2/etalonnage	présent
+PASS	coiffure_beaute_T2/style_visuel	présent
+PASS	coiffure_beaute_T2/signature_montage	présent
+PASS	coiffure_beaute_T2/axes_signature	présent
+PASS	coiffure_beaute_T2/formulaire_ui	présent
+PASS	coiffure_beaute_T2/nom_format_affiche	présent
+PASS	coiffure_beaute_T2/interface_commercant	présent
+PASS	coiffure_beaute_T2/duree_coherente	déclarée 35s vs somme des scènes 35.0s
+PASS	coiffure_beaute_T2/nombre_scenes	déclaré 16 vs réel 16
+PASS	coiffure_beaute_T2/ordre_sequences	numéros [1, 2, 3, 4, 5]…[14, 15, 16] séquentiels 1..N
+PASS	coiffure_beaute_T2/champs_uniques	7 champs, ids uniques
+PASS	coiffure_beaute_T2/variables_resolues	5 variables utilisées, toutes définies
+PASS	coiffure_beaute_T2/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	coiffure_beaute_T2/guide_tournage	3 prises à filmer, 3 étapes
+PASS	coiffure_beaute_T2/musique	genre=afrobeats lumineux instrumental, bpm 95-109, catégorie=musique_t2_coiffure_beaute
+PASS	coiffure_beaute_T2/sfx	9 effets sonores sur 9 scènes
+PASS	coiffure_beaute_T2/modes_audio_3	voix active sur 1/16 scènes ; musique présente ; mode musique seule représentable (15 scènes sans voix)
+PASS	coiffure_beaute_T2/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	coiffure_beaute_T2/transitions	15/15 transitions de sortie définies
+PASS	coiffure_beaute_T2/effets	16 effets de scène
+PASS	coiffure_beaute_T2/structure_montage	16 étapes de montage horodatées
+PASS	coiffure_beaute_T2/ratio	ratio=9:16
+PASS	coiffure_beaute_T3/identite	id=coiffure_beaute_T3 secteur=coiffure_beaute format=T3_presentation_produit fichier=coiffure_beaute/T3.json
+PASS	coiffure_beaute_T3/secteur_libelle	présent
+PASS	coiffure_beaute_T3/notes_adaptation	présent
+PASS	coiffure_beaute_T3/copywriting	présent
+PASS	coiffure_beaute_T3/montage_signature	présent
+PASS	coiffure_beaute_T3/etalonnage	présent
+PASS	coiffure_beaute_T3/style_visuel	présent
+PASS	coiffure_beaute_T3/signature_montage	présent
+PASS	coiffure_beaute_T3/axes_signature	présent
+PASS	coiffure_beaute_T3/formulaire_ui	présent
+PASS	coiffure_beaute_T3/nom_format_affiche	présent
+PASS	coiffure_beaute_T3/interface_commercant	présent
+PASS	coiffure_beaute_T3/duree_coherente	déclarée 40s vs somme des scènes 40.0s
+PASS	coiffure_beaute_T3/nombre_scenes	déclaré 14 vs réel 14
+PASS	coiffure_beaute_T3/ordre_sequences	numéros [1, 2, 3, 4, 5]…[12, 13, 14] séquentiels 1..N
+PASS	coiffure_beaute_T3/champs_uniques	7 champs, ids uniques
+PASS	coiffure_beaute_T3/variables_resolues	6 variables utilisées, toutes définies
+PASS	coiffure_beaute_T3/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	coiffure_beaute_T3/guide_tournage	3 prises à filmer, 3 étapes
+PASS	coiffure_beaute_T3/musique	genre=afro-house minimal instrumental, bpm 89-105, catégorie=musique_t3_coiffure_beaute
+PASS	coiffure_beaute_T3/sfx	11 effets sonores sur 11 scènes
+PASS	coiffure_beaute_T3/modes_audio_3	voix active sur 1/14 scènes ; musique présente ; mode musique seule représentable (13 scènes sans voix)
+PASS	coiffure_beaute_T3/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	coiffure_beaute_T3/transitions	13/13 transitions de sortie définies
+PASS	coiffure_beaute_T3/effets	14 effets de scène
+PASS	coiffure_beaute_T3/structure_montage	14 étapes de montage horodatées
+PASS	coiffure_beaute_T3/ratio	ratio=9:16
+PASS	coiffure_beaute_T4/identite	id=coiffure_beaute_T4 secteur=coiffure_beaute format=T4_promo_flash fichier=coiffure_beaute/T4.json
+PASS	coiffure_beaute_T4/secteur_libelle	présent
+PASS	coiffure_beaute_T4/notes_adaptation	présent
+PASS	coiffure_beaute_T4/copywriting	présent
+PASS	coiffure_beaute_T4/montage_signature	présent
+PASS	coiffure_beaute_T4/etalonnage	présent
+PASS	coiffure_beaute_T4/style_visuel	présent
+PASS	coiffure_beaute_T4/signature_montage	présent
+PASS	coiffure_beaute_T4/axes_signature	présent
+PASS	coiffure_beaute_T4/formulaire_ui	présent
+PASS	coiffure_beaute_T4/nom_format_affiche	présent
+PASS	coiffure_beaute_T4/interface_commercant	présent
+PASS	coiffure_beaute_T4/duree_coherente	déclarée 33s vs somme des scènes 33.0s
+PASS	coiffure_beaute_T4/nombre_scenes	déclaré 17 vs réel 17
+PASS	coiffure_beaute_T4/ordre_sequences	numéros [1, 2, 3, 4, 5]…[15, 16, 17] séquentiels 1..N
+PASS	coiffure_beaute_T4/champs_uniques	9 champs, ids uniques
+PASS	coiffure_beaute_T4/variables_resolues	9 variables utilisées, toutes définies
+PASS	coiffure_beaute_T4/prises_coherentes	2 prises définies, 2 référencées, toutes résolues
+PASS	coiffure_beaute_T4/guide_tournage	2 prises à filmer, 2 étapes
+PASS	coiffure_beaute_T4/musique	genre=highlife doux instrumental, bpm 111-127, catégorie=musique_t4_coiffure_beaute
+PASS	coiffure_beaute_T4/sfx	15 effets sonores sur 15 scènes
+PASS	coiffure_beaute_T4/modes_audio_3	voix active sur 1/17 scènes ; musique présente ; mode musique seule représentable (16 scènes sans voix)
+PASS	coiffure_beaute_T4/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	coiffure_beaute_T4/transitions	16/16 transitions de sortie définies
+PASS	coiffure_beaute_T4/effets	17 effets de scène
+PASS	coiffure_beaute_T4/structure_montage	17 étapes de montage horodatées
+PASS	coiffure_beaute_T4/ratio	ratio=9:16
+PASS	coiffure_beaute_T5/identite	id=coiffure_beaute_T5 secteur=coiffure_beaute format=T5_temoignage_client fichier=coiffure_beaute/T5.json
+PASS	coiffure_beaute_T5/secteur_libelle	présent
+PASS	coiffure_beaute_T5/notes_adaptation	présent
+PASS	coiffure_beaute_T5/copywriting	présent
+PASS	coiffure_beaute_T5/montage_signature	présent
+PASS	coiffure_beaute_T5/etalonnage	présent
+PASS	coiffure_beaute_T5/style_visuel	présent
+PASS	coiffure_beaute_T5/signature_montage	présent
+PASS	coiffure_beaute_T5/axes_signature	présent
+PASS	coiffure_beaute_T5/formulaire_ui	présent
+PASS	coiffure_beaute_T5/nom_format_affiche	présent
+PASS	coiffure_beaute_T5/interface_commercant	présent
+PASS	coiffure_beaute_T5/duree_coherente	déclarée 50s vs somme des scènes 50.0s
+PASS	coiffure_beaute_T5/nombre_scenes	déclaré 13 vs réel 13
+PASS	coiffure_beaute_T5/ordre_sequences	numéros [1, 2, 3, 4, 5]…[11, 12, 13] séquentiels 1..N
+PASS	coiffure_beaute_T5/champs_uniques	10 champs, ids uniques
+PASS	coiffure_beaute_T5/variables_resolues	5 variables utilisées, toutes définies
+PASS	coiffure_beaute_T5/prises_coherentes	2 prises définies, 2 référencées, toutes résolues
+PASS	coiffure_beaute_T5/guide_tournage	2 prises à filmer, 2 étapes
+PASS	coiffure_beaute_T5/musique	genre=percussions afro feutrées, bpm 77-95, catégorie=musique_t5_coiffure_beaute
+PASS	coiffure_beaute_T5/sfx	8 effets sonores sur 8 scènes
+PASS	coiffure_beaute_T5/modes_audio_3	voix active sur 5/13 scènes ; musique présente ; mode musique seule représentable (8 scènes sans voix)
+PASS	coiffure_beaute_T5/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	coiffure_beaute_T5/transitions	12/12 transitions de sortie définies
+PASS	coiffure_beaute_T5/effets	13 effets de scène
+PASS	coiffure_beaute_T5/structure_montage	13 étapes de montage horodatées
+PASS	coiffure_beaute_T5/ratio	ratio=9:16
+PASS	catalogue/immo_auto	5 gabarits (T1..T5 attendus : OK)
+PASS	immo_auto_T1/identite	id=immo_auto_T1 secteur=immo_auto format=T1_nouvel_arrivage fichier=immo_auto/T1.json
+PASS	immo_auto_T1/secteur_libelle	présent
+PASS	immo_auto_T1/notes_adaptation	présent
+PASS	immo_auto_T1/copywriting	présent
+PASS	immo_auto_T1/montage_signature	présent
+PASS	immo_auto_T1/etalonnage	présent
+PASS	immo_auto_T1/style_visuel	présent
+PASS	immo_auto_T1/signature_montage	présent
+PASS	immo_auto_T1/axes_signature	présent
+PASS	immo_auto_T1/formulaire_ui	présent
+PASS	immo_auto_T1/nom_format_affiche	présent
+PASS	immo_auto_T1/interface_commercant	présent
+PASS	immo_auto_T1/duree_coherente	déclarée 35s vs somme des scènes 35.0s
+PASS	immo_auto_T1/nombre_scenes	déclaré 15 vs réel 15
+PASS	immo_auto_T1/ordre_sequences	numéros [1, 2, 3, 4, 5]…[13, 14, 15] séquentiels 1..N
+PASS	immo_auto_T1/champs_uniques	7 champs, ids uniques
+PASS	immo_auto_T1/variables_resolues	6 variables utilisées, toutes définies
+PASS	immo_auto_T1/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	immo_auto_T1/guide_tournage	3 prises à filmer, 3 étapes
+PASS	immo_auto_T1/musique	genre=afro-house premium instrumental, bpm 101-113, catégorie=musique_t1_immo_auto
+PASS	immo_auto_T1/sfx	11 effets sonores sur 11 scènes
+PASS	immo_auto_T1/modes_audio_3	voix active sur 1/15 scènes ; musique présente ; mode musique seule représentable (14 scènes sans voix)
+PASS	immo_auto_T1/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	immo_auto_T1/transitions	14/14 transitions de sortie définies
+PASS	immo_auto_T1/effets	15 effets de scène
+PASS	immo_auto_T1/structure_montage	15 étapes de montage horodatées
+PASS	immo_auto_T1/ratio	ratio=9:16
+PASS	immo_auto_T2/identite	id=immo_auto_T2 secteur=immo_auto format=T2_avant_apres fichier=immo_auto/T2.json
+PASS	immo_auto_T2/secteur_libelle	présent
+PASS	immo_auto_T2/notes_adaptation	présent
+PASS	immo_auto_T2/copywriting	présent
+PASS	immo_auto_T2/montage_signature	présent
+PASS	immo_auto_T2/etalonnage	présent
+PASS	immo_auto_T2/style_visuel	présent
+PASS	immo_auto_T2/signature_montage	présent
+PASS	immo_auto_T2/axes_signature	présent
+PASS	immo_auto_T2/formulaire_ui	présent
+PASS	immo_auto_T2/nom_format_affiche	présent
+PASS	immo_auto_T2/interface_commercant	présent
+PASS	immo_auto_T2/duree_coherente	déclarée 35s vs somme des scènes 35.0s
+PASS	immo_auto_T2/nombre_scenes	déclaré 15 vs réel 15
+PASS	immo_auto_T2/ordre_sequences	numéros [1, 2, 3, 4, 5]…[13, 14, 15] séquentiels 1..N
+PASS	immo_auto_T2/champs_uniques	7 champs, ids uniques
+PASS	immo_auto_T2/variables_resolues	5 variables utilisées, toutes définies
+PASS	immo_auto_T2/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	immo_auto_T2/guide_tournage	3 prises à filmer, 3 étapes
+PASS	immo_auto_T2/musique	genre=afrobeats sobre instrumental, bpm 95-109, catégorie=musique_t2_immo_auto
+PASS	immo_auto_T2/sfx	10 effets sonores sur 10 scènes
+PASS	immo_auto_T2/modes_audio_3	voix active sur 1/15 scènes ; musique présente ; mode musique seule représentable (14 scènes sans voix)
+PASS	immo_auto_T2/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	immo_auto_T2/transitions	14/14 transitions de sortie définies
+PASS	immo_auto_T2/effets	15 effets de scène
+PASS	immo_auto_T2/structure_montage	15 étapes de montage horodatées
+PASS	immo_auto_T2/ratio	ratio=9:16
+PASS	immo_auto_T3/identite	id=immo_auto_T3 secteur=immo_auto format=T3_presentation_produit fichier=immo_auto/T3.json
+PASS	immo_auto_T3/secteur_libelle	présent
+PASS	immo_auto_T3/notes_adaptation	présent
+PASS	immo_auto_T3/copywriting	présent
+PASS	immo_auto_T3/montage_signature	présent
+PASS	immo_auto_T3/etalonnage	présent
+PASS	immo_auto_T3/style_visuel	présent
+PASS	immo_auto_T3/signature_montage	présent
+PASS	immo_auto_T3/axes_signature	présent
+PASS	immo_auto_T3/formulaire_ui	présent
+PASS	immo_auto_T3/nom_format_affiche	présent
+PASS	immo_auto_T3/interface_commercant	présent
+PASS	immo_auto_T3/duree_coherente	déclarée 40s vs somme des scènes 40.0s
+PASS	immo_auto_T3/nombre_scenes	déclaré 14 vs réel 14
+PASS	immo_auto_T3/ordre_sequences	numéros [1, 2, 3, 4, 5]…[12, 13, 14] séquentiels 1..N
+PASS	immo_auto_T3/champs_uniques	7 champs, ids uniques
+PASS	immo_auto_T3/variables_resolues	6 variables utilisées, toutes définies
+PASS	immo_auto_T3/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	immo_auto_T3/guide_tournage	3 prises à filmer, 3 étapes
+PASS	immo_auto_T3/musique	genre=amapiano instrumental, bpm 89-105, catégorie=musique_t3_immo_auto
+PASS	immo_auto_T3/sfx	10 effets sonores sur 10 scènes
+PASS	immo_auto_T3/modes_audio_3	voix active sur 1/14 scènes ; musique présente ; mode musique seule représentable (13 scènes sans voix)
+PASS	immo_auto_T3/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	immo_auto_T3/transitions	13/13 transitions de sortie définies
+PASS	immo_auto_T3/effets	14 effets de scène
+PASS	immo_auto_T3/structure_montage	14 étapes de montage horodatées
+PASS	immo_auto_T3/ratio	ratio=9:16
+PASS	immo_auto_T4/identite	id=immo_auto_T4 secteur=immo_auto format=T4_promo_flash fichier=immo_auto/T4.json
+PASS	immo_auto_T4/secteur_libelle	présent
+PASS	immo_auto_T4/notes_adaptation	présent
+PASS	immo_auto_T4/copywriting	présent
+PASS	immo_auto_T4/montage_signature	présent
+PASS	immo_auto_T4/etalonnage	présent
+PASS	immo_auto_T4/style_visuel	présent
+PASS	immo_auto_T4/signature_montage	présent
+PASS	immo_auto_T4/axes_signature	présent
+PASS	immo_auto_T4/formulaire_ui	présent
+PASS	immo_auto_T4/nom_format_affiche	présent
+PASS	immo_auto_T4/interface_commercant	présent
+PASS	immo_auto_T4/duree_coherente	déclarée 33s vs somme des scènes 33.0s
+PASS	immo_auto_T4/nombre_scenes	déclaré 17 vs réel 17
+PASS	immo_auto_T4/ordre_sequences	numéros [1, 2, 3, 4, 5]…[15, 16, 17] séquentiels 1..N
+PASS	immo_auto_T4/champs_uniques	9 champs, ids uniques
+PASS	immo_auto_T4/variables_resolues	9 variables utilisées, toutes définies
+PASS	immo_auto_T4/prises_coherentes	2 prises définies, 2 référencées, toutes résolues
+PASS	immo_auto_T4/guide_tournage	2 prises à filmer, 2 étapes
+PASS	immo_auto_T4/musique	genre=highlife calme instrumental, bpm 111-127, catégorie=musique_t4_immo_auto
+PASS	immo_auto_T4/sfx	15 effets sonores sur 15 scènes
+PASS	immo_auto_T4/modes_audio_3	voix active sur 1/17 scènes ; musique présente ; mode musique seule représentable (16 scènes sans voix)
+PASS	immo_auto_T4/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	immo_auto_T4/transitions	16/16 transitions de sortie définies
+PASS	immo_auto_T4/effets	17 effets de scène
+PASS	immo_auto_T4/structure_montage	17 étapes de montage horodatées
+PASS	immo_auto_T4/ratio	ratio=9:16
+PASS	immo_auto_T5/identite	id=immo_auto_T5 secteur=immo_auto format=T5_temoignage_client fichier=immo_auto/T5.json
+PASS	immo_auto_T5/secteur_libelle	présent
+PASS	immo_auto_T5/notes_adaptation	présent
+PASS	immo_auto_T5/copywriting	présent
+PASS	immo_auto_T5/montage_signature	présent
+PASS	immo_auto_T5/etalonnage	présent
+PASS	immo_auto_T5/style_visuel	présent
+PASS	immo_auto_T5/signature_montage	présent
+PASS	immo_auto_T5/axes_signature	présent
+PASS	immo_auto_T5/formulaire_ui	présent
+PASS	immo_auto_T5/nom_format_affiche	présent
+PASS	immo_auto_T5/interface_commercant	présent
+PASS	immo_auto_T5/duree_coherente	déclarée 50s vs somme des scènes 50.0s
+PASS	immo_auto_T5/nombre_scenes	déclaré 13 vs réel 13
+PASS	immo_auto_T5/ordre_sequences	numéros [1, 2, 3, 4, 5]…[11, 12, 13] séquentiels 1..N
+PASS	immo_auto_T5/champs_uniques	10 champs, ids uniques
+PASS	immo_auto_T5/variables_resolues	5 variables utilisées, toutes définies
+PASS	immo_auto_T5/prises_coherentes	2 prises définies, 2 référencées, toutes résolues
+PASS	immo_auto_T5/guide_tournage	2 prises à filmer, 2 étapes
+PASS	immo_auto_T5/musique	genre=afro-soul confiance instrumental, bpm 77-95, catégorie=musique_t5_immo_auto
+PASS	immo_auto_T5/sfx	7 effets sonores sur 7 scènes
+PASS	immo_auto_T5/modes_audio_3	voix active sur 5/13 scènes ; musique présente ; mode musique seule représentable (8 scènes sans voix)
+PASS	immo_auto_T5/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	immo_auto_T5/transitions	12/12 transitions de sortie définies
+PASS	immo_auto_T5/effets	13 effets de scène
+PASS	immo_auto_T5/structure_montage	13 étapes de montage horodatées
+PASS	immo_auto_T5/ratio	ratio=9:16
+PASS	catalogue/restaurants_maquis	5 gabarits (T1..T5 attendus : OK)
+PASS	restaurants_maquis_T1/identite	id=restaurants_maquis_T1 secteur=restaurants_maquis format=T1_nouvel_arrivage fichier=restaurants_maquis/T1.json
+PASS	restaurants_maquis_T1/secteur_libelle	présent
+PASS	restaurants_maquis_T1/notes_adaptation	présent
+PASS	restaurants_maquis_T1/copywriting	présent
+PASS	restaurants_maquis_T1/montage_signature	présent
+PASS	restaurants_maquis_T1/etalonnage	présent
+PASS	restaurants_maquis_T1/style_visuel	présent
+PASS	restaurants_maquis_T1/signature_montage	présent
+PASS	restaurants_maquis_T1/axes_signature	présent
+PASS	restaurants_maquis_T1/formulaire_ui	présent
+PASS	restaurants_maquis_T1/nom_format_affiche	présent
+PASS	restaurants_maquis_T1/interface_commercant	présent
+PASS	restaurants_maquis_T1/duree_coherente	déclarée 35s vs somme des scènes 35.0s
+PASS	restaurants_maquis_T1/nombre_scenes	déclaré 15 vs réel 15
+PASS	restaurants_maquis_T1/ordre_sequences	numéros [1, 2, 3, 4, 5]…[13, 14, 15] séquentiels 1..N
+PASS	restaurants_maquis_T1/champs_uniques	7 champs, ids uniques
+PASS	restaurants_maquis_T1/variables_resolues	6 variables utilisées, toutes définies
+PASS	restaurants_maquis_T1/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	restaurants_maquis_T1/guide_tournage	3 prises à filmer, 3 étapes
+PASS	restaurants_maquis_T1/musique	genre=afrobeats percussif instrumental, bpm 102-114, catégorie=musique_t1_restaurants_maquis
+PASS	restaurants_maquis_T1/sfx	5 effets sonores sur 5 scènes
+PASS	restaurants_maquis_T1/modes_audio_3	voix active sur 1/15 scènes ; musique présente ; mode musique seule représentable (14 scènes sans voix)
+PASS	restaurants_maquis_T1/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	restaurants_maquis_T1/transitions	14/14 transitions de sortie définies
+PASS	restaurants_maquis_T1/effets	15 effets de scène
+PASS	restaurants_maquis_T1/structure_montage	15 étapes de montage horodatées
+PASS	restaurants_maquis_T1/ratio	ratio=9:16
+PASS	restaurants_maquis_T2/identite	id=restaurants_maquis_T2 secteur=restaurants_maquis format=T2_avant_apres fichier=restaurants_maquis/T2.json
+PASS	restaurants_maquis_T2/secteur_libelle	présent
+PASS	restaurants_maquis_T2/notes_adaptation	présent
+PASS	restaurants_maquis_T2/copywriting	présent
+PASS	restaurants_maquis_T2/montage_signature	présent
+PASS	restaurants_maquis_T2/etalonnage	présent
+PASS	restaurants_maquis_T2/style_visuel	présent
+PASS	restaurants_maquis_T2/signature_montage	présent
+PASS	restaurants_maquis_T2/axes_signature	présent
+PASS	restaurants_maquis_T2/formulaire_ui	présent
+PASS	restaurants_maquis_T2/nom_format_affiche	présent
+PASS	restaurants_maquis_T2/interface_commercant	présent
+PASS	restaurants_maquis_T2/duree_coherente	déclarée 35s vs somme des scènes 35.0s
+PASS	restaurants_maquis_T2/nombre_scenes	déclaré 16 vs réel 16
+PASS	restaurants_maquis_T2/ordre_sequences	numéros [1, 2, 3, 4, 5]…[14, 15, 16] séquentiels 1..N
+PASS	restaurants_maquis_T2/champs_uniques	7 champs, ids uniques
+PASS	restaurants_maquis_T2/variables_resolues	5 variables utilisées, toutes définies
+PASS	restaurants_maquis_T2/prises_coherentes	4 prises définies, 4 référencées, toutes résolues
+PASS	restaurants_maquis_T2/guide_tournage	4 prises à filmer, 4 étapes
+PASS	restaurants_maquis_T2/musique	genre=highlife chaleureux instrumental, bpm 96-110, catégorie=musique_t2_restaurants_maquis
+PASS	restaurants_maquis_T2/sfx	11 effets sonores sur 11 scènes
+PASS	restaurants_maquis_T2/modes_audio_3	voix active sur 1/16 scènes ; musique présente ; mode musique seule représentable (15 scènes sans voix)
+PASS	restaurants_maquis_T2/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	restaurants_maquis_T2/transitions	15/15 transitions de sortie définies
+PASS	restaurants_maquis_T2/effets	16 effets de scène
+PASS	restaurants_maquis_T2/structure_montage	16 étapes de montage horodatées
+PASS	restaurants_maquis_T2/ratio	ratio=9:16
+PASS	restaurants_maquis_T3/identite	id=restaurants_maquis_T3 secteur=restaurants_maquis format=T3_presentation_produit fichier=restaurants_maquis/T3.json
+PASS	restaurants_maquis_T3/secteur_libelle	présent
+PASS	restaurants_maquis_T3/notes_adaptation	présent
+PASS	restaurants_maquis_T3/copywriting	présent
+PASS	restaurants_maquis_T3/montage_signature	présent
+PASS	restaurants_maquis_T3/etalonnage	présent
+PASS	restaurants_maquis_T3/style_visuel	présent
+PASS	restaurants_maquis_T3/signature_montage	présent
+PASS	restaurants_maquis_T3/axes_signature	présent
+PASS	restaurants_maquis_T3/formulaire_ui	présent
+PASS	restaurants_maquis_T3/nom_format_affiche	présent
+PASS	restaurants_maquis_T3/interface_commercant	présent
+PASS	restaurants_maquis_T3/duree_coherente	déclarée 40s vs somme des scènes 40.0s
+PASS	restaurants_maquis_T3/nombre_scenes	déclaré 14 vs réel 14
+PASS	restaurants_maquis_T3/ordre_sequences	numéros [1, 2, 3, 4, 5]…[12, 13, 14] séquentiels 1..N
+PASS	restaurants_maquis_T3/champs_uniques	7 champs, ids uniques
+PASS	restaurants_maquis_T3/variables_resolues	6 variables utilisées, toutes définies
+PASS	restaurants_maquis_T3/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	restaurants_maquis_T3/guide_tournage	3 prises à filmer, 3 étapes
+PASS	restaurants_maquis_T3/musique	genre=coupé-décalé instrumental, bpm 90-106, catégorie=musique_t3_restaurants_maquis
+PASS	restaurants_maquis_T3/sfx	4 effets sonores sur 4 scènes
+PASS	restaurants_maquis_T3/modes_audio_3	voix active sur 1/14 scènes ; musique présente ; mode musique seule représentable (13 scènes sans voix)
+PASS	restaurants_maquis_T3/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	restaurants_maquis_T3/transitions	13/13 transitions de sortie définies
+PASS	restaurants_maquis_T3/effets	14 effets de scène
+PASS	restaurants_maquis_T3/structure_montage	14 étapes de montage horodatées
+PASS	restaurants_maquis_T3/ratio	ratio=9:16
+PASS	restaurants_maquis_T4/identite	id=restaurants_maquis_T4 secteur=restaurants_maquis format=T4_promo_flash fichier=restaurants_maquis/T4.json
+PASS	restaurants_maquis_T4/secteur_libelle	présent
+PASS	restaurants_maquis_T4/notes_adaptation	présent
+PASS	restaurants_maquis_T4/copywriting	présent
+PASS	restaurants_maquis_T4/montage_signature	présent
+PASS	restaurants_maquis_T4/etalonnage	présent
+PASS	restaurants_maquis_T4/style_visuel	présent
+PASS	restaurants_maquis_T4/signature_montage	présent
+PASS	restaurants_maquis_T4/axes_signature	présent
+PASS	restaurants_maquis_T4/formulaire_ui	présent
+PASS	restaurants_maquis_T4/nom_format_affiche	présent
+PASS	restaurants_maquis_T4/interface_commercant	présent
+PASS	restaurants_maquis_T4/duree_coherente	déclarée 33s vs somme des scènes 33.0s
+PASS	restaurants_maquis_T4/nombre_scenes	déclaré 17 vs réel 17
+PASS	restaurants_maquis_T4/ordre_sequences	numéros [1, 2, 3, 4, 5]…[15, 16, 17] séquentiels 1..N
+PASS	restaurants_maquis_T4/champs_uniques	9 champs, ids uniques
+PASS	restaurants_maquis_T4/variables_resolues	9 variables utilisées, toutes définies
+PASS	restaurants_maquis_T4/prises_coherentes	2 prises définies, 2 référencées, toutes résolues
+PASS	restaurants_maquis_T4/guide_tournage	2 prises à filmer, 2 étapes
+PASS	restaurants_maquis_T4/musique	genre=afro-house cuisine groove, bpm 112-128, catégorie=musique_t4_restaurants_maquis
+PASS	restaurants_maquis_T4/sfx	9 effets sonores sur 9 scènes
+PASS	restaurants_maquis_T4/modes_audio_3	voix active sur 1/17 scènes ; musique présente ; mode musique seule représentable (16 scènes sans voix)
+PASS	restaurants_maquis_T4/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	restaurants_maquis_T4/transitions	16/16 transitions de sortie définies
+PASS	restaurants_maquis_T4/effets	17 effets de scène
+PASS	restaurants_maquis_T4/structure_montage	17 étapes de montage horodatées
+PASS	restaurants_maquis_T4/ratio	ratio=9:16
+PASS	restaurants_maquis_T5/identite	id=restaurants_maquis_T5 secteur=restaurants_maquis format=T5_temoignage_client fichier=restaurants_maquis/T5.json
+PASS	restaurants_maquis_T5/secteur_libelle	présent
+PASS	restaurants_maquis_T5/notes_adaptation	présent
+PASS	restaurants_maquis_T5/copywriting	présent
+PASS	restaurants_maquis_T5/montage_signature	présent
+PASS	restaurants_maquis_T5/etalonnage	présent
+PASS	restaurants_maquis_T5/style_visuel	présent
+PASS	restaurants_maquis_T5/signature_montage	présent
+PASS	restaurants_maquis_T5/axes_signature	présent
+PASS	restaurants_maquis_T5/formulaire_ui	présent
+PASS	restaurants_maquis_T5/nom_format_affiche	présent
+PASS	restaurants_maquis_T5/interface_commercant	présent
+PASS	restaurants_maquis_T5/duree_coherente	déclarée 50s vs somme des scènes 50.0s
+PASS	restaurants_maquis_T5/nombre_scenes	déclaré 13 vs réel 13
+PASS	restaurants_maquis_T5/ordre_sequences	numéros [1, 2, 3, 4, 5]…[11, 12, 13] séquentiels 1..N
+PASS	restaurants_maquis_T5/champs_uniques	10 champs, ids uniques
+PASS	restaurants_maquis_T5/variables_resolues	5 variables utilisées, toutes définies
+PASS	restaurants_maquis_T5/prises_coherentes	2 prises définies, 2 référencées, toutes résolues
+PASS	restaurants_maquis_T5/guide_tournage	2 prises à filmer, 2 étapes
+PASS	restaurants_maquis_T5/musique	genre=afro-soul maquis instrumental, bpm 78-96, catégorie=musique_t5_restaurants_maquis
+PASS	restaurants_maquis_T5/sfx	3 effets sonores sur 3 scènes
+PASS	restaurants_maquis_T5/modes_audio_3	voix active sur 4/13 scènes ; musique présente ; mode musique seule représentable (9 scènes sans voix)
+PASS	restaurants_maquis_T5/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	restaurants_maquis_T5/transitions	12/12 transitions de sortie définies
+PASS	restaurants_maquis_T5/effets	13 effets de scène
+PASS	restaurants_maquis_T5/structure_montage	13 étapes de montage horodatées
+PASS	restaurants_maquis_T5/ratio	ratio=9:16
+PASS	catalogue/shops_small_business	5 gabarits (T1..T5 attendus : OK)
+PASS	shops_small_business_T1/identite	id=shops_small_business_T1 secteur=shops_small_business format=T1_nouvel_arrivage fichier=shops_small_business/T1.json
+PASS	shops_small_business_T1/secteur_libelle	présent
+PASS	shops_small_business_T1/notes_adaptation	présent
+PASS	shops_small_business_T1/copywriting	présent
+PASS	shops_small_business_T1/montage_signature	présent
+PASS	shops_small_business_T1/etalonnage	présent
+PASS	shops_small_business_T1/style_visuel	présent
+PASS	shops_small_business_T1/signature_montage	présent
+PASS	shops_small_business_T1/axes_signature	présent
+PASS	shops_small_business_T1/formulaire_ui	présent
+PASS	shops_small_business_T1/nom_format_affiche	présent
+PASS	shops_small_business_T1/interface_commercant	présent
+PASS	shops_small_business_T1/duree_coherente	déclarée 35s vs somme des scènes 35.0s
+PASS	shops_small_business_T1/nombre_scenes	déclaré 15 vs réel 15
+PASS	shops_small_business_T1/ordre_sequences	numéros [1, 2, 3, 4, 5]…[13, 14, 15] séquentiels 1..N
+PASS	shops_small_business_T1/champs_uniques	7 champs, ids uniques
+PASS	shops_small_business_T1/variables_resolues	6 variables utilisées, toutes définies
+PASS	shops_small_business_T1/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	shops_small_business_T1/guide_tournage	3 prises à filmer, 3 étapes
+PASS	shops_small_business_T1/musique	genre=afrobeats commercial instrumental, bpm 102-114, catégorie=musique_t1_shops_small_business
+PASS	shops_small_business_T1/sfx	9 effets sonores sur 9 scènes
+PASS	shops_small_business_T1/modes_audio_3	voix active sur 1/15 scènes ; musique présente ; mode musique seule représentable (14 scènes sans voix)
+PASS	shops_small_business_T1/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	shops_small_business_T1/transitions	14/14 transitions de sortie définies
+PASS	shops_small_business_T1/effets	15 effets de scène
+PASS	shops_small_business_T1/structure_montage	15 étapes de montage horodatées
+PASS	shops_small_business_T1/ratio	ratio=9:16
+PASS	shops_small_business_T2/identite	id=shops_small_business_T2 secteur=shops_small_business format=T2_avant_apres fichier=shops_small_business/T2.json
+PASS	shops_small_business_T2/secteur_libelle	présent
+PASS	shops_small_business_T2/notes_adaptation	présent
+PASS	shops_small_business_T2/copywriting	présent
+PASS	shops_small_business_T2/montage_signature	présent
+PASS	shops_small_business_T2/etalonnage	présent
+PASS	shops_small_business_T2/style_visuel	présent
+PASS	shops_small_business_T2/signature_montage	présent
+PASS	shops_small_business_T2/axes_signature	présent
+PASS	shops_small_business_T2/formulaire_ui	présent
+PASS	shops_small_business_T2/nom_format_affiche	présent
+PASS	shops_small_business_T2/interface_commercant	présent
+PASS	shops_small_business_T2/duree_coherente	déclarée 35s vs somme des scènes 35.0s
+PASS	shops_small_business_T2/nombre_scenes	déclaré 15 vs réel 15
+PASS	shops_small_business_T2/ordre_sequences	numéros [1, 2, 3, 4, 5]…[13, 14, 15] séquentiels 1..N
+PASS	shops_small_business_T2/champs_uniques	7 champs, ids uniques
+PASS	shops_small_business_T2/variables_resolues	5 variables utilisées, toutes définies
+PASS	shops_small_business_T2/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	shops_small_business_T2/guide_tournage	3 prises à filmer, 3 étapes
+PASS	shops_small_business_T2/musique	genre=coupé-décalé instrumental, bpm 96-110, catégorie=musique_t2_shops_small_business
+PASS	shops_small_business_T2/sfx	9 effets sonores sur 9 scènes
+PASS	shops_small_business_T2/modes_audio_3	voix active sur 1/15 scènes ; musique présente ; mode musique seule représentable (14 scènes sans voix)
+PASS	shops_small_business_T2/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	shops_small_business_T2/transitions	14/14 transitions de sortie définies
+PASS	shops_small_business_T2/effets	15 effets de scène
+PASS	shops_small_business_T2/structure_montage	15 étapes de montage horodatées
+PASS	shops_small_business_T2/ratio	ratio=9:16
+PASS	shops_small_business_T3/identite	id=shops_small_business_T3 secteur=shops_small_business format=T3_presentation_produit fichier=shops_small_business/T3.json
+PASS	shops_small_business_T3/secteur_libelle	présent
+PASS	shops_small_business_T3/notes_adaptation	présent
+PASS	shops_small_business_T3/copywriting	présent
+PASS	shops_small_business_T3/montage_signature	présent
+PASS	shops_small_business_T3/etalonnage	présent
+PASS	shops_small_business_T3/style_visuel	présent
+PASS	shops_small_business_T3/signature_montage	présent
+PASS	shops_small_business_T3/axes_signature	présent
+PASS	shops_small_business_T3/formulaire_ui	présent
+PASS	shops_small_business_T3/nom_format_affiche	présent
+PASS	shops_small_business_T3/interface_commercant	présent
+PASS	shops_small_business_T3/duree_coherente	déclarée 40s vs somme des scènes 40.0s
+PASS	shops_small_business_T3/nombre_scenes	déclaré 14 vs réel 14
+PASS	shops_small_business_T3/ordre_sequences	numéros [1, 2, 3, 4, 5]…[12, 13, 14] séquentiels 1..N
+PASS	shops_small_business_T3/champs_uniques	7 champs, ids uniques
+PASS	shops_small_business_T3/variables_resolues	6 variables utilisées, toutes définies
+PASS	shops_small_business_T3/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	shops_small_business_T3/guide_tournage	3 prises à filmer, 3 étapes
+PASS	shops_small_business_T3/musique	genre=amapiano groove instrumental, bpm 90-106, catégorie=musique_t3_shops_small_business
+PASS	shops_small_business_T3/sfx	11 effets sonores sur 11 scènes
+PASS	shops_small_business_T3/modes_audio_3	voix active sur 1/14 scènes ; musique présente ; mode musique seule représentable (13 scènes sans voix)
+PASS	shops_small_business_T3/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	shops_small_business_T3/transitions	13/13 transitions de sortie définies
+PASS	shops_small_business_T3/effets	14 effets de scène
+PASS	shops_small_business_T3/structure_montage	14 étapes de montage horodatées
+PASS	shops_small_business_T3/ratio	ratio=9:16
+PASS	shops_small_business_T4/identite	id=shops_small_business_T4 secteur=shops_small_business format=T4_promo_flash fichier=shops_small_business/T4.json
+PASS	shops_small_business_T4/secteur_libelle	présent
+PASS	shops_small_business_T4/notes_adaptation	présent
+PASS	shops_small_business_T4/copywriting	présent
+PASS	shops_small_business_T4/montage_signature	présent
+PASS	shops_small_business_T4/etalonnage	présent
+PASS	shops_small_business_T4/style_visuel	présent
+PASS	shops_small_business_T4/signature_montage	présent
+PASS	shops_small_business_T4/axes_signature	présent
+PASS	shops_small_business_T4/formulaire_ui	présent
+PASS	shops_small_business_T4/nom_format_affiche	présent
+PASS	shops_small_business_T4/interface_commercant	présent
+PASS	shops_small_business_T4/duree_coherente	déclarée 33s vs somme des scènes 33.0s
+PASS	shops_small_business_T4/nombre_scenes	déclaré 17 vs réel 17
+PASS	shops_small_business_T4/ordre_sequences	numéros [1, 2, 3, 4, 5]…[15, 16, 17] séquentiels 1..N
+PASS	shops_small_business_T4/champs_uniques	9 champs, ids uniques
+PASS	shops_small_business_T4/variables_resolues	9 variables utilisées, toutes définies
+PASS	shops_small_business_T4/prises_coherentes	2 prises définies, 2 référencées, toutes résolues
+PASS	shops_small_business_T4/guide_tournage	2 prises à filmer, 2 étapes
+PASS	shops_small_business_T4/musique	genre=highlife léger instrumental, bpm 112-128, catégorie=musique_t4_shops_small_business
+PASS	shops_small_business_T4/sfx	14 effets sonores sur 14 scènes
+PASS	shops_small_business_T4/modes_audio_3	voix active sur 1/17 scènes ; musique présente ; mode musique seule représentable (16 scènes sans voix)
+PASS	shops_small_business_T4/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	shops_small_business_T4/transitions	16/16 transitions de sortie définies
+PASS	shops_small_business_T4/effets	17 effets de scène
+PASS	shops_small_business_T4/structure_montage	17 étapes de montage horodatées
+PASS	shops_small_business_T4/ratio	ratio=9:16
+PASS	shops_small_business_T5/identite	id=shops_small_business_T5 secteur=shops_small_business format=T5_temoignage_client fichier=shops_small_business/T5.json
+PASS	shops_small_business_T5/secteur_libelle	présent
+PASS	shops_small_business_T5/notes_adaptation	présent
+PASS	shops_small_business_T5/copywriting	présent
+PASS	shops_small_business_T5/montage_signature	présent
+PASS	shops_small_business_T5/etalonnage	présent
+PASS	shops_small_business_T5/style_visuel	présent
+PASS	shops_small_business_T5/signature_montage	présent
+PASS	shops_small_business_T5/axes_signature	présent
+PASS	shops_small_business_T5/formulaire_ui	présent
+PASS	shops_small_business_T5/nom_format_affiche	présent
+PASS	shops_small_business_T5/interface_commercant	présent
+PASS	shops_small_business_T5/duree_coherente	déclarée 50s vs somme des scènes 50.0s
+PASS	shops_small_business_T5/nombre_scenes	déclaré 13 vs réel 13
+PASS	shops_small_business_T5/ordre_sequences	numéros [1, 2, 3, 4, 5]…[11, 12, 13] séquentiels 1..N
+PASS	shops_small_business_T5/champs_uniques	10 champs, ids uniques
+PASS	shops_small_business_T5/variables_resolues	5 variables utilisées, toutes définies
+PASS	shops_small_business_T5/prises_coherentes	2 prises définies, 2 référencées, toutes résolues
+PASS	shops_small_business_T5/guide_tournage	2 prises à filmer, 2 étapes
+PASS	shops_small_business_T5/musique	genre=afro-house dynamique instrumental, bpm 78-96, catégorie=musique_t5_shops_small_business
+PASS	shops_small_business_T5/sfx	7 effets sonores sur 7 scènes
+PASS	shops_small_business_T5/modes_audio_3	voix active sur 5/13 scènes ; musique présente ; mode musique seule représentable (8 scènes sans voix)
+PASS	shops_small_business_T5/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	shops_small_business_T5/transitions	12/12 transitions de sortie définies
+PASS	shops_small_business_T5/effets	13 effets de scène
+PASS	shops_small_business_T5/structure_montage	13 étapes de montage horodatées
+PASS	shops_small_business_T5/ratio	ratio=9:16
+PASS	catalogue/vetements_mode	5 gabarits (T1..T5 attendus : OK)
+PASS	vetements_mode_T1/identite	id=vetements_mode_T1 secteur=vetements_mode format=T1_nouvel_arrivage fichier=vetements_mode/T1.json
+PASS	vetements_mode_T1/secteur_libelle	présent
+PASS	vetements_mode_T1/notes_adaptation	présent
+PASS	vetements_mode_T1/copywriting	présent
+PASS	vetements_mode_T1/montage_signature	présent
+PASS	vetements_mode_T1/etalonnage	présent
+PASS	vetements_mode_T1/style_visuel	présent
+PASS	vetements_mode_T1/signature_montage	présent
+PASS	vetements_mode_T1/axes_signature	présent
+PASS	vetements_mode_T1/formulaire_ui	présent
+PASS	vetements_mode_T1/nom_format_affiche	présent
+PASS	vetements_mode_T1/interface_commercant	présent
+PASS	vetements_mode_T1/duree_coherente	déclarée 35s vs somme des scènes 35.0s
+PASS	vetements_mode_T1/nombre_scenes	déclaré 15 vs réel 15
+PASS	vetements_mode_T1/ordre_sequences	numéros [1, 2, 3, 4, 5]…[13, 14, 15] séquentiels 1..N
+PASS	vetements_mode_T1/champs_uniques	7 champs, ids uniques
+PASS	vetements_mode_T1/variables_resolues	6 variables utilisées, toutes définies
+PASS	vetements_mode_T1/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	vetements_mode_T1/guide_tournage	3 prises à filmer, 3 étapes
+PASS	vetements_mode_T1/musique	genre=afrobeats élégant instrumental, bpm 100-112, catégorie=musique_t1_vetements_mode
+PASS	vetements_mode_T1/sfx	10 effets sonores sur 10 scènes
+PASS	vetements_mode_T1/modes_audio_3	voix active sur 1/15 scènes ; musique présente ; mode musique seule représentable (14 scènes sans voix)
+PASS	vetements_mode_T1/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	vetements_mode_T1/transitions	14/14 transitions de sortie définies
+PASS	vetements_mode_T1/effets	15 effets de scène
+PASS	vetements_mode_T1/structure_montage	15 étapes de montage horodatées
+PASS	vetements_mode_T1/ratio	ratio=9:16
+PASS	vetements_mode_T2/identite	id=vetements_mode_T2 secteur=vetements_mode format=T2_avant_apres fichier=vetements_mode/T2.json
+PASS	vetements_mode_T2/secteur_libelle	présent
+PASS	vetements_mode_T2/notes_adaptation	présent
+PASS	vetements_mode_T2/copywriting	présent
+PASS	vetements_mode_T2/montage_signature	présent
+PASS	vetements_mode_T2/etalonnage	présent
+PASS	vetements_mode_T2/style_visuel	présent
+PASS	vetements_mode_T2/signature_montage	présent
+PASS	vetements_mode_T2/axes_signature	présent
+PASS	vetements_mode_T2/formulaire_ui	présent
+PASS	vetements_mode_T2/nom_format_affiche	présent
+PASS	vetements_mode_T2/interface_commercant	présent
+PASS	vetements_mode_T2/duree_coherente	déclarée 35s vs somme des scènes 35.0s
+PASS	vetements_mode_T2/nombre_scenes	déclaré 15 vs réel 15
+PASS	vetements_mode_T2/ordre_sequences	numéros [1, 2, 3, 4, 5]…[13, 14, 15] séquentiels 1..N
+PASS	vetements_mode_T2/champs_uniques	7 champs, ids uniques
+PASS	vetements_mode_T2/variables_resolues	5 variables utilisées, toutes définies
+PASS	vetements_mode_T2/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	vetements_mode_T2/guide_tournage	3 prises à filmer, 3 étapes
+PASS	vetements_mode_T2/musique	genre=afro-house runway instrumental, bpm 94-108, catégorie=musique_t2_vetements_mode
+PASS	vetements_mode_T2/sfx	9 effets sonores sur 9 scènes
+PASS	vetements_mode_T2/modes_audio_3	voix active sur 1/15 scènes ; musique présente ; mode musique seule représentable (14 scènes sans voix)
+PASS	vetements_mode_T2/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	vetements_mode_T2/transitions	14/14 transitions de sortie définies
+PASS	vetements_mode_T2/effets	15 effets de scène
+PASS	vetements_mode_T2/structure_montage	15 étapes de montage horodatées
+PASS	vetements_mode_T2/ratio	ratio=9:16
+PASS	vetements_mode_T3/identite	id=vetements_mode_T3 secteur=vetements_mode format=T3_presentation_produit fichier=vetements_mode/T3.json
+PASS	vetements_mode_T3/secteur_libelle	présent
+PASS	vetements_mode_T3/notes_adaptation	présent
+PASS	vetements_mode_T3/copywriting	présent
+PASS	vetements_mode_T3/montage_signature	présent
+PASS	vetements_mode_T3/etalonnage	présent
+PASS	vetements_mode_T3/style_visuel	présent
+PASS	vetements_mode_T3/signature_montage	présent
+PASS	vetements_mode_T3/axes_signature	présent
+PASS	vetements_mode_T3/formulaire_ui	présent
+PASS	vetements_mode_T3/nom_format_affiche	présent
+PASS	vetements_mode_T3/interface_commercant	présent
+PASS	vetements_mode_T3/duree_coherente	déclarée 40s vs somme des scènes 40.0s
+PASS	vetements_mode_T3/nombre_scenes	déclaré 14 vs réel 14
+PASS	vetements_mode_T3/ordre_sequences	numéros [1, 2, 3, 4, 5]…[12, 13, 14] séquentiels 1..N
+PASS	vetements_mode_T3/champs_uniques	7 champs, ids uniques
+PASS	vetements_mode_T3/variables_resolues	6 variables utilisées, toutes définies
+PASS	vetements_mode_T3/prises_coherentes	3 prises définies, 3 référencées, toutes résolues
+PASS	vetements_mode_T3/guide_tournage	3 prises à filmer, 3 étapes
+PASS	vetements_mode_T3/musique	genre=highlife moderne instrumental, bpm 88-104, catégorie=musique_t3_vetements_mode
+PASS	vetements_mode_T3/sfx	12 effets sonores sur 12 scènes
+PASS	vetements_mode_T3/modes_audio_3	voix active sur 1/14 scènes ; musique présente ; mode musique seule représentable (13 scènes sans voix)
+PASS	vetements_mode_T3/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	vetements_mode_T3/transitions	13/13 transitions de sortie définies
+PASS	vetements_mode_T3/effets	14 effets de scène
+PASS	vetements_mode_T3/structure_montage	14 étapes de montage horodatées
+PASS	vetements_mode_T3/ratio	ratio=9:16
+PASS	vetements_mode_T4/identite	id=vetements_mode_T4 secteur=vetements_mode format=T4_promo_flash fichier=vetements_mode/T4.json
+PASS	vetements_mode_T4/secteur_libelle	présent
+PASS	vetements_mode_T4/notes_adaptation	présent
+PASS	vetements_mode_T4/copywriting	présent
+PASS	vetements_mode_T4/montage_signature	présent
+PASS	vetements_mode_T4/etalonnage	présent
+PASS	vetements_mode_T4/style_visuel	présent
+PASS	vetements_mode_T4/signature_montage	présent
+PASS	vetements_mode_T4/axes_signature	présent
+PASS	vetements_mode_T4/formulaire_ui	présent
+PASS	vetements_mode_T4/nom_format_affiche	présent
+PASS	vetements_mode_T4/interface_commercant	présent
+PASS	vetements_mode_T4/duree_coherente	déclarée 33s vs somme des scènes 33.0s
+PASS	vetements_mode_T4/nombre_scenes	déclaré 17 vs réel 17
+PASS	vetements_mode_T4/ordre_sequences	numéros [1, 2, 3, 4, 5]…[15, 16, 17] séquentiels 1..N
+PASS	vetements_mode_T4/champs_uniques	9 champs, ids uniques
+PASS	vetements_mode_T4/variables_resolues	9 variables utilisées, toutes définies
+PASS	vetements_mode_T4/prises_coherentes	2 prises définies, 2 référencées, toutes résolues
+PASS	vetements_mode_T4/guide_tournage	2 prises à filmer, 2 étapes
+PASS	vetements_mode_T4/musique	genre=afro-soul doux instrumental, bpm 110-126, catégorie=musique_t4_vetements_mode
+PASS	vetements_mode_T4/sfx	13 effets sonores sur 13 scènes
+PASS	vetements_mode_T4/modes_audio_3	voix active sur 1/17 scènes ; musique présente ; mode musique seule représentable (16 scènes sans voix)
+PASS	vetements_mode_T4/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	vetements_mode_T4/transitions	16/16 transitions de sortie définies
+PASS	vetements_mode_T4/effets	17 effets de scène
+PASS	vetements_mode_T4/structure_montage	17 étapes de montage horodatées
+PASS	vetements_mode_T4/ratio	ratio=9:16
+PASS	vetements_mode_T5/identite	id=vetements_mode_T5 secteur=vetements_mode format=T5_temoignage_client fichier=vetements_mode/T5.json
+PASS	vetements_mode_T5/secteur_libelle	présent
+PASS	vetements_mode_T5/notes_adaptation	présent
+PASS	vetements_mode_T5/copywriting	présent
+PASS	vetements_mode_T5/montage_signature	présent
+PASS	vetements_mode_T5/etalonnage	présent
+PASS	vetements_mode_T5/style_visuel	présent
+PASS	vetements_mode_T5/signature_montage	présent
+PASS	vetements_mode_T5/axes_signature	présent
+PASS	vetements_mode_T5/formulaire_ui	présent
+PASS	vetements_mode_T5/nom_format_affiche	présent
+PASS	vetements_mode_T5/interface_commercant	présent
+PASS	vetements_mode_T5/duree_coherente	déclarée 50s vs somme des scènes 50.0s
+PASS	vetements_mode_T5/nombre_scenes	déclaré 13 vs réel 13
+PASS	vetements_mode_T5/ordre_sequences	numéros [1, 2, 3, 4, 5]…[11, 12, 13] séquentiels 1..N
+PASS	vetements_mode_T5/champs_uniques	10 champs, ids uniques
+PASS	vetements_mode_T5/variables_resolues	5 variables utilisées, toutes définies
+PASS	vetements_mode_T5/prises_coherentes	2 prises définies, 2 référencées, toutes résolues
+PASS	vetements_mode_T5/guide_tournage	2 prises à filmer, 2 étapes
+PASS	vetements_mode_T5/musique	genre=amapiano léger instrumental, bpm 76-94, catégorie=musique_t5_vetements_mode
+PASS	vetements_mode_T5/sfx	8 effets sonores sur 8 scènes
+PASS	vetements_mode_T5/modes_audio_3	voix active sur 4/13 scènes ; musique présente ; mode musique seule représentable (9 scènes sans voix)
+PASS	vetements_mode_T5/politique_saisie	{"mode": "saisie_video", "recollecter_a_chaque_video": true, "enregistrer_dans_profil": false, "pre_remplissage_automati
+PASS	vetements_mode_T5/transitions	12/12 transitions de sortie définies
+PASS	vetements_mode_T5/effets	13 effets de scène
+PASS	vetements_mode_T5/structure_montage	13 étapes de montage horodatées
+PASS	vetements_mode_T5/ratio	ratio=9:16
+PASS	catalogue/completude	30/30 gabarits audités
+FAIL	manifeste/integrite	148 entrées, 30 gabarits, 30 MANQUANTS (ex: ['profils_style/batiment_travaux/T1.json', 'profils_style/batiment_travaux/T2.json']), 4 MODIFIÉS par rapport au manifeste (ex: ['fiches_style_v2_0/immo_auto/T2.json', 'fiches_style_v2_0/shops_small_business/T2.json', 'gabarits/immo_auto/T2.json']) — constat d'intégrité du lot, à documenter (aucune modification faite par l'audit)

@@ -242,6 +242,91 @@ jobs:
   # D42.14 — Suite de sécurité COMPLÈTE en local (64 contrôles), sans Firebase.
   # IdP local + pont HTTP local ; Worker et base réels. Statut PASS_LOCAL_HARNESS.
   # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # OFFLINE (D42.26 action B) — qualification explicite hors connexion :
+  # le réseau de l'ÉMULATEUR est coupé par adb (svc wifi/data disable) avant
+  # le premier lancement ; le runner garde Internet. Lancement sans réseau,
+  # écrans locaux, tentative Google sans crash, repli démo, carrousel, secteur,
+  # bienvenue (seed local), catalogue, fermeture/relance, retour réseau.
+  # ---------------------------------------------------------------------------
+  android-e2e-offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Assemblage de l'APK debug (sans secret) + empreinte
+        run: |
+          set -o pipefail
+          ./gradlew :app:assembleDebug --stacktrace 2>&1 | tail -40
+          ls -la app/build/outputs/apk/debug/
+          sha256sum app/build/outputs/apk/debug/app-debug.apk | tee apk_sha256.txt
+
+      - name: Activation KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls -l /dev/kvm || echo "KVM ABSENT"
+
+      - name: Parcours OFFLINE — réseau coupé avant le premier lancement
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
+          script: |
+            adb devices
+            bash tools/e2e/run_offline.sh pixel5
+
+      - name: Capture des artefacts offline
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-offline
+          path: |
+            artifacts/**
+            apk_sha256.txt
+          retention-days: 14
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
+  # GABARITS (D42.26 action F) — audit de contenu STATIQUE des 30 gabarits
+  # (6 secteurs × T1-T5) : catalogue, séquences, ordre, textes/variables,
+  # prises, guide de tournage, musique/SFX, 3 modes audio, politique de
+  # saisie, transitions/effets, structure de montage, ratio, manifeste SHA.
+  # Aucun émulateur, ~5 s. Ne modifie AUCUN contenu.
+  # ---------------------------------------------------------------------------
+  gabarits-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit des 30 gabarits (817 contrôles)
+        run: python3 tools/e2e/audit_gabarits.py
+      - name: Artefact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gabarits-audit
+          path: artifacts/gabarits-audit/**
+          retention-days: 14
+          if-no-files-found: warn
+
   security-local:
     runs-on: ubuntu-latest
     timeout-minutes: 20

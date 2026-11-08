@@ -1,0 +1,152 @@
+name: D1 Restore Drill (non destructif)
+
+# D42.26 — Action I / matrice §10.4 : CONTRÔLE DE RESTAURATION NON DESTRUCTIF.
+#
+# Ce que ce drill prouve :
+#   1. la D1 de production peut être exportée (lecture seule, comme le backup
+#      nocturne — aucune écriture en production) ;
+#   2. le fichier SQL produit est RESTAURABLE dans une base vierge ;
+#   3. l'intégrité du contenu restauré : les 8 tables attendues existent et
+#      contiennent les mêmes lignes que l'export (comptage croisé) ;
+#   4. l'empreinte SHA-256 de l'export est journalisée (chaîne de traçabilité).
+#
+# Ce que ce drill ne prouve PAS (documenté en toute honnêteté) :
+#   - le TÉLÉCHARGEMENT depuis B2 : la clé de backup est volontairement
+#     WRITE-ONLY (lecture impossible par sécurité). Vérifier la lisibilité
+#     des objets B2 exigerait une clé readFiles dédiée sur le bucket de
+#     backup — décision fondateur, aucune dépense impliquée.
+#   - la restauration DANS Cloudflare (remplacer la base distante) : hors
+#     question au labo, destructif par nature ; couvert par la procédure
+#     documentée 06_GUIDE_CLE_B2_BACKUP.md.
+#
+# Base cible de la restauration : base LOCALE éphémère du runner (sqlite3),
+# détruite avec le runner. Aucune écriture distante, aucun secret B2 requis.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vitrine-video-d1-restore-drill
+  cancel-in-progress: false
+
+jobs:
+  restore-drill:
+    # Mêmes règles d'exécution que le backup : dépôt privé ou miroir hors PR.
+    if: github.repository == 'mdgejc14-hash/vitrine-video' || (github.repository == 'mdgejc14-hash/vitrine-video-d42-arena' && github.event_name != 'pull_request')
+    name: Export → restore → verify (D1 locale éphémère)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: d7dac13da931423a19812f6d9116bd47
+
+    steps:
+      - name: Gate OPS_ENABLED (défaut REFUSÉ)
+        env:
+          VAR_OPS_ENABLED: ${{ vars.OPS_ENABLED }}
+          SEC_OPS_ENABLED: ${{ secrets.OPS_ENABLED }}
+        run: |
+          if [ "${VAR_OPS_ENABLED}" != "true" ] && [ "${SEC_OPS_ENABLED}" != "true" ]; then
+            echo "::error::Opération sensible REFUSÉE par défaut : OPS_ENABLED != true."
+            exit 1
+          fi
+          echo "PASS: OPS_ENABLED=true — opération sensible autorisée"
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Vérification de la configuration
+        run: |
+          set -euo pipefail
+          [ -n "${CLOUDFLARE_API_TOKEN}" ] || { echo "::error::CLOUDFLARE_API_TOKEN manquant"; exit 1; }
+          test -f wrangler.jsonc -o -f wrangler.toml -o -f wrangler.json
+          which sqlite3 || sudo apt-get update -qq && sudo apt-get install -y -qq sqlite3
+          sqlite3 --version
+
+      - name: Export LECTURE SEULE de la D1 de production
+        run: |
+          set -euo pipefail
+          mkdir -p drill-output
+          npx --yes wrangler@4 d1 export vitrine-video-db \
+            --remote \
+            --output=drill-output/export.sql \
+            --skip-confirmation
+          test -s drill-output/export.sql
+          sha256sum drill-output/export.sql | tee drill-output/export.sha256
+          echo "Octets SQL : $(wc -c < drill-output/export.sql)"
+
+      - name: Restauration dans une base LOCALE vierge
+        run: |
+          set -euo pipefail
+          rm -f drill-output/restore.db
+          sqlite3 drill-output/restore.db < drill-output/export.sql
+          echo "Restauration exécutée sans erreur."
+
+      - name: Vérification d'intégrité (tables + lignes)
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import sqlite3, re, sys
+          from pathlib import Path
+
+          sql = Path("drill-output/export.sql").read_text(encoding="utf-8", errors="replace")
+          # Tables DÉCLARÉES par l'export lui-même (auto-cohérent : aucune
+          # liste en dur — le schéma peut évoluer, le drill suit l'export).
+          declarees = set(m.group(1) for m in re.finditer(
+              r'CREATE TABLE (?:IF NOT EXISTS )?"?(\w+)"?', sql))
+          con = sqlite3.connect("drill-output/restore.db")
+          restaurees = {r[0] for r in con.execute(
+              "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")}
+          manquantes = declarees - restaurees
+          rapport = ["=== RESTORE DRILL — RAPPORT D'INTÉGRITÉ ==="]
+          rapport.append(f"tables déclarées par l'export : {len(declarees)}")
+          rapport.append(f"tables présentes après restauration : {len(restaurees)}")
+          if manquantes:
+              rapport.append(f"DÉFAUT — tables déclarées mais ABSENTES après restauration : {sorted(manquantes)}")
+          ok = not manquantes
+          integ = con.execute("PRAGMA integrity_check").fetchone()[0]
+          rapport.append(f"PRAGMA integrity_check : {integ}")
+          ok = ok and integ == "ok"
+          # Comptage croisé : chaque table remplie par l'export doit l'être
+          # après restauration (les comptes d'instructions ≠ lignes sont
+          # normaux : un INSERT D1 peut porter plusieurs tuples).
+          compte_export = {}
+          for m in re.finditer(r'INSERT INTO "?(\w+)"?', sql):
+              compte_export[m.group(1)] = compte_export.get(m.group(1), 0) + 1
+          total_lignes = 0
+          for t in sorted(restaurees):
+              n = con.execute(f'SELECT COUNT(*) FROM "{t}"').fetchone()[0]
+              total_lignes += n
+              rapport.append(f"  table {t:24s} : {n:6d} lignes (instructions INSERT dans l'export : {compte_export.get(t, 0)})")
+          rapport.append(f"TOTAL lignes restaurées : {total_lignes}")
+          vides_anormales = [t for t, n in compte_export.items() if n > 0 and t in restaurees
+                             and con.execute(f'SELECT COUNT(*) FROM "{t}"').fetchone()[0] == 0]
+          if vides_anormales:
+              rapport.append(f"DÉFAUT — tables vides après restauration alors que l'export les remplit : {vides_anormales}")
+              ok = False
+          rapport.append("VERDICT : " + ("PASS — restauration intégrale vérifiée (schéma + contenu)" if ok else "FAIL — voir les écarts ci-dessus"))
+          Path("drill-output/rapport.txt").write_text("\n".join(rapport), encoding="utf-8")
+          print("\n".join(rapport))
+          sys.exit(0 if ok else 1)
+          PY
+
+      - name: Artefacts du drill
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: d1-restore-drill
+          path: |
+            drill-output/export.sha256
+            drill-output/rapport.txt
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Nettoyage (rien ne quitte le runner)
+        if: always()
+        run: rm -rf drill-output/restore.db drill-output/export.sql

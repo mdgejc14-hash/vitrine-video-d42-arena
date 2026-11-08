@@ -1,0 +1,4 @@
+PASS=817
+FAIL=1
+BLOCKED=0
+gabarits=30/30
