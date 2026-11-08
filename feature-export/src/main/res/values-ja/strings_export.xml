@@ -21,4 +21,7 @@
     <string name="export_space">マイページを見る</string>
     <string name="export_failed_ui">書き出しが中断されました。クレジットは返却済みです — もう一度お試しください。</string>
     <string name="export_input_missing">元動画が見つかりません。書き出す前に撮り直してください。クレジットは返却されました。</string>
+    <string name="export_notif_channel_name">動画書き出し</string>
+    <string name="export_notif_title">書き出し中…</string>
+    <string name="export_notif_text">広告を準備しています — 画面を消しても大丈夫です。</string>
 </resources>

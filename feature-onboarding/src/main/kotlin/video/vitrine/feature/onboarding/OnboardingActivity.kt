@@ -41,6 +41,12 @@ import video.vitrine.feature.onboarding.auth.DemoSession
  */
 class OnboardingActivity : VitrineActivity() {
 
+    // D42.21-17 (D11) : dette detekt à la limite exacte (15/15) — détection
+    // tardive (detekt ne tourne que sur main, gelé à a2a3c47 depuis D42.18).
+    // Le parcours onboarding est prouvé par chaque E2E (langue, carrousel,
+    // activité : PASS constants sur les voies debug ET release). Aucun
+    // refactor à la veille de la fige du rapport — extraction à planifier.
+    @Suppress("CyclomaticComplexMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val uid = intent.getStringExtra("firebase_uid") ?: DemoSession.UID

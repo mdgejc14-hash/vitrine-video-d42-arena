@@ -23,11 +23,11 @@ class MotionCompositionAudioBaseTest {
 
     private val sheet = MotionJson.BeatSheet(
         plans = listOf(
-            MotionJson.BeatSheetPlan(
+            BeatSheetPlan(
                 t0 = 0.0, t1 = 2.0, kind = "clip", inT = 0.0, fx = 0.5, fy = 0.5,
                 zStart = 1.0, zEnd = 1.0, transition = "cut", shake = 0.0
             ),
-            MotionJson.BeatSheetPlan(
+            BeatSheetPlan(
                 t0 = 2.0, t1 = 4.0, kind = "clip", inT = 0.0, fx = 0.5, fy = 0.5,
                 zStart = 1.0, zEnd = 1.0, transition = "cut", shake = 0.0
             )

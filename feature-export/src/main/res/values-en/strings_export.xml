@@ -21,4 +21,7 @@
     <string name="export_space">View my space</string>
     <string name="export_failed_ui">Export interrupted. Your credits were returned — try again.</string>
     <string name="export_input_missing">Source video not found — retake your clips before exporting. Your credit was returned.</string>
+    <string name="export_notif_channel_name">Video export</string>
+    <string name="export_notif_title">Exporting…</string>
+    <string name="export_notif_text">Your ad is being prepared — you can turn off the screen.</string>
 </resources>

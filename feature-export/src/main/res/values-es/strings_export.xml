@@ -21,4 +21,7 @@
     <string name="export_space">Ver mi espacio</string>
     <string name="export_failed_ui">Exportación interrumpida. Tus créditos fueron devueltos — inténtalo de nuevo.</string>
     <string name="export_input_missing">No se encuentra el vídeo de origen — vuelve a grabar tus tomas antes de exportar. Se devolvió tu crédito.</string>
+    <string name="export_notif_channel_name">Exportación de vídeo</string>
+    <string name="export_notif_title">Exportando…</string>
+    <string name="export_notif_text">Tu anuncio se está preparando — puedes apagar la pantalla.</string>
 </resources>
