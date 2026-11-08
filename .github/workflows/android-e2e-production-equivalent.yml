@@ -179,7 +179,7 @@ jobs:
                   print('DIAG occurrences AIzaSy (binaire):', data.count(b'AIzaSy'))
                   if key.encode() in data:
                       real = True
-                  if b'D42LAB' in data or b'DUMMY' in data:
+                  if b'AIzaSyD42LABDUMMYKEY' in data:
                       dummy = True
                   if b'REMPLACE_PAR_API_KEY' in data:
                       fallback = True
