@@ -71,7 +71,12 @@ jobs:
         run: python3 tools/audit/validate_gabarits.py data/src/main/assets/gabarits
 
       - name: Qualite (ktlint + detekt) + tests JVM + graphe
-        run: ./gradlew ktlintCheck detekt testDebugUnitTest checkModuleGraph --stacktrace
+        # D42.21-16 : --continue — main était gelé à a2a3c47 depuis D42.18, les
+        # dettes detekt s'étaient accumulées invisibles ; sans --continue le build
+        # s'arrête à la PREMIÈRE tâche fautive et révèle les modules un par un
+        # (3 cycles perdus : 42442004666, 42444219198, 42444413885). Avec
+        # --continue : inventaire complet en un seul run, correction en un commit.
+        run: ./gradlew ktlintCheck detekt testDebugUnitTest checkModuleGraph --stacktrace --continue
 
       - name: Harnais CI-Visual-Check (captures Compose Robolectric)
         if: always()
