@@ -15,8 +15,9 @@ CONDITIONAL.
 | Miroir CI (android-ci) | **PASS ×4 consécutifs** (984cda4, 5fcc600, ac2b7dc/f3fa0bd, 0a5d2bb) | rien à refaire | runs cités |
 | Miroir e2e-lab | PASS (f1ddd5b 42472291434) | rien à refaire | run cité |
 | API Security (P1-B) | **PASS** | re-dispatch demandé sur le commit exact du tag → run **42478068047** en cours (984cda4) | **42477195502 SUCCESS** (bb4e8b3) : Firebase A/B réel, streaming B2 réel, isolation crédits, BGM 600 |
-| Deploy Worker (P1-A) | **BLOCKED (fondateur — périmètre jeton)** | migrations D1 prod **À JOUR 0001→0012** ✓ ; il manque Workers Scripts:Edit au jeton → recréer token (modèle « Edit Cloudflare Workers ») | 42477858757 (worker-deploy-4) : FAIL propre avant deploy, prod intacte 0.9.0 ; détail 01_DEPLOY_WORKER.md |
-| Audit audio (P1-D) | BLOCKED (derrière deploy — par conception) | l'audit tape le worker prod ; attendre 0.9.1-d42.23 sinon preuve invalide | — |
+| Deploy Worker (P1-A) | **PASS — 0.9.1-d42.23 en production** | sonde périmètre 42491960095 PASS (service nommé HTTP 200) → tag worker-deploy-5 → **42492066614 SUCCESS complet** : smoke /health version 0.9.1-d42.23 + 8 tables, routes auth 401 (catalog/library/welcome-grant), billing/return 200 (SKYPAY) | détail 01_DEPLOY_WORKER.md |
+| B2 600 composants (P1-C) | **PASS** | **42493755744 : HEAD direct 600/600 pistes bgm_library PRÉSENTES en B2**, sha256 octet par octet conformes, 600/600 EN_LIGNE servies |
+| Audit audio (P1-D) | **EXÉCUTÉ — preuves complètes, 2 découvertes produit** | 42493755744 : 21 PASS / 4 FAIL ; 60 pistes (décodabilité 60/60, RMS −17,2 dB, dynamique 12-17 dB, 0 clipping, cohérence 0,88 dB) ; découvertes : silence initial 1-3 s (60/60) + 54/60 titulaires 404 (repli v01) → **2 décisions produit** — détail 04_AUDIO_AUDIT.md |
 | Backup D1→B2 (P1-E) | BLOCKED (2 secrets lot 3 absents) | noms exacts communiqués au fondateur | — |
 | E2E équivalent release | en cours (2e fix + durci) | run sur 53b573f | 42472303159 (fix empreinte appliqué), 42477208491 (timeout Gradle), relance |
 | APK rc11 (P2) | CONDITIONAL | qualification par équivalence + e2e officiel privé au reset minutes | release privée 438156110 |
@@ -107,6 +108,20 @@ CONDITIONAL.
     auto-vérifier son recollage en ~30 s** (dispatch « CF token probe » →
     attendre « HTTP 200 success=True + PASS: périmètre Workers CONFIRMÉ »)
     avant de demander worker-deploy-5.
+18. **14:48** **FEU VERT FONDATEUR** : jetons CF recollés (principal AVEC
+    périmètre Workers + preview redevenu valide). Séquence automatique :
+    sonde 42491960095 **PASS** (service nommé HTTP 200) → tag
+    `worker-deploy-5` → **Deploy 42492066614 SUCCESS complet** :
+    migrations idempotentes ✓, **Worker 0.9.1-d42.23 DÉPLOYÉ (première
+    réussite depuis D40)**, smoke PASS (version, 8 tables, routes auth
+    401, billing/return 200 SKYPAY).
+19. **14:58-15:17** audit audio (P1-D) en 3 itérations méthodiques :
+    v1 42492361577 (13/1 : listing B2 vide) → v2 42492979146 (HEAD direct
+    inventé : **600/600 pistes PRÉSENTES** ; ffmpeg absent des runners) →
+    v3 **42493755744 : 21 PASS / 4 FAIL** — toutes les mesures du mandat
+    livrées sur 60 pistes ; 2 découvertes produit (silence initial
+    systématique 1-3 s ; 54/60 titulaires 404 couverts par repli v01) →
+    **2 décisions produit fondateur** (checkpoint 04).
 
 ## Blocage fondateur unique (requête précise et minimale)
 **Recréer le jeton Cloudflare principal avec le périmètre Workers** (~2 min) :

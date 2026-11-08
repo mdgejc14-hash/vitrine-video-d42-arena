@@ -27,10 +27,10 @@ build faussement accusé par un outil de mesure défaillant.
 | # | Domaine | Statut | Preuve principale |
 |---|---|---|---|
 | P0 | Sécurité workflows (avant usage secrets) | **PASS** | audit 08_SECURITY_VALIDATION.md ; OPS_ENABLED fermé par défaut + gate dans deploy/audio-audit/backup ; permissions minimales ; zéro pull_request_target ; secrets jamais en CLI/artefacts/logs |
-| P1-A | Déploy Worker 0.9.1-d42.23 | **BLOCKED (fondateur)** | 42477858757 : migrations D1 prod **0001→0012 APPLIQUÉES + schéma vérifié** ✓ ; échec PROPRE au déploiement du script (sonde service 403 : jeton sans périmètre Workers Scripts:Edit) ; prod intacte 0.9.0 |
+| P1-A | Déploy Worker 0.9.1-d42.23 | **PASS — EN PRODUCTION** | sonde 42491960095 (service nommé HTTP 200) → **42492066614 worker-deploy-5 SUCCESS complet** : smoke /health `version 0.9.1-d42.23` + database connected + 8 tables, routes auth 401 (catalog/library/welcome-grant), billing/return 200 (SKYPAY) ; migrations D1 0001→0012 ✓ |
 | P1-B | API Security (2 comptes A/B réels) | **PASS** | **42478068047 SUCCESS** (984cda4, commit exact du tag) : Firebase A/B réel, streaming B2 réel + Range, isolation crédits/commerces/projets/commandes, quotas, webhook 401/400/422, BGM 600 |
-| P1-C | B2 — 600 composants | **PASS (preuve partielle)** | api-security 42478068047 (600 pistes servies + cache + Range) + D1 prod 0012 appliquée ; l'audit audio détaillé (P1-D) reste à courir pour les preuves acoustiques |
-| P1-D | Audit audio production | **BLOCKED (derrière P1-A)** | audio-audit tape le Worker PROD (/health, /api/v1/audio/*) : auditer le 0.9.0 serait une preuve invalide — ordre fondateur respecté |
+| P1-C | B2 — 600 composants | **PASS** | **42493755744 : HEAD direct 600/600 pistes bgm_library PRÉSENTES en B2** + sha256 octet par octet conformes (4 sondes) + 600/600 EN_LIGNE servies par le worker 0.9.1-d42.23 |
+| P1-D | Audit audio production | **EXÉCUTÉ — preuves complètes ; 2 décisions produit** | **42493755744 : 21 PASS / 4 FAIL** ; 60 pistes analysées : décodabilité 60/60, codec mp3, durées 36-60 s, RMS −17,2 dB, dynamique 12,1-17,3 dB, 0 clipping, cohérence 0,88 dB ; découvertes : (1) silence initial 1,0-3,1 s sur 60/60 pistes, (2) 54/60 clés titulaires audio_catalog 404 (repli v01 par conception) |
 | P1-E | Backup D1→B2 (lot 3) | **BLOCKED (fondateur)** | secrets `B2_S3_ENDPOINT` + `B2_BACKUP_BUCKET` absents du miroir ; aucune configuration fabriquée (règle) |
 | P2 | Android — qualification | **PASS (équivalence)** | **42482295447 SUCCESS** : P1 officiel 37/0/0 (MP4 9 158 574 o, crédits CONFIRMED/2, zéro crash) ; P0 base 22/0/0, font130 23/0/0 ; android-ci SUCCESS ×6 commits consécutifs |
 | P2 | APK finale certificat officiel | **CONDITIONAL** | rc11 = release privée 438156110 (sha256 b052e7c9…c83bb6) ; code identique au miroir (mapping R8 identique — checkpoint 02) ; e2e complet vert par équivalence ; e2e officiel privé au reset des minutes |
@@ -74,25 +74,31 @@ ORG_GRADLE_PROJECT_ prouvé (test Gradle 9.6 local, env > gradle.properties)
 | 8 | Historique projets | CONDITIONAL (hérité) | parcours e2e nominal complet sans crash ; preuves D42.22 |
 | 9 | Crédits (client) | **PASS** | parcours crédits du P1 + isolation (api-security) |
 | 10 | Parrainage | **PASS (base)** | étapes parrainage franchies en nominal ; BLOCKED en rot90/petit écran (accessibilité, backlog) |
-| 11 | 600 composants audio | **PASS** | api-security 42478068047 (BGM 600 servies) ; D1 prod 0012 (600 pistes V2) ; audit acoustique détaillé = P1-D bloqué |
+| 11 | 600 composants audio | **PASS** | **42493755744 : 600/600 EN_LIGNE servies, 600/600 PRÉSENTES en B2 (HEAD), sha256 conformes** ; mesures acoustiques livrées (voir P1-D) |
 | 12 | Crédits SERVEUR (worker) | **PASS** | P1 : journal crédits **CONFIRMED, solde 2 attendu/constaté** ; isolation A/B (api-security) |
-| 13 | SKYPAY | 501 volontaire | décision direction maintenue |
-| 14 | Worker production 0.9.1-d42.23 | **BLOCKED (fondateur)** | D1 à jour ✓ ; script non déployé : jeton sans périmètre Workers |
+| 13 | SKYPAY | 501 volontaire | décision direction maintenue ; route billing/return 200 vérifiée en smoke |
+| 14 | Worker production 0.9.1-d42.23 | **PASS — EN PRODUCTION** | 42492066614 : déployé + fumé (version, routes, SKYPAY, D1 connected) |
 | 15 | APK finale (certificat officiel) | **CONDITIONAL** | rc11 référence (b052e7c9…) ; équivalence prouvée (mapping identique + e2e complet vert) ; signature officielle = release privée existante |
 
 ## 5. Demandes fondateur restantes (précises et minimales)
 
-**A. Jeton Cloudflare avec périmètre Workers (~2 min)** — débloque P1-A
-puis P1-D automatiquement :
-1. Dashboard Cloudflare → My Profile → API Tokens → Create Token → modèle
-   **« Edit Cloudflare Workers »** (Workers Scripts: Edit + D1: Edit) sur le
-   compte `d7dac13da931423a19812f6d9116bd47` ;
-2. Mettre à jour le secret GitHub `CLOUDFLARE_API_TOKEN` du miroir.
-Dès réception : tag `worker-deploy-5` → smoke (billing/return 200, version
-0.9.1-d42.23, routes auth 401) → tag `audio-audit-1`.
+**A. ✔ ACCOMPLIE (14:48)** — jetons Cloudflare recollés avec le bon
+périmètre : déploiement Worker 0.9.1-d42.23 EFFECTUÉ + audit audio exécuté
+(ci-dessus).
 
 **B. Secrets backup lot 3 (~1 min)** — débloque P1-E :
 `B2_S3_ENDPOINT` et `B2_BACKUP_BUCKET` (mêmes valeurs que le privé).
+
+**C. Décision produit — silence initial BGM (découverte P1-D)** :
+100 % des pistes (60/60 sondées, tous gabarits/secteurs) démarrent par
+1,0-3,1 s de silence. Options : (a) prouver que le montage auto absorbe
+(fondu/décalage BGM) ; (b) trim/fade-in des sources (SANS régénération) ;
+(c) accepter comme choix documenté.
+
+**D. Décision produit — clés titulaires audio_catalog (découverte P1-D)** :
+54/60 masters titulaires absents de B2 (404), service couvert par repli
+v01 (conception routeAudioTrack). Options : uploader les masters, ou
+purger/aligner les clés titulaires dans D1.
 
 ## 6. État de production réel (aucune fiction)
 
