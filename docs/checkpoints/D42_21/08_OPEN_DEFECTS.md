@@ -1,0 +1,65 @@
+# 08 — Défauts ouverts / connus (état D42.21)
+
+**Date** : dim. 08/11/2026 — à figer dans le rapport final 20:00.
+
+## D1 — Voie P1-debug : gel du lancement d'export (INFRASTRUCTURE HARNais, pas applicatif)
+
+- **Symptôme** : cycles 2–3 D42.21 (runs 42391198712, 42418783843) — 30 PASS jusqu'à
+  `P1_apercu_valide`, puis 5 FAIL (`P1_export_lance`, `P1_notif_fgs`, `P1_ecran_etaint`,
+  `P1_export_termine`, `P1_mp4_extrait`) + 1 BLOCKED (partage). Aucun crash.
+- **Cause racine démontrée (cycle 3, artefact 13594745867 + log job 128542514229)** :
+  le harnais a exécuté **1020 dumps uiautomator en 55 min** (1 toutes les 3,1 s, y compris
+  pendant l'attente de 40 min — cf. `WindowManager: removeWindowToken` en boucle dans le
+  logcat). Chaque dump sérialise le thread UI de l'app (traversée de l'arbre
+  d'accessibilité) sur un émulateur x86 déjà lent. Le tap `input tap` du bouton
+  « Lancer l'export local » (~22:19:55) a été émis dans cette tempête : l'événement
+  n'a jamais atteint le listener `enqueue()` (bouton `enabled=true clickable=true`
+  au dump final 23:03, statut jamais modifié, zéro log applicatif après 22:19:37).
+- **Chronologie verrouillée** : prep IO terminée 22:19:37.66 (trace D42-TRACE + SQLite
+  22:19:37.56) — **AVANT** le tap → le correctif E8 (préparation déclenchée à
+  l'affichage, pas au clic) a FONCTIONNÉ ; l'écran s'est éteint 22:20:51 (« Sleep
+  timeout! ») pendant les sondes du harnais ; aucun WM-/vv_export/BgmStore jamais émis.
+- **Ce n'est PAS une régression D42.21** : la voie P1-debug n'a **jamais** été verte
+  depuis sa création (06/11) ; les runs pré-D42.21 (`bce7556`, 42357960775, échecs en
+  22–24 min) échouaient PLUS TÔT ; mes cycles 60–61 min = le plus loin jamais atteint.
+- **Référence contradictoire** : la voie release signée (42387189875, d42.18-rc9) passe
+  le même parcours avec le même harnais (export démarré, MP4 8,5 Mo extrait) — l'app
+  release (R8) gagne la course timing. **La preuve du correctif audio se prend donc sur
+  la voie release** (`d42.21-build-1` → re-signature → `d42.21-rc-audio-v1`).
+- **Traitement** : documenté (02_EXPORT_ROOT_CAUSE.md) ; PAS de correctif applicatif
+  (l'app est saine) ; PAS de bricolage harnais au-delà du diagnostic (règle : un cycle
+  CI par correctif, pas de cycle debug supplémentaire). Piste d'amélioration future
+  (hors D42.21) : espacer les dumps / utiliser un wait par sondage logcat au lieu de
+  dumps UI répétés pendant les attentes longues.
+
+## D2 — Export release : rendu > 40 min sur émulateur (d42.18-rc9)
+
+Le MP4 release exporté en rc9 n'a pas fini son rendu dans la fenêtre de 40 min du harnais
+(`P1_export_termine` FAIL alors que l'export ÉTAIT démarré et le MP4 extrait/valide).
+Défaut d'infrastructure CI (CPU émulateur), pas de l'app. Ré-évalué en rc-audio-v1.
+
+## D3 — d42.18-rc9 : crédit réservé non libéré à l'échec du rendu
+
+`P1_credits` FAIL sur 42387189875 : à l'expiration de la fenêtre de 40 min, le crédit
+restait « réservé ». La logique de libération à l'échec existe (D42.8.1, testée JVM) mais
+le cas « rendu toujours en cours à l'arrêt du harnais » ne l'a pas déclenchée (l'export
+était vivant, pas échoué). Comportement attendu si le rendu finit par échouer ; à
+surveiller en rc-audio-v1.
+
+## D4 — Jeton GitHub exposé puis révoqué (résolu)
+
+L'ancien PAT a été exposé dans un flux d'outil puis perdu au 5e effacement ; révoqué et
+remplacé par le fondateur (08/11 ~01:30). Règles renforcées : umask 077, jamais dans
+URL/commit, fichier seul.
+
+## D5 — Divergences pistes production vs régénération locale (31, documentées)
+
+564 pistes en production ; la régénération locale des 31 pistes « batiment » diverge des
+originaux (T1×17 : v01,v03-v16,v18,v20 ; T2×9 : v01,v03,v06,v11,v12,v13,v15,v16,v18 ;
+T3×5 : v03,v05,v10,v12,v14). **Décision fondateur : NE PAS remplacer les originaux** ;
+divergences documentées dans `06_TEMPLATE_MUSIC_DIRECTION.md` (shas v2 dans D1/donnees).
+
+## D6 — Test physique sur appareil réel : NON RÉALISÉ
+
+Aucun appareil Android physique disponible ; toutes les validations E2E sont émulateur
+CI (api 34, x86_64). À marquer NON TESTÉ dans le rapport final.

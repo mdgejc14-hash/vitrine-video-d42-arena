@@ -2,11 +2,16 @@ name: Deploy Production
 
 # Déploiement AUTONOME du Worker de production + migrations D1 distantes.
 # Déclenché manuellement (bouton GitHub ou API workflow_dispatch) — jamais
-# automatique sur push : un déploiement production reste un acte délibéré.
+# automatique sur push de branche : un déploiement production reste un acte
+# délibéré. D42.21 : second déclencheur TAG « worker-deploy-* » (jeton de
+# mission sans actions:write ; pousser un tag explicite reste délibéré/audité).
 # Credentials : secrets repo CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID.
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - "worker-deploy-*"
 
 permissions:
   contents: read

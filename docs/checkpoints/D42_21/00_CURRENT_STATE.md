@@ -1,4 +1,33 @@
-# D42.21 — 00. STATUT EXÉCUTIF
+# D42.21 — 00. ÉTAT COURANT (canonique)
+
+**Dernière mise à jour** : dim. 08/11/2026 ~01:50 Bénin (autonomie jusqu'à 20:00).
+**Jalon du moment** : cause racine du gel export ÉTABLIE (voir 02) ; chaîne release
+en cours de montage : commit/push → main → `worker-deploy-1` → `d42.21-build-1` →
+re-signature locale → release `d42.21-rc-audio-v1` (étage 3 = PREUVE A) → rapport 17 items.
+
+## Fait nouveau (depuis la dernière révision)
+
+1. **Cause racine export verrouillée (02_EXPORT_ROOT_CAUSE.md, mise à jour finale)** :
+   tempête de dumps uiautomator (1020 dumps / 55 min, 1 par 3,1 s) — le tap n'atteint
+   jamais le listener sur la voie debug ; PAS un défaut applicatif ; PAS une régression
+   D42.21 ; la prep E8 a fonctionné (terminée 22:19:37.66, avant le tap ~22:19:55).
+2. Renommage canonique des checkpoints (noms fondateur 00–09) + annexes : 01 (récupération
+   workspace), 08 (défauts ouverts D1–D6), 09 (verdict final 17 items, à figer 20:00).
+3. `donnees/` complété : mesures600 + classement600 + shards regen + timelines 30 gabarits
+   (GitHub = seule mémoire).
+
+## Séquence restante (ordre strict)
+
+1. Push `d42.13-lab` (ce commit) → vérifier distant.
+2. Push `main` (fast-forward depuis `c242d99` + ce commit) → android-ci (unit) + e2e-lab.
+3. Tag `worker-deploy-1` → deploy-production → sondes `?v=2` + `/audio/library`.
+4. Tag `d42.21-build-1` → release-official-build (étage 1 : unit + APK release non signé).
+5. Re-signature locale (build-tools_r34 à re-télécharger, ~/keystores survivant).
+6. Release GitHub `rc10-audio-v1` + tag `d42.21-rc-audio-v1` + APK signé → étage 3
+   (release-official-e2e) = PREUVE A (ffprobe audio du MP4 exporté).
+7. Rapport final 17 items (09_FINAL_VERDICT.md figé) + message fondateur 20:00.
+
+---
 
 **Mission** : autonomie totale, finalisation technique et qualification commerciale.
 **Échéance** : dimanche 08/11/2026 20 h 00 (heure du Bénin). **Budget** : 0 FCFA.

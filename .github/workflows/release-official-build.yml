@@ -11,7 +11,7 @@ name: release-official-build
 # qualification D42.16/D42.17 ne sont pas relancés).
 on:
   push:
-    tags: ['d42.17-build-*', 'd42.18-build-*']
+    tags: ['d42.17-build-*', 'd42.18-build-*', 'd42.21-build-*']
 
 concurrency:
   group: release-official-build-${{ github.ref }}

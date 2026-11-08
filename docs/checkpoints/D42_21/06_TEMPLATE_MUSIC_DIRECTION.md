@@ -539,3 +539,23 @@ Principes transverses (chacun justifié par une source identifiée dans le cp. D
 **Voix** : facultative (le commerçant peut ne pas parler). Avec voix : musique −20 dB + ducking −14 dB (défaut gabarit) ; sans voix : musique pleine (0 dB — calibration −16 LUFS du fichier, D42.21).
 **Mixage** : BGM seule −16,0 LUFS ±0,15 / TP ≤ −1,0 dBTP (BS.1770-4, atteint en v2) ; mix complet cible mobile −14 à −16 LUFS à valider par écoute smartphone (D42.20-03 §3).
 **Réalité mesurée v2** (20/20 pistes de ce gabarit) : première attaque médiane 2.81 s, densité 0.59 év/s, LRA 4.8 LU — écarts vs direction ci-dessus documentés pour la v3.
+
+---
+
+# ANNEXE D42.21 (08/11) — Divergences production vs régénération locale (31 pistes « batiment »)
+
+Les 564 pistes de production ne sont PAS remplacées (décision fondateur : respect des
+originaux ; les régénérations locales divergent = elles ne sont pas des copies exactes,
+pas des erreurs à corriger). Liste exhaustive des divergences constatées :
+
+| Gabarit | Versions divergentes (régénération locale ≠ original production) |
+|---|---|
+| batiment T1 | v01, v03, v04, v05, v06, v07, v08, v09, v10, v11, v12, v13, v14, v15, v16, v18, v20 (17) |
+| batiment T2 | v01, v03, v06, v11, v12, v13, v15, v16, v18 (9) |
+| batiment T3 | v03, v05, v10, v12, v14 (5) |
+
+- Total : 31/600 (5,2 %). Les shas locaux ont été perdus (5e effacement) ; les shas v2
+  (régénérations) figurent dans les shards regen (`audio_v2_mesures/regen_shard*.jsonl`,
+  copiés dans `donnees/`).
+- Portée :_documentation uniquement. Aucune action sur la production sans accord fondateur.
+- Classement 600/600 (526 IMPROVE / 74 REGENERATE / 0 KEEP) : inchangé, clos.
