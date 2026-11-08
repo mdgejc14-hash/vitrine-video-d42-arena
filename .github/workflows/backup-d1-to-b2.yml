@@ -105,6 +105,20 @@ jobs:
             echo "Sur la page du bucket B2 → « Endpoint », collez : s3.<region>.backblazeb2.com (ou avec https://) — PAS l'URL apiNNN.backblazeb2.com (API native)."
             exit 1
           fi
+          # D42.26 (run 42504809917) : les clés d'application sont souvent
+          # collées avec un saut de ligne final/initial (copier-coller) —
+          # botocore rend alors « Invalid header value AWS4-HMAC-SHA256
+          # Credential=\n*** ». Les keyID/applicationKey B2 sont alphanum :
+          # on supprime TOUT whitespace puis on revalide la longueur.
+          KID="$(printf '%s' "$B2_BACKUP_KEY_ID" | tr -d '[:space:]')"
+          KAPP="$(printf '%s' "$B2_BACKUP_APPLICATION_KEY" | tr -d '[:space:]')"
+          if [[ ${#KID} -lt 10 || ${#KAPP} -lt 10 ]]; then
+            echo "ERROR: B2_BACKUP_KEY_ID (longueur ${#KID}) ou B2_BACKUP_APPLICATION_KEY (longueur ${#KAPP}) trop courts après nettoyage des whitespace — vérifier le collé (keyID ~25 car., applicationKey ~31+ car., sans retour à la ligne)."
+            exit 1
+          fi
+          echo "B2_BACKUP_KEY_ID=${KID}" >> "$GITHUB_ENV"
+          echo "B2_BACKUP_APPLICATION_KEY=${KAPP}" >> "$GITHUB_ENV"
+          echo "Clés backup normalisées (keyID ${#KID} car., applicationKey ${#KAPP} car. — valeurs jamais affichées)."
           test -f wrangler.jsonc -o -f wrangler.toml -o -f wrangler.json
 
       - name: Export remote Cloudflare D1 database
