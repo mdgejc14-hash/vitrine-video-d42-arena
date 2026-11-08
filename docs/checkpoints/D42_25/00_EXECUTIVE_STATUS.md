@@ -11,7 +11,8 @@ CONDITIONAL.
 | Domaine | État | Action | Preuve |
 |---|---|---|---|
 | P0 Sécurité workflows | **PASS** | audit complet + OPS_ENABLED fermé par défaut | 08 + commit `df15b6f`/`bb4e8b3` |
-| Miroir CI (android-ci) | flaky réseau → relance durcie | amorçage retry ajouté | runs 42477195501 (timeout Gradle) → 53b573f |
+| E2E équivalent release | **porte artefact RÉPARÉE** (f3fa0bd+0a5d2bb) ; parcours P0 : flake émulateur (DeadSystemException pré-app) → re-run attempt 2 en cours | si récidive : durcir options émulateur (-no-snapshot) | runs 42477586620→42482295447 ; détail 02_E2E_EQUIV_ENQUETE_DEX.md |
+| Miroir CI (android-ci) | **PASS ×4 consécutifs** (984cda4, 5fcc600, ac2b7dc/f3fa0bd, 0a5d2bb) | rien à refaire | runs cités |
 | Miroir e2e-lab | PASS (f1ddd5b 42472291434) | rien à refaire | run cité |
 | API Security (P1-B) | **PASS** | re-dispatch demandé sur le commit exact du tag → run **42478068047** en cours (984cda4) | **42477195502 SUCCESS** (bb4e8b3) : Firebase A/B réel, streaming B2 réel, isolation crédits, BGM 600 |
 | Deploy Worker (P1-A) | **BLOCKED (fondateur — périmètre jeton)** | migrations D1 prod **À JOUR 0001→0012** ✓ ; il manque Workers Scripts:Edit au jeton → recréer token (modèle « Edit Cloudflare Workers ») | 42477858757 (worker-deploy-4) : FAIL propre avant deploy, prod intacte 0.9.0 ; détail 01_DEPLOY_WORKER.md |
@@ -61,8 +62,30 @@ CONDITIONAL.
    aucun demi-déploiement (prod = 0.9.0 intacte). Cause : jeton sans
    périmètre Workers Scripts:Edit → **requête fondateur ci-dessous**.
 9. **12:01** API Security CI re-dispatché sur 984cda4 (commit exact du
-   tag) : run **42478068047** en cours. audio-audit-1 maintenu BLOQUÉ
-   derrière le déploiement (audit = worker prod, sinon preuve invalide).
+   tag) : run **42478068047 SUCCESS** (12:07) — preuve verte sur le commit
+   du déploiement.
+10. **12:08-12:25** android-ci **42477577218 SUCCESS** (984cda4) —
+    l'amorçage Gradle a porté ses fruits. e2e-équivalent 42477586620 :
+    FAILURE à l'étape « Vérifications de l'artefact » — dex sans AUCUNE
+    clé (ni réelle, ni dummy, ni fallback).
+11. **12:10-12:30** ENQUÊTE MÉTHODIQUE (checkpoint 02) : secret prouvé bon
+    (api-security), mécanisme ORG_GRADLE_PROJECT_ prouvé sous Gradle 9.6
+    (test local multi-module, env > gradle.properties), instrumentation du
+    workflow (runs 42479256822, 42480435635) : propriété résolue ✓,
+    BuildConfig.java avec clé réelle ✓, mapping R8 uploadé.
+12. **12:43** PREUVE ABSOLUE : mappings R8 rc11 (asset privé) et miroir
+    (artefact run) **octet pour octet identiques** (sha256 8cef1f5a…,
+    même pg_map_id) ⇒ dex identiques ⇒ la clé est dans le dex. Coupable :
+    le check `strings` (stdout vide sur le runner). Fix f3fa0bd = analyse
+    binaire (`key.encode() in data`).
+13. **12:51** run 42481593759 : clé réelle présente (binaire) ✓ mais
+    faux positif « factice » — b'DUMMY' matche 2 chaînes CEA/media3
+    anodines (vérifié sur le dex rc11 sain). Fix 0a5d2bb = dummy EXACTE
+    (AIzaSyD42LABDUMMYKEY).
+14. **13:03** run **42482295447** : étape « Vérifications de l'artefact »
+    **SUCCESS** (première fois) — puis parcours P0 Pixel 5 : échec
+    d'infrastructure (DeadSystemException de l'émulateur au keyevent 82,
+    AVANT tout lancement d'app). Re-run attempt 2 lancé (13:20).
 
 ## Blocage fondateur unique (requête précise et minimale)
 **Recréer le jeton Cloudflare principal avec le périmètre Workers** (~2 min) :
