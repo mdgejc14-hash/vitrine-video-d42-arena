@@ -339,13 +339,19 @@ if (B2_KEY_ID && B2_APP_KEY) {
   }
   const echantillon = [];
   for (const [cat, vs] of parGabarit) {
-    for (const v of [1, VARIATIONS_ATTENDUES]) if (vs.has(v)) echantillon.push(vs.get(v));
+    // D42.26 §13-G : mode FULL (AUDIT_FULL=1) = couverture INTÉGRALE des
+    // 600 pistes (toutes les variations) au lieu de l'échantillon v01+v20.
+    const FULL = process.env.AUDIT_FULL === "1";
+    const cibles = FULL ? [...vs.values()] : [1, VARIATIONS_ATTENDUES].map(v => vs.get(v)).filter(Boolean);
+    for (const p of cibles) echantillon.push(p);
   }
   rapport.acoustique_echantillon = echantillon.length;
+  rapport.audit_full = process.env.AUDIT_FULL === "1";
   rapport.acoustique_detail = [];
 
   const mesures = [];
   let decodables = 0, codeNonConforme = [];
+  let shaConformes = 0; const shaEcarts = [];
   for (const p of echantillon) {
     const f = path2.join(dir, `${p.categorie_audio}_v${String(p.variation).padStart(2, "0")}.mp3`);
     const url = `${API}/api/v1/audio/track/${encodeURIComponent(p.categorie_audio)}?v=${p.variation}`;
@@ -353,6 +359,15 @@ if (B2_KEY_ID && B2_APP_KEY) {
     if (dl.status !== 200 && dl.status !== 206) { mesures.push({ cat: p.categorie_audio, v: p.variation, erreur: `téléchargement HTTP ${dl.status}` }); continue; }
     const buf = Buffer.from(await dl.arrayBuffer());
     fs2.writeFileSync(f, buf);
+
+    // D42.26 §13-G : en mode FULL, sha256 byte-level de CHAQUE piste
+    // téléchargée, comparé à la valeur de référence D1 (couverture 600/600,
+    // et non plus 4 sondes).
+    if (process.env.AUDIT_FULL === "1") {
+      const shaCalc = createHash("sha256").update(buf).digest("hex");
+      const conforme = !!p.sha256 && shaCalc === p.sha256;
+      if (conforme) shaConformes++; else shaEcarts.push(`${p.categorie_audio} v${p.variation}${p.sha256 ? "" : " (sha D1 absent)"}`);
+    }
 
     // a) décodabilité intégrale (aucune erreur de décodage)
     const dec = sh("ffmpeg", ["-hide_banner", "-v", "error", "-i", f, "-f", "null", "-"]);
@@ -389,6 +404,14 @@ if (B2_KEY_ID && B2_APP_KEY) {
   }
   const ok = mesures.filter(m => !m.erreur);
   rapport.acoustique_detail = mesures;
+
+  // D42.26 §13-G : verdict de couverture intégrale (uniquement en mode FULL).
+  if (process.env.AUDIT_FULL === "1") {
+    rapport.sha_couverture = `${shaConformes}/${echantillon.length}`;
+    rec("tracks_sha256_couverture_integrale",
+        echantillon.length > 0 && shaConformes === echantillon.length,
+        `Couverture INTÉGRALE : ${shaConformes}/${echantillon.length} pistes téléchargées via l'API de production ont un sha256 CONFORME à la référence D1${shaEcarts.length ? " — écarts : " + shaEcarts.slice(0, 10).join(", ") + (shaEcarts.length > 10 ? "…" : "") : ""}`);
+  }
 
   const rmsOk = ok.filter(m => m.rms !== null && m.peak !== null);
   const rmss = rmsOk.map(m => m.rms);
