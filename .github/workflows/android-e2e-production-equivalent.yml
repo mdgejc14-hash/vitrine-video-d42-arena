@@ -155,34 +155,39 @@ jobs:
           grep -q "$VV_APK_SHA256" cert_recette.txt \
             || { echo "FAIL: certificat inattendu (empreinte de recette absente)"; exit 1; }
           echo "PASS: signé avec le certificat de recette annoncé"
-          # Dex : clé RÉELLE présente, clé FACTICE absente (sans afficher la valeur)
+          # Dex : clé RÉELLE présente, clé FACTICE absente (sans afficher la valeur).
+          # Analyse BINAIRE directe — leçon runs 42477586620/42479256822/42480435635 :
+          # `strings` a renvoyé 0 clé sur le runner alors que le dex est PROUVÉ
+          # identique à celui de la rc11 (mappings R8 identiques au sha256 près :
+          # 8cef1f5a…, pg_map_id 9d2f38a2…). La comparaison d'octets est exacte,
+          # sans dépendance binutils/locale/décodage.
           python3 - <<'PYV'
-          import os, subprocess, tempfile, glob
+          import os, subprocess, tempfile, glob, hashlib
           key = os.environ.get('FIREBASE_WEB_API_KEY_ENV') or ''
-          real_prefix = key[:12]
+          RC11_DEX_SHA256 = '26e4d02d002a69f8784b36b0cd4e7b8dcf7075526835f244cef17aee60e378af'
           with tempfile.TemporaryDirectory() as d:
               subprocess.run(['unzip', '-q', '-o', 'app/build/outputs/apk/release/app-release.apk',
                               'classes*.dex', '-d', d], check=True)
               dexes = sorted(glob.glob(os.path.join(d, 'classes*.dex')))
-              print('DIAG dex extraits :', len(dexes),
-                    [(os.path.basename(x), os.path.getsize(x)) for x in dexes])
-              found = set()
-              fallback = False
+              real = dummy = fallback = False
               for dex in dexes:
-                  out = subprocess.run(['strings', dex], capture_output=True, text=True).stdout
-                  if 'REMPLACE_PAR_API_KEY' in out:
+                  data = open(dex, 'rb').read()
+                  h = hashlib.sha256(data).hexdigest()
+                  print('DIAG dex:', os.path.basename(dex), '| taille:', len(data),
+                        '| sha256:', h[:16] + '…',
+                        '| identique dex rc11:', h == RC11_DEX_SHA256)
+                  print('DIAG occurrences AIzaSy (binaire):', data.count(b'AIzaSy'))
+                  if key.encode() in data:
+                      real = True
+                  if b'D42LAB' in data or b'DUMMY' in data:
+                      dummy = True
+                  if b'REMPLACE_PAR_API_KEY' in data:
                       fallback = True
-                  for k in ('AIzaSy',):
-                      for tok in [t for t in out.split() if t.startswith('AIzaSy')]:
-                          found.add(tok)
-          real = [t for t in found if t.startswith(real_prefix)]
-          dummy = [t for t in found if 'D42LAB' in t or 'DUMMY' in t]
-          print('clés AIzaSy présentes dans le dex :', len(found))
-          print('DIAG fallback REMPLACE_PAR_API_KEY présent :', fallback)
-          print('clé réelle présente :', bool(real))
-          print('clé factice présente :', bool(dummy))
+          print('clé réelle présente (binaire) :', real)
+          print('clé factice présente (binaire) :', dummy)
+          print('DIAG fallback REMPLACE_PAR_API_KEY présent (binaire) :', fallback)
           assert real and not dummy, 'échec vérification de clé'
-          print('PASS: dex = clé réelle uniquement')
+          print('PASS: dex = clé réelle uniquement (comparaison binaire exacte)')
           PYV
         env:
           FIREBASE_WEB_API_KEY_ENV: ${{ secrets.FIREBASE_WEB_API_KEY }}
