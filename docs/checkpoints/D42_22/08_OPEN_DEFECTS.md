@@ -32,5 +32,6 @@
 - D11 : dettes complexité detekt (2 suppressions ciblées, refactors à planifier).
 
 ## D42.22 nouveaux (hors secrets)
-- (aucun à ce stade — android-ci et e2e-lab re-validés verts sur 46a27e2 si
-  les runs en cours le confirment)
+- AUCUN. Clôture : android-ci (42456741706), e2e-lab 9/9 ×2 branches
+  (42456741703/42456741399) et e2e-official 42456670342 (PASS=37 FAIL=0)
+  tous VERTS sur le commit final `1c10cad`.

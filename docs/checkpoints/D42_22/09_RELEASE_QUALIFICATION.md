@@ -11,7 +11,17 @@
   - Fichier SHA-256 : `4e2acf14e9276a406369907ebda432cad59c101ddd523cf119985137523f7edb`
 - Release GitHub : `rc10-audio-v2` (id 438084850, tag `d42.21-rc-audio-v2`,
   asset `vitrine-release-signed.apk`).
-- **Étage 3 (release-official-e2e, run 42456670342) : lancé — résultat à reporter.**
+- **Étage 3 (release-official-e2e, run 42456670342) : SUCCESS** (08/11
+  06:55 → 07:22 UTC) — **PASS=37 FAIL=0 BLOCKED=0** sur l'APK téléchargé
+  depuis l'asset de la release (sha256 + certificat officiel contrôlés par
+  le run avant l'installation). MP4 export-0.mp4 9 140 832 octets, h264
+  1920×1080 + AAC 44,1 kHz, 34,99 s, décodage rc=0, export écran éteint
+  45 s, crédits CONFIRMED/solde 2, partage ouvert, aucun crash.
+  Mesure complémentaire : moyenne −53,3 dB / crête −27,3 dB, non-muette sur
+  toute la durée (détails au checkpoint 06). Artefact `e2e-p1-official`
+  13608501901.
+- **Chaîne v2 donc QUALIFIÉE de bout en bout : build → signature →
+  publication → E2E sur l'artefact publié.**
 
 ## Chaîne rc10-audio-v1 (preuve audio historique, APK du 003ceca)
 - Run 42432251656 : SUCCESS 35/35 ; MP4 9 168 612 octets, AAC + h264,
