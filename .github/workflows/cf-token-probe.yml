@@ -2,13 +2,22 @@ name: CF token probe
 
 # D42.25 — contrôle de prévol RAPIDE des jetons Cloudflare du miroir,
 # SANS AUCUNE écriture (aucun déploiement, aucune migration) : vérifie
-# uniquement que les secrets CLOUDFLARE_API_TOKEN et
-# CLOUDFLARE_D1_PREVIEW_API_TOKEN sont des valeurs VALIDES (format
-# d'en-tête accepté, jeton actif, accès D1/Workers sur le compte cible).
-# Motivation : le run Deploy 42476870643 (08/11 11:41) a échoué sur
-# « Invalid format for Authorization header » (code 6111 CF) → valeurs
-# de secrets malformées au collage. Cette sonde permet de vérifier la
-# correction fondateur en ~30 s avant de relancer le déploiement.
+# que le secret CLOUDFLARE_API_TOKEN est une valeur VALIDE (format
+# d'en-tête accepté, jeton actif) ET qu'il a le périmètre requis pour
+# déployer le Worker (accès au SERVICE NOMMÉ vitrine-video-api).
+# Le jeton CLOUDFLARE_D1_PREVIEW_API_TOKEN est un FALLBACK : son état
+# est rapporté à titre informatif seulement (il ne bloque rien).
+#
+# LEÇONS consignées (08/11) :
+#  - run Deploy 42476870643 : « Invalid format for Authorization header »
+#    (code 6111 CF) → valeurs malformées au collage ;
+#  - sonde 42477734593 : l'appel LIST /workers/scripts renvoie
+#    success:true + liste VIDE même SANS le périmètre Workers → liste
+#    vide ≠ périmètre. Le VRAI test = sonde du service NOMMÉ (celle du
+#    workflow Deploy, cf. run 42477858757 : HTTP 403 = jeton sans
+#    Workers Scripts:Edit).
+# Cette sonde permet au fondateur de vérifier son recollage en ~30 s
+# AVANT de relancer le déploiement.
 
 on:
   workflow_dispatch:
@@ -53,27 +62,49 @@ jobs:
           fi
           echo "PASS: les 2 secrets Cloudflare sont présents"
 
-      - name: Sonde des deux jetons (lecture seule, valeurs masquées)
+      - name: Sonde lecture seule (principal bloquant + fallback informatif)
         run: |
           set -u
+          ACC="$CLOUDFLARE_ACCOUNT_ID"
+          SVC="https://api.cloudflare.com/client/v4/accounts/$ACC/workers/services/vitrine-video-api"
           rc=0
-          for T in "$CLOUDFLARE_API_TOKEN" "$CLOUDFLARE_D1_PREVIEW_API_TOKEN"; do
-            echo "── jeton (longueur ${#T}) ──"
-            v=$(curl -s -H "Authorization: Bearer $T" \
-              https://api.cloudflare.com/client/v4/user/tokens/verify)
-            echo "$v" | python3 -c "import json,sys;d=json.load(sys.stdin);print('verify → success:',d.get('success'),'status:',(d.get('result') or {}).get('status'),'erreurs:',d.get('errors'))" || { echo "réponse illisible"; rc=1; }
-            if ! echo "$v" | grep -q '"success":true'; then rc=1; fi
-          done
-          echo "── accès D1 du compte cible (jeton principal) ──"
-          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/d1/database?per_page=5" \
-            | python3 -c "import json,sys;d=json.load(sys.stdin);print('D1 → success:',d.get('success'),'bases:',[b.get('name') for b in (d.get('result') or [])],'erreurs:',d.get('errors'))" || true
-          echo "── accès Workers du compte cible (jeton principal) ──"
-          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts?per_page=5" \
-            | python3 -c "import json,sys;d=json.load(sys.stdin);print('Workers → success:',d.get('success'),'scripts:',[s.get('id') for s in (d.get('result') or [])],'erreurs:',d.get('errors'))" || true
-          if [ "$rc" -ne 0 ]; then
-            echo "::error::Au moins un jeton Cloudflare est INVALIDE (format ou valeur). Recoller la valeur dans Settings → Secrets and variables → Actions (une seule ligne, sans espace ni retour)."
+
+          echo "══ 1/4 — jeton PRINCIPAL CLOUDFLARE_API_TOKEN (bloquant) ══"
+          v=$(curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            https://api.cloudflare.com/client/v4/user/tokens/verify)
+          echo "$v" | python3 -c "import json,sys;d=json.load(sys.stdin);print('verify → success:',d.get('success'),'| status:',(d.get('result') or {}).get('status'),'| erreurs:',d.get('errors'))" || echo "réponse illisible"
+          if ! echo "$v" | grep -q '"success":true'; then
+            echo "::error::Jeton PRINCIPAL invalide (format ou valeur). Recoller la valeur dans Settings → Secrets and variables → Actions (une seule ligne, sans espace ni retour)."
             exit 1
           fi
-          echo "PASS: les deux jetons Cloudflare sont valides et actifs"
+
+          echo "══ 2/4 — accès D1 du compte cible (principal) ══"
+          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$ACC/d1/database?per_page=5" \
+            | python3 -c "import json,sys;d=json.load(sys.stdin);print('D1 → success:',d.get('success'),'| bases:',[b.get('name') for b in (d.get('result') or [])],'| erreurs:',d.get('errors'))"
+          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$ACC/d1/database?per_page=5" \
+            | grep -q '"success":true' || { echo "::error::Jeton principal sans accès D1 au compte cible."; exit 1; }
+
+          echo "══ 3/4 — périmètre WORKERS : sonde du service NOMMÉ vitrine-video-api (LE test qui compte — leçon 42477734593/42477858757) ══"
+          code=$(curl -s -o /tmp/svc.json -w '%{http_code}' -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$SVC" || echo 000)
+          ok=$(python3 -c "import json;print(json.load(open('/tmp/svc.json')).get('success'))" 2>/dev/null || echo None)
+          echo "service vitrine-video-api → HTTP $code success=$ok"
+          if [ "$ok" != "True" ]; then
+            echo "::error::Jeton principal SANS périmètre Workers Scripts:Edit (le service existe pourtant — déployé le 01/11). Action fondateur (~2 min) : dashboard Cloudflare → My Profile → API Tokens → Create Token → modèle « Edit Cloudflare Workers » (Workers Scripts: Edit + D1: Edit) sur le compte $ACC → mettre à jour le secret GitHub CLOUDFLARE_API_TOKEN → relancer cette sonde (elle doit afficher HTTP 200 success=True) → prévenir l'agent pour worker-deploy-5."
+            rc=1
+          else
+            echo "PASS: périmètre Workers CONFIRMÉ sur le service nommé — déployable."
+          fi
+
+          echo "══ 4/4 — jeton FALLBACK CLOUDFLARE_D1_PREVIEW_API_TOKEN (informatif, ne bloque pas) ══"
+          v2=$(curl -s -H "Authorization: Bearer $CLOUDFLARE_D1_PREVIEW_API_TOKEN" \
+            https://api.cloudflare.com/client/v4/user/tokens/verify)
+          echo "$v2" | python3 -c "import json,sys;d=json.load(sys.stdin);print('verify → success:',d.get('success'),'| erreurs:',d.get('errors'))" || echo "réponse illisible"
+          if ! echo "$v2" | grep -q '"success":true'; then
+            echo "::warning::Jeton fallback D1 preview invalide — sans conséquence immédiate (le principal suffit) ; à re-coller depuis la source privée si un workflow l'exige en primaire."
+          fi
+
+          if [ "$rc" -ne 0 ]; then exit 1; fi
+          echo ""
+          echo "PASS: jeton principal VALIDE (verify actif, D1 OK, service nommé accessible) — le déploiement Worker peut être relancé (tag worker-deploy-5)."
