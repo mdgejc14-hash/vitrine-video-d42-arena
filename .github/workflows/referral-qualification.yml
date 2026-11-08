@@ -1,0 +1,64 @@
+name: Referral Qualification
+
+# D42.26 §13-C — qualification d'intégration du parrainage sur la
+# PRODUCTION (comptes de TEST A/B dédiés, mêmes que api-security ; aucune
+# donnée utilisateur réel). Déclenchement manuel uniquement.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: referral-qualification
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    if: github.repository == 'mdgejc14-hash/vitrine-video-d42-arena' && github.event_name != 'pull_request'
+    name: Qualification parrainage (comptes de test)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      API_BASE_URL: https://vitrine-video-api.mdgejcinfluence.workers.dev
+      FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
+      FIREBASE_TEST_A_EMAIL: ${{ secrets.FIREBASE_TEST_A_EMAIL }}
+      FIREBASE_TEST_A_PASSWORD: ${{ secrets.FIREBASE_TEST_A_PASSWORD }}
+      FIREBASE_TEST_B_EMAIL: ${{ secrets.FIREBASE_TEST_B_EMAIL }}
+      FIREBASE_TEST_B_PASSWORD: ${{ secrets.FIREBASE_TEST_B_PASSWORD }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Pré-vol secrets (échec clair si absents)
+        env:
+          K: ${{ secrets.FIREBASE_WEB_API_KEY }}
+          A: ${{ secrets.FIREBASE_TEST_A_EMAIL }}
+          P: ${{ secrets.FIREBASE_TEST_A_PASSWORD }}
+          B: ${{ secrets.FIREBASE_TEST_B_EMAIL }}
+          Q: ${{ secrets.FIREBASE_TEST_B_PASSWORD }}
+        run: |
+          miss=0
+          for n in K A P B Q; do
+            v=$(eval echo \$$n)
+            if [ -z "$v" ]; then echo "::error::secret manquant ($n)"; miss=1; fi
+          done
+          [ "$miss" = "0" ] && echo "PASS: secrets requis présents (valeurs jamais affichées)" || exit 1
+
+      - name: Qualification parrainage (script)
+        run: node scripts/referral-qualification.mjs
+
+      - name: Artefacts qualification
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: referral-qualification
+          path: rapport-parrainage.json
+          retention-days: 30
