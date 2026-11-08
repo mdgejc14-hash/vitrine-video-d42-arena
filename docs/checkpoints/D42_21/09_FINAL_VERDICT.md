@@ -21,8 +21,8 @@
    PAS un défaut applicatif ; PAS une régression D42.21 ; prep E8
    fonctionnelle. La « tempête de dumps » (1020/55 min) : bruit harnais réel,
    PAS la cause. [VALIDÉ — diagnostic complet ; artefacts 13594745867 +
-   13599235899 (su_mask_proof.txt) + code IntegrityGuard.kt ; validation du
-   correctif harnais = cycle P1-debug suivant]
+   13599235899 (su_mask_proof.txt) + code IntegrityGuard.kt ; correctif
+   VALIDÉ : cycle 6 parcours 36/36 + cycle 7 (42437711684) job VERT 9/9]
 2. **Correctif robustesse export (c242d99)** — préparation lancée à l'affichage E8
    (plus au clic), statut posé dès ALLOW, `preparationJob` rejouable. Tests JVM verts.
    [VALIDÉ tests ; E2E debug bloqué par D1 → preuve par voie release item 12]
@@ -80,11 +80,10 @@
 16. **GO/NO-GO production** — conditions XII : à trancher à 20:00 sur les preuves
     ci-dessus. [À COMPLÉTER]
 17. **Non testé / partiellement validé** — test physique appareil réel : NON TESTÉ
-    (au fondateur, protocole 08) ; P1-debug E2E : **RÉSOLU ET VALIDÉ au parcours**
-    (cycle 6, 42435516694 : 36/36 PASS, export complet, MP4 9 156 375 octets
-    AVEC AAC non-muette RMS −53,3 dBFS/crête −27,3 dBFS ; le rouge du job était
-    un bug de workflow ffprobe multi-lignes, corrigé D42.21-12 — cycle 7 de
-    confirmation du vert job en cours au moment du rapport) ; rendu > 40 min
+    (au fondateur, protocole 08) ; P1-debug E2E : **RÉSOLU ET VALIDÉ** (cycle 6 :
+    36/36 PASS, MP4 9 156 375 octets AVEC AAC non-muette RMS −53,3 dBFS ;
+    cycle 7 : job VERT, 9/9 — bug workflow ffprobe corrigé D42.21-12) ;
+    rendu > 40 min
     émulateur : D2 ; déploiement Worker : bloqué D8 (secret) ; LUFS du MP4
     exporté : RMS/crête mesurés localement (PyAV), ebur128 CI non relancé
     (installation ffmpeg trop lente — historique des runs). [VALIDÉ — marquage

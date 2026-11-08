@@ -28,7 +28,9 @@
 > par l'emulator-runner (`sh -c` par ligne) → « Syntax error: end of file
 > unexpected » (exit 2) APRÈS le résumé 36/36. **Correctif D42.21-12** : bloc
 > remis sur une seule ligne (seul bloc touché ; P0/langues vérifiés sains).
-> **Statut D1 : RÉSOLU (parcours) — cycle 7 attendu vert au niveau job.**
+> **Statut D1 : RÉSOLU ET VALIDÉ — cycle 7 (42437711684, e4b6c23) : SUCCESS,
+9/9 jobs, android-e2e-p1 VERT au niveau job (première fois de l'histoire de
+la voie). D1 peut être fermé.**
 
 - **Symptôme** : cycles 2–3 D42.21 (runs 42391198712, 42418783843) — 30 PASS jusqu'à
   `P1_apercu_valide`, puis 5 FAIL (`P1_export_lance`, `P1_notif_fgs`, `P1_ecran_etaint`,

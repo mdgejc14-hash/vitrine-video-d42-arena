@@ -1,7 +1,9 @@
 # D42.21 — 00. ÉTAT COURANT (canonique)
 
-**Dernière mise à jour** : dim. 08/11/2026 ~03:30 Bénin (autonomie jusqu'à 20:00).
-**Jalon du moment** : **PREUVE A OBTENUE + VOIE DEBUG VERTE AU PARCOURS**.
+**Dernière mise à jour** : dim. 08/11/2026 ~03:55 Bénin (autonomie jusqu'à 20:00).
+**Jalon du moment** : **PREUVE A OBTENUE + VOIE P1-DEBUG VERTE AU NIVEAU JOB
+(cycle 7, run 42437711684, commit e4b6c23 : 9/9 jobs SUCCESS — première fois
+de l'histoire de la voie ; android-e2e-p1 INCLUS)**.
 (1) Run 42432251656 (release-official-e2e, tag `d42.21-rc-audio-v1`, release
 `rc10-audio-v1`) **SUCCESS, P1 35/35 PASS, MP4 exporté AVEC piste audio AAC**
 (34,99 s, 9,17 Mo, décodage rc=0, non-muette) — défaut D42.18 RETOURNÉ sur la
@@ -38,8 +40,10 @@ cycle 7 attendu vert au niveau job.
 6. ~~Cycle P1-debug de validation du correctif harnais~~ ✅ 42435516694 :
    parcours 36/36 PASS (export complet + MP4 AAC non-muette) ; job rouge
    uniquement par bug workflow ffprobe → corrigé D42.21-12.
-7. Cycle 7 (validation D42.21-12, déclenché par ce push) → attendu VERT.
-8. Push `main` (fast-forward) après cycle 7 → android-ci.
+7. ~~Cycle 7 (validation D42.21-12)~~ ✅ 42437711684 **SUCCESS — 9/9 jobs**
+   (P1-debug vert au niveau job, première fois).
+8. Push `main` (fast-forward vers le commit docs final) → android-ci +
+   e2e-lab(main) → vérifier verts.
 9. Rapport final 17 items (09_FINAL_VERDICT.md figé) + message fondateur 20:00.
 
 ---
