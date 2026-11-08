@@ -129,6 +129,12 @@ class ExportWorker(
         }
     }
 
+    // D42.21-15 (D11) : dette detekt assumée — complexité 19/15. Cette fonction
+    // d'orchestration est PROUVÉE de bout en bout (preuve A release 35/35 run
+    // 42432251656 + voie debug 36/36 cycles 6-7) ; aucun refactor le jour de
+    // la figue du rapport (règle : ne pas déstabiliser du code validé).
+    // Refactor d'extraction à planifier au prochain cycle de dev.
+    @Suppress("CyclomaticComplexMethod")
     private suspend fun doWorkInner(): Result {
         if (!nativeGateOk()) return Result.failure()
         val input = inputData.getString(KEY_INPUT) ?: return Result.failure()

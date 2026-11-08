@@ -164,3 +164,18 @@ CI (api 34, x86_64). À marquer NON TESTÉ dans le rapport final.
   main, gelé à a2a3c47 depuis le début de D42.18.
 - **Correctif D42.21-14** : ligne wrapped (contenu identique, pure mise en
   forme) — validation par le android-ci suivant.
+
+## D11 — detekt CyclomaticComplexMethod ExportWorker.doWorkInner (suppression ciblée D42.21-15)
+
+- **Symptôme** : android-ci 42444219198 : `ExportWorker.kt:132 doWorkInner`
+  complexité 19/15 (20min dette). Dette antérieure invisible (detekt ne
+  tourne que sur main, gelé à a2a3c47 depuis D42.18 ; la voie release-build
+  ne lance que tests unitaires + assemble, sans detekt).
+- **Décision** : `@Suppress("CyclomaticComplexMethod")` ciblé + justification
+  en tête de fonction — AUCUN refactor de `doWorkInner` le jour de la fige
+  du rapport : la fonction est prouvée de bout en bout (preuve A 35/35 +
+  debug 36/36 cycles 6-7) et la règle fondateur interdit de déstabiliser du
+  code validé sans nécessité. Extraction à planifier au prochain cycle.
+- **Historique D10** : le MaxLineLength feature-camera (1re déteinte) est
+  corrigé en forme pure (ligne wrapped, D42.21-14) — validé par le présent
+  run android-ci (le BUILD est allé au-delà de feature-camera).
