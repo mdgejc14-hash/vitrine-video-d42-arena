@@ -98,6 +98,15 @@ CONDITIONAL.
     items, 2 demandes fondateur (jeton CF Workers, secrets lot 3),
     leçons durables. État final : tout l'automatisable est VERT ; P1-A/D/E
     BLOCKED sur actions fondateur documentées.
+17. **14:26** sonde cf-token-probe DURCIE (3cfcb1e) et validée en run
+    42489798752 : test décisif = sonde du service NOMMÉ
+    `vitrine-video-api` (leçon « LIST vide ≠ périmètre »). Verdict du
+    moment : principal actif/D1 ✓, **service nommé HTTP 403** (erreur
+    actionnable : recréer le token « Edit Cloudflare Workers »), fallback
+    preview invalide (warning, non bloquant). **Le fondateur peut
+    auto-vérifier son recollage en ~30 s** (dispatch « CF token probe » →
+    attendre « HTTP 200 success=True + PASS: périmètre Workers CONFIRMÉ »)
+    avant de demander worker-deploy-5.
 
 ## Blocage fondateur unique (requête précise et minimale)
 **Recréer le jeton Cloudflare principal avec le périmètre Workers** (~2 min) :
