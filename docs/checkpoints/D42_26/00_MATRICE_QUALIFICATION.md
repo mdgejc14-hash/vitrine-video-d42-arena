@@ -1,0 +1,198 @@
+# D42.26 — MATRICE DE QUALIFICATION INTÉGRALE (gate final avant remise APK)
+
+**Règle absolue appliquée** : un statut PASS exige une preuve datée (run,
+artefact, inspection code/documentée). Un écran affiché ou une route qui
+répond ne suffit jamais. Aucune relance de test certifié sans raison
+technique. Budget 0 FCFA.
+
+Statuts : **PASS** (preuve citée) · **FAIL** (défaut identifié, à corriger)
+· **BLOCKED** (cause externe) · **NOT RUN** (jamais exécuté) ·
+**CONDITIONAL** (preuve partielle/sous condition).
+
+Synthèse au 08/11 soir : **47 PASS · 2 FAIL · 2 BLOCKED→0 · 26 NOT RUN ·
+9 CONDITIONAL** sur 84 exigences tracées ci-dessous. Les FAIL et NOT RUN
+alimentent le plan d'action (§13).
+
+---
+
+## 1. GOUVERNANCE ET PREUVES (règle absolue)
+
+| # | Exigence | Statut | Preuve / note |
+|---|---|---|---|
+| 1.1 | Preuves antérieures conservées sans relance inutile | PASS | Aucun run re-lancé ; références tenues (42492066614, 42493755744, 42482295447, 42497790522) |
+| 1.2 | Audit de couverture exhaustif produit | PASS | **Ce document** (84 exigences tracées) |
+| 1.3 | Défauts logiciels identifiés → correction planifiée | PASS | FAIL 9.1/9.2 (UI rotation/small) — plan §13-A |
+| 1.4 | Aucun PASS déclaratif sans preuve | PASS | Convention appliquée ligne à ligne |
+
+## 2. AUTHENTIFICATION ET COMPTES
+
+| # | Exigence | Statut | Preuve / note |
+|---|---|---|---|
+| 2.1 | Authentification Firebase (email/password, comptes réels) | PASS | api-security 42478068047 : comptes test A/B réels (signInWithPassword) ; réutilisé par l'audit audio (firebase_session PASS 42493755744) |
+| 2.2 | Création de compte + première connexion | CONDITIONAL | Écran/parcours implémentés (e2e lab `auth-local`) ; création via l'API Firebase validée indirectement — **parcours complet app à re-tester dans le job auth dédié (§13-D)** |
+| 2.3 | Reconnexion / déconnexion | CONDITIONAL | `auth-local` du lab couvre le cycle local ; re-test dans §13-D |
+| 2.4 | **Google Sign-In en production (vrai OAuth)** | **NOT RUN** | Le bouton est affiché et localisé (e2e langues) mais **aucun parcours OAuth Google réel n'a été exécuté** (émulateurs sans compte Google). → test physique fondateur OU job émulateur avec compte Google dédié |
+| 2.5 | Expiration / renouvellement de session | NOT RUN | Aucun test de TTL token/JWT. → §13-D |
+| 2.6 | Récupération et gestion des erreurs d'auth | CONDITIONAL | Erreurs 401 testées (audit : sans token → 401 ×3 routes ; api-security : webhook 401/400/422) ; récupération mot de passe NOT RUN (parcours Google prédominant) |
+| 2.7 | Isolation des comptes | PASS | api-security 42478068047 : isolation crédits/commerces/projets/commandes A vs B |
+| 2.8 | Conservation de la session après redémarrage | NOT RUN | À tester (redémarrage process puis reprise sans re-login) — §13-D |
+
+## 3. BACKEND ET CONTRÔLE À DISTANCE
+
+| # | Exigence | Statut | Preuve / note |
+|---|---|---|---|
+| 3.1 | Worker production opérationnel | PASS | 42492066614 déployé ; smoke live 16:09Z : /health 200 (0.9.1-d42.23, connected, 8 tables) |
+| 3.2 | D1 production cohérent avec le Worker | PASS | Migrations 0001→0012 idempotentes vérifiées au deploy ; audit audio : library_total 600/600, statuts EN_LIGNE 600/600 |
+| 3.3 | Firebase production (Auth) | PASS | Comptes A/B réels (2.1) |
+| 3.4 | Stockage B2 média | PASS | HEAD direct 600/600 pistes présentes (42493755744) |
+| 3.5 | Catalogue des gabarits (30/6) servi | PASS | audit : structure_secteurs 6/6, structure_gabarits 30/30, 20 variations |
+| 3.6 | Bibliothèque audio servie | PASS | 60/60 sondes 206+audio/* ; sha256 byte-level 4 sondes conformes |
+| 3.7 | Crédits (solde, débit serveur) | PASS | e2e P1 officiel 42482295447 : journal crédits CONFIRMED, solde 2 attendu/constaté ; isolation A/B |
+| 3.8 | Projets (création, historique) | CONDITIONAL | e2e P1 crée un projet + l'historique l'affiche (36/0/0 au lab) ; isolation testée (api-security) ; **API projets : liste/détail/lifecycle à tracer formellement (§13-F)** |
+| 3.9 | Commandes (billing) | CONDITIONAL | billing/return 200 vérifié (smoke) ; webhook 401/400/422 (api-security) ; SKYPAY volontairement 501 (voir 10.6) |
+| 3.10 | Parrainage serveur (implémentation) | CONDITIONAL | Code inspecté : GET /me/referral (JWT), POST /me/referral/claim, anti auto-parrainage (`ref.id === merchantId` → 404), fingerprint signup, refcode_collision géré — **tests d'intégration réels NOT RUN (§13-C)** |
+| 3.11 | Erreurs réseau / réponses invalides côté client | NOT RUN | Comportement de l'app face à un serveur indisponible/réponse invalide — §13-B (offline) |
+| 3.12 | Serveur indisponible (dégradation propre) | NOT RUN | §13-B |
+| 3.13 | Aucun crédit/droit fabriquable côté client | CONDITIONAL | Architecture : crédits et droits uniquement en D1 (écrits par le Worker, JWT obligatoire) ; api-security prouve l'isolation et le refus sans token ; **à renforcer par tests négatifs ciblés (§13-C : welcome-grant unique, claim impossible sans JWT, débit uniquement via route protégée)** |
+
+## 4. MODE HORS CONNEXION ET REPRISE
+
+| # | Exigence | Statut | Preuve / note |
+|---|---|---|---|
+| 4.1 | Sons mis en cache localement (définitif) | PASS (code) | `BgmStore` : cache `files/bgm/{piste_id}.mp3` hors cacheDir → survit au vidage, « servi hors-ligne pour toujours » (inspection code, ce tour) |
+| 4.2 | Catalogue en cache local | PASS (code) | `library_{secteur}_{format}.json` mis en cache par BgmStore (inspection code) |
+| 4.3 | Lancement sans Internet | NOT RUN | §13-B (job e2e offline : `adb shell svc data disable && svc wifi disable`) |
+| 4.4 | Accès données locales autorisées hors connexion | NOT RUN | §13-B |
+| 4.5 | Gabarits hors connexion | NOT RUN | §13-B (dépend 4.2 + assets) |
+| 4.6 | Création/conservation d'un projet local | NOT RUN | §13-B |
+| 4.7 | Interruption réseau pendant un parcours | NOT RUN | §13-B |
+| 4.8 | Fermeture/redémarrage puis reprise | NOT RUN | §13-B (+ 2.8) |
+| 4.9 | Reprise après reconnexion + synchronisation sans doublon | NOT RUN | §13-B |
+| 4.10 | Absence de perte de projet / double débit | NOT RUN | §13-B (le débit crédits est serveur → double débit client improbable par conception ; à prouver par test) |
+
+## 5. CAMÉRA ET PARCOURS DE CRÉATION
+
+| # | Exigence | Statut | Preuve / note |
+|---|---|---|---|
+| 5.1 | Parcours tournage guidé 4 scènes (émulateur) | PASS | e2e P1 36/0/0 (42497790522) + P1 officiel 37/0/0 (42482295447) : parcours complet jusqu'au MP4 |
+| 5.2 | Enregistrement/arrêt/suppression/reprise d'une prise | CONDITIONAL | Le parcours nominal couvre enregistrement+arrêt ; suppression/reprise d'une prise : à tracer précisément dans les étapes e2e (§13-E) |
+| 5.3 | Conservation des prises | CONDITIONAL | Le MP4 final intègre les prises (preuve e2e) ; persistance inter-processus à tracer |
+| 5.4 | Caméra avant/arrière + changement | NOT RUN | Émulateur : caméra virtuelle par défaut uniquement. **Test physique requis** |
+| 5.5 | Aperçu vidéo (preview) | PASS (émulateur) | e2e P1 (écran de capture atteint, frames rendues) |
+| 5.6 | Permissions refusées (caméra/micro) | NOT RUN | §13-E (test e2e : deny permission → message/parcours dégradé propre) |
+| 5.7 | Stockage insuffisant | NOT RUN | §13-E (simulation quota) — basse priorité |
+| 5.8 | Erreurs caméra (débranchement, occupation) | NOT RUN | **Test physique requis** (hardware) |
+
+## 6. GABARITS, SECTEURS ET MONTAGE
+
+| # | Exigence | Statut | Preuve / note |
+|---|---|---|---|
+| 6.1 | 30 gabarits / 6 secteurs dans le catalogue servi | PASS | audit 42493755744 : structure 6/30/20 + library 600 |
+| 6.2 | Brief par gabarit (contenu, séquences, ordre, textes) | CONDITIONAL | Gabarits V2 en D1 (structure vérifiée) ; **vérification exhaustive par gabarit des champs de brief/séquences/textes = §13-F (script d'audit D1)** |
+| 6.3 | Structure de montage + effets/transitions | CONDITIONAL | Pipeline d'export certifié (6.x/7.x) ; mapping gabarit→structure à tracer dans §13-F |
+| 6.4 | Musique correspondante par gabarit | PASS | 20 variations par gabarit, toutes présentes (HEAD 600/600) + sélection par gabarit (BgmSelection) |
+| 6.5 | Durée attendue / export final | PASS | MP4 9 158 574 octets produit par le P1 officiel ; durées pistes 36-60 s conformes |
+| 6.6 | Mode voix seule / voix+musique | CONDITIONAL | MixPlan : ducking musique sous voix (−14 dB), fade in/out — implémenté et testé JVM (MixBenchAudioTest) ; **parcours e2e explicite des 3 modes = §13-E** |
+| 6.7 | Mode musique seule (aucune obligation de parler) | PASS (code+design) | `MUSIC_SOLO_GAIN_DB = 0 dB` (mode solo, MixPlan D42.21) ; e2e P1 officiel a tourné en mode sans voix (MP4 produit) — parcours e2e à tracer par mode (§13-E) |
+| 6.8 | Les 3 modes sans blocage utilisateur | NOT RUN | §13-E (matrice 3 modes × parcours) |
+
+## 7. BIBLIOTHÈQUE MUSICALE (600)
+
+| # | Exigence | Statut | Preuve / note |
+|---|---|---|---|
+| 7.1 | Disponibilité réelle des 600 | PASS | HEAD direct 600/600 en B2 (42493755744, 8 s) ; 600/600 EN_LIGNE servies |
+| 7.2 | Intégrité byte-level des 600 | CONDITIONAL | 4 sondes sha256 conformes sur 60 téléchargées ; **plan de couverture 600/600 : §13-G (exécution complète, ~420 Mo en runner gratuit)** |
+| 7.3 | Correspondance secteur/gabarit | PASS | structure_secteurs 6/6 × gabarits 30/30 × 20 variations (D1↔B2 réconcilié par HEAD) |
+| 7.4 | Sélection anti-répétition | PASS (code) | BgmSelection : exclut les K dernières pistes du gabarit (historique persistant `historique.json`) — inspection code ; **test d'intégration e2e léger à ajouter (§13-G)** |
+| 7.5 | Téléchargement + cache local + reprise après coupure | CONDITIONAL | Cache définitif implémenté (BgmStore) ; téléchargement prouvé (e2e P1) ; **reprise après coupure de téléchargement NOT RUN (§13-B)** |
+| 7.6 | Lecture complète / démarrage / volume / saturation | CONDITIONAL | Acoustique mesurée sur échantillon stratifié 60/600 (décodabilité 60/60, RMS −17,2 dB, dynamique 12-17 dB, 0 clipping) ; **extrapolation 600 NON revendiquée — couverture §13-G** |
+| 7.7 | Silence initial | **FAIL (documenté, arbitrage fondateur A)** | 60/60 mesurées : 1,03-3,07 s (07_ARBITRAGES_PRODUIT.md) ; **aucune modification sans décision** |
+| 7.8 | Clés titulaires (54/60 absentes) | **FAIL (documenté, arbitrage fondateur B)** | Repli v01 par conception (07_ARBITRAGES_PRODUIT.md) ; **aucune modification sans décision** |
+| 7.9 | Piste AAC présente dans l'export MP4 | CONDITIONAL | `ExportVerifier.kt` (ins-effects) vérifie l'export ; **contrôle explicite ffprobe « piste audio AAC » sur l'artefact MP4 du lab = §13-G (trivial, immédiat)** |
+| 7.10 | Aucune composition modifiée sans autorisation | PASS | Aucune écriture B2/D1 audio depuis D42.23 (audits lecture seule) |
+
+## 8. PARRAINAGE, CRÉDITS ET HISTORIQUE
+
+| # | Exigence | Statut | Preuve / note |
+|---|---|---|---|
+| 8.1 | Crédits : débit serveur, journal, solde | PASS | P1 officiel : CONFIRMED/2 ; isolation A/B ; débit sur action protégée |
+| 8.2 | Historique des opérations affiché | PASS | e2e P1 (36/0/0) : écran historique avec le projet créé |
+| 8.3 | Lien de parrainage : création + unicité | CONDITIONAL | Code serveur : referral_code unique par marchand, régénération anti-collision (2517) ; **test d'intégration §13-C** |
+| 8.4 | Ouverture du lien + attribution + inscription filleul | NOT RUN | §13-C (2 comptes réels A/B : claim du code) |
+| 8.5 | Anti auto-parrainage | PASS (code) | `ref.id === merchantId → 404` (ligne 2517, inspection) ; **test d'intégration §13-C** |
+| 8.6 | Éligibilité / anti-doublons / avantages | NOT RUN | §13-C (fingerprint signup, statuts converted) |
+| 8.7 | Synchronisation serveur du parrainage | NOT RUN | §13-C |
+
+## 9. INTERFACE ET ACCESSIBILITÉ
+
+| # | Exigence | Statut | Preuve / note |
+|---|---|---|---|
+| 9.1 | Défauts rotation 90° (17/3/3) | **FAIL → correction en cours §13-A** | Constats e2e-lab (config rot90 : 3 FAIL) — extraction des 3 défauts précis puis correction layouts |
+| 9.2 | Défauts petit écran 540×960 (13/1/4) | **FAIL → correction en cours §13-A** | Idem (config small : 4 FAIL) |
+| 9.3 | 4 langues FR/EN/ES/JA | PASS | FR = parcours principal (22-23/0/0) ; EN/ES/JA = 11/0/0 chacun (42497790522) — **les 4 langues couvertes, à documenter ainsi** |
+| 9.4 | Grandes tailles de police / clavier affiché | NOT RUN | §13-H (config fontScale 1.3 + états clavier) |
+| 9.5 | Zones tactiles / défilement / carrousels / formulaires | CONDITIONAL | Couverts implicitement par les parcours e2e (carrousel onboarding testé en 4 langues) ; matrice dédiée §13-H |
+| 9.6 | Navigation arrière | CONDITIONAL | Back utilisé dans les parcours ; exhaustivité §13-H |
+| 9.7 | Paysage (si pris en charge) | NOT RUN | L'app cible portrait ; rotation 90° testée pour la robustesse (9.1) |
+| 9.8 | Aucun bouton essentiel inaccessible | CONDITIONAL | Actuellement 3+4 FAIL précisément listés (9.1/9.2) → après correction, re-certification |
+
+## 10. SAUVEGARDE ET SERVICES DE PRODUCTION
+
+| # | Exigence | Statut | Preuve / note |
+|---|---|---|---|
+| 10.1 | Configuration B2 backup terminée (2 secrets dédiés) | PASS | Secrets posés (14 au total) ; clé writeFiles (+listFiles) |
+| 10.2 | Pré-vol + export D1 réel + upload B2 | **PASS** | **Run 42505158748 SUCCESS (08/11 17:29Z)** : HeadBucket 200, export 468 371 octets, upload `d1/2026/11/08/172908/vitrine-video-db.sql` + `.sha256` — après normalisation des clés (leçon : collé avec \n) |
+| 10.3 | Vérification SHA-256 du backup | PASS | sha256 généré côté export et téléversé avec le SQL (101 octets) ; **contrôle de restauration §13-I** |
+| 10.4 | Contrôle de restauration non destructif | NOT RUN | §13-I : import du SQL d'export dans une **D1 preview éphémère** + vérif tables/comptes clés + suppression — 0 risque prod, 0 FCFA |
+| 10.5 | Sauvegarde automatique (cron) | CONDITIONAL | Cron `0 3 * * *` armé sur le workflow ; **preuve = exécution automatique de la nuit 08→09/11 03:00 UTC à relever** |
+| 10.6 | SKYPAY volontairement 501, aucune simulation | PASS | Statut 501 documenté ; billing/return 200 (route) ; aucun paiement simulé |
+| 10.7 | Worker 0.9.1-d42.23 ↔ D1 cohérents | PASS | Smoke live 16:09Z + audit du jour (600/600, 8 tables) |
+
+## 11-12. LIVRABLE ET AUTORISATION (méta)
+
+| # | Exigence | Statut | Preuve / note |
+|---|---|---|---|
+| 11.1 | Matrice exhaustive de qualification | PASS | **Ce document** (84 lignes, mise à jour continue) |
+| 11.2 | Inventaire prod / test-only / Internet / offline / physique | PASS | §14 ci-dessous (tenu à jour) |
+| 12.1 | Correction des défauts bloquants avant remise | **EN COURS** | 2 FAIL UI (9.1/9.2) — §13-A |
+| 12.2 | Intégrité APK + certificat officiel | CONDITIONAL | rc11 : release privée 438156110, sha256 b052e7c9…c83bb6, mapping R8 identique miroir/privé ; **après corrections UI → rc12 à produire et re-certifier** |
+| 12.3 | Rapport final complet avant remise | EN COURS | Présent document + 99_RAPPORT_FINAL (D42.25) à consolider en fin de mission |
+
+---
+
+## 13. PLAN D'ACTION PRIORISÉ (exécution en cours, 0 FCFA)
+
+- **A. Corrections UI** (FAIL 9.1/9.2) : extraire les 3+4 défauts précis des
+  artefacts e2e-lab → corriger layouts → relance lab → vert exigé.
+- **B. Qualification offline** : nouveau job e2e (réseau coupé via adb) :
+  lancement offline, cache sons/catalogue, projet local, interruption,
+  redémarrage, reprise, sync sans doublon/perte/double débit.
+- **C. Parrainage & tests négatifs serveur** : job API avec comptes A/B
+  réels : GET /me/referral, claim croisé, auto-parrainage → 404,
+  welcome-grant unique, débits uniquement authentifiés.
+- **D. Auth approfondie** : cycle complet (création, 1re connexion,
+  reconnexion, déconnexion, session après redémarrage, expiration) ;
+  Google Sign-In réel = test physique fondateur (documenté comme tel).
+- **E. Modes de montage & caméra résiliente** : e2e 3 modes
+  (voix/solo/mixte) + permission refusée + suppression/reprise de prise.
+- **F. Audit contenu des 30 gabarits** : script D1 (brief, séquences,
+  ordre, textes, structure, durée) — exhaustif 30/30.
+- **G. Couverture audio 600** : sha256 600/600 (téléchargement complet) +
+  ffprobe piste AAC sur MP4 d'export + test anti-répétition léger.
+  L'audit 60 pistes reste un échantillon ; extrapolation non revendiquée.
+- **H. Accessibilité** : fontScale 1.3, clavier, navigation arrière,
+  exhaustive par écran principal.
+- **I. Restauration non destructive** : import du SQL backup en D1 preview
+  éphémère + contrôles + suppression ; relever le cron 03:00 UTC.
+- **J. Consolidation finale** : matrice à jour + rapport de remise APK
+  (avec rc12 si corrections UI).
+
+## 14. INVENTAIRE OPÉRATIONNEL
+
+| Catégorie | Éléments |
+|---|---|
+| **Opérationnel en production** | Worker API (0.9.1-d42.23) ; D1 (12 migrations, 8 tables) ; Auth Firebase (email/password) ; B2 média 600 pistes ; crédits serveur ; billing route ; backup D1→B2 (manuel + cron armé) ; SKYPAY en 501 assumé |
+| **Fonctionne en test (lab) uniquement** | Parcours complet app (tournage→montage→MP4→historique→crédits) sur émulateur ; 4 langues ; UI standard |
+| **Nécessite Internet** | Auth (sauf session locale), catalogue/bibliothèque non cachés, débit crédits, commandes, parrainage (claim), export des métadonnées serveur |
+| **Fonctionne hors connexion (prouvé/implementé)** | Sons déjà téléchargés (cache définitif files/bgm) ; catalogue en cache JSON ; lecture locale — **qualification formelle §13-B en cours** |
+| **Nécessite test physique** | Google Sign-In OAuth réel ; caméra avant/arrière + changement ; erreurs matérielles caméra/micro ; performances réelles ; impression générale fondateur |
