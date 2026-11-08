@@ -11,7 +11,7 @@ CONDITIONAL.
 | Domaine | État | Action | Preuve |
 |---|---|---|---|
 | P0 Sécurité workflows | **PASS** | audit complet + OPS_ENABLED fermé par défaut | 08 + commit `df15b6f`/`bb4e8b3` |
-| E2E équivalent release | **porte artefact RÉPARÉE** (f3fa0bd+0a5d2bb) ; parcours P0 : flake émulateur (DeadSystemException pré-app) → re-run attempt 2 en cours | si récidive : durcir options émulateur (-no-snapshot) | runs 42477586620→42482295447 ; détail 02_E2E_EQUIV_ENQUETE_DEX.md |
+| E2E équivalent release | **PASS COMPLET** (run 42482295447 attempt 2) : porte artefact réparée, P0 base 22/0 + font130 23/0, **P1 officiel 37/0/0** (MP4 réel 9,16 Mo, crédits CONFIRMED/2, zéro crash) | défauts accessibilité rot90/petit écran → backlog produit | détail 03_E2E_EQUIV_RESULTATS.md |
 | Miroir CI (android-ci) | **PASS ×4 consécutifs** (984cda4, 5fcc600, ac2b7dc/f3fa0bd, 0a5d2bb) | rien à refaire | runs cités |
 | Miroir e2e-lab | PASS (f1ddd5b 42472291434) | rien à refaire | run cité |
 | API Security (P1-B) | **PASS** | re-dispatch demandé sur le commit exact du tag → run **42478068047** en cours (984cda4) | **42477195502 SUCCESS** (bb4e8b3) : Firebase A/B réel, streaming B2 réel, isolation crédits, BGM 600 |
@@ -86,6 +86,12 @@ CONDITIONAL.
     **SUCCESS** (première fois) — puis parcours P0 Pixel 5 : échec
     d'infrastructure (DeadSystemException de l'émulateur au keyevent 82,
     AVANT tout lancement d'app). Re-run attempt 2 lancé (13:20).
+15. **14:08** attempt 2 : **SUCCESS COMPLET** — P0 pixel5-base 22/0/0,
+    font130 23/0/0 (rot90 17/3/3 et petit écran 13/1/4 : défauts
+    d'accessibilité consignés) ; **P1 officiel 37 PASS/0 FAIL/0 BLOCKED**
+    (3 prises caméra émulée, export-0.mp4 9 158 574 o, notification
+    vv_export, export écran éteint, partage, **crédits serveur CONFIRMED
+    solde 2**, zéro FATAL EXCEPTION). Checkpoint 03 poussé.
 
 ## Blocage fondateur unique (requête précise et minimale)
 **Recréer le jeton Cloudflare principal avec le périmètre Workers** (~2 min) :
