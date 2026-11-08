@@ -117,6 +117,52 @@ jobs:
       - name: Install minimal S3 client
         run: python -m pip install --disable-pip-version-check --no-input 'boto3>=1.34,<2'
 
+      - name: Pre-flight bucket backup (HeadBucket signé — D42.25, run 42494796528)
+        # Le run 42494796528 est mort sur ConnectionClosedError SANS réponse
+        # HTTP : ce pré-vol signé discrimine la cause exacte (404 = bucket
+        # inexistant sur cette région ; 403 = clé non autorisée sur ce bucket ;
+        # connexion fermée = région d'endpoint incorrecte) et échoue propre
+        # avec le message actionnable AVANT tout effet de bord.
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os, re, sys
+          from urllib.parse import urlparse
+          import boto3
+          from botocore.config import Config
+          from botocore.exceptions import ClientError, ConnectionClosedError, EndpointConnectionError
+
+          endpoint = os.environ["B2_S3_ENDPOINT"].rstrip("/")
+          bucket = os.environ["B2_BACKUP_BUCKET"].strip()
+          m = re.fullmatch(r"s3\.([a-z0-9-]+)\.backblazeb2\.com", urlparse(endpoint).netloc)
+          if not m:
+              raise SystemExit("Endpoint non conforme après normalisation.")
+          region = m.group(1)
+          print(f"Pré-vol : endpoint région = {region} ; bucket masqué ({len(bucket)} caractères)")
+          client = boto3.client(
+              "s3", endpoint_url=endpoint, region_name=region,
+              aws_access_key_id=os.environ["B2_KEY_ID"],
+              aws_secret_access_key=os.environ["B2_APPLICATION_KEY"],
+              config=Config(signature_version="s3v4", retries={"max_attempts": 2, "mode": "standard"}),
+          )
+          try:
+              client.head_bucket(Bucket=bucket)
+              print("PASS : HeadBucket 200 — bucket joignable et clé autorisée.")
+          except ClientError as e:
+              code = e.response["ResponseMetadata"]["HTTPStatusCode"]
+              if code == 404:
+                  print("::error::NoSuchBucket (404) — le bucket n'existe pas sur cette région d'endpoint. Vérifier B2_BACKUP_BUCKET (nom EXACT du bucket) et B2_S3_ENDPOINT (région de la page du bucket).")
+              elif code == 403:
+                  print("::error::AccessDenied (403) — bucket joignable mais la clé B2_KEY_ID/B2_APPLICATION_KEY n'a pas les droits sur CE bucket (clé actuelle restreinte au bucket média). Créer une clé d'application B2 avec writeFiles sur le bucket de backup et mettre à jour les secrets du dépôt.")
+              else:
+                  print(f"::error::HeadBucket HTTP {code} — {e}")
+              sys.exit(1)
+          except (ConnectionClosedError, EndpointConnectionError) as e:
+              print("::error::Connexion fermée sans réponse HTTP — l'endpoint ne sert pas ce bucket (région incorrecte ou bucket inexistant). Recoller B2_S3_ENDPOINT = endpoint EXACT affiché sur la page du bucket B2 (champ « Endpoint »).")
+              sys.exit(1)
+          PY
+
       - name: Upload SQL and checksum to private Backblaze B2
         shell: bash
         run: |
