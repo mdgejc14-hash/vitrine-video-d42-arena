@@ -58,8 +58,10 @@ let codeA = "", codeB = "";
   const rB = await myReferral(sB.token);
   codeA = rA.json?.code || "";
   codeB = rB.json?.code || "";
-  const structureA = rA.status === 200 && typeof codeA === "string" && /^[A-Z0-9]{4,10}$/.test(codeA);
-  const structureB = rB.status === 200 && typeof codeB === "string" && /^[A-Z0-9]{4,10}$/.test(codeB);
+  // Format réel (src/index.js) : MOT-NNN (ex. SHALOM-842) — 10 mots × 900.
+  const RE_CODE = /^[A-Z]+-[0-9]{3}$/;
+  const structureA = rA.status === 200 && typeof codeA === "string" && RE_CODE.test(codeA);
+  const structureB = rB.status === 200 && typeof codeB === "string" && RE_CODE.test(codeB);
   rec("referral_code_cree", structureA && structureB,
       `GET /me/referral A→${rA.status}, B→${rB.status} ; codes au format attendu (valeurs non imprimées)`);
   rec("referral_code_unique", structureA && structureB && codeA !== codeB,
