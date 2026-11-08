@@ -1,6 +1,8 @@
 
 import { randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
+// D42.22 re-validation trigger : ce commentaire (paths filter) relance
+// l'API Security CI sans changement de logique — aucune ligne de code modifiée.
 import { fileURLToPath } from "node:url";
 
 const BASE_URL = process.env.API_BASE_URL ?? "http://127.0.0.1:8788";
