@@ -70,6 +70,13 @@ jobs:
       - name: Validateur croise des 30 gabarits V2.0 (audit D40, C1)
         run: python3 tools/audit/validate_gabarits.py data/src/main/assets/gabarits
 
+
+      - name: Amorçage distribution Gradle (retry — leçon D42.23 453)
+        # Le wrapper n'a AUCUN retry réseau : un timeout de 10 s sur
+        # services.gradle.org tue le job (runs 42477195501/42477208491,
+        # 08/11 11:46). On chauffe la distribution avec des tentatives
+        # espacées ; les commandes réelles utilisent ensuite le cache.
+        run: ./gradlew --version || (sleep 15 && ./gradlew --version) || (sleep 30 && ./gradlew --version)
       - name: Qualite (ktlint + detekt) + tests JVM + graphe
         # D42.21-16 : --continue — main était gelé à a2a3c47 depuis D42.18, les
         # dettes detekt s'étaient accumulées invisibles ; sans --continue le build

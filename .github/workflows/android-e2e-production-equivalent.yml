@@ -85,6 +85,13 @@ jobs:
           echo "VV_APK_SHA256=$CERT_SHA256" >> "$GITHUB_ENV"
           echo "empreinte certificat de recette (hexa continue): $CERT_SHA256"
 
+
+      - name: Amorçage distribution Gradle (retry — leçon D42.23 453)
+        # Le wrapper n'a AUCUN retry réseau : un timeout de 10 s sur
+        # services.gradle.org tue le job (runs 42477195501/42477208491,
+        # 08/11 11:46). On chauffe la distribution avec des tentatives
+        # espacées ; les commandes réelles utilisent ensuite le cache.
+        run: ./gradlew --version || (sleep 15 && ./gradlew --version) || (sleep 30 && ./gradlew --version)
       - name: Tests unitaires feature-export (porte intégrité active)
         run: |
           set -euo pipefail
