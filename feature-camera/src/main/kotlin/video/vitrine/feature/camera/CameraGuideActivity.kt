@@ -266,7 +266,12 @@ class CameraGuideActivity : VitrineActivity() {
                     binder.lockThreeA(provider, camera)
                     Log.i(TAG_E2E, "verrou 3A appliqué")
                 } else {
-                    Log.i(TAG_E2E, "verrou 3A sauté : caméra non liée (binder=${binder != null} camera=${camera != null} provider=${provider != null})")
+                    Log.i(
+                        TAG_E2E,
+                        "verrou 3A sauté : caméra non liée " +
+                            "(binder=${binder != null} camera=${camera != null} " +
+                            "provider=${provider != null})",
+                    )
                 }
             }
             startRecording()

@@ -139,3 +139,28 @@ CI (api 34, x86_64). À marquer NON TESTÉ dans le rapport final.
 - **Statut rapport final** : item 7 = PARTIELLEMENT VALIDÉ (code + tests JVM
   poussés et verts ; déploiement bloqué par secret ; production saine sur
   l'existant Phase C).
+
+## D9 — API Security CI sur main : secrets Firebase absents (NOUVEAU 08/11, action fondateur)
+
+- **Symptôme** : run 42442004667 (premier sur main depuis a2a3c47 — main était
+  gelé, le workflow n'avait donc jamais tourné sur les commits D42.18-21) :
+  `Configuration CI manquante : FIREBASE_WEB_API_KEY` → exit 1. Les 5 env
+  Firebase sont vides.
+- **Secrets requis** (api-security-tests.yml l.217-221) : `FIREBASE_WEB_API_KEY`,
+  `FIREBASE_TEST_A_EMAIL`, `FIREBASE_TEST_A_PASSWORD`, `FIREBASE_TEST_B_EMAIL`,
+  `FIREBASE_TEST_B_PASSWORD`.
+- **Ce n'est PAS un échec de code** : le harnais de sécurité refuse de tourner
+  sans identités de test. Même classe que D8 (secret manquant).
+- **Traitement** : action fondateur — ajouter les 5 secrets, puis re-pousser
+  sur main (ou re-tag) pour relancer. Le reste du workflow (worker local,
+  base, migrations) est vert jusqu'à cette étape.
+
+## D10 — android-ci sur main : detekt MaxLineLength (RÉSOLU D42.21-14)
+
+- **Symptôme** : run 42442004666 : `:feature-camera:detekt FAILED` — UNE ligne
+  de 155 car. (CameraGuideActivity.kt:269, log « verrou 3A sauté »).
+- **Contexte** : code antérieur à D42.21 (module feature-camera intact durant
+  toute la mission) ; jamais détecté car android-ci ne se déclenche que sur
+  main, gelé à a2a3c47 depuis le début de D42.18.
+- **Correctif D42.21-14** : ligne wrapped (contenu identique, pure mise en
+  forme) — validation par le android-ci suivant.
