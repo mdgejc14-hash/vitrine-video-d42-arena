@@ -69,12 +69,26 @@ Référence D42.23 : privé `59de59c` / miroir `e5f2f8c` / APK rc11
 
 ## Plan D42.24
 1. ~~Diagnostic zéro-coût (01)~~ ✓ + optimisation runners (02) ✓ +
-   secrets/dépôts (03) ✓ (confirmations API faites : 16 secrets privé /
-   0 miroir ; billing API = 403 hors périmètre PAT — documenté).
-2. Workflows miroir : garde `vars.OPS_ENABLED` + durcissement, push.
-3. Probe privé (workflow témoin) : le quota s'est-il reconstitué ?
-4. Secrets miroir : ajout fondateur via UI (liste exacte au 03) ;
-   `FIREBASE_WEB_API_KEY` posé par l'agent si l'API le permet.
-5. Chaîne : backup → `worker-deploy-3` → api-security → `audio-audit-1`
-   → e2e équivalent (09).
+   secrets/dépôts (03) ✓ (16 secrets privé / 0 miroir → 1 posé par
+   l'agent ; billing API = 403 hors périmètre PAT — documenté).
+2. ~~Workflows miroir : garde étendue + pré-vol + push~~ ✓ **FAIT**
+   (`8701d6d` : deploy/api-security/audio-audit/backup — miroir
+   autorisé tags/dispatch, PR neutralisées, kill-switch optionnel
+   `OPS_ENABLED=false`, backup corrigé account ID ; preuve : API
+   Security 42471881490 a tourné sur le miroir et échoué PROPREMENT au
+   pré-vol en listant les secrets manquants — exactement le comportement
+   voulu).
+3. ~~Probe privé~~ ✓ **FAIT** : 42471658541 = 0 étape → D23-1 confirmé
+   en direct (08/11 10:29 UTC) — le privé ne peut allouer aucun runner.
+4. ~~Workflow e2e équivalent~~ ✓ **ÉCRIT + ARMÉ**
+   (`android-e2e-production-equivalent.yml`, dispatch seul : build
+   RELEASE R8 + clé réelle via `ORG_GRADLE_PROJECT_*` + signature de
+   recette déterministe + porte intégrité à l'empreinte de recette +
+   vérif dex (réelle présente/factice absente) + P0 ×5 variantes +
+   P1 officiel `run_official_e2e.sh` (masquage su + ffprobe + preuve
+   crédits) ; l'APK n'est jamais téléversé) — **dispatché dès ce tour**
+   (le secret Firebase requis est déjà posé).
+5. **Attente fondateur** : ajout des 8 secrets (lots 1+2) via l'UI du
+   miroir — puis chaîne : `worker-deploy-3` → api-security →
+   `audio-audit-1` (+ backup lot 3 optionnel).
 6. Checkpoints 04-11 au fil des exécutions, rapport final, livraison.

@@ -43,16 +43,17 @@
   dépôt) et que les gardes de cadrage D42.23 soient étendues proprement
   (voir 02).
 
-### Probe empirique (à exécuter — workflow témoin sur le privé)
-Un workflow minimal `zz-zero-cost-probe.yml` (1 job `echo`, 0 secret,
-~5 s) sera poussé sur `d42.23-production` du privé et dispatché :
-- s'il **s'exécute** → le quota s'est reconstitué : le privé redevient
-  utilisable gratuitement dans la limite des 2 000 min (architecture
-  alors simplifiée : chaîne originale D42.23 sur le privé) ;
-- s'il **meurt sans étape** → D23-1 confirmé en direct → architecture
-  miroir (prévue).
+### Probe empirique — RÉSULTAT (08/11 10:29 UTC)
+Workflow témoin `zz-zero-cost-probe.yml` poussé sur le privé (main
+`5710bef` + branche `d42.23-production` `20aa561`) et dispatché :
+run **42471658541 → completed/failure avec 0 ÉTAPE exécutée** (job
+« probe », aucune étape, aucun runner alloué — un echo de 5 s aurait
+suffi). **D23-1 confirmé en direct : le privé ne peut pas allouer le
+moindre runner.** Architecture miroir validée sans réserve. Le workflow
+témoin reste en place (canari gratuit pour détecter le retour des
+minutes : à re-dispatcher au prochain point).
 
-### Décision d'architecture (appliquée — mission §2/§3)
+### Décision d'architecture (APPLIQUÉE — preuves au 02/03)
 **Miroir public = usine de qualification** (runners standards gratuits) ;
 privé = détenteur des artefacts de distribution (release rc11) et du
 code à secrets committés. Aucune dépense, aucun runner payant, aucune

@@ -81,6 +81,17 @@ inutile (littéral committé correct).
 Restitué par le fondateur le 08/11 après perte par le snapshot ;
 stocké `/home/user/.d42_secrets/gh_pat_fondateur.txt` chmod 600,
 jamais affiché/committé/élargi. Périmètre constaté : contenus dépôts
-vitrine + Actions + releases ; billing REFUSÉ (403) — aucun impact sur
-la mission. Ne pas supprimer de sa propre initiative (décision
-fondateur après livraison vérifiée).
+vitrine + Actions + releases ; billing REFUSÉ (403) ; variables de
+dépôt REFUSÉES (403 — le kill-switch `OPS_ENABLED` est donc OPTIONNEL,
+à poser par le fondateur via l'interface s'il le souhaite ; défaut =
+chaîne autorisée sur le miroir pour tags/dispatch) ; **secrets de
+dépôt : noms lisibles + ÉCRITURE autorisée** (clé publique accessible,
+PUT validé).
+
+## Action agent effectuée (08/11)
+- **`FIREBASE_WEB_API_KEY` posé sur le miroir via API** (PUT 201,
+  sealed-box vers la clé publique du dépôt, valeur lue du
+  gradle.properties du privé, jamais affichée). Le fondateur n'a plus
+  que **8 secrets à ajouter** (lots 1+2 hors Firebase) + 2 optionnels
+  (lot 3). Ne pas supprimer de sa propre initiative (décision
+  fondateur après livraison vérifiée).

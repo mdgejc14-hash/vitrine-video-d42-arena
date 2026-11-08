@@ -1,0 +1,233 @@
+name: android-e2e-production-equivalent
+
+# D42.24 — E2E sur build RELEASE ÉQUIVALENT à l'artefact distribué rc11 :
+# même code (miroir main = branche production synchronisée), build RELEASE
+# complet (R8, minification), clé Firebase RÉELLE (secret Actions — jamais
+# en argument de commande : passée par variable d'environnement
+# ORG_GRADLE_PROJECT_vvFirebaseApiKey), signature de recette (keystore debug
+# du runner — le keystore officiel ne vient JAMAIS sur le dépôt public,
+# décision D42.17 maintenue ; l'artefact officiellement signé reste la
+# release PRIVÉE d42.23-rc11).
+#
+# Ce que couvre ce harnais : parcours P0 (nominal, police 130 %, rotation,
+# petit écran) + P1 (catalogue -> gabarit -> brief -> caméra -> prises ->
+# export -> partage) + vérification dex (clé réelle présente, factice
+# absente) + porte d'intégrité IntegrityGuard avec l'empreinte du
+# certificat de recette (prouve que la porte est ACTIVE en release).
+#
+# Ce que cela ne couvre PAS : la signature officielle 758077eb… (vérifiée
+# séparément sur l'artefact privé rc11) — l'e2e officiel sur l'artefact
+# exact reprendra sur le dépôt privé au retour des minutes gratuites.
+#
+# L'APK n'est JAMAIS téléversé comme artefact (seuls captures/dumps/
+# résultats). Aucune valeur de secret n'apparaît en clair (masquage
+# GitHub + env).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-e2e-production-equivalent
+  cancel-in-progress: true
+
+jobs:
+  e2e-release-equivalent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      # Clé réelle injectée comme propriété projet Gradle SANS argument de
+      # commande (jamais visible dans les journaux, masquée par GitHub).
+      ORG_GRADLE_PROJECT_vvFirebaseApiKey: ${{ secrets.FIREBASE_WEB_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Pré-vol secret (échec clair si absent)
+        env:
+          FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
+        run: |
+          set -u
+          if [ -z "${FIREBASE_WEB_API_KEY:-}" ]; then
+            echo "::error::Secret FIREBASE_WEB_API_KEY manquant (Settings → Secrets and variables → Actions)"
+            exit 1
+          fi
+          echo "PASS: FIREBASE_WEB_API_KEY présent (valeur jamais affichée)"
+
+      - name: Keystore de recette déterministe (signature jetable)
+        run: |
+          mkdir -p ~/.android
+          rm -f ~/.android/debug.keystore
+          keytool -genkeypair -keystore ~/.android/debug.keystore \
+            -storepass android -keypass android -alias androiddebugkey \
+            -dname "CN=Android Debug,O=Android,C=US" \
+            -keyalg RSA -keysize 2048 -validity 10000 >/dev/null 2>&1
+          echo "keystore de recette généré"
+
+      - name: Empreinte du certificat de recette (porte intégrité)
+        run: |
+          CERT_SHA256="$(keytool -list -v -keystore ~/.android/debug.keystore \
+            -storepass android -alias androiddebugkey 2>/dev/null \
+            | awk '/SHA256:/ {print $2}')"
+          if [ -z "$CERT_SHA256" ]; then echo "FAIL: empreinte introuvable"; exit 1; fi
+          echo "VV_APK_SHA256=$CERT_SHA256" >> "$GITHUB_ENV"
+          echo "empreinte certificat de recette: $CERT_SHA256"
+
+      - name: Tests unitaires feature-export (porte intégrité active)
+        run: |
+          set -euo pipefail
+          ./gradlew :feature-export:testDebugUnitTest \
+            -PvvApkSha256="$VV_APK_SHA256" \
+            --stacktrace > gradle_unit_tests.log 2>&1 || {
+              grep -nE -A6 "What went wrong|^e: |error: |Execution failed for|FAILED" gradle_unit_tests.log | head -60 || true
+              tail -60 gradle_unit_tests.log; exit 1; }
+          tail -4 gradle_unit_tests.log
+
+      - name: APK RELEASE équivalent (R8, clé réelle, signature de recette)
+        run: |
+          set -euo pipefail
+          ./gradlew :app:assembleRelease \
+            -PvvApkSha256="$VV_APK_SHA256" \
+            --stacktrace > gradle_release.log 2>&1 || {
+              grep -nE -A6 "What went wrong|Execution failed for|Caused by:" gradle_release.log | head -60 || true
+              tail -60 gradle_release.log; exit 1; }
+          tail -4 gradle_release.log
+          ls -la app/build/outputs/apk/release/
+
+      - name: Vérifications de l'artefact (dex + signature + empreinte)
+        run: |
+          set -euo pipefail
+          APK=app/build/outputs/apk/release/app-release.apk
+          test -s "$APK" || { echo "FAIL: APK absent"; exit 1; }
+          sha256sum "$APK" | tee apk_equiv_sha256.txt
+          echo "commit=$(git rev-parse HEAD)" | tee -a apk_equiv_sha256.txt
+          echo "cert_de_recette=$VV_APK_SHA256" | tee -a apk_equiv_sha256.txt
+          # Signature : clé de recette attendue (l'officielle reste privée)
+          APKSIGNER="${ANDROID_SDK_ROOT}/build-tools/$(ls "${ANDROID_SDK_ROOT}/build-tools" | sort -V | tail -1)/apksigner"
+          "$APKSIGNER" verify --print-certs "$APK" | tee cert_recette.txt
+          grep -q "$(echo "$VV_APK_SHA256" | tr 'A-F' 'a-f')" cert_recette.txt \
+            || grep -qi "$VV_APK_SHA256" cert_recette.txt \
+            || { echo "FAIL: certificat inattendu"; exit 1; }
+          echo "PASS: signé avec le certificat de recette annoncé"
+          # Dex : clé RÉELLE présente, clé FACTICE absente (sans afficher la valeur)
+          python3 - <<'PYV'
+          import os, subprocess, tempfile, glob
+          key = os.environ.get('FIREBASE_WEB_API_KEY_ENV') or ''
+          real_prefix = key[:12]
+          with tempfile.TemporaryDirectory() as d:
+              subprocess.run(['unzip', '-q', '-o', 'app/build/outputs/apk/release/app-release.apk',
+                              'classes*.dex', '-d', d], check=True)
+              found = set()
+              for dex in glob.glob(os.path.join(d, 'classes*.dex')):
+                  out = subprocess.run(['strings', dex], capture_output=True, text=True).stdout
+                  for k in ('AIzaSy',):
+                      for tok in [t for t in out.split() if t.startswith('AIzaSy')]:
+                          found.add(tok)
+          real = [t for t in found if t.startswith(real_prefix)]
+          dummy = [t for t in found if 'D42LAB' in t or 'DUMMY' in t]
+          print('clés AIzaSy présentes dans le dex :', len(found))
+          print('clé réelle présente :', bool(real))
+          print('clé factice présente :', bool(dummy))
+          assert real and not dummy, 'échec vérification de clé'
+          print('PASS: dex = clé réelle uniquement')
+          PYV
+        env:
+          FIREBASE_WEB_API_KEY_ENV: ${{ secrets.FIREBASE_WEB_API_KEY }}
+
+      - name: Activation KVM (accélération matérielle de l'émulateur)
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls -l /dev/kvm || echo "KVM ABSENT"
+
+      # -------------------------------------------------------------------
+      # P0 sur l'APK RELEASE équivalent — Pixel 5 (nominal + police + rotation)
+      # -------------------------------------------------------------------
+      - name: Parcours P0 — Pixel 5 (nominal + police + rotation)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
+          script: |
+            adb devices
+            APK=app/build/outputs/apk/release/app-release.apk bash tools/e2e/run_p0.sh pixel5 base
+            APK=app/build/outputs/apk/release/app-release.apk bash tools/e2e/run_p0.sh pixel5 font130
+            APK=app/build/outputs/apk/release/app-release.apk bash tools/e2e/run_p0.sh pixel5 rot90
+
+      - name: Parcours P0 — petit écran 540x960
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
+          script: |
+            adb devices
+            APK=app/build/outputs/apk/release/app-release.apk bash tools/e2e/run_p0.sh petit_ecran small
+            APK=app/build/outputs/apk/release/app-release.apk bash tools/e2e/run_p0.sh petit_ecran font130
+
+      - name: ffprobe (vérification du MP4 exporté)
+        run: timeout 240 bash -c 'sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg' >/dev/null 2>&1 || echo "ffmpeg indisponible — ffprobe ignoré"
+
+      # -------------------------------------------------------------------
+      # P1 — harnais OFFICIEL certifié D42.17/D42.21 (run_official_e2e.sh) :
+      # appareil client propre (masquage /system/xbin pour les heuristiques
+      # anti-root d'IntegrityGuard, certificat toujours contrôlé), parcours
+      # P1 complet, ffprobe + décodage intégral, preuve de crédits.
+      # -------------------------------------------------------------------
+      - name: APK équivalent au chemin attendu par le harnais officiel
+        run: |
+          cp app/build/outputs/apk/release/app-release.apk release.apk
+          sha256sum release.apk
+
+      - name: Parcours P1 officiel (caméra émulée, APK release équivalent)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
+          script: bash tools/e2e/run_official_e2e.sh
+
+      - name: Artefacts (captures/dumps/résultats — JAMAIS l'APK)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-release-equivalent
+          path: |
+            artifacts/**
+            apk_equiv_sha256.txt
+            cert_recette.txt
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Bilan agrégé
+        if: always()
+        run: |
+          echo "=== BILAN PAR VARIANTE ==="
+          for f in artifacts/*/summary.txt; do
+            [ -f "$f" ] || continue
+            echo "--- $f"; cat "$f"
+          done
+          echo "=== ÉCHECS ==="
+          grep -h "FAIL" artifacts/*/results.tsv 2>/dev/null || echo "aucun FAIL enregistré"
+          echo "=== BLOQUÉS ==="
+          grep -h "BLOCKED" artifacts/*/results.tsv 2>/dev/null || echo "aucun BLOCKED enregistré"
