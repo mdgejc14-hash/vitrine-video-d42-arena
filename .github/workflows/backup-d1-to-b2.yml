@@ -36,12 +36,15 @@ jobs:
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: d7dac13da931423a19812f6d9116bd47
-      # D42.25 (run 42495212327 : HeadBucket 403 AccessDenied) : la clé
-      # B2_KEY_ID du miroir est restreinte au bucket MÉDIA (lecture, audit
-      # audio) — le backup exige une clé DÉDIÉE avec writeFiles sur le seul
-      # bucket de backup (moindre privilège, ne pas élargir l'autre clé).
-      B2_BACKUP_KEY_ID: ${{ secrets.B2_BACKUP_KEY_ID }}
-      B2_BACKUP_APPLICATION_KEY: ${{ secrets.B2_BACKUP_APPLICATION_KEY }}
+      # D42.25 (runs 42495212327, reprise fondateur 08/11 soir) : le backup
+      # PRÉFÈRE la clé dédiée (B2_BACKUP_KEY_ID/B2_BACKUP_APPLICATION_KEY,
+      # moindre privilège) ; à défaut il retombe sur B2_KEY_ID/
+      # B2_APPLICATION_KEY (dont la valeur a pu être mise à jour par le
+      # fondateur avec une clé couvrant le backup) — dans TOUS les cas le
+      # pré-vol HeadBucket SIGNÉ décide avant tout effet de bord (403 =
+      # refus propre avec message actionnable).
+      B2_BACKUP_KEY_ID: ${{ secrets.B2_BACKUP_KEY_ID || secrets.B2_KEY_ID }}
+      B2_BACKUP_APPLICATION_KEY: ${{ secrets.B2_BACKUP_APPLICATION_KEY || secrets.B2_APPLICATION_KEY }}
       B2_BACKUP_BUCKET: ${{ secrets.B2_BACKUP_BUCKET }}
       B2_S3_ENDPOINT: ${{ secrets.B2_S3_ENDPOINT }}
 
@@ -158,7 +161,7 @@ jobs:
               if code == 404:
                   print("::error::NoSuchBucket (404) — le bucket n'existe pas sur cette région d'endpoint. Vérifier B2_BACKUP_BUCKET (nom EXACT du bucket) et B2_S3_ENDPOINT (région de la page du bucket).")
               elif code == 403:
-                  print("::error::AccessDenied (403) — bucket joignable mais la clé B2_BACKUP_KEY_ID/B2_BACKUP_APPLICATION_KEY n'a pas les droits sur CE bucket. Créer une clé d'application B2 avec writeFiles limitée au bucket de backup et poser les secrets B2_BACKUP_KEY_ID + B2_BACKUP_APPLICATION_KEY.")
+                  print("::error::AccessDenied (403) — bucket joignable mais la clé utilisée n'a pas les droits sur CE bucket. Correction : (option dédiée, recommandée) créer une clé B2 writeFiles limitée au bucket backup et poser B2_BACKUP_KEY_ID + B2_BACKUP_APPLICATION_KEY ; ou (option mise à jour) mettre à jour B2_KEY_ID/B2_APPLICATION_KEY avec une clé couvrant média-lecture + backup-écriture.")
               else:
                   print(f"::error::HeadBucket HTTP {code} — {e}")
               sys.exit(1)
