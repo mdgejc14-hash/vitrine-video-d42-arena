@@ -29,7 +29,7 @@ jobs:
     # D42.24 : CLOUDFLARE_ACCOUNT_ID = littéral committé NON-secret (compte
     # propriétaire des D1, cf. deploy-production.yml) — le secret du privé du
     # même nom pointait ailleurs (« No access… », 31/10/2026) ; corrigé.
-    if: github.repository == 'mdgejc14-hash/vitrine-video' || (github.repository == 'mdgejc14-hash/vitrine-video-d42-arena' && github.event_name != 'pull_request' && vars.OPS_ENABLED != 'false')
+    if: github.repository == 'mdgejc14-hash/vitrine-video' || (github.repository == 'mdgejc14-hash/vitrine-video-d42-arena' && github.event_name != 'pull_request')
     name: Export D1 and upload private backup
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -42,6 +42,17 @@ jobs:
       B2_S3_ENDPOINT: ${{ secrets.B2_S3_ENDPOINT }}
 
     steps:
+      - name: Gate OPS_ENABLED (défaut REFUSÉ — D42.25 P0)
+        env:
+          VAR_OPS_ENABLED: ${{ vars.OPS_ENABLED }}
+          SEC_OPS_ENABLED: ${{ secrets.OPS_ENABLED }}
+        run: |
+          if [ "${VAR_OPS_ENABLED}" != "true" ] && [ "${SEC_OPS_ENABLED}" != "true" ]; then
+            echo "::error::Opération sensible REFUSÉE par défaut : OPS_ENABLED != true. Poser la variable de dépôt OPS_ENABLED=true (Settings → Secrets and variables → Actions → onglet Variables) OU le secret OPS_ENABLED=true, puis relancer."
+            exit 1
+          fi
+          echo "PASS: OPS_ENABLED=true — opération sensible autorisée"
+
       - name: Checkout repository
         uses: actions/checkout@v4
 

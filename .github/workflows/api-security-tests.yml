@@ -53,9 +53,10 @@ jobs:
     # push de tags/dispatch UNIQUEMENT (collaborateurs — jamais
     # pull_request : les PR n'ont de toute façon pas les secrets ; le
     # trigger pull_request du privé reste actif via la clause 1).
-    # Kill-switch : variable de dépôt OPS_ENABLED=false coupe la chaîne
-    # ops du miroir sans toucher aux fichiers.
-    if: github.repository == 'mdgejc14-hash/vitrine-video' || (github.repository == 'mdgejc14-hash/vitrine-video-d42-arena' && github.event_name != 'pull_request' && vars.OPS_ENABLED != 'false')
+    # D42.25 P0 : FERMÉ PAR DÉFAUT — la première étape (Gate) exige
+    # OPS_ENABLED=true (variable ou secret OPS_ENABLED) avant toute
+    # opération sensible ; sans elle : refus explicite.
+    if: github.repository == 'mdgejc14-hash/vitrine-video' || (github.repository == 'mdgejc14-hash/vitrine-video-d42-arena' && github.event_name != 'pull_request')
     name: Local D1 and API security tests
     runs-on: ubuntu-latest
     timeout-minutes: 15

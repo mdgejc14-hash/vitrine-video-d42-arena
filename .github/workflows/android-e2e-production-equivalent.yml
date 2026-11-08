@@ -74,12 +74,16 @@ jobs:
 
       - name: Empreinte du certificat de recette (porte intégrité)
         run: |
+          # keytool sort l'empreinte AVEC deux-points ; IntegrityGuard compare
+          # de l'hexa CONTINUE en minuscules (leçon run 42472303159 : le format
+          # deux-points faisait échouer la comparaison apksigner ET la porte
+          # au runtime). Normalisation systématique.
           CERT_SHA256="$(keytool -list -v -keystore ~/.android/debug.keystore \
             -storepass android -alias androiddebugkey 2>/dev/null \
-            | awk '/SHA256:/ {print $2}')"
+            | awk '/SHA256:/ {print $2}' | tr -d ':' | tr 'A-F' 'a-f')"
           if [ -z "$CERT_SHA256" ]; then echo "FAIL: empreinte introuvable"; exit 1; fi
           echo "VV_APK_SHA256=$CERT_SHA256" >> "$GITHUB_ENV"
-          echo "empreinte certificat de recette: $CERT_SHA256"
+          echo "empreinte certificat de recette (hexa continue): $CERT_SHA256"
 
       - name: Tests unitaires feature-export (porte intégrité active)
         run: |
@@ -113,9 +117,8 @@ jobs:
           # Signature : clé de recette attendue (l'officielle reste privée)
           APKSIGNER="${ANDROID_SDK_ROOT}/build-tools/$(ls "${ANDROID_SDK_ROOT}/build-tools" | sort -V | tail -1)/apksigner"
           "$APKSIGNER" verify --print-certs "$APK" | tee cert_recette.txt
-          grep -q "$(echo "$VV_APK_SHA256" | tr 'A-F' 'a-f')" cert_recette.txt \
-            || grep -qi "$VV_APK_SHA256" cert_recette.txt \
-            || { echo "FAIL: certificat inattendu"; exit 1; }
+          grep -q "$VV_APK_SHA256" cert_recette.txt \
+            || { echo "FAIL: certificat inattendu (empreinte de recette absente)"; exit 1; }
           echo "PASS: signé avec le certificat de recette annoncé"
           # Dex : clé RÉELLE présente, clé FACTICE absente (sans afficher la valeur)
           python3 - <<'PYV'

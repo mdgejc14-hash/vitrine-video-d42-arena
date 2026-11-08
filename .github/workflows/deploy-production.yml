@@ -33,10 +33,11 @@ jobs:
     # 0 étape, 08/11 10:29 UTC). Exécution autorisée sur le miroir pour
     # push de tags/dispatch uniquement (collaborateurs — la création d'un
     # tag exige l'accès en écriture ; jamais pull_request, les PR n'ont de
-    # toute façon pas les secrets). Kill-switch : variable de dépôt
-    # OPS_ENABLED=false coupe la chaîne ops du miroir sans toucher aux
-    # fichiers. Le privé reste autorisé en toutes circonstances (clause 1).
-    if: github.repository == 'mdgejc14-hash/vitrine-video' || (github.repository == 'mdgejc14-hash/vitrine-video-d42-arena' && github.event_name != 'pull_request' && vars.OPS_ENABLED != 'false')
+    # toute façon pas les secrets). D42.25 P0 : FERMÉ PAR DÉFAUT — la première étape (Gate) exige
+    # OPS_ENABLED=true (variable de dépôt OU secret OPS_ENABLED) avant
+    # toute opération sensible. Sans elle : refus explicite. Le privé
+    # reste autorisé (clause 1).
+    if: github.repository == 'mdgejc14-hash/vitrine-video' || (github.repository == 'mdgejc14-hash/vitrine-video-d42-arena' && github.event_name != 'pull_request')
     name: Worker + migrations D1 distantes + smoke
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -50,6 +51,17 @@ jobs:
       # specified service" au déploiement du 31/10/2026).
       CLOUDFLARE_ACCOUNT_ID: d7dac13da931423a19812f6d9116bd47
     steps:
+      - name: Gate OPS_ENABLED (défaut REFUSÉ — D42.25 P0)
+        env:
+          VAR_OPS_ENABLED: ${{ vars.OPS_ENABLED }}
+          SEC_OPS_ENABLED: ${{ secrets.OPS_ENABLED }}
+        run: |
+          if [ "${VAR_OPS_ENABLED}" != "true" ] && [ "${SEC_OPS_ENABLED}" != "true" ]; then
+            echo "::error::Opération sensible REFUSÉE par défaut : OPS_ENABLED != true. Poser la variable de dépôt OPS_ENABLED=true (Settings → Secrets and variables → Actions → onglet Variables) OU le secret OPS_ENABLED=true, puis relancer."
+            exit 1
+          fi
+          echo "PASS: OPS_ENABLED=true — opération sensible autorisée"
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
