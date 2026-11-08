@@ -85,3 +85,28 @@ CI (api 34, x86_64). À marquer NON TESTÉ dans le rapport final.
   (`:feature-export:testDebugUnitTest`) sur `d42.21-build-1`.
 - **Impact rapport final** : item à marquer explicitement (main non synchronisé,
   divergence documentée, raison : protection de la preuve release).
+
+## D8 — Déploiement Worker bloqué : secret CLOUDFLARE_API_TOKEN absent/vide (08/11 ~00:40)
+
+- **Fait** : run 42430521024 (tag `worker-deploy-1`) — échec à « Vérification du
+  schéma distant » : appels API Cloudflare = « Invalid format for Authorization
+  header » (6003/6111) + « Authentication error » (10000) ; wrangler : « it's
+  necessary to set a CLOUDFLARE_API_TOKEN ». Étapes déploiement + smoke : skipped.
+- **État production** ( sondé 08/11 ~00:45) : Worker
+  https://vitrine-video-api.mdgejcinfluence.workers.dev VIVANT — `/health` 200
+  (service ok, D1 connected, schema ready, 8 tables, version 0.9.0) ; routes audio
+  Phase C PRÉSENTES et protégées (`/api/v1/audio/catalog|library|track/*` → 401
+  « A valid Firebase ID token is required » = comportement attendu sans JWT).
+- **Manque en production** : les évolutions worker de `56e4717`/`c242d99`
+  (07/11) — sélection par variation `/audio/track/{categorie}?v=N` (1..20,
+  strictement EN_LIGNE de la catégorie) + sha256 servi par `/audio/library`,
+  qui portent le scénario B complet. Vérification fonctionnelle distante
+  impossible sans JWT Firebase (pas de compte de test à ma disposition — et
+  je n'en fabrique pas).
+- **Action fondateur requise** : renseigner le secret `CLOUDFLARE_API_TOKEN`
+  (jeton Cloudflare avec droits Workers Scripts:Edit + D1:Edit sur le compte)
+  dans les secrets du dépôt, puis pousser un tag `worker-deploy-2` (le jeton
+  de mission n'a pas actions:write — le déclencheur tag reste la voie auditée).
+- **Statut rapport final** : item 7 = PARTIELLEMENT VALIDÉ (code + tests JVM
+  poussés et verts ; déploiement bloqué par secret ; production saine sur
+  l'existant Phase C).
