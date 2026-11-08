@@ -92,6 +92,12 @@ CONDITIONAL.
     (3 prises caméra émulée, export-0.mp4 9 158 574 o, notification
     vv_export, export écran éteint, partage, **crédits serveur CONFIRMED
     solde 2**, zéro FATAL EXCEPTION). Checkpoint 03 poussé.
+16. **14:20-14:35** clôture du tour : android-ci SUCCESS sur tous les
+    commits du tour (×7) ; e2e-lab SUCCESS (4548afd) ; **RAPPORT FINAL
+    99_RAPPORT_FINAL.md poussé (a350cce)** — matrice complète, §9 des 15
+    items, 2 demandes fondateur (jeton CF Workers, secrets lot 3),
+    leçons durables. État final : tout l'automatisable est VERT ; P1-A/D/E
+    BLOCKED sur actions fondateur documentées.
 
 ## Blocage fondateur unique (requête précise et minimale)
 **Recréer le jeton Cloudflare principal avec le périmètre Workers** (~2 min) :
