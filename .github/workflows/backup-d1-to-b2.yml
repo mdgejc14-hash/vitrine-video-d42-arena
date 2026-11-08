@@ -160,11 +160,17 @@ jobs:
               code = e.response["ResponseMetadata"]["HTTPStatusCode"]
               if code == 404:
                   print("::error::NoSuchBucket (404) — le bucket n'existe pas sur cette région d'endpoint. Vérifier B2_BACKUP_BUCKET (nom EXACT du bucket) et B2_S3_ENDPOINT (région de la page du bucket).")
+                  sys.exit(1)
               elif code == 403:
-                  print("::error::AccessDenied (403) — bucket joignable mais la clé utilisée n'a pas les droits sur CE bucket. Correction : (option dédiée, recommandée) créer une clé B2 writeFiles limitée au bucket backup et poser B2_BACKUP_KEY_ID + B2_BACKUP_APPLICATION_KEY ; ou (option mise à jour) mettre à jour B2_KEY_ID/B2_APPLICATION_KEY avec une clé couvrant média-lecture + backup-écriture.")
+                  # D42.25 (correction pré-vol) : HeadBucket exige la
+                  # capability listFiles — une clé writeFiles-ONLY (celle
+                  # demandée au fondateur) répond 403 ICI alors qu'elle peut
+                  # uploader. Le 403 est donc NON bloquant : le PUT réel de
+                  # l'upload tranche (PutObject = writeFiles).
+                  print("ATTENTION : HeadBucket 403 — normal pour une clé writeFiles-only (sans listFiles) ; l'upload va trancher. (Si l'upload échoue aussi en 403 : la clé n'a pas writeFiles sur ce bucket.)")
               else:
                   print(f"::error::HeadBucket HTTP {code} — {e}")
-              sys.exit(1)
+                  sys.exit(1)
           except (ConnectionClosedError, EndpointConnectionError) as e:
               print("::error::Connexion fermée sans réponse HTTP — l'endpoint ne sert pas ce bucket (région incorrecte ou bucket inexistant). Recoller B2_S3_ENDPOINT = endpoint EXACT affiché sur la page du bucket B2 (champ « Endpoint »).")
               sys.exit(1)
@@ -210,15 +216,22 @@ jobs:
               (sql_path, f"{prefix}/vitrine-video-db.sql", "application/sql"),
               (checksum_path, f"{prefix}/vitrine-video-db.sql.sha256", "text/plain; charset=utf-8"),
           ]
+          from botocore.exceptions import ClientError
           for path, key, content_type in uploads:
-              with path.open("rb") as body:
-                  client.put_object(
-                      Bucket=bucket,
-                      Key=key,
-                      Body=body,
-                      ContentLength=path.stat().st_size,
-                      ContentType=content_type,
-                  )
+              try:
+                  with path.open("rb") as body:
+                      client.put_object(
+                          Bucket=bucket,
+                          Key=key,
+                          Body=body,
+                          ContentLength=path.stat().st_size,
+                          ContentType=content_type,
+                      )
+              except ClientError as e:
+                  code = e.response["ResponseMetadata"]["HTTPStatusCode"]
+                  if code == 403:
+                      raise SystemExit("PutObject 403 AccessDenied — la clé utilisée n'a PAS writeFiles sur ce bucket. Action : clé B2 avec writeFiles (bucket backup) → secrets B2_BACKUP_KEY_ID/B2_BACKUP_APPLICATION_KEY, ou mise à jour de B2_KEY_ID/B2_APPLICATION_KEY.")
+                  raise SystemExit(f"PutObject HTTP {code} — {e}")
               print(f"Uploaded: s3://{bucket}/{key} ({path.stat().st_size} bytes)")
 
           print("B2 upload API accepted both objects.")
