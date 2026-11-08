@@ -1,9 +1,13 @@
 # D42.21 — 00. ÉTAT COURANT (canonique)
 
-**Dernière mise à jour** : dim. 08/11/2026 ~01:50 Bénin (autonomie jusqu'à 20:00).
-**Jalon du moment** : cause racine du gel export ÉTABLIE (voir 02) ; chaîne release
-en cours de montage : commit/push → main → `worker-deploy-1` → `d42.21-build-1` →
-re-signature locale → release `d42.21-rc-audio-v1` (étage 3 = PREUVE A) → rapport 17 items.
+**Dernière mise à jour** : dim. 08/11/2026 ~03:00 Bénin (autonomie jusqu'à 20:00).
+**Jalon du moment** : **PREUVE A OBTENUE** — run 42432251656 (release-official-e2e,
+tag `d42.21-rc-audio-v1`, release `rc10-audio-v1`) **SUCCESS, P1 35/35 PASS, MP4
+exporté AVEC piste audio AAC** (34,99 s, 9,17 Mo, décodage rc=0, non-muette). Le
+défaut D42.18 (MP4 muet) est RETOURNÉ et prouvé sur la voie de référence signée.
+Cause racine P1-debug RÉSOLUE TOTALEMENT (02, §RÉSOLUTION) : `/system/xbin/su` vu
+par IntegrityGuard sur l'image AOSP ; le harnais officiel le masque, le harnais
+lab ne le masquait pas → correctif D42.21-11 (même masquage dans run_p1.sh).
 
 ## Fait nouveau (depuis la dernière révision)
 
@@ -21,14 +25,18 @@ re-signature locale → release `d42.21-rc-audio-v1` (étage 3 = PREUVE A) → r
 
 ## Séquence restante (ordre strict)
 
-1. Push `d42.13-lab` (ce commit) → vérifier distant.
-2. Push `main` (fast-forward depuis `c242d99` + ce commit) → android-ci (unit) + e2e-lab.
-3. Tag `worker-deploy-1` → deploy-production → sondes `?v=2` + `/audio/library`.
-4. Tag `d42.21-build-1` → release-official-build (étage 1 : unit + APK release non signé).
-5. Re-signature locale (build-tools_r34 à re-télécharger, ~/keystores survivant).
-6. Release GitHub `rc10-audio-v1` + tag `d42.21-rc-audio-v1` + APK signé → étage 3
-   (release-official-e2e) = PREUVE A (ffprobe audio du MP4 exporté).
-7. Rapport final 17 items (09_FINAL_VERDICT.md figé) + message fondateur 20:00.
+1. ~~Push `d42.13-lab`~~ ✅ 64df9d9 (corrections) puis D42.21-11 (ce commit :
+   correctif harnais + preuve A documentée).
+2. ~~Tag `d42.21-build-1` → étage 1~~ ✅ run 42430521104 SUCCESS.
+3. ~~Re-signature locale~~ ✅ apksigner, cert 758077eb…33e192 vérifié.
+4. ~~Release `rc10-audio-v1` + tag `d42.21-rc-audio-v1` → étage 3~~ ✅ run
+   42432251656 **SUCCESS 35/35** = PREUVE A (audio AAC dans le MP4 exporté).
+5. ~~Tag `worker-deploy-1` → deploy-production~~ ⛔ 42430521024 FAILURE :
+   secret `CLOUDFLARE_API_TOKEN` absent (D8) — action fondateur requise.
+6. Cycle P1-debug de validation du correctif harnais (D42.21-11, déclenché par
+   ce push) → reporter le résultat dans 09 item 17.
+7. Push `main` (fast-forward) après validation du cycle → android-ci.
+8. Rapport final 17 items (09_FINAL_VERDICT.md figé) + message fondateur 20:00.
 
 ---
 

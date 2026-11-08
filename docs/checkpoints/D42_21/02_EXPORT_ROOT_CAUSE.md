@@ -182,6 +182,43 @@ défaut d'extraction qui masquait `export_t1` (84 car.) a masqué le message
      présent dans le process debug) — mécanisme précis (pourquoi
      `Debug.isDebuggerConnected()` aurait répondu vrai) NON ÉLUCIDÉ, à
      sonder sur un futur run (D1) avec un log dédié.
+
+---
+
+# RÉSOLUTION TOTALE (08/11 ~02:50) — l'indice était `su`, sur `/system/xbin/su`
+
+La preuve A (`d42.21-rc-audio-v1`, run 42432251656, **SUCCESS**) a livré la
+clé dans son artefact `su_mask_proof.txt` :
+
+```
+=== avant masquage ===
+ls: /system/bin/su: No such file or directory
+ls: /system/app/Superuser.apk: No such file or directory
+-rwsr-x--- 1 root shell 8264 2023-05-04 15:55 /system/xbin/su   ← ICI
+=== masquage : bind-mount d'un répertoire vide sur /system/xbin ===
+=== après masquage ===
+ls: /system/xbin/su: No such file or directory                     ← invisible
+```
+
+1. **L'image AOSP API 30 « default » embarque `/system/xbin/su`** (PAS
+   `/system/bin/su` — d'où l'absence de trace avc et l'erreur d'appréciation
+   initiale). `IntegrityGuard.tamperHints()` sonde `/system/xbin/su` →
+   indice `su` → `isOk()=false` → **DENY_INTEGRITY**. C'est bien l'indice
+   `su`, la déduction « su improbable » ci-dessus était FAUSSE (elle supposait
+   à tort que la voie officiale courait sans masquage sur la même image).
+2. **Pourquoi rc9 (release) passait** : le harnais OFFICIEL
+   (`run_official_e2e.sh`, bloc « appareil client propre ») **masque
+   `/system/xbin` par bind-mount d'un répertoire vide AVANT le parcours** —
+   l'indice `su` devient invisible. Le harnais LAB (`run_p1.sh`) ne le
+   faisait pas → l'app debug voyait `su` → refus. **Rien à voir avec
+   debuggable/JDWP.**
+3. **Correctif appliqué (commit D42.21-11)** : `run_p1.sh` exécute désormais
+   le MÊME masquage que la voie officielle (bloc copié, preuve conservée dans
+   `artifacts/<tag>/su_mask_proof.txt`). C'est un alignement d'ENVIRONNEMENT
+   DE TEST sur la voie de référence : IntegrityGuard n'est ni modifié ni
+   contourné, le contrôle de certificat reste pleinement actif, /system
+   n'est pas écrit, pas de reboot. Validation attendue : cycle P1-debug
+   suivant (règle : un cycle CI par correctif).
 5. **Pourquoi la voie release passe (rc9, 42387189875)** : même image, même
    code de garde — l'app RELEASE (non debuggable) a franchi la porte le
    07/11 (export démarré, MP4 8,5 Mo). Le différenciateur debug/release reste

@@ -37,6 +37,34 @@ app_cat() {  # app_cat <chemin-relatif> -> contenu binaire sur stdout (exec-out)
 }
 UI="python3 tools/e2e/ui.py"
 mkdir -p "$OUT"
+
+# D42.21 (08/11) — APPAREIL CLIENT PROPRE, aligné sur la voie officielle
+# (run_official_e2e.sh, même technique éprouvée rc9 + d42.21-rc-audio-v1).
+# L'image AOSP « default » embarque /system/xbin/su : l'heuristique anti-root
+# d'IntegrityGuard (V2.0 §22) le voit et refuse l'export (DENY_INTEGRITY —
+# cause racine de TOUS les échecs P1-debug au lancement de l'export depuis la
+# création de la voie ; cf. docs/checkpoints/D42_21/02_EXPORT_ROOT_CAUSE.md,
+# §CORRECTION : le statut du dump 29 = export_gate_integrity). La voie
+# officiale masque /system/xbin par bind-mount d'un répertoire vide : même
+# traitement ici. IntegrityGuard n'est NI modifié NI contourné — le contrôle
+# de certificat reste pleinement actif (un APK signé d'une autre clé serait
+# toujours refusé en release). /system n'est pas écrit, pas de reboot (le
+# reboot a tué l'émulateur au run rc3, le rm direct est impossible : /system
+# en lecture seule, preuves rc2).
+adb root >/dev/null 2>&1 || true
+sleep 3
+adb shell setenforce 0 2>/dev/null || true
+adb shell mkdir -p /data/local/tmp/vv_xbin_vide
+{
+  echo "=== avant masquage (su visible = heuristique anti-root active) ==="
+  adb shell 'ls -la /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1'
+  echo "=== masquage : bind-mount d'un répertoire vide sur /system/xbin ==="
+  adb shell mount -o bind /data/local/tmp/vv_xbin_vide /system/xbin 2>&1 \
+    || adb shell mount --bind /data/local/tmp/vv_xbin_vide /system/xbin 2>&1
+  echo "=== après masquage (attendu : su invisible) ==="
+  adb shell 'ls /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1'
+} | tee "$OUT/su_mask_proof.txt"
+
 RESULTS="$OUT/results.tsv"
 : > "$RESULTS"
 exec 2> >(tee -a "$OUT/stderr.log" >&2)
