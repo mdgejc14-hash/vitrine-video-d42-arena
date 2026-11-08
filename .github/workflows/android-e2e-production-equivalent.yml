@@ -105,13 +105,41 @@ jobs:
       - name: APK RELEASE équivalent (R8, clé réelle, signature de recette)
         run: |
           set -euo pipefail
+          # DIAG D42.25 (run 42477586620 : dex sans aucune clé — cause à isoler).
+          # Verdicts par comparaison en shell : JAMAIS de valeur affichée.
+          ./gradlew -q :feature-onboarding:properties --console=plain \
+            > props_diag.txt 2>&1 || true
+          P="$(awk -F': ' '/^vvFirebaseApiKey: /{sub(/\r$/,""); print $2; exit}' props_diag.txt)"
+          echo "DIAG propriété Gradle vvFirebaseApiKey : longueur=${#P}"
+          if [ -n "$P" ] && [ "$P" = "$FIREBASE_WEB_API_KEY_ENV" ]; then
+            echo "DIAG: propriété = secret (env ORG_GRADLE_PROJECT résolu)"
+          elif [ "$P" = "AIzaSyD42LABDUMMYKEY00000000000000000" ]; then
+            echo "DIAG: propriété = DUMMY du gradle.properties (env NON résolu)"
+          elif [ -z "$P" ]; then
+            echo "DIAG: propriété ABSENTE (ni env ni gradle.properties lus)"
+          else
+            echo "DIAG: propriété = valeur inattendue (préfixe ${P:0:6}, longueur ${#P})"
+          fi
           ./gradlew :app:assembleRelease \
             -PvvApkSha256="$VV_APK_SHA256" \
             --stacktrace > gradle_release.log 2>&1 || {
               grep -nE -A6 "What went wrong|Execution failed for|Caused by:" gradle_release.log | head -60 || true
               tail -60 gradle_release.log; exit 1; }
+          BC="$(find feature-onboarding/build/generated -name BuildConfig.java 2>/dev/null | head -1)"
+          echo "DIAG BuildConfig généré : $BC"
+          if grep -q 'REMPLACE_PAR_API_KEY' "$BC"; then
+            echo "DIAG: BuildConfig contient le FALLBACK (propriété non résolue au build)"
+          elif grep -q "$FIREBASE_WEB_API_KEY_ENV" "$BC"; then
+            echo "DIAG: BuildConfig contient la clé réelle"
+          elif grep -q 'D42LAB' "$BC"; then
+            echo "DIAG: BuildConfig contient la DUMMY du gradle.properties"
+          else
+            echo "DIAG: BuildConfig sans fallback/dummy/clé réelle — inspecter"
+          fi
           tail -4 gradle_release.log
           ls -la app/build/outputs/apk/release/
+        env:
+          FIREBASE_WEB_API_KEY_ENV: ${{ secrets.FIREBASE_WEB_API_KEY }}
 
       - name: Vérifications de l'artefact (dex + signature + empreinte)
         run: |
@@ -135,15 +163,22 @@ jobs:
           with tempfile.TemporaryDirectory() as d:
               subprocess.run(['unzip', '-q', '-o', 'app/build/outputs/apk/release/app-release.apk',
                               'classes*.dex', '-d', d], check=True)
+              dexes = sorted(glob.glob(os.path.join(d, 'classes*.dex')))
+              print('DIAG dex extraits :', len(dexes),
+                    [os.path.basename(x) for x in dexes])
               found = set()
-              for dex in glob.glob(os.path.join(d, 'classes*.dex')):
+              fallback = False
+              for dex in dexes:
                   out = subprocess.run(['strings', dex], capture_output=True, text=True).stdout
+                  if 'REMPLACE_PAR_API_KEY' in out:
+                      fallback = True
                   for k in ('AIzaSy',):
                       for tok in [t for t in out.split() if t.startswith('AIzaSy')]:
                           found.add(tok)
           real = [t for t in found if t.startswith(real_prefix)]
           dummy = [t for t in found if 'D42LAB' in t or 'DUMMY' in t]
           print('clés AIzaSy présentes dans le dex :', len(found))
+          print('DIAG fallback REMPLACE_PAR_API_KEY présent :', fallback)
           print('clé réelle présente :', bool(real))
           print('clé factice présente :', bool(dummy))
           assert real and not dummy, 'échec vérification de clé'
