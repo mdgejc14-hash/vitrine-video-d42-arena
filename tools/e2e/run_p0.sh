@@ -27,6 +27,11 @@ swipe_v() { # y1pct y2pct [ms] — swipe VERTICAL au centre, relatif à la haute
   adb shell input swipe $(( EFF_W / 2 )) $(( EFF_H * $1 / 100 )) \
     $(( EFF_W / 2 )) $(( EFF_H * $2 / 100 )) "${3:-250}" >/dev/null 2>&1
 }
+swipe_h() { # x1pct x2pct [ms] — swipe HORIZONTAL au centre vertical, % de la largeur
+  # D42.26-13 : geste natif du HorizontalPager du carrousel (onboarding).
+  adb shell input swipe $(( EFF_W * $1 / 100 )) $(( EFF_H / 2 )) \
+    $(( EFF_W * $2 / 100 )) $(( EFF_H / 2 )) "${3:-250}" >/dev/null 2>&1
+}
 set -uo pipefail
 
 TAG="${1:-pixel5}"
@@ -217,8 +222,20 @@ if $UI wait --text "Suivant" --timeout 90 >/dev/null 2>&1 \
   case "$LANGUE" in
     en) SUIVANT="Next" ;; es) SUIVANT="Siguiente" ;; ja) SUIVANT="次へ" ;; *) SUIVANT="Suivant" ;;
   esac
+  # D42.26-13 : trois mécanismes d'avancement, du plus direct au plus robuste.
+  # (1) tap du bouton via le dump ; (2) tap du BOUTON RÉEL par sa bande orange
+  # (uiautomator expose parfois des bounds VIDES [0,0][0,0] en petit écran
+  # override alors que le bouton est rendu : runs 42509265951/42512514439) ;
+  # (3) swipe horizontal, geste natif du HorizontalPager. Chacun prouve le
+  # produit ; on s'arrête dès que l'écran a changé.
   $UI tap --text "$SUIVANT" --exact --timeout 10 >/dev/null 2>&1 || $UI tap --text "Suivant" --exact --timeout 5 >/dev/null 2>&1
   sleep 1
+  if [ "$LANGUE" = "fr" ] && ! $UI wait --text "Filme tes produits, on te guide" --exact --timeout 6 >/dev/null 2>&1; then
+    $UI taporange >/dev/null 2>&1; sleep 1
+  fi
+  if [ "$LANGUE" = "fr" ] && ! $UI wait --text "Filme tes produits, on te guide" --exact --timeout 6 >/dev/null 2>&1; then
+    swipe_h 78 18 350; sleep 1
+  fi
   shot 05_carrousel_2; dump 05_carrousel_2
   # D42.14 : un tap réussi ne prouve pas le changement d'écran (défaut du run
   # 42189554849). On exige le slogan du 2e écran.
@@ -227,15 +244,29 @@ if $UI wait --text "Suivant" --timeout 90 >/dev/null 2>&1 \
      || [ "$LANGUE" != "fr" ]; then
     record PASS S07_carrousel_slide2 "deuxième écran atteint (slogan vérifié)"
   else
-    record FAIL S07_carrousel_slide2 "le carrousel n'a pas changé d'écran"
+    record FAIL S07_carrousel_slide2 "le carrousel n'a pas changé d'écran (bouton, bande orange et swipe gestuel tous inefficaces)"
   fi
   $UI tap --text "$SUIVANT" --exact --timeout 10 >/dev/null 2>&1 || $UI tap --text "Suivant" --exact --timeout 5 >/dev/null 2>&1
   sleep 1
+  if [ "$LANGUE" = "fr" ] && ! $UI wait --text "Une vidéo prête à publier en 30 secondes" --exact --timeout 6 >/dev/null 2>&1; then
+    $UI taporange >/dev/null 2>&1; sleep 1
+  fi
+  if [ "$LANGUE" = "fr" ] && ! $UI wait --text "Une vidéo prête à publier en 30 secondes" --exact --timeout 6 >/dev/null 2>&1; then
+    swipe_h 78 18 350; sleep 1
+  fi
   shot 06_carrousel_3; dump 06_carrousel_3
   if $UI wait --text "Une vidéo prête à publier en 30 secondes" --exact --timeout 20 >/dev/null 2>&1 \
      || $UI wait --text "Commencer" --exact --timeout 10 >/dev/null 2>&1; then
     record PASS S08_carrousel_slide3 "troisième écran + bouton Commencer"
     $UI tap --text "Commencer" --timeout 10 >/dev/null 2>&1
+    sleep 1
+    # D42.26-13 : si le dump n'a pas localisé « Commencer », taper le bouton
+    # réel (bande orange) — uniquement si l'écran affiche ENCORE « Commencer »
+    # (sinon l'écran a déjà changé et on ne doit rien taper).
+    if [ "$LANGUE" = "fr" ] && ! $UI wait --text "activité" --timeout 4 >/dev/null 2>&1 \
+       && $UI wait --text "Commencer" --exact --timeout 3 >/dev/null 2>&1; then
+      $UI taporange >/dev/null 2>&1; sleep 1
+    fi
   else
     record FAIL S08_carrousel_slide3 "bouton Commencer absent au 3e écran"
   fi
@@ -271,24 +302,46 @@ fi
 # défile avant de taper, sinon `tap` vise un élément hors écran et l'appui se
 # perd (échec S12 du run 42186013775, non expliqué jusque-là).
 taper_carte_secteur() {
+  # D42.26-13 : FAUX PASS éliminé. (1) On tape les TITRES EXACTS des cartes
+  # (« Boutique & Petit Commerce »…), plus les mots courts : « Boutique » en
+  # sous-chaîne matchait le sous-titre du carrousel « …des boutiques et des
+  # métiers » quand l'écran secteur n'était jamais atteint (variante small,
+  # run 42512514439 : S12 PASS alors que TOUTES les captures montraient le
+  # carrousel figé). (2) Le tap seul ne prouve rien : on exige l'écran SUIVANT
+  # (« Ton code parrain ») comme preuve du changement d'écran.
   local t
-  for t in "Commerce" "Boutique" "Vêtements" "Coiffure" "Restauration" "Bâtiment" "Voitures"; do
-    $UI inside --text "$t" --timeout 3 >/dev/null 2>&1 && { $UI tap --text "$t" --timeout 6 >/dev/null 2>&1 && return 0; }
+  for t in "Boutique & Petit Commerce" "Vêtements & Mode" "Coiffure & Beauté" \
+           "Restauration & Maquis" "Bâtiment & Travaux" "Vente de Voitures & Maisons"; do
+    if $UI inside --text "$t" --timeout 3 >/dev/null 2>&1; then
+      $UI tap --text "$t" --timeout 6 >/dev/null 2>&1 || continue
+      sleep 1
+      if $UI wait --text "Ton code parrain" --timeout 12 >/dev/null 2>&1 \
+         || $UI wait --text "Tu as choisi" --timeout 4 >/dev/null 2>&1; then
+        return 0
+      fi
+      # tap sans effet : réessayer la carte suivante
+    fi
   done
   local i
   for i in 1 2 3; do
     swipe_v 51 21 250 >/dev/null 2>&1
     sleep 1
-    for t in "Commerce" "Boutique" "Vêtements" "Coiffure" "Restauration" "Bâtiment" "Voitures"; do
+    for t in "Boutique & Petit Commerce" "Vêtements & Mode" "Coiffure & Beauté" \
+             "Restauration & Maquis" "Bâtiment & Travaux" "Vente de Voitures & Maisons"; do
       if $UI inside --text "$t" --timeout 2 >/dev/null 2>&1; then
-        $UI tap --text "$t" --timeout 6 >/dev/null 2>&1 && return 0
+        $UI tap --text "$t" --timeout 6 >/dev/null 2>&1 || continue
+        sleep 1
+        if $UI wait --text "Ton code parrain" --timeout 12 >/dev/null 2>&1 \
+           || $UI wait --text "Tu as choisi" --timeout 4 >/dev/null 2>&1; then
+          return 0
+        fi
       fi
     done
   done
   return 1
 }
 if taper_carte_secteur; then
-  record PASS S12_selection_secteur "carte secteur actionnée (après défilement si nécessaire)"
+  record PASS S12_selection_secteur "carte secteur actionnée, écran parrain ATTEINT (preuve post-tap)"
   shot 09_secteur_choisi
 else
   record BLOCKED S12_selection_secteur "carte secteur non identifiée (voir probe)"

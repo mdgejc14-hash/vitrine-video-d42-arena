@@ -135,13 +135,13 @@ achèvement programmé one-shot à 00:15 UTC.
 | # | Exigence | Statut | Preuve / note |
 |---|---|---|---|
 | 9.1 | Défauts rotation 90° (17/3/3) | **PASS** | Cause : boutons Google/Continuer hors écran en paysage → **verrouillage portrait des 9 activités** (produit vidéo verticale 9:16), commits 532b76b+c120fbd ; **validé 23/0/0** sur c0d7d72 (42509265951) ET e45ba1e (42512514439) |
-| 9.2 | Défauts petit écran 540×960 (13/1/4) | **CORRIGÉ — validation en cours** | Défaut 1 (auth) VALIDÉ : repli hors-ligne ancré bas — S04b/S05/S12/S18 PASS sur c0d7d72+e45ba1e. Défaut 2 (carrousel) : cause racine FINALE = bouton « Suivant » sous la ligne de flottaison de la fenêtre utile (~752 px sur small), dump bounds [0,0][0,0] → tap perdu au (0,0), pager figé slide 1 (le swipe adaptatif e45ba1e a falsifié l'hypothèse « coordonnées hors écran ») → **fix 37f6ed8 : bloc dots+bouton ANCRÉ en bas du Box, visibles sur tout écran par construction** ; re-validation lab en cours |
+| 9.2 | Défauts petit écran 540×960 (13/1/4) | **FAUX DÉFAUT PRODUIT — re-validation harnais en cours** | Défaut 1 (auth) VALIDÉ : repli ancré bas — S04b/S05/S12/S18 PASS (c0d7d72+e45ba1e). Défaut 2 (carrousel small) : **le bouton « Suivant » était RENDU correctement** (analyse pixel des captures : bande orange 40 dp pleine largeur, y 786-845) — le dump uiautomator exposait des bounds VIDES [0,0][0,0] (écart de labo override 540×960) → tap inopérant → FAUX FAIL S07-S09 ; et S12 était un FAUX PASS (tap « Boutique » ⊂ sous-chaîne du sous-titre « …des boutiques… » alors que TOUTES les captures 04→12 montraient le carrousel figé). Tentative produit a0fc28c (bloc ancré) = RÉGRESSION base/rot90/font130 (12-13/3/2) → **REVERTée**. Correctifs HARNAIS D42.26-13 : `taporange` (tape le bouton réel par sa bande orange, screencap raw sans dépendance), `swipe_h` (geste natif du HorizontalPager), S12 : titres exacts des cartes + PREUVE post-tap (écran « Ton code parrain » exigé) |
 | 9.3 | 4 langues FR/EN/ES/JA | PASS | FR = parcours principal (22-23/0/0) ; EN/ES/JA = 11/0/0 chacun (42497790522) — **les 4 langues couvertes, à documenter ainsi** |
 | 9.4 | Grandes tailles de police / clavier affiché | NOT RUN | §13-H (config fontScale 1.3 + états clavier) |
 | 9.5 | Zones tactiles / défilement / carrousels / formulaires | CONDITIONAL | Couverts implicitement par les parcours e2e (carrousel onboarding testé en 4 langues) ; matrice dédiée §13-H |
 | 9.6 | Navigation arrière | CONDITIONAL | Back utilisé dans les parcours ; exhaustivité §13-H |
 | 9.7 | Paysage (si pris en charge) | NOT RUN | L'app cible portrait ; rotation 90° testée pour la robustesse (9.1) |
-| 9.8 | Aucun bouton essentiel inaccessible | CONDITIONAL | 9.1 fermé (23/0/0 ×2) ; reste le carrousel small (fix 37f6ed8 en validation lab) → re-certification après run |
+| 9.8 | Aucun bouton essentiel inaccessible | CONDITIONAL | 9.1 fermé (23/0/0 ×2) ; 9.2 = faux défaut produit confirmé (bouton rendu, dump en cause) → re-certification après le run harnais D42.26-13 |
 
 ## 10. SAUVEGARDE ET SERVICES DE PRODUCTION
 
@@ -169,7 +169,7 @@ achèvement programmé one-shot à 00:15 UTC.
 
 ## 13. PLAN D'ACTION PRIORISÉ (exécution en cours, 0 FCFA)
 
-- **A. Corrections UI** : 9.1 FERMÉ (23/0/0 sur c0d7d72+e45ba1e). 9.2 : défaut auth FERMÉ (S04b/S05/S12/S18 PASS) ; défaut carrousel small corrigé par 37f6ed8 (bouton « Suivant » ancré bas — était sous la fenêtre utile 752 px, bounds [0,0][0,0]) → relance lab, vert exigé.
+- **A. Corrections UI** : 9.1 FERMÉ (23/0/0 ×2). 9.2 : défaut auth FERMÉ ; défaut carrousel small = FAUX défaut produit (bouton rendu, dump uiautomator pourri en override 540×960, + faux PASS S12 par sous-chaîne). Fix produit a0fc28c reverté (régression base/rot90). Harnais D42.26-13 : taporange + swipe_h + S12 titres exacts + preuve post-tap → relance lab, vert exigé sur les 5 variantes.
 - **B. Qualification offline** : nouveau job e2e (réseau coupé via adb) :
   lancement offline, cache sons/catalogue, projet local, interruption,
   redémarrage, reprise, sync sans doublon/perte/double débit.

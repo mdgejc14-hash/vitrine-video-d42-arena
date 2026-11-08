@@ -58,6 +58,94 @@ def adb(*args, timeout=180):
                           timeout=timeout, errors="replace")
 
 
+def adb_bytes(*args, timeout=180):
+    """Sortie BINAIRE d'adb (screencap raw) — text=True corromprait les octets."""
+    return subprocess.run([adb_bin(), *args], capture_output=True,
+                          timeout=timeout).stdout
+
+
+# OrangeStore du design system (vérifié sur captures : 249, 92, 15)
+_ORANGE = (249, 92, 15)
+
+
+def bande_orange_basse():
+    """Détecte la bande orange pleine largeur la plus basse de l'écran.
+
+    D42.26-13 : uiautomator expose parfois les boutons Compose avec des bounds
+    VIDES ([0,0][0,0], variante small) alors que le bouton EST rendu à sa place
+    (prouvé par analyse pixel des captures : bande orange y 786-845 sur
+    540x960, y 2043-2152 sur 1080x2340). Le dump étant inexploitable, on lit
+    directement le screencap RAW (aucune dépendance : header u32 w/h[/cs]/fmt
+    + pixels RGBA). Renvoie (w, h, y_haut, y_bas) ou None.
+    """
+    import struct
+    raw = adb_bytes("exec-out", "screencap")
+    if not raw or len(raw) < 64:
+        return None
+    w0, h0 = struct.unpack_from("<II", raw, 0)
+    if not (0 < w0 <= 4096 and 0 < h0 <= 4096):
+        return None
+    n = w0 * h0 * 4
+    base = None
+    for off in (12, 16, 20):
+        if len(raw) == off + n:
+            base = off
+            break
+    if base is None:  # format inattendu : tenter quand même 16
+        base = 16
+    w, h = w0, h0
+    xs = list(range(0, w, 6))
+    seuil = len(xs) * 0.6
+
+    def scan(ordre_rgb):
+        rows = []
+        for y in range(h - 1, -1, -1):
+            o = base + y * w * 4
+            cnt = 0
+            for x in xs:
+                i = o + x * 4
+                px = raw[i:i + 3]
+                if ordre_rgb:
+                    r, g, b = px[0], px[1], px[2]
+                else:
+                    b, g, r = px[0], px[1], px[2]
+                if abs(r - _ORANGE[0]) < 45 and abs(g - _ORANGE[1]) < 55 \
+                        and abs(b - _ORANGE[2]) < 55:
+                    cnt += 1
+            if cnt >= seuil:
+                rows.append(y)
+            elif rows:
+                break  # la bande est dépassée (scan depuis le bas)
+        return rows
+
+    for ordre in (True, False):  # RGBA puis BGRA selon pilote
+        rows = scan(ordre)
+        if rows:
+            return w, h, min(rows), max(rows)
+    return None
+
+
+def cmd_taporange(args):
+    """Tape le bouton d'action principal (bande orange la plus basse).
+
+    Secours du `tap --text` quand uiautomator ne localise pas le bouton
+    Compose (bounds vides) : le tap texte n'a alors AUCUN point où frapper.
+    """
+    b = bande_orange_basse()
+    if not b:
+        print("E2E FAIL bande_orange_absente (aucune bande pleine largeur OrangeStore)",
+              file=sys.stderr)
+        return 4
+    w, h, y0, y1 = b
+    if y1 - y0 < 20:
+        print(f"E2E FAIL bande_orange_trop_fine y={y0}..{y1}", file=sys.stderr)
+        return 4
+    x, y = w // 2, (y0 + y1) // 2
+    adb("shell", "input", "tap", str(x), str(y))
+    print(f"E2E TAPORANGE {x},{y} (bande y {y0}..{y1})")
+    return 0
+
+
 def screen_size():
     out = adb("shell", "wm", "size").stdout
     m = re.search(r"Override size:\s*(\d+)x(\d+)", out) or re.search(r"Physical size:\s*(\d+)x(\d+)", out)
@@ -492,6 +580,8 @@ def build_parser():
     t = cible(sub.add_parser("tap"))
     t.add_argument("--xy")
     t.set_defaults(func=cmd_tap)
+
+    sub.add_parser("taporange").set_defaults(func=cmd_taporange)
 
     cible(sub.add_parser("inside")).set_defaults(func=cmd_inside)
     cible(sub.add_parser("gone")).set_defaults(func=cmd_gone)

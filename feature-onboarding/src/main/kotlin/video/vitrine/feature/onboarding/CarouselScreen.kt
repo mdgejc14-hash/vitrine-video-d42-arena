@@ -38,66 +38,45 @@ import video.vitrine.core.designsystem.VitrineTheme
 fun CarouselScreen(onDone: () -> Unit) {
     val pager = rememberPagerState(pageCount = { 3 })
     val scope = rememberCoroutineScope()
-    // D42.26 (FAIL small 540x960, runs 42509265951/42512514439) : en colonne
-    // pure, le bloc dots+bouton passait SOUS la ligne de flottaison de la
-    // fenêtre (bouton [0,0][0,0] dans le dump — tap perdu, carrousel bloqué
-    // au slide 1 pour un utilisateur de petit écran). Restructuration : le
-    // pager remplit la zone, dots+bouton sont ANCRÉS EN BAS de celle-ci —
-    // visibles sur tout écran par construction, y compris 540x960@240dpi
-    // où la fenêtre utile ne fait que ~752 px.
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         VitrineLogoHeader()
-        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-            HorizontalPager(state = pager, modifier = Modifier.fillMaxSize()) { page ->
-                when (page) {
-                    0 -> Slide(
-                        stringResource(R.string.slide1_slogan),
-                        stringResource(R.string.slide1_sub),
-                        R.drawable.illu_carousel_1_filme_vends
-                    )
-                    1 -> Slide(
-                        stringResource(R.string.slide2_title),
-                        stringResource(R.string.slide2_sub),
-                        R.drawable.illu_carousel_2_tournage_guide
-                    )
-                    else -> Slide(
-                        stringResource(R.string.slide3_slogan),
-                        stringResource(R.string.slide3_sub),
-                        R.drawable.illu_carousel_3_video_prete
-                    )
-                }
+        HorizontalPager(state = pager, modifier = Modifier.weight(1f)) { page ->
+            when (page) {
+                0 -> Slide(
+                    stringResource(R.string.slide1_slogan),
+                    stringResource(R.string.slide1_sub),
+                    R.drawable.illu_carousel_1_filme_vends
+                )
+                1 -> Slide(
+                    stringResource(R.string.slide2_title),
+                    stringResource(R.string.slide2_sub),
+                    R.drawable.illu_carousel_2_tournage_guide
+                )
+                else -> Slide(
+                    stringResource(R.string.slide3_slogan),
+                    stringResource(R.string.slide3_sub),
+                    R.drawable.illu_carousel_3_video_prete
+                )
             }
-            // Bloc de navigation TOUJOURS dans la fenêtre (fond plein pour
-            // rester lisible par-dessus l'illustration).
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .background(BlancPur),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Dots(pager.currentPage)
-                Button(
-                    onClick = {
-                        if (pager.currentPage < 2) {
-                            scope.launch { pager.animateScrollToPage(pager.currentPage + 1) }
-                        } else {
-                            onDone()
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth().padding(
-                        start = 24.dp, end = 24.dp, top = 8.dp, bottom = 16.dp
-                    )
-                ) {
-                    Text(
-                        if (pager.currentPage < 2) {
-                            stringResource(R.string.carousel_next)
-                        } else {
-                            stringResource(R.string.carousel_start)
-                        }
-                    )
+        }
+        Dots(pager.currentPage)
+        Button(
+            onClick = {
+                if (pager.currentPage < 2) {
+                    scope.launch { pager.animateScrollToPage(pager.currentPage + 1) }
+                } else {
+                    onDone()
                 }
-            }
+            },
+            modifier = Modifier.fillMaxWidth().padding(24.dp)
+        ) {
+            Text(
+                if (pager.currentPage < 2) {
+                    stringResource(R.string.carousel_next)
+                } else {
+                    stringResource(R.string.carousel_start)
+                }
+            )
         }
     }
 }
@@ -116,9 +95,7 @@ fun CarouselScreen(onDone: () -> Unit) {
 @Composable
 private fun Slide(title: String, subtitle: String, illustration: Int) {
     Column(
-        // Padding bas : reserve la hauteur du bloc dots+bouton ancre en bas
-        // pour que le contenu centre reste lisible au-dessus de lui.
-        modifier = Modifier.fillMaxSize().padding(start = 24.dp, end = 24.dp, bottom = 120.dp),
+        modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
