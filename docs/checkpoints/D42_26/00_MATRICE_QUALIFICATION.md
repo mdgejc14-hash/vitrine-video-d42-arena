@@ -9,9 +9,15 @@ Statuts : **PASS** (preuve citée) · **FAIL** (défaut identifié, à corriger)
 · **BLOCKED** (cause externe) · **NOT RUN** (jamais exécuté) ·
 **CONDITIONAL** (preuve partielle/sous condition).
 
-Synthèse au 08/11 soir : **47 PASS · 2 FAIL · 2 BLOCKED→0 · 26 NOT RUN ·
-9 CONDITIONAL** sur 84 exigences tracées ci-dessous. Les FAIL et NOT RUN
-alimentent le plan d'action (§13).
+Synthèse au 08/11 18:30Z : **56 PASS · 2 FAIL→corrigés (validation en cours) ·
+0 BLOCKED · 18 NOT RUN · 8 CONDITIONAL** sur 84 exigences tracées ci-dessous.
+Avancées du jour : P1-E FERMÉ (backup 42505158748 SUCCESS), parrainage FERMÉ
+(13/13, 42507249925), corrections UI poussées (verrouillage portrait + layout
+auth ancré), couverture intégrale audio 318/600 (toutes conformes) —
+**découverte majeure : quota B2 Class B quotidien (2 500/jour gratuit) ÉPUISÉ
+par la cumulation des audits** (sonde 42508980573 : 6/6 → 404
+track_not_uploaded, y compris pistes servies 200 une heure avant) ;
+achèvement programmé one-shot à 00:15 UTC.
 
 ---
 
@@ -54,6 +60,7 @@ alimentent le plan d'action (§13).
 | 3.11 | Erreurs réseau / réponses invalides côté client | NOT RUN | Comportement de l'app face à un serveur indisponible/réponse invalide — §13-B (offline) |
 | 3.12 | Serveur indisponible (dégradation propre) | NOT RUN | §13-B |
 | 3.13 | Aucun crédit/droit fabriquable côté client | CONDITIONAL | Architecture : crédits et droits uniquement en D1 (écrits par le Worker, JWT obligatoire) ; api-security prouve l'isolation et le refus sans token ; **à renforcer par tests négatifs ciblés (§13-C : welcome-grant unique, claim impossible sans JWT, débit uniquement via route protégée)** |
+| 3.14 | Limite de capacité B2 connue et documentée | **CONDITIONAL (découverte du 08/11)** | Quota gratuit B2 Class B = **2 500 lectures/jour** — épuisé à ~18:00 par la cumulation des audits (654 HEAD ×2 + ~400 GET + labs). ATTNÉNUATION : cache edge Cloudflare 1 mois/immutable (les pistes déjà servies d'une colo ne consomment plus). Tant que l'app n'est pas distribuée : aucun impact utilisateur. **Après le test fondateur : surveiller la consommation (décision budgétaire éventuelle = fondateur)**. Backlog transparence : la route track transforme les refus B2 (403/429 quota) en 404 `track_not_uploaded` — à distinguer (amélioration serveur, pas bloquante) |
 
 ## 4. MODE HORS CONNEXION ET REPRISE
 
@@ -101,11 +108,11 @@ alimentent le plan d'action (§13).
 | # | Exigence | Statut | Preuve / note |
 |---|---|---|---|
 | 7.1 | Disponibilité réelle des 600 | PASS | HEAD direct 600/600 en B2 (42493755744, 8 s) ; 600/600 EN_LIGNE servies |
-| 7.2 | Intégrité byte-level des 600 | CONDITIONAL | 4 sondes sha256 conformes sur 60 téléchargées ; **plan de couverture 600/600 : §13-G (exécution complète, ~420 Mo en runner gratuit)** |
+| 7.2 | Intégrité byte-level des 600 | CONDITIONAL (318/600, toutes conformes) | Run FULL 42506602819 : **318 pistes téléchargées, 318/318 sha256 CONFORMES** ; les 282 restantes → 404 **quota B2 Class B épuisé** (preuve sonde 42508980573) — **achèvement ONE-SHOT programmé 00:15 UTC (workflow audio-audit-full-once.yml, garde anti-répétition)** |
 | 7.3 | Correspondance secteur/gabarit | PASS | structure_secteurs 6/6 × gabarits 30/30 × 20 variations (D1↔B2 réconcilié par HEAD) |
 | 7.4 | Sélection anti-répétition | PASS (code) | BgmSelection : exclut les K dernières pistes du gabarit (historique persistant `historique.json`) — inspection code ; **test d'intégration e2e léger à ajouter (§13-G)** |
 | 7.5 | Téléchargement + cache local + reprise après coupure | CONDITIONAL | Cache définitif implémenté (BgmStore) ; téléchargement prouvé (e2e P1) ; **reprise après coupure de téléchargement NOT RUN (§13-B)** |
-| 7.6 | Lecture complète / démarrage / volume / saturation | CONDITIONAL | Acoustique mesurée sur échantillon stratifié 60/600 (décodabilité 60/60, RMS −17,2 dB, dynamique 12-17 dB, 0 clipping) ; **extrapolation 600 NON revendiquée — couverture §13-G** |
+| 7.6 | Lecture complète / démarrage / volume / saturation | CONDITIONAL (318/600 mesurées) | Run FULL : 318/318 décodées, RMS moyen −17,3 dB, dynamique 11,9-17,5 dB, 0 clipping, cohérence σ 0,84 dB ; échantillon 60 initial + 318 — **complétion 600/600 programmée (one-shot 00:15 UTC)** |
 | 7.7 | Silence initial | **FAIL (documenté, arbitrage fondateur A)** | 60/60 mesurées : 1,03-3,07 s (07_ARBITRAGES_PRODUIT.md) ; **aucune modification sans décision** |
 | 7.8 | Clés titulaires (54/60 absentes) | **FAIL (documenté, arbitrage fondateur B)** | Repli v01 par conception (07_ARBITRAGES_PRODUIT.md) ; **aucune modification sans décision** |
 | 7.9 | Piste AAC présente dans l'export MP4 | CONDITIONAL | `ExportVerifier.kt` (ins-effects) vérifie l'export ; **contrôle explicite ffprobe « piste audio AAC » sur l'artefact MP4 du lab = §13-G (trivial, immédiat)** |
@@ -117,18 +124,18 @@ alimentent le plan d'action (§13).
 |---|---|---|---|
 | 8.1 | Crédits : débit serveur, journal, solde | PASS | P1 officiel : CONFIRMED/2 ; isolation A/B ; débit sur action protégée |
 | 8.2 | Historique des opérations affiché | PASS | e2e P1 (36/0/0) : écran historique avec le projet créé |
-| 8.3 | Lien de parrainage : création + unicité | CONDITIONAL | Code serveur : referral_code unique par marchand, régénération anti-collision (2517) ; **test d'intégration §13-C** |
-| 8.4 | Ouverture du lien + attribution + inscription filleul | NOT RUN | §13-C (2 comptes réels A/B : claim du code) |
-| 8.5 | Anti auto-parrainage | PASS (code) | `ref.id === merchantId → 404` (ligne 2517, inspection) ; **test d'intégration §13-C** |
-| 8.6 | Éligibilité / anti-doublons / avantages | NOT RUN | §13-C (fingerprint signup, statuts converted) |
-| 8.7 | Synchronisation serveur du parrainage | NOT RUN | §13-C |
+| 8.3 | Lien de parrainage : création + unicité | **PASS** | **42507249925 (13/13)** : GET /me/referral A et B 200, codes au format MOT-NNN, distincts |
+| 8.4 | Ouverture du lien + attribution + inscription filleul | **PASS** | 42507249925 : claim A→code B = 200 ok, entrée pending côté B (run 42506827457 : historique 0→1) |
+| 8.5 | Anti auto-parrainage | **PASS** | 42507249925 : claim de son propre code → 404 (A et B, avant et après claim) |
+| 8.6 | Éligibilité / anti-doublons / avantages | **PASS (anti-doublon) / CONDITIONAL (avantages)** | re-claim → 200 SANS doublon (UNIQUE referred_id) ; code inconnu → 404 ; sans jeton → 401 ; **la conversion/récompense (+30 j Pro par palier de 5) exige une commande réelle — SKYPAY 501 → NOT RUN par conception, code idempotent inspecté** |
+| 8.7 | Synchronisation serveur du parrainage | **PASS** | 42507249925 : GET reflète immédiatement l'état (isolation des historiques A/B vérifiée) |
 
 ## 9. INTERFACE ET ACCESSIBILITÉ
 
 | # | Exigence | Statut | Preuve / note |
 |---|---|---|---|
-| 9.1 | Défauts rotation 90° (17/3/3) | **FAIL → correction en cours §13-A** | Constats e2e-lab (config rot90 : 3 FAIL) — extraction des 3 défauts précis puis correction layouts |
-| 9.2 | Défauts petit écran 540×960 (13/1/4) | **FAIL → correction en cours §13-A** | Idem (config small : 4 FAIL) |
+| 9.1 | Défauts rotation 90° (17/3/3) | **CORRIGÉ — validation en cours** | Cause : boutons Google/Continuer hors écran en paysage → **verrouillage portrait des 9 activités** (produit vidéo verticale 9:16), commits 532b76b+c120fbd ; re-validation lab en cours |
+| 9.2 | Défauts petit écran 540×960 (13/1/4) | **CORRIGÉ — validation en cours** | Cause racine : `auth_offline_button` rendu SOUS le bas (bounds [0,0][0,0]) → clic de secours tombait sur Google → « Réessayer » → flux bloqué → **layout auth restructuré : repli hors-ligne ANCRÉ en bas, toujours visible** ; re-validation lab en cours |
 | 9.3 | 4 langues FR/EN/ES/JA | PASS | FR = parcours principal (22-23/0/0) ; EN/ES/JA = 11/0/0 chacun (42497790522) — **les 4 langues couvertes, à documenter ainsi** |
 | 9.4 | Grandes tailles de police / clavier affiché | NOT RUN | §13-H (config fontScale 1.3 + états clavier) |
 | 9.5 | Zones tactiles / défilement / carrousels / formulaires | CONDITIONAL | Couverts implicitement par les parcours e2e (carrousel onboarding testé en 4 langues) ; matrice dédiée §13-H |
@@ -142,9 +149,9 @@ alimentent le plan d'action (§13).
 |---|---|---|---|
 | 10.1 | Configuration B2 backup terminée (2 secrets dédiés) | PASS | Secrets posés (14 au total) ; clé writeFiles (+listFiles) |
 | 10.2 | Pré-vol + export D1 réel + upload B2 | **PASS** | **Run 42505158748 SUCCESS (08/11 17:29Z)** : HeadBucket 200, export 468 371 octets, upload `d1/2026/11/08/172908/vitrine-video-db.sql` + `.sha256` — après normalisation des clés (leçon : collé avec \n) |
-| 10.3 | Vérification SHA-256 du backup | PASS | sha256 généré côté export et téléversé avec le SQL (101 octets) ; **contrôle de restauration §13-I** |
+| 10.3 | Vérification SHA-256 du backup | PASS | sha256 généré côté export et téléversé avec le SQL (101 octets, run 42505158748) ; **contrôle de restauration §13-I** |
 | 10.4 | Contrôle de restauration non destructif | NOT RUN | §13-I : import du SQL d'export dans une **D1 preview éphémère** + vérif tables/comptes clés + suppression — 0 risque prod, 0 FCFA |
-| 10.5 | Sauvegarde automatique (cron) | CONDITIONAL | Cron `0 3 * * *` armé sur le workflow ; **preuve = exécution automatique de la nuit 08→09/11 03:00 UTC à relever** |
+| 10.5 | Sauvegarde automatique (cron) | CONDITIONAL | Cron `0 3 * * *` armé ; **preuve = exécution automatique de la nuit 08→09/11 03:00 UTC à relever** |
 | 10.6 | SKYPAY volontairement 501, aucune simulation | PASS | Statut 501 documenté ; billing/return 200 (route) ; aucun paiement simulé |
 | 10.7 | Worker 0.9.1-d42.23 ↔ D1 cohérents | PASS | Smoke live 16:09Z + audit du jour (600/600, 8 tables) |
 

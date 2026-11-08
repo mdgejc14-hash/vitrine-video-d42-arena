@@ -1,0 +1,105 @@
+name: Audio Audit Full (one-shot)
+
+# D42.26 §13-G — Couverture INTÉGRALE des 600 pistes (sha256 byte-level +
+# acoustique complète). ONE-SHOT : programmé à 00:15 UTC (le quota B2 Class B
+# gratuit — 2 500 lectures/jour — se réinitialise à 00:00 UTC ; il a été
+# ÉPUISÉ le 08/11 vers 18:00 par la cumulation des audits, preuve sonde run
+# 42508980573 : 6/6 pistes → 404 track_not_uploaded, y compris celles servies
+# 200 une heure plus tôt). GARDE anti-répétition : dès qu'un run de CE
+# workflow a réussi, les nuits suivantes skippent (aucune consommation de
+# quota). Réessaie chaque nuit jusqu'au premier succès.
+
+on:
+  schedule:
+    - cron: '15 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audio-audit-full-once
+  cancel-in-progress: false
+
+jobs:
+  audit-full:
+    if: github.repository == 'mdgejc14-hash/vitrine-video-d42-arena' && github.event_name != 'pull_request'
+    name: Couverture intégrale 600 pistes
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      API_BASE_URL: https://vitrine-video-api.mdgejcinfluence.workers.dev
+      FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
+      FIREBASE_TEST_A_EMAIL: ${{ secrets.FIREBASE_TEST_A_EMAIL }}
+      FIREBASE_TEST_A_PASSWORD: ${{ secrets.FIREBASE_TEST_A_PASSWORD }}
+      B2_KEY_ID: ${{ secrets.B2_KEY_ID }}
+      B2_APPLICATION_KEY: ${{ secrets.B2_APPLICATION_KEY }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_D1_PREVIEW_API_TOKEN: ${{ secrets.CLOUDFLARE_D1_PREVIEW_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: d7dac13da931423a19812f6d9116bd47
+    steps:
+      - name: Garde one-shot (un run réussi = verrouillé pour toujours)
+        run: |
+          set -euo pipefail
+          N=$(curl -s "https://api.github.com/repos/mdgejc14-hash/vitrine-video-d42-arena/actions/workflows/audio-audit-full-once.yml/runs?status=success&per_page=1" \
+            | python3 -c "import json,sys; print(json.load(sys.stdin).get('total_count',0))" 2>/dev/null || echo 0)
+          if [ "${N:-0}" -gt 0 ]; then
+            echo "SKIP : l'audit FULL intégral a déjà réussi (${N} run(s)) — verrouillé pour protéger le quota B2 quotidien."
+            exit 0
+          fi
+          echo "Première exécution — l'audit intégral va tourner."
+
+      - name: Gate OPS_ENABLED (défaut REFUSÉ — D42.25 P0)
+        env:
+          VAR_OPS_ENABLED: ${{ vars.OPS_ENABLED }}
+          SEC_OPS_ENABLED: ${{ secrets.OPS_ENABLED }}
+        run: |
+          if [ "${VAR_OPS_ENABLED}" != "true" ] && [ "${SEC_OPS_ENABLED}" != "true" ]; then
+            echo "::error::Opération sensible REFUSÉE par défaut : OPS_ENABLED != true."
+            exit 1
+          fi
+          echo "PASS: OPS_ENABLED=true — opération sensible autorisée"
+
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Pré-vol secrets (échec clair si absents)
+        run: |
+          set -u
+          missing=""
+          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_D1_PREVIEW_API_TOKEN FIREBASE_WEB_API_KEY FIREBASE_TEST_A_EMAIL FIREBASE_TEST_A_PASSWORD B2_KEY_ID B2_APPLICATION_KEY; do
+            if [ -z "${!name:-}" ]; then missing="$missing $name"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Secrets Actions manquants:$missing"
+            exit 1
+          fi
+          echo "PASS: secrets requis présents (valeurs jamais affichées)"
+
+      - name: ffmpeg (analyse acoustique)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
+      - name: Audit audio INTÉGRAL (600 pistes, lecture seule)
+        env:
+          AUDIT_FULL: "1"
+        run: |
+          for T in "$CLOUDFLARE_API_TOKEN" "$CLOUDFLARE_D1_PREVIEW_API_TOKEN"; do
+            okd1=$(curl -s -H "Authorization: Bearer $T" \
+              "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/d1/database?per_page=1" \
+              | python3 -c "import json,sys;print(json.load(sys.stdin).get('success'))" 2>/dev/null || echo None)
+            if [ "$okd1" = "True" ]; then export CLOUDFLARE_API_TOKEN="$T"; echo "jeton D1 retenu"; break; fi
+          done
+          node scripts/audio-audit.mjs
+
+      - name: Artefacts audit intégral
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audio-audit-full
+          path: artifacts/audio-audit/**
+          retention-days: 30
+          if-no-files-found: warn
