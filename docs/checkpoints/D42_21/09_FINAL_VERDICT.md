@@ -25,7 +25,8 @@
    VALIDÉ : cycle 6 parcours 36/36 + cycle 7 (42437711684) job VERT 9/9]
 2. **Correctif robustesse export (c242d99)** — préparation lancée à l'affichage E8
    (plus au clic), statut posé dès ALLOW, `preparationJob` rejouable. Tests JVM verts.
-   [VALIDÉ tests ; E2E debug bloqué par D1 → preuve par voie release item 12]
+   [VALIDÉ tests + E2E : voie release preuve A 35/35 ET voie debug 36/36
+   (cycles 6-7) — le parcours export complet passe désormais sur les DEUX voies]
 3. **Acquis D42.14–D42.20 intacts** — crédits/idempotence, CI 120/120 + 30 P + 22 + 15 +
    64 + 9, SKYPAY 501, durcissement D37, E2E référence 42387189875, mesures 600/600.
    [VALIDÉ — rien relancé, conforme rectification]
@@ -76,9 +77,20 @@
 14. **600 pistes production + 20 variations** — 564 pistes en ligne + 31 divergentes
     documentées (D5) ; gabarits 20 variations opérationnels (05_MUSIC_ARCHITECTURE.md).
     [VALIDÉ — originaux respectés]
-15. **Défauts ouverts** — 08_OPEN_DEFECTS.md (D1–D6). [VALIDÉ document]
-16. **GO/NO-GO production** — conditions XII : à trancher à 20:00 sur les preuves
-    ci-dessus. [À COMPLÉTER]
+15. **Défauts ouverts** — 08_OPEN_DEFECTS.md : **D1 FERMÉ** (résolu+validé) ;
+    **D10 RÉSOLU+VALIDÉ** (inventaire detekt `--continue` ; android-ci
+    42444964658 **SUCCESS** sur main : ktlint+detekt+tests JVM+graphe — dont
+    le test audio D42.21 désormais réellement exécuté) ; D11 = 2 suppressions
+    detekt ciblées documentées (refactors à planifier) ; D2-D6 ouverts ;
+    **D8/D9 = actions fondateur** (secrets CLOUDFLARE_API_TOKEN + 5 secrets
+    Firebase). [VALIDÉ document]
+16. **GO/NO-GO production** — **GO CONDITIONNEL** : chaîne applicative prête
+    et prouvée (export+audio+crédits+SaaS+SKYPAY 501+E2E vert sur les DEUX
+    voies+android-ci VERT sur main). Conditions restantes : (a) D8 — secret
+    CLOUDFLARE_API_TOKEN puis re-tag `worker-deploy-*` + sondes ?v=2 ;
+    (b) D9 — 5 secrets Firebase puis re-run API Security CI ; (c) test
+    physique appareil réel au fondateur (protocole 08) ; (d) post-mission :
+    révoquer le jeton exposé en messagerie + planifier refactors D11.
 17. **Non testé / partiellement validé** — test physique appareil réel : NON TESTÉ
     (au fondateur, protocole 08) ; P1-debug E2E : **RÉSOLU ET VALIDÉ** (cycle 6 :
     36/36 PASS, MP4 9 156 375 octets AVEC AAC non-muette RMS −53,3 dBFS ;

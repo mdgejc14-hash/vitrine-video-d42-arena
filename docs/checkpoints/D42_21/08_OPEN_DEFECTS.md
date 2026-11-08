@@ -163,7 +163,14 @@ CI (api 34, x86_64). À marquer NON TESTÉ dans le rapport final.
   toute la mission) ; jamais détecté car android-ci ne se déclenche que sur
   main, gelé à a2a3c47 depuis le début de D42.18.
 - **Correctif D42.21-14** : ligne wrapped (contenu identique, pure mise en
-  forme) — validation par le android-ci suivant.
+  forme) — VALIDÉ (les runs suivants passent feature-camera).
+- **Suite D42.21-15/16/17** : l'inventaire `--continue` (D42.21-16) a révélé
+  3 dettes de plus, traitées en UN commit (D42.21-17) : test ins-effects
+  ne compilant JAMAIS (Unresolved BeatSheetPlan — le test audio D42.21
+  n'avait jamais pu s'exécuter), 9 chaînes i18n manquantes (export_notif_*),
+  detekt OnboardingActivity.onCreate 15/15 (suppression ciblée).
+  **VALIDÉ : android-ci 42444964658 SUCCESS sur main (2b06fbf)** — ktlint +
+  detekt + tests JVM + graphe de modules.
 
 ## D11 — detekt CyclomaticComplexMethod ExportWorker.doWorkInner (suppression ciblée D42.21-15)
 

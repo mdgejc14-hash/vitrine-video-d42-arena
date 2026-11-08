@@ -47,8 +47,12 @@ cycle 7 attendu vert au niveau job.
    1 ligne detekt 155 car. (feature-camera, code antérieur — D10, corrigé
    D42.21-14). API Security CI 42442004667 FAIL : secrets Firebase absents
    (D9 — action fondateur).
-9. Push D42.21-14 (detekt) + FF main → android-ci vert attendu.
-10. Rapport final 17 items (09_FINAL_VERDICT.md figé) + message fondateur 20:00.
+9. ~~Push D42.21-14/15/16/17 + FF main~~ ✅ android-ci 42444964658 **SUCCESS**
+   (ktlint+detekt+tests JVM+graphe) sur 2b06fbf. e2e-lab@2b06fbf en cours au
+   moment de l'écriture (vert attendu : deltas = suppressions detekt
+   documentées + 9 traductions + fix test).
+10. Rapport final 17 items (09_FINAL_VERDICT.md figé) + message fondateur —
+    livraison après e2e-lab@2b06fbf (bien avant 20:00).
 
 ---
 
