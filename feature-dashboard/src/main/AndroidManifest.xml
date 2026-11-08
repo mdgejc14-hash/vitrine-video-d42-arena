@@ -3,7 +3,8 @@
     <application>
         <activity
             android:name=".DashboardActivity"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="video.vitrine.action.VIEW_PAYWALL" />
                 <action android:name="video.vitrine.action.VIEW_DASHBOARD" />

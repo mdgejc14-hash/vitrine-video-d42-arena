@@ -8,12 +8,15 @@
              (seule activite exportee, launcher), qui transmet le code en extra. -->
         <activity
             android:name=".auth.AuthActivity"
-            android:exported="false" />
+            android:exported="false" /
+            android:screenOrientation="portrait" >
         <activity
             android:name=".LanguageActivity"
-            android:exported="false" />
+            android:exported="false" /
+            android:screenOrientation="portrait" >
         <activity
             android:name=".OnboardingActivity"
-            android:exported="false" />
+            android:exported="false" /
+            android:screenOrientation="portrait" >
     </application>
 </manifest>

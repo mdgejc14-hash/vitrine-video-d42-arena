@@ -16,7 +16,8 @@
     <application>
         <activity
             android:name=".ExportActivity"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="video.vitrine.action.START_EXPORT" />
                 <category android:name="android.intent.category.DEFAULT" />
