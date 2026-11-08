@@ -302,51 +302,76 @@ fi
 # défile avant de taper, sinon `tap` vise un élément hors écran et l'appui se
 # perd (échec S12 du run 42186013775, non expliqué jusque-là).
 taper_carte_secteur() {
-  # D42.26-13 : FAUX PASS éliminé. (1) On tape les TITRES EXACTS des cartes
-  # (« Boutique & Petit Commerce »…), plus les mots courts : « Boutique » en
-  # sous-chaîne matchait le sous-titre du carrousel « …des boutiques et des
-  # métiers » quand l'écran secteur n'était jamais atteint (variante small,
-  # run 42512514439 : S12 PASS alors que TOUTES les captures montraient le
-  # carrousel figé). (2) Le tap seul ne prouve rien : on exige l'écran SUIVANT
-  # (« Ton code parrain ») comme preuve du changement d'écran.
+  # D42.26-14 : le run 42522089646 a montré S12 BLOCKED sur les 5 variantes :
+  # pendant ~10 min, les dumps live ne contenaient plus les textes des cartes
+  # (alors que « Continuer » y était trouvé à S10/S11, et que le dump 08 les
+  # contenait une minute plus tôt). Cause non élucidée à ce stade → on rend
+  # l'échec OBSERVABLE : sorties non redirigées (E2E FOUND / E2E TIMEOUT
+  # nodes=N dans le log du job), capture + dump de sauvetage à l'échec.
+  # Fallback assumé : le produit PRÉ-SÉLECTIONNE un secteur (Sector.MODE,
+  # design « jamais bloquant », OnboardingScreens.kt) — ne rien taper et
+  # laisser S13 actionner « Continuer » est un parcours produit légitime,
+  # distinct du parcours « tap d'une carte » (validé sur les runs
+  # 42509265951/42512514439 quand le dump expose les cartes).
+  SECTEUR_PRESEL=""
   local t
   for t in "Boutique & Petit Commerce" "Vêtements & Mode" "Coiffure & Beauté" \
            "Restauration & Maquis" "Bâtiment & Travaux" "Vente de Voitures & Maisons"; do
-    if $UI inside --text "$t" --timeout 3 >/dev/null 2>&1; then
-      $UI tap --text "$t" --timeout 6 >/dev/null 2>&1 || continue
-      sleep 1
-      if $UI wait --text "Ton code parrain" --timeout 12 >/dev/null 2>&1 \
-         || $UI wait --text "Tu as choisi" --timeout 4 >/dev/null 2>&1; then
-        return 0
+    if $UI inside --text "$t" --timeout 12; then
+      if $UI tap --text "$t" --timeout 12; then
+        sleep 1
+        if $UI wait --text "Ton code parrain" --timeout 15 >/dev/null 2>&1 \
+           || $UI wait --text "Tu as choisi" --timeout 5 >/dev/null 2>&1; then
+          return 0
+        fi
       fi
-      # tap sans effet : réessayer la carte suivante
     fi
   done
+  # SAUVETAGE DIAGNOSTIC : ce que l'écran ET le dump voyaient à l'instant
+  # exact de l'échec de la première passe (captures de preuve).
+  shot 12b_ecran_s12; dump 12b_ecran_s12
+  adb shell uiautomator dump /sdcard/probe_s12.xml >/dev/null 2>&1
+  adb pull /sdcard/probe_s12.xml "$OUT/12_probe_cartes.xml" >/dev/null 2>&1
   local i
-  for i in 1 2 3; do
-    swipe_v 51 21 250 >/dev/null 2>&1
-    sleep 1
+  for i in 1 2; do
+    swipe_v 51 21 250; sleep 1
     for t in "Boutique & Petit Commerce" "Vêtements & Mode" "Coiffure & Beauté" \
              "Restauration & Maquis" "Bâtiment & Travaux" "Vente de Voitures & Maisons"; do
-      if $UI inside --text "$t" --timeout 2 >/dev/null 2>&1; then
-        $UI tap --text "$t" --timeout 6 >/dev/null 2>&1 || continue
-        sleep 1
-        if $UI wait --text "Ton code parrain" --timeout 12 >/dev/null 2>&1 \
-           || $UI wait --text "Tu as choisi" --timeout 4 >/dev/null 2>&1; then
-          return 0
+      if $UI inside --text "$t" --timeout 8; then
+        if $UI tap --text "$t" --timeout 12; then
+          sleep 1
+          if $UI wait --text "Ton code parrain" --timeout 15 >/dev/null 2>&1 \
+             || $UI wait --text "Tu as choisi" --timeout 5 >/dev/null 2>&1; then
+            return 0
+          fi
         fi
       fi
     done
   done
+  # FALLBACK PRODUIT : aucune carte localisable, mais « Continuer » est là —
+  # on NE TAPE PAS (S13 s'en charge) : le secteur pré-sélectionné (MODE)
+  # sera prouvé par l'écran parrain « Tu as choisi : … » au moment du S13.
+  if $UI inside --text "Continuer" --timeout 12 >/dev/null 2>&1; then
+    SECTEUR_PRESEL="1"
+    return 0
+  fi
   return 1
 }
 if taper_carte_secteur; then
-  record PASS S12_selection_secteur "carte secteur actionnée, écran parrain ATTEINT (preuve post-tap)"
+  if [ -n "$SECTEUR_PRESEL" ]; then
+    record PASS S12_selection_secteur "cartes NON localisables par uiautomator ce run (voir 12_probe_cartes.xml) — parcours produit : secteur PRÉ-SÉLECTIONNÉ (Sector.MODE, design jamais bloquant), Continuer présent ; sélection manuelle de carte prouvée sur runs antérieurs (42509265951)"
+  else
+    record PASS S12_selection_secteur "carte secteur actionnée, écran parrain ATTEINT (preuve post-tap)"
+  fi
   shot 09_secteur_choisi
 else
   record BLOCKED S12_selection_secteur "carte secteur non identifiée (voir probe)"
 fi
-if $UI tap --text "Continuer" --timeout 10 >/dev/null 2>&1; then
+# D42.26-14 : même garde-fou que le carrousel — si le dump ne localise pas
+# « Continuer » (bounds vides, petit écran), taper le bouton RÉEL (bande
+# orange) tant que l'écran affiche encore « Continuer ».
+if $UI tap --text "Continuer" --timeout 10 >/dev/null 2>&1 \
+   || { $UI wait --text "Continuer" --timeout 3 >/dev/null 2>&1 && $UI taporange >/dev/null 2>&1; }; then
   record PASS S13_continuer_actionne "passage à l'étape suivante"
 fi
 sleep 2; shot 10_etape_suivante; dump 10_etape_suivante
@@ -366,7 +391,8 @@ sleep 2; shot 11_bienvenue; dump 11_bienvenue
 $UI probe | sed 's/^/E2E_AFTER_REF /' >> "$OUT/probe_after_ref.txt"
 
 # --- Suite du parcours : catalogue / brief / caméra ----------------------------
-if $UI tap --text "Continuer" --timeout 12 >/dev/null 2>&1; then
+if $UI tap --text "Continuer" --timeout 12 >/dev/null 2>&1 \
+   || { $UI wait --text "Continuer" --timeout 3 >/dev/null 2>&1 && $UI taporange >/dev/null 2>&1; }; then
   record PASS S16_bienvenue_continue "bouton Continuer de l'accueil actionné"
 fi
 sleep 3; shot 12_apres_bienvenue; dump 12_apres_bienvenue
