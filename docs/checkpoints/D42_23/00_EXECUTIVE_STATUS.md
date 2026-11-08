@@ -28,19 +28,25 @@ de vérité. Aucun acquis D42.15-22 recommencé.
   (observable via /health) + smoke test deploy renforcé (preuve que le
   code D42.23 est réellement en production).
 
-## Séquence restante
-1. Pousser branche `d42.23-production` (code D42.23) vers le dépôt PRIVÉ
-   (prêt à déployer par tag `worker-deploy-3` dès déblocage D23-1).
-2. CI miroir sur le commit D42.23-01 (android-ci + e2e-lab).
-3. Checkpoints 03-09 au fil des validations.
-4. Verdict + rapport + paquet fondateur (action facturation unique).
+## Séquence restante — ÉTAT AU FIGÉAGE (rc11 livré)
+1. ~~Pousser branche `d42.23-production`~~ **FAIT** : privé à jour jusqu'au
+   merge `3d02c9e` (miroir `cab9370` intégré, clé réelle conservée).
+2. ~~CI miroir~~ **FAIT** : `03639c2` android-ci **42466646400 SUCCESS** +
+   e2e-lab **42466646463 SUCCESS** ; `cab9370` (doc seul) poussé, runs
+   déclenchés (aucun changement de code attendu).
+3. ~~Checkpoints 03-09~~ **FAITS** (00-10 écrits, valeurs rc11 figées au 09).
+4. ~~Verdict + rapport + paquet fondateur~~ **FAIT** (voir 11 +
+   RAPPORT_FINAL_D42_23 + PAQUET_FONDATEUR_D42_23).
 
-## Découverte D23-3 (critique, corrigée en cours)
+## Découverte D23-3 (critique) — CORRIGÉE ET LIVRÉE
 - **APK rc10-audio-v2 = clé Firebase FACTICE** (`AIzaSyD42LABDUMMYKEY…`,
   extraite du dex de l'asset publié) : la connexion Google aurait échoué
   au premier test physique. Correctif : clé réelle (privé) committée en
-  branche `d42.23-production` (commit `2cd6991`), APK reconstruit +
-  signé localement, release dans le PRIVÉ (voir 04).
+  branche `d42.23-production` (commit `2cd6991`), APK **reconstruit +
+  signé localement + VÉRIFIÉ** (dex = clé réelle seule, cert
+  `758077eb…` v2, sha256 `b052e7c9…c83bb6`), **release PRIVÉE
+  `d42.23-rc11` id 438156110** (APK + mapping.txt + checksums). Détails
+  04 et 09.
 
 ## Blocage unique
 **D23-1 (facturation Actions dépôts privés)** — déploiement Worker, tests
