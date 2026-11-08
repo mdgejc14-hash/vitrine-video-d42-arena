@@ -18,7 +18,7 @@ CONDITIONAL.
 | Deploy Worker (P1-A) | **PASS — 0.9.1-d42.23 en production** | sonde périmètre 42491960095 PASS (service nommé HTTP 200) → tag worker-deploy-5 → **42492066614 SUCCESS complet** : smoke /health version 0.9.1-d42.23 + 8 tables, routes auth 401 (catalog/library/welcome-grant), billing/return 200 (SKYPAY) | détail 01_DEPLOY_WORKER.md |
 | B2 600 composants (P1-C) | **PASS** | **42493755744 : HEAD direct 600/600 pistes bgm_library PRÉSENTES en B2**, sha256 octet par octet conformes, 600/600 EN_LIGNE servies |
 | Audit audio (P1-D) | **EXÉCUTÉ — preuves complètes, 2 découvertes produit** | 42493755744 : 21 PASS / 4 FAIL ; 60 pistes (décodabilité 60/60, RMS −17,2 dB, dynamique 12-17 dB, 0 clipping, cohérence 0,88 dB) ; découvertes : silence initial 1-3 s (60/60) + 54/60 titulaires 404 (repli v01) → **2 décisions produit** — détail 04_AUDIO_AUDIT.md |
-| Backup D1→B2 (P1-E) | **BLOCKED (1 action fondateur : clé writeFiles)** | lot 3 POSÉ (14:5x) ; export D1 réel réussi (468 Ko SQL) ; pré-vol HeadBucket signé = **403 AccessDenied : le bucket existe (us-east-005) mais la clé média n'a pas les droits** → workflow passé aux secrets dédiés `B2_BACKUP_KEY_ID`/`B2_BACKUP_APPLICATION_KEY` ; runs 42494678205/42494796528/42495212327 ; détail 05_BACKUP.md |
+| Backup D1→B2 (P1-E) | **BLOCKED (1 action fondateur : clé writeFiles + secrets MIROIR)** | 5 runs de diagnostic (…→42497382603) : chaîne entière PROUVÉE (export D1 réel 468 Ko ✓, pré-vol discriminant ✓, PUT tenté ✓) ; secrets vérifiés exhaustivement (miroir/privé/vars/environments) : **aucune clé writeFiles accessible — la clé actuelle n'y a pas le droit (PUT ConnectionClosed ×2)** ; demande fondateur UNIQUE détaillée dans 05_BACKUP.md |
 | E2E équivalent release | en cours (2e fix + durci) | run sur 53b573f | 42472303159 (fix empreinte appliqué), 42477208491 (timeout Gradle), relance |
 | APK rc11 (P2) | CONDITIONAL | qualification par équivalence + e2e officiel privé au reset minutes | release privée 438156110 |
 | SKYPAY | 501 volontaire | maintenir | — |
@@ -130,6 +130,15 @@ CONDITIONAL.
     42495212327 : **HeadBucket 403 = bucket existe mais clé média non
     autorisée**) → secrets dédiés backup 6c64ba9. **Il manque une seule
     clé writeFiles backup** (demande fondateur ~2 min, détail 05_BACKUP.md).
+21. **15:50-16:00 (reprise fondateur)** : « les deux actions effectuées » —
+    VÉRIFIÉ : aucun secret nouveau (miroir 12, privé 16, vars 0,
+    environments 0) et la clé actuelle n'a pas writeFiles (runs 42497033223
+    puis 42497382603 après correction du pré-vol : 403 HeadBucket non
+    bloquant, PUT réel → ConnectionClosed). Défaut de MON pré-vol corrigé
+    (HeadBucket exige listFiles — une clé writeFiles-only y répond 403).
+    P1-A/D NON relancés (src/ inchangé depuis le deploy — preuve git diff
+    785e348..main vide ; runs 42492066614 et 42493755744 restent les
+    preuves de référence).
 
 ## Blocage fondateur unique (requête précise et minimale)
 **Recréer le jeton Cloudflare principal avec le périmètre Workers** (~2 min) :

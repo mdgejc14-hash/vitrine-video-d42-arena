@@ -86,12 +86,14 @@ ORG_GRADLE_PROJECT_ prouvé (test Gradle 9.6 local, env > gradle.properties)
 périmètre : déploiement Worker 0.9.1-d42.23 EFFECTUÉ + audit audio exécuté
 (ci-dessus).
 
-**B. ✔ SECRETS POSÉS (15:2x)** — `B2_S3_ENDPOINT` + `B2_BACKUP_BUCKET`
-reçus ; export D1 réel réussi (468 Ko SQL). **Reste 1 action (~2 min)** :
-créer une clé d'application B2 **writeFiles limitée au bucket de backup**
-et poser `B2_BACKUP_KEY_ID` + `B2_BACKUP_APPLICATION_KEY` (détail :
-05_BACKUP.md — la clé média actuelle est volontairement restreinte et ne
-sera PAS élargie).
+**B. Reste 1 action (~2 min, vérifiée nécessaire au 08/11 16:00)** — le
+lot 3 (`B2_S3_ENDPOINT`+`B2_BACKUP_BUCKET`) est posé et l'export D1 réel a
+réussi (468 Ko SQL), MAIS aucune clé writeFiles n'est déclarée au **miroir**
+(secrets vérifiés : miroir/privé/vars/environments — la clé actuelle n'a pas
+writeFiles sur le bucket backup, PUT ConnectionClosed ×2). Action : créer
+une clé B2 writeFiles (bucket backup) et poser `B2_BACKUP_KEY_ID` +
+`B2_BACKUP_APPLICATION_KEY` **sur le miroir** (ou mettre à jour
+`B2_KEY_ID`/`B2_APPLICATION_KEY`). Détail : 05_BACKUP.md.
 
 **C. Décision produit — silence initial BGM (découverte P1-D)** :
 100 % des pistes (60/60 sondées, tous gabarits/secteurs) démarrent par
