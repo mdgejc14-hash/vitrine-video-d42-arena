@@ -163,17 +163,15 @@ jobs:
             adb devices
             bash tools/e2e/run_p1.sh p1-debug app/build/outputs/apk/debug/app-debug.apk
             echo "=== ffprobe du MP4 exporté ==="
+            # D42.21-12 : bloc sur UNE SEULE LIGNE — l'emulator-runner exécute le
+            # script LIGNE PAR LIGNE via `sh -c` : un `for ... done` multi-lignes
+            # est coupé et meurt en « Syntax error: end of file unexpected »
+            # (prouvé run 42435516694 : parcours 36/36 PASS mais step rouge).
             # `|| true` : l'ABSENCE du MP4 est un résultat (échec de parcours), pas
             # une erreur de job. Sans ce garde-fou, le job passait « failure » même
             # quand le harnais avait tout mesuré — signal brouillé (runs 42219775013,
             # 42228009767).
-            for f in artifacts/p1-debug/export.mp4; do
-              if [ -s "$f" ]; then
-                ffprobe -v error -show_entries format=duration,size,format_name -show_entries stream=codec_type,codec_name,width,height -of default=noprint_wrappers=1 "$f" | tee artifacts/p1-debug/ffprobe.txt
-              else
-                echo "aucun MP4 produit : l'échec est applicatif, pas technique" | tee artifacts/p1-debug/ffprobe.txt
-              fi
-            done
+            if [ -s artifacts/p1-debug/export.mp4 ]; then ffprobe -v error -show_entries format=duration,size,format_name -show_entries stream=codec_type,codec_name,width,height -of default=noprint_wrappers=1 artifacts/p1-debug/export.mp4 | tee artifacts/p1-debug/ffprobe.txt || true; else echo "aucun MP4 produit : l'échec est applicatif, pas technique" | tee artifacts/p1-debug/ffprobe.txt; fi
             true
       - name: Artefacts P1
         if: always()

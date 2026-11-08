@@ -2,7 +2,33 @@
 
 **Date** : dim. 08/11/2026 — à figer dans le rapport final 20:00.
 
-## D1 — Voie P1-debug : gel du lancement d'export (INFRASTRUCTURE HARNais, pas applicatif)
+## D1 — Voie P1-debug : refus intégrité au lancement d'export (INFRASTRUCTURE HARNais, pas applicatif) — **RÉSOLU 08/11, correctif en validation**
+
+> **MISE À JOUR 08/11 ~03:10** : la section ci-dessous (analyse du 08/11 ~01:45)
+> est conservée pour l'audit trail mais sa conclusion « tap non livré / tempête
+> de dumps » est **INVALIDÉE** — voir 02_EXPORT_ROOT_CAUSE.md §CORRECTION puis
+> §RÉSOLUTION TOTALE. Résumé : le statut du dump final 29 (cycles 3 ET 4 —
+> confirmé indépendamment sur 9203a27) = « Vérification de sécurité échouée… »
+> (`export_gate_integrity`) : **le tap A été livré, IntegrityGuard a refusé**
+> car l'image AOSP API 30 « default » embarque `/system/xbin/su` (révélé par
+> le su_mask_proof.txt de la preuve A, artefact 13599235899). Le harnais
+> officiel masque /system/xbin (bind-mount) ; le harnais lab ne le faisait
+> pas. **Correctif D42.21-11 (3e96f0a)** : run_p1.sh aligné sur le même
+> masquage — IntegrityGuard ni modifié ni contourné, certificat toujours
+> contrôlé.
+>
+> **VALIDATION (run 42435516694, cycle 6, commit 3e96f0a)** : parcours P1-debug
+> **36/36 PASS, 0 FAIL, 0 BLOCKED** — export lancé (« Export local en cours… »),
+> notif FGS, écran éteint 45 s survécu, « Vidéo prête ! », MP4 extrait
+> (9 156 375 octets, piste AAC stéréo 44,1 kHz NON-MUETTE vérifiée localement :
+> RMS −53,3 dBFS, crête −27,3 dBFS — mêmes caractéristiques que la voie
+> release), partage, aucun crash, APK sha256 377b0c65f49b…8148124. Le job est
+> resté ROUGE uniquement à cause d'un **bug de workflow indépendant** : le
+> bloc `for … done` multi-lignes du step ffprobe est exécuté LIGNE PAR LIGNE
+> par l'emulator-runner (`sh -c` par ligne) → « Syntax error: end of file
+> unexpected » (exit 2) APRÈS le résumé 36/36. **Correctif D42.21-12** : bloc
+> remis sur une seule ligne (seul bloc touché ; P0/langues vérifiés sains).
+> **Statut D1 : RÉSOLU (parcours) — cycle 7 attendu vert au niveau job.**
 
 - **Symptôme** : cycles 2–3 D42.21 (runs 42391198712, 42418783843) — 30 PASS jusqu'à
   `P1_apercu_valide`, puis 5 FAIL (`P1_export_lance`, `P1_notif_fgs`, `P1_ecran_etaint`,
@@ -15,6 +41,7 @@
   « Lancer l'export local » (~22:19:55) a été émis dans cette tempête : l'événement
   n'a jamais atteint le listener `enqueue()` (bouton `enabled=true clickable=true`
   au dump final 23:03, statut jamais modifié, zéro log applicatif après 22:19:37).
+  *(— conclusion invalidée, voir l'encadré —)*
 - **Chronologie verrouillée** : prep IO terminée 22:19:37.66 (trace D42-TRACE + SQLite
   22:19:37.56) — **AVANT** le tap → le correctif E8 (préparation déclenchée à
   l'affichage, pas au clic) a FONCTIONNÉ ; l'écran s'est éteint 22:20:51 (« Sleep
@@ -26,11 +53,11 @@
   le même parcours avec le même harnais (export démarré, MP4 8,5 Mo extrait) — l'app
   release (R8) gagne la course timing. **La preuve du correctif audio se prend donc sur
   la voie release** (`d42.21-build-1` → re-signature → `d42.21-rc-audio-v1`).
-- **Traitement** : documenté (02_EXPORT_ROOT_CAUSE.md) ; PAS de correctif applicatif
-  (l'app est saine) ; PAS de bricolage harnais au-delà du diagnostic (règle : un cycle
-  CI par correctif, pas de cycle debug supplémentaire). Piste d'amélioration future
-  (hors D42.21) : espacer les dumps / utiliser un wait par sondage logcat au lieu de
-  dumps UI répétés pendant les attentes longues.
+- **Traitement** : correctif harnais D42.21-11 poussé (3e96f0a) — alignement du
+  masquage /system/xbin sur la voie officielle ; validation cycle 6
+  (42435516694). Piste d'amélioration future (hors D42.21) : espacer les dumps /
+  utiliser un wait par sondage logcat au lieu de dumps UI répétés pendant les
+  attentes longues.
 
 ## D2 — Export release : rendu > 40 min sur émulateur (d42.18-rc9)
 

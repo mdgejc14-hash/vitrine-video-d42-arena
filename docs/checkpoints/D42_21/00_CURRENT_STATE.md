@@ -1,13 +1,15 @@
 # D42.21 — 00. ÉTAT COURANT (canonique)
 
-**Dernière mise à jour** : dim. 08/11/2026 ~03:00 Bénin (autonomie jusqu'à 20:00).
-**Jalon du moment** : **PREUVE A OBTENUE** — run 42432251656 (release-official-e2e,
-tag `d42.21-rc-audio-v1`, release `rc10-audio-v1`) **SUCCESS, P1 35/35 PASS, MP4
-exporté AVEC piste audio AAC** (34,99 s, 9,17 Mo, décodage rc=0, non-muette). Le
-défaut D42.18 (MP4 muet) est RETOURNÉ et prouvé sur la voie de référence signée.
-Cause racine P1-debug RÉSOLUE TOTALEMENT (02, §RÉSOLUTION) : `/system/xbin/su` vu
-par IntegrityGuard sur l'image AOSP ; le harnais officiel le masque, le harnais
-lab ne le masquait pas → correctif D42.21-11 (même masquage dans run_p1.sh).
+**Dernière mise à jour** : dim. 08/11/2026 ~03:30 Bénin (autonomie jusqu'à 20:00).
+**Jalon du moment** : **PREUVE A OBTENUE + VOIE DEBUG VERTE AU PARCOURS**.
+(1) Run 42432251656 (release-official-e2e, tag `d42.21-rc-audio-v1`, release
+`rc10-audio-v1`) **SUCCESS, P1 35/35 PASS, MP4 exporté AVEC piste audio AAC**
+(34,99 s, 9,17 Mo, décodage rc=0, non-muette) — défaut D42.18 RETOURNÉ sur la
+voie signée. (2) Cycle 6 (42435516694, correctif harnais D42.21-11) : parcours
+P1-debug **36/36 PASS** — MP4 debug 9 156 375 octets AVEC AAC non-muette ; le
+rouge du job venait d'un bug de workflow (`for…done` multi-lignes coupé par
+l'emulator-runner) → **correctif D42.21-12** (bloc ffprobe sur une ligne),
+cycle 7 attendu vert au niveau job.
 
 ## Fait nouveau (depuis la dernière révision)
 
@@ -33,10 +35,12 @@ lab ne le masquait pas → correctif D42.21-11 (même masquage dans run_p1.sh).
    42432251656 **SUCCESS 35/35** = PREUVE A (audio AAC dans le MP4 exporté).
 5. ~~Tag `worker-deploy-1` → deploy-production~~ ⛔ 42430521024 FAILURE :
    secret `CLOUDFLARE_API_TOKEN` absent (D8) — action fondateur requise.
-6. Cycle P1-debug de validation du correctif harnais (D42.21-11, déclenché par
-   ce push) → reporter le résultat dans 09 item 17.
-7. Push `main` (fast-forward) après validation du cycle → android-ci.
-8. Rapport final 17 items (09_FINAL_VERDICT.md figé) + message fondateur 20:00.
+6. ~~Cycle P1-debug de validation du correctif harnais~~ ✅ 42435516694 :
+   parcours 36/36 PASS (export complet + MP4 AAC non-muette) ; job rouge
+   uniquement par bug workflow ffprobe → corrigé D42.21-12.
+7. Cycle 7 (validation D42.21-12, déclenché par ce push) → attendu VERT.
+8. Push `main` (fast-forward) après cycle 7 → android-ci.
+9. Rapport final 17 items (09_FINAL_VERDICT.md figé) + message fondateur 20:00.
 
 ---
 
