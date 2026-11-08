@@ -1,0 +1,79 @@
+name: CF token probe
+
+# D42.25 — contrôle de prévol RAPIDE des jetons Cloudflare du miroir,
+# SANS AUCUNE écriture (aucun déploiement, aucune migration) : vérifie
+# uniquement que les secrets CLOUDFLARE_API_TOKEN et
+# CLOUDFLARE_D1_PREVIEW_API_TOKEN sont des valeurs VALIDES (format
+# d'en-tête accepté, jeton actif, accès D1/Workers sur le compte cible).
+# Motivation : le run Deploy 42476870643 (08/11 11:41) a échoué sur
+# « Invalid format for Authorization header » (code 6111 CF) → valeurs
+# de secrets malformées au collage. Cette sonde permet de vérifier la
+# correction fondateur en ~30 s avant de relancer le déploiement.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cf-token-probe
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_D1_PREVIEW_API_TOKEN: ${{ secrets.CLOUDFLARE_D1_PREVIEW_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: d7dac13da931423a19812f6d9116bd47
+    steps:
+      - name: Gate OPS_ENABLED (défaut REFUSÉ — D42.25 P0)
+        env:
+          VAR_OPS_ENABLED: ${{ vars.OPS_ENABLED }}
+          SEC_OPS_ENABLED: ${{ secrets.OPS_ENABLED }}
+        run: |
+          if [ "${VAR_OPS_ENABLED}" != "true" ] && [ "${SEC_OPS_ENABLED}" != "true" ]; then
+            echo "::error::Opération sensible REFUSÉE par défaut : OPS_ENABLED != true."
+            exit 1
+          fi
+          echo "PASS: OPS_ENABLED=true"
+
+      - name: Pré-vol secrets (échec clair si absents)
+        run: |
+          set -u
+          missing=""
+          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_D1_PREVIEW_API_TOKEN; do
+            if [ -z "${!name:-}" ]; then missing="$missing $name"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Secrets manquants:$missing"
+            exit 1
+          fi
+          echo "PASS: les 2 secrets Cloudflare sont présents"
+
+      - name: Sonde des deux jetons (lecture seule, valeurs masquées)
+        run: |
+          set -u
+          rc=0
+          for T in "$CLOUDFLARE_API_TOKEN" "$CLOUDFLARE_D1_PREVIEW_API_TOKEN"; do
+            echo "── jeton (longueur ${#T}) ──"
+            v=$(curl -s -H "Authorization: Bearer $T" \
+              https://api.cloudflare.com/client/v4/user/tokens/verify)
+            echo "$v" | python3 -c "import json,sys;d=json.load(sys.stdin);print('verify → success:',d.get('success'),'status:',(d.get('result') or {}).get('status'),'erreurs:',d.get('errors'))" || { echo "réponse illisible"; rc=1; }
+            if ! echo "$v" | grep -q '"success":true'; then rc=1; fi
+          done
+          echo "── accès D1 du compte cible (jeton principal) ──"
+          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/d1/database?per_page=5" \
+            | python3 -c "import json,sys;d=json.load(sys.stdin);print('D1 → success:',d.get('success'),'bases:',[b.get('name') for b in (d.get('result') or [])],'erreurs:',d.get('errors'))" || true
+          echo "── accès Workers du compte cible (jeton principal) ──"
+          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts?per_page=5" \
+            | python3 -c "import json,sys;d=json.load(sys.stdin);print('Workers → success:',d.get('success'),'scripts:',[s.get('id') for s in (d.get('result') or [])],'erreurs:',d.get('errors'))" || true
+          if [ "$rc" -ne 0 ]; then
+            echo "::error::Au moins un jeton Cloudflare est INVALIDE (format ou valeur). Recoller la valeur dans Settings → Secrets and variables → Actions (une seule ligne, sans espace ni retour)."
+            exit 1
+          fi
+          echo "PASS: les deux jetons Cloudflare sont valides et actifs"

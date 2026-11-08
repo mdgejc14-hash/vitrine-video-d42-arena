@@ -163,6 +163,12 @@ jobs:
             --local \
             --file=db/migrations/0011_bgm_library.sql
 
+      - name: Apply BGM library v2 migration (600 pistes uniques — D42.25)
+        run: |
+          npx wrangler d1 execute vitrine-video-db \
+            --local \
+            --file=db/migrations/0012_bgm_library_v2.sql
+
       - name: Verify query indexes are used
         shell: bash
         run: |
