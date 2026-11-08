@@ -139,6 +139,12 @@ CONDITIONAL.
     P1-A/D NON relancés (src/ inchangé depuis le deploy — preuve git diff
     785e348..main vide ; runs 42492066614 et 42493755744 restent les
     preuves de référence).
+22. **16:02-16:29** clôture de livraison : **e2e-lab 42497790522 SUCCESS
+    sur da117e6** (P1 36/0/0, langues en/es/ja 11/0/0, backend 15/0,
+    défauts UI connus inchangés) + android-ci 42497790605 SUCCESS ;
+    **smoke live 16:09Z** : /health 200 version 0.9.1-d42.23 +
+    401×3 routes protégées. Livraison qualifiée (P1-E restant = 1 clé
+    writeFiles backup à poser sur le miroir).
 
 ## Blocage fondateur unique (requête précise et minimale)
 **Recréer le jeton Cloudflare principal avec le périmètre Workers** (~2 min) :
