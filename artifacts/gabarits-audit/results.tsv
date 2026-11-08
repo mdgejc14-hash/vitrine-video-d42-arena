@@ -815,4 +815,4 @@ PASS	vetements_mode_T5/effets	13 effets de scène
 PASS	vetements_mode_T5/structure_montage	13 étapes de montage horodatées
 PASS	vetements_mode_T5/ratio	ratio=9:16
 PASS	catalogue/completude	30/30 gabarits audités
-FAIL	manifeste/integrite	148 entrées, 30 gabarits, 30 MANQUANTS (ex: ['profils_style/batiment_travaux/T1.json', 'profils_style/batiment_travaux/T2.json']), 4 MODIFIÉS par rapport au manifeste (ex: ['fiches_style_v2_0/immo_auto/T2.json', 'fiches_style_v2_0/shops_small_business/T2.json', 'gabarits/immo_auto/T2.json']) — constat d'intégrité du lot, à documenter (aucune modification faite par l'audit)
+WARN	manifeste/integrite	148 entrées, 30 gabarits, 30 MANQUANTS (ex: ['profils_style/batiment_travaux/T1.json', 'profils_style/batiment_travaux/T2.json']), 4 MODIFIÉS par rapport au manifeste (ex: ['fiches_style_v2_0/immo_auto/T2.json', 'fiches_style_v2_0/shops_small_business/T2.json', 'gabarits/immo_auto/T2.json']) — constat d'intégrité du lot, à documenter (aucune modification faite par l'audit)

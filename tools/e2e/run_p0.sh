@@ -368,11 +368,18 @@ if taper_carte_secteur; then
 else
   record BLOCKED S12_selection_secteur "carte secteur non identifiée (voir probe)"
 fi
-# D42.26-14 : même garde-fou que le carrousel — si le dump ne localise pas
-# « Continuer » (bounds vides, petit écran), taper le bouton RÉEL (bande
-# orange) tant que l'écran affiche encore « Continuer ».
-if $UI tap --text "Continuer" --timeout 10 >/dev/null 2>&1 \
-   || { $UI wait --text "Continuer" --timeout 3 >/dev/null 2>&1 && $UI taporange >/dev/null 2>&1; }; then
+# D42.26-16 : contrôle d'EFFET après le tap — en petit écran, uiautomator
+# expose parfois le bouton à [0,0][0,0] et le secours « bas_large » tape la
+# carte cliquable la plus basse : le tap retourne 0 SANS effet. On vérifie
+# donc que l'écran parrain apparaît ; sinon on tape le BOUTON RÉEL (bande
+# orange) et on re-vérifie.
+$UI tap --text "Continuer" --timeout 10 >/dev/null 2>&1
+sleep 1
+if ! $UI wait --text "code parrain" --timeout 8 >/dev/null 2>&1; then
+  $UI taporange >/dev/null 2>&1
+  sleep 1
+fi
+if $UI wait --text "code parrain" --timeout 10 >/dev/null 2>&1; then
   record PASS S13_continuer_actionne "passage à l'étape suivante"
 fi
 sleep 2; shot 10_etape_suivante; dump 10_etape_suivante
@@ -392,9 +399,18 @@ sleep 2; shot 11_bienvenue; dump 11_bienvenue
 $UI probe | sed 's/^/E2E_AFTER_REF /' >> "$OUT/probe_after_ref.txt"
 
 # --- Suite du parcours : catalogue / brief / caméra ----------------------------
-if $UI tap --text "Continuer" --timeout 12 >/dev/null 2>&1 \
-   || { $UI wait --text "Continuer" --timeout 3 >/dev/null 2>&1 && $UI taporange >/dev/null 2>&1; }; then
-  record PASS S16_bienvenue_continue "bouton Continuer de l'accueil actionné"
+# D42.26-16 : contrôle d'EFFET — le PASS exige que le catalogue soit atteint
+# (tap texte, sinon bouton réel par bande orange tant que l'écran affiche
+# encore « Continuer »).
+$UI tap --text "Continuer" --timeout 12 >/dev/null 2>&1
+sleep 2
+if ! $UI wait --text "modèle de vidéo" --timeout 8 >/dev/null 2>&1 \
+   && $UI wait --text "Continuer" --exact --timeout 4 >/dev/null 2>&1; then
+  $UI taporange >/dev/null 2>&1
+  sleep 2
+fi
+if $UI wait --text "modèle de vidéo" --timeout 10 >/dev/null 2>&1; then
+  record PASS S16_bienvenue_continue "bouton Continuer de l'accueil actionné — catalogue atteint (effet vérifié)"
 fi
 sleep 3; shot 12_apres_bienvenue; dump 12_apres_bienvenue
 if $UI wait --text "modèle de vidéo" --timeout 25 >/dev/null 2>&1 || $UI wait --text "model" --timeout 3 >/dev/null 2>&1 || $UI wait --text "モデル" --timeout 3 >/dev/null 2>&1 || $UI wait --text "modelo" --timeout 3 >/dev/null 2>&1; then
@@ -406,11 +422,16 @@ $UI probe | sed 's/^/E2E_CATALOG /' >> "$OUT/probe_catalog.txt"
 
 # --- Stabilité ------------------------------------------------------------------
 sleep 2
-if adb logcat -d -b crash | grep -q "FATAL EXCEPTION"; then
-  adb logcat -d -b crash > "$OUT/crash.log"
-  record FAIL S18_aucun_crash "FATAL EXCEPTION détectée (crash.log)"
+# D42.26-16 : le tampon crash est GLOBAL — le launcher de l'émulateur peut
+# y crasher pour ses propres raisons (bug CellLayout connu quand wm size /
+# density sont surchargés pour la variante small, run 42534049820 :
+# com.android.launcher3). On ne juge QUE les crashes DU PROCESSUS DE L'APP.
+adb logcat -d -b crash > "$OUT/crash_tampon.txt" 2>/dev/null
+if tr -d '\r' < "$OUT/crash_tampon.txt" | grep -q "Process: $PKG"; then
+  tr -d '\r' < "$OUT/crash_tampon.txt" | grep -B2 -A30 "Process: $PKG" > "$OUT/crash.log"
+  record FAIL S18_aucun_crash "FATAL EXCEPTION du processus $PKG (crash.log)"
 else
-  record PASS S18_aucun_crash "aucune FATAL EXCEPTION dans le tampon crash"
+  record PASS S18_aucun_crash "aucune FATAL EXCEPTION du processus $PKG dans le tampon crash (les crashes tiers, ex. launcher, sont ignorés)"
 fi
 adb logcat -d > "$OUT/logcat.txt" 2>/dev/null
 adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" > "$OUT/activite_courante.txt" 2>/dev/null

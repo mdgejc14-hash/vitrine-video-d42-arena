@@ -161,6 +161,8 @@ fi
 # --- OFF-7 : secteur + parrain + bienvenue (seed local honnête) ---------------
 # Secteur : pré-sélectionné par le produit (Sector.MODE) ; on tente la carte,
 # sinon on laisse Continuer faire (parcours produit documenté).
+# D42.26-16 : contrôle d'EFFET après Continuer (le tap texte peut se perdre
+# en petit écran : secours taporange sur le bouton réel).
 for t in "Boutique & Petit Commerce" "Vêtements & Mode" "Coiffure & Beauté" \
          "Restauration & Maquis" "Bâtiment & Travaux" "Vente de Voitures & Maisons"; do
   if $UI inside --text "$t" --timeout 8 >/dev/null 2>&1; then
@@ -168,11 +170,18 @@ for t in "Boutique & Petit Commerce" "Vêtements & Mode" "Coiffure & Beauté" \
   fi
 done
 shot 05_offline_secteur; dump 05_offline_secteur
-if $UI tap --text "Continuer" --timeout 12 >/dev/null 2>&1 \
-   || { $UI wait --text "Continuer" --timeout 3 >/dev/null 2>&1 && $UI taporange >/dev/null 2>&1; }; then
-  record PASS OFF7_secteur_continuer_hors_ligne "choix de secteur + Continuer actionnés hors connexion"
+$UI tap --text "Continuer" --timeout 12 >/dev/null 2>&1
+sleep 1
+if ! $UI wait --text "code parrain" --timeout 8 >/dev/null 2>&1; then
+  $UI taporange >/dev/null 2>&1
+  sleep 1
+fi
+if $UI wait --text "code parrain" --timeout 10 >/dev/null 2>&1; then
+  record PASS OFF7_secteur_continuer_hors_ligne "choix de secteur + Continuer actionnés hors connexion (effet vérifié)"
+  OFF7_FRANCHI="1"
 else
-  record BLOCKED OFF7_secteur_continuer_hors_ligne "écran secteur non franchi hors ligne"
+  record BLOCKED OFF7_secteur_continuer_hors_ligne "écran secteur non franchi hors ligne (voir 05_offline_secteur)"
+  OFF7_FRANCHI=""
 fi
 sleep 2
 # Parrainage : étape facultative — la passer hors ligne doit marcher.
@@ -192,7 +201,9 @@ sleep 3
 
 # --- OFF-9 : catalogue hors connexion -----------------------------------------
 shot 07_offline_catalogue; dump 07_offline_catalogue
-if $UI wait --text "modèle de vidéo" --timeout 25 >/dev/null 2>&1 || $UI wait --text "model" --timeout 3 >/dev/null 2>&1; then
+if [ -z "${OFF7_FRANCHI:-}" ]; then
+  record BLOCKED OFF9_catalogue_hors_ligne "NON TESTÉ en cascade : l'écran secteur n'a pas été franchi (OFF7) — le catalogue hors ligne reste à qualifier quand OFF7 passe"
+elif $UI wait --text "modèle de vidéo" --timeout 25 >/dev/null 2>&1 || $UI wait --text "model" --timeout 3 >/dev/null 2>&1; then
   record PASS OFF9_catalogue_hors_ligne "catalogue consultable hors connexion (données locales/embarquées)"
   $UI probe | sed 's/^/E2E_OFF_CATALOG /' >> "$OUT/probe_catalog.txt"
 elif adb shell pidof "$PKG" >/dev/null 2>&1; then
@@ -230,11 +241,13 @@ fi
 # En session DÉMO : par conception aucun appel réseau n'est émis (aucun double
 # débit possible) — on journalise l'état pour la matrice plutôt que prétendre.
 adb logcat -d 2>/dev/null > "$OUT/logcat.txt"
-if adb logcat -d -b crash 2>/dev/null | grep -q "FATAL EXCEPTION"; then
-  adb logcat -d -b crash > "$OUT/crash.log"
-  record FAIL OFF12_aucun_crash "FATAL EXCEPTION détectée pendant le run offline (crash.log)"
+# D42.26-16 : on ne juge que les crashes DU PROCESSUS DE L'APP (le launcher
+# de l'émulateur peut crasher pour son propre compte — run 42534049820).
+if adb logcat -d -b crash 2>/dev/null | tr -d '\r' | grep -q "Process: $PKG"; then
+  adb logcat -d -b crash 2>/dev/null | tr -d '\r' | grep -B2 -A30 "Process: $PKG" > "$OUT/crash.log"
+  record FAIL OFF12_aucun_crash "FATAL EXCEPTION du processus $PKG pendant le run offline (crash.log)"
 else
-  record PASS OFF12_aucun_crash "aucune FATAL EXCEPTION sur tout le parcours hors ligne + retour réseau"
+  record PASS OFF12_aucun_crash "aucune FATAL EXCEPTION du processus $PKG sur tout le parcours hors ligne + retour réseau"
 fi
 adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" > "$OUT/activite_courante.txt" 2>/dev/null
 

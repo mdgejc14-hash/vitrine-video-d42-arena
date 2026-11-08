@@ -68,12 +68,12 @@ achèvement programmé one-shot à 00:15 UTC.
 |---|---|---|---|
 | 4.1 | Sons mis en cache localement (définitif) | PASS (code) | `BgmStore` : cache `files/bgm/{piste_id}.mp3` hors cacheDir → survit au vidage, « servi hors-ligne pour toujours » (inspection code, ce tour) |
 | 4.2 | Catalogue en cache local | PASS (code) | `library_{secteur}_{format}.json` mis en cache par BgmStore (inspection code) |
-| 4.3 | Lancement sans Internet | NOT RUN | §13-B (job e2e offline : `adb shell svc data disable && svc wifi disable`) |
-| 4.4 | Accès données locales autorisées hors connexion | NOT RUN | §13-B |
-| 4.5 | Gabarits hors connexion | NOT RUN | §13-B (dépend 4.2 + assets) |
+| 4.3 | Lancement sans Internet | **PASS** | **job android-e2e-offline (run 42534049820, 442a21b)** : réseau émulateur coupé AVANT le 1er lancement (svc wifi+data disable, dumpsys en preuve) — OFF1+OFF2 PASS : app démarrée à froid sans réseau, processus vivant |
+| 4.4 | Accès données locales autorisées hors connexion | **PASS** | OFF3+OFF4+OFF4b+OFF5 PASS : langue, écran connexion, tentative Google SANS crash, repli démo — tout l'onboarding local fonctionne hors connexion |
+| 4.5 | Gabarits hors connexion | **PARTIEL — en validation** | OFF6 PASS (carrousel) ; OFF7/OFF8 = blocage HARNAIS (tap « Continuer » sans contrôle d'effet — même cause que small, fix D42.26-16 poussé) ; OFF9 catalogue = BLOCKED en cascade à re-tester |
 | 4.6 | Création/conservation d'un projet local | NOT RUN | §13-B |
-| 4.7 | Interruption réseau pendant un parcours | NOT RUN | §13-B |
-| 4.8 | Fermeture/redémarrage puis reprise | NOT RUN | §13-B (+ 2.8) |
+| 4.7 | Interruption réseau pendant un parcours | **PASS (aller-retour)** | OFF11 PASS : retour du réseau (svc enable) après tout le parcours hors ligne — app vivante, aucun crash ; l'interruption DÉBUT de parcours = la coupe préalable OFF1 ; coupure EN COURS de tournage = à couvrir au test physique |
+| 4.8 | Fermeture/redémarrage puis reprise | **PASS** | OFF10+OFF10b PASS : force-stop + relance hors connexion — pas de retour au carrousel (session conservée), processus vivant |
 | 4.9 | Reprise après reconnexion + synchronisation sans doublon | NOT RUN | §13-B |
 | 4.10 | Absence de perte de projet / double débit | NOT RUN | §13-B (le débit crédits est serveur → double débit client improbable par conception ; à prouver par test) |
 
@@ -150,7 +150,7 @@ achèvement programmé one-shot à 00:15 UTC.
 | 10.1 | Configuration B2 backup terminée (2 secrets dédiés) | PASS | Secrets posés (14 au total) ; clé writeFiles (+listFiles) |
 | 10.2 | Pré-vol + export D1 réel + upload B2 | **PASS** | **Run 42505158748 SUCCESS (08/11 17:29Z)** : HeadBucket 200, export 468 371 octets, upload `d1/2026/11/08/172908/vitrine-video-db.sql` + `.sha256` — après normalisation des clés (leçon : collé avec \n) |
 | 10.3 | Vérification SHA-256 du backup | PASS | sha256 généré côté export et téléversé avec le SQL (101 octets, run 42505158748) ; **contrôle de restauration §13-I** |
-| 10.4 | Contrôle de restauration non destructif | NOT RUN | §13-I : import du SQL d'export dans une **D1 preview éphémère** + vérif tables/comptes clés + suppression — 0 risque prod, 0 FCFA |
+| 10.4 | Contrôle de restauration non destructif | **PASS** | **Run 42534124616 (442a21b, D1 Restore Drill) SUCCESS** : export D1 prod (lecture seule, 469 092 octets, SHA-256 1f6e9d5b…d29a3) → restauration sqlite VIERGE → **24/24 tables, PRAGMA integrity_check ok, 676 lignes (bgm_library 600, audio_catalog 30, users 4, templates 6…), VERDICT PASS (schéma + contenu)** ; artefact d1-restore-drill. Réserve documentée : le DOWNLOAD B2 n'est pas couvert (clé de backup volontairement write-only — une clé readFiles dédiée = décision fondateur, 0 FCFA) ; la restauration DANS Cloudflare reste une procédure documentée (06_GUIDE_CLE_B2_BACKUP.md), jamais exécutée sur la prod par principe |
 | 10.5 | Sauvegarde automatique (cron) | CONDITIONAL | Cron `0 3 * * *` armé ; **preuve = exécution automatique de la nuit 08→09/11 03:00 UTC à relever** |
 | 10.6 | SKYPAY volontairement 501, aucune simulation | PASS | Statut 501 documenté ; billing/return 200 (route) ; aucun paiement simulé |
 | 10.7 | Worker 0.9.1-d42.23 ↔ D1 cohérents | PASS | Smoke live 16:09Z + audit du jour (600/600, 8 tables) |
