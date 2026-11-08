@@ -2684,7 +2684,9 @@ async function health(env) {
       database: "connected",
       schema: ready ? "ready" : "incomplete",
       applicationTables: count,
-      version: "0.9.0"
+      // D42.23 : marqueur de version observable — /health doit montrer la
+      // version réellement déployée (audit raccordement, Phase B.10).
+      version: "0.9.1-d42.23"
     }, ready ? 200 : 503);
 
   } catch {
@@ -5551,7 +5553,7 @@ async function handleFetch(request, env) {
       if (request.method === "GET" && path === "/") {
         return json({
           service: "vitrine-video-api",
-          version: "0.9.0",
+          version: "0.9.1-d42.23",
           status: "online",
           endpoints: [
             "/health",

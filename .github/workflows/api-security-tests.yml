@@ -36,6 +36,12 @@ concurrency:
 
 jobs:
   api-security-tests:
+    # D42.23 : cadrage architectural — ce workflow exige des secrets Actions
+    # qui n'existent que dans le dépôt PRIVÉ mdgejc14-hash/vitrine-video
+    # (inventaire checkpoint D42_23/01). Dans le miroir public (sans secrets),
+    # il échouerait systématiquement sans information : on le SAUTE
+    # honnêtement ici ; il s'exécute normalement dans le dépôt privé.
+    if: github.repository == 'mdgejc14-hash/vitrine-video'
     name: Local D1 and API security tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
