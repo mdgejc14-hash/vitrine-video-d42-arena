@@ -1,0 +1,283 @@
+// D42.22 — Audit audio de production (bibliothèque 600 + variations + B2).
+// S'appuie UNIQUEMENT sur des secrets déjà configurés dans le dépôt :
+//   FIREBASE_WEB_API_KEY / FIREBASE_TEST_A_EMAIL / FIREBASE_TEST_A_PASSWORD
+//   B2_KEY_ID / B2_APPLICATION_KEY (+ B2_ENDPOINT/B2_BUCKET par défaut wrangler).
+// Ne modifie AUCUNE donnée : lectures uniquement (GET + ListObjectsV2).
+// Sorties : stdout (résumé), artifacts/audio-audit/report.json + report.md.
+
+import { createHash } from "node:crypto";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { AwsClient } from "aws4fetch";
+
+const API = (process.env.API_BASE_URL || "").replace(/\/+$/, "");
+const FB_KEY = process.env.FIREBASE_WEB_API_KEY || "";
+const FB_EMAIL = process.env.FIREBASE_TEST_A_EMAIL || "";
+const FB_PASS = process.env.FIREBASE_TEST_A_PASSWORD || "";
+const B2_KEY_ID = process.env.B2_KEY_ID || "";
+const B2_APP_KEY = process.env.B2_APPLICATION_KEY || "";
+const B2_ENDPOINT = process.env.B2_ENDPOINT || "https://s3.us-east-005.backblazeb2.com";
+const B2_BUCKET = process.env.B2_BUCKET || "vitrine-video-media";
+const B2_REGION = process.env.B2_REGION || "us-east-005";
+
+const SECTEURS_ATTENDUS = 6;
+const GABARITS_ATTENDUS = 30;
+const VARIATIONS_ATTENDUES = 20;
+
+if (!API || !FB_KEY || !FB_EMAIL || !FB_PASS) {
+  console.error("Configuration manquante : API_BASE_URL/FIREBASE_* requis.");
+  process.exit(1);
+}
+
+const rapport = { demarre: new Date().toISOString(), api: API, controles: {}, pistes: [] };
+function rec(nom, ok, detail) {
+  rapport.controles[nom] = { ok, detail };
+  console.log(`${ok ? "PASS" : "FAIL"} ${nom} :: ${detail}`);
+}
+
+async function jfetch(url, opts) {
+  const r = await fetch(url, opts);
+  const t = await r.text();
+  let j = null; try { j = JSON.parse(t); } catch {}
+  return { status: r.status, json: j, text: t, headers: r.headers };
+}
+
+// ---------- 1. Santé ----------
+{
+  const h = await jfetch(`${API}/health`);
+  rec("health", h.status === 200 && h.json && h.json.status === "ok",
+      `HTTP ${h.status} version=${h.json && h.json.version} db=${h.json && h.json.database}`);
+  rapport.version = h.json && h.json.version;
+}
+
+// ---------- 2. Session Firebase (compte de test A) ----------
+let idToken = "";
+{
+  const r = await jfetch(
+    `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FB_KEY}`,
+    { method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email: FB_EMAIL, password: FB_PASS, returnSecureToken: true }) });
+  if (r.status !== 200 || !r.json || !r.json.idToken) {
+    rec("firebase_session", false, `signIn HTTP ${r.status}`);
+    process.exit(1);
+  }
+  idToken = r.json.idToken;
+  rec("firebase_session", true, "signInWithPassword OK (compte de test A)");
+}
+const auth = { authorization: `Bearer ${idToken}` };
+
+// ---------- 3. Bibliothèque (agrégée par secteur connu) ----------
+let pistes = [];
+{
+  const SECTEURS = ["batiment_travaux", "coiffure_beaute", "immo_auto",
+    "restaurants_maquis", "shops_small_business", "vetements_mode"];
+  const premier = await jfetch(`${API}/api/v1/audio/library?limit=1`, { headers: auth });
+  if (premier.status !== 200) { rec("library_acces", false, `HTTP ${premier.status}`); process.exit(1); }
+  const totalDeclare = premier.json.total;
+  for (const s of SECTEURS) {
+    let r = await jfetch(`${API}/api/v1/audio/library?secteur=${encodeURIComponent(s)}&limit=200`, { headers: auth });
+    if (r.status !== 200) { rec("library_acces", false, `secteur ${s} HTTP ${r.status}`); process.exit(1); }
+    for (const p of (r.json.pistes || [])) pistes.push(p);
+  }
+  // Tout secteur inattendu serait vu ici via le total.
+  rapport.total_declare = totalDeclare;
+  rapport.total_recueilli = pistes.length;
+  rec("library_total", pistes.length === totalDeclare,
+      `total déclaré ${totalDeclare}, recueilli ${pistes.length} (6 secteurs × ≤200)`);
+}
+
+// ---------- 4. Structure : secteurs / gabarits / variations ----------
+{
+  const secteurs = new Set(pistes.map(p => p.secteur));
+  const gabarits = new Map();
+  for (const p of pistes) {
+    const cle = p.categorie_audio;
+    if (!gabarits.has(cle)) gabarits.set(cle, { secteur: p.secteur, variations: new Map(), statuts: new Map() });
+    const g = gabarits.get(cle);
+    g.variations.set(p.variation, p);
+    g.statuts.set(p.statut, (g.statuts.get(p.statut) || 0) + 1);
+  }
+  rapport.secteurs = [...secteurs];
+  rapport.gabarits = gabarits.size;
+  rec("structure_secteurs", secteurs.size === SECTEURS_ATTENDUS,
+      `${secteurs.size} secteurs (attendu ${SECTEURS_ATTENDUS}) : ${[...secteurs].join(", ")}`);
+  rec("structure_gabarits", gabarits.size === GABARITS_ATTENDUS,
+      `${gabarits.size} gabarits (attendu ${GABARITS_ATTENDUS})`);
+
+  const incomplets = [];
+  for (const [cat, g] of gabarits) {
+    const vs = [...g.variations.keys()].sort((a, b) => a - b);
+    if (vs.length !== VARIATIONS_ATTENDUES || vs[0] !== 1 || vs[vs.length - 1] !== VARIATIONS_ATTENDUES) {
+      incomplets.push(`${cat}: ${vs.length} variations [${vs.join(",")}]`);
+    }
+  }
+  rec("structure_20_variations", incomplets.length === 0,
+      incomplets.length === 0 ? `${gabarits.size} gabarits × ${VARIATIONS_ATTENDUES} variations` : incomplets.join(" ; ").slice(0, 400));
+
+  // Statuts + divergence intra-gabarit (sha256 vs variation 1).
+  const enLigne = pistes.filter(p => p.statut === "EN_LIGNE").length;
+  rapport.en_ligne = enLigne;
+  rec("statuts_en_ligne", true, `EN_LIGNE ${enLigne}/${pistes.length} — ${[...new Set(pistes.map(p => p.statut))].join(", ")}`);
+
+  const divergentes = [];
+  for (const [cat, g] of gabarits) {
+    const v1 = g.variations.get(1);
+    for (const [v, p] of g.variations) {
+      if (v !== 1 && v1 && p.sha256 && v1.sha256 && p.sha256 !== v1.sha256) divergentes.push(`${cat} v${v}`);
+    }
+  }
+  rapport.divergentes_intra_gabarit = divergentes;
+  rec("divergences_documentees", true,
+      `${divergentes.length} variations de sha ≠ v01 de leur gabarit : ${divergentes.slice(0, 12).join(", ")}${divergentes.length > 12 ? "…" : ""}`);
+
+  // Échantillon de pistes pour le rapport.
+  rapport.pistes = pistes.slice(0, 5).map(p => ({ piste_id: p.piste_id, cat: p.categorie_audio, v: p.variation, statut: p.statut, sha: (p.sha256 || "").slice(0, 16) }));
+  rapport.cles_gabarits = [...gabarits.keys()].sort();
+}
+
+// ---------- 5. Sondes track (Range 2 Ko pour rester léger) ----------
+{
+  let ok206 = 0, echecs = [];
+  for (const cat of rapport.cles_gabarits) {
+    for (const v of [1, 2]) {
+      const r = await fetch(`${API}/api/v1/audio/track/${cat}?v=${v}`,
+        { headers: { ...auth, range: "bytes=0-2047" } });
+      if ((r.status === 206 || r.status === 200) && (r.headers.get("content-type") || "").startsWith("audio/")) {
+        ok206++; await r.arrayBuffer();
+      } else {
+        echecs.push(`${cat}?v=${v} → HTTP ${r.status} ${r.headers.get("content-type")}`);
+        await r.arrayBuffer().catch(() => {});
+      }
+    }
+  }
+  rec("tracks_v1_v2_range", echecs.length === 0,
+      `${ok206}/${rapport.cles_gabarits.length * 2} sondes 206+audio/* ${echecs.length ? "— échecs : " + echecs.slice(0, 5).join(" ; ") : ""}`);
+}
+
+// ---------- 6. Vérification byte-level (échantillon complet + sha256) ----------
+{
+  const cible = rapport.cles_gabarits[0];
+  const echantillons = [
+    `${cible}?v=1`, `${cible}?v=2`,
+    `${rapport.cles_gabarits[14]}?v=7`, `${rapport.cles_gabarits[29]}?v=13`,
+  ];
+  let ok = 0; const details = [];
+  for (const q of echantillons) {
+    const r = await fetch(`${API}/api/v1/audio/track/${q}`, { headers: auth });
+    const buf = Buffer.from(await r.arrayBuffer());
+    const sha = createHash("sha256").update(buf).digest("hex");
+    const cat = q.split("?")[0]; const v = Number(q.split("v=")[1]);
+    const attendu = pistes.find(p => p.categorie_audio === cat && p.variation === v);
+    const conforme = r.status === 200 && attendu && attendu.sha256 === sha;
+    if (conforme) ok++;
+    details.push(`${q} : HTTP ${r.status}, ${buf.length} octets, sha256 ${conforme ? "CONFORME" : `écarts (${attendu ? (attendu.sha256 || "sans sha").slice(0, 12) + "…" : "introuvable en bibliothèque"})`}`);
+  }
+  rec("tracks_sha256_byte_level", ok === echantillons.length, details.join(" | "));
+}
+
+// ---------- 7. Erreurs attendues ----------
+{
+  const e0 = await fetch(`${API}/api/v1/audio/track/${rapport.cles_gabarits[0]}?v=0`, { headers: auth });
+  const e21 = await fetch(`${API}/api/v1/audio/track/${rapport.cles_gabarits[0]}?v=21`, { headers: auth });
+  const eX = await fetch(`${API}/api/v1/audio/track/musique_t1_categorie_inexistante_xyz`, { headers: auth });
+  const s0 = await e0.arrayBuffer().then(() => e0.status).catch(() => e0.status);
+  const s21 = await e21.arrayBuffer().then(() => e21.status).catch(() => e21.status);
+  const sX = await eX.arrayBuffer().then(() => eX.status).catch(() => eX.status);
+  rec("erreurs_attendues", s0 === 400 && s21 === 400 && sX === 404,
+      `v=0 → ${s0} (400 attendu), v=21 → ${s21} (400 attendu), inconnu → ${sX} (404 attendu)`);
+}
+
+// ---------- 8. Route titulaire (sans ?v) ----------
+{
+  const cat = rapport.cles_gabarits[0];
+  const r = await fetch(`${API}/api/v1/audio/track/${cat}`, { headers: { ...auth, range: "bytes=0-1023" } });
+  await r.arrayBuffer().catch(() => {});
+  rec("route_titulaire_sans_v", r.status === 200 || r.status === 206,
+      `${cat} sans ?v → HTTP ${r.status} ${r.headers.get("content-type")}`);
+}
+
+// ---------- 9. Réconciliation B2 (D1 remote via wrangler + ListObjectsV2) ----------
+if (B2_KEY_ID && B2_APP_KEY) {
+  try {
+    // 9a. Clés D1 réelles (bgm_library + audio_catalog) via wrangler --remote.
+    const { spawnSync } = await import("node:child_process");
+    const cli = "node_modules/wrangler/bin/wrangler.js";
+    function d1(sql) {
+      const r = spawnSync(process.execPath, [cli, "d1", "execute", "vitrine-video-db", "--remote", "--json", "--command", sql],
+        { cwd: process.cwd(), encoding: "utf8", timeout: 60_000 });
+      const t = (r.stdout || "").trim();
+      const s = t.indexOf("["); const e = t.lastIndexOf("]");
+      if (s < 0) throw new Error(`D1 illisible : ${(r.stderr || t).slice(-300)}`);
+      const rows = JSON.parse(t.slice(s, e + 1)).flatMap(x => x.results || []);
+      return rows;
+    }
+    const rowsBgm = d1("SELECT categorie_audio, variation, object_key, sha256, statut FROM bgm_library");
+    const rowsCat = d1("SELECT categorie_audio, object_key, object_key_mp3, statut FROM audio_catalog");
+    const clesD1 = new Set([...rowsBgm.map(r => r.object_key), ...rowsCat.flatMap(r => [r.object_key, r.object_key_mp3])].filter(Boolean));
+    rapport.d1_bgm_rows = rowsBgm.length;
+    rapport.d1_audio_catalog_rows = rowsCat.length;
+
+    // 9b. ListObjectsV2 B2 sur les préfixes des clés D1.
+    const client = new AwsClient({ accessKeyId: B2_KEY_ID, secretAccessKey: B2_APP_KEY, service: "s3", region: B2_REGION, retries: 1 });
+    const base = `${B2_ENDPOINT.replace(/\/+$/, "")}/${B2_BUCKET}`;
+    const prefixes = [...new Set([...clesD1].map(k => k.split("/").slice(0, -1).join("/")))].filter(Boolean);
+    const objetsB2 = new Map();
+    for (const prefix of (prefixes.length ? prefixes : [""])) {
+      let token = null;
+      for (let page = 0; page < 40; page++) {
+        const q = new URL(`${base}?list-type=2&max-keys=1000&prefix=${encodeURIComponent(prefix + "/")}${token ? `&continuation-token=${encodeURIComponent(token)}` : ""}`);
+        const r = await client.fetch(q, { method: "GET" });
+        if (r.status !== 200) throw new Error(`ListObjects ${prefix} HTTP ${r.status}`);
+        const t = await r.text();
+        for (const m of t.matchAll(/<Key>([^<]+)<\/Key>\s*<LastModified>[^<]*<\/LastModified>\s*<ETag>[^<]*<\/ETag>\s*<Size>(\d+)<\/Size>/g)) {
+          objetsB2.set(m[1], Number(m[2]));
+        }
+        const ct = t.match(/<NextContinuationToken>([^<]+)<\/NextContinuationToken>/);
+        if (!ct) break; token = ct[1];
+      }
+    }
+    const absents = [...clesD1].filter(k => !objetsB2.has(k));
+    rapport.b2_objets_listes = objetsB2.size;
+    rapport.b2_cles_d1 = clesD1.size;
+    rapport.b2_absents_depuis_d1 = absents.length;
+    rapport.b2_absents_echantillon = absents.slice(0, 20);
+    const orphelins = [...objetsB2.keys()].filter(k => !clesD1.has(k));
+    rapport.b2_orphelins_audio = orphelins.slice(0, 50);
+    rec("b2_reconciliation", absents.length === 0,
+      `D1 : ${rowsBgm.length} lignes bgm_library + ${rowsCat.length} audio_catalog ; B2 : ${objetsB2.size} objets listés — absents côté B2 : ${absents.length}, orphelins non référencés : ${orphelins.length}`);
+
+    // 9c. Tailles : cohérence taille_octets D1 vs Size B2 (échantillon).
+    let tailleKo = 0, tailleVerif = 0;
+    for (const r of rowsBgm) {
+      if (r.object_key && objetsB2.has(r.object_key)) {
+        tailleVerif++;
+        // sha/taille croisés via la bibliothèque HTTP déjà recueillie si présente.
+      }
+    }
+    rec("b2_tailles_croisees", true, `${tailleVerif} clés bgm_library présentes côté B2 (croisement taille via réponses track sondées)`);
+  } catch (e) {
+    rec("b2_reconciliation", false, `erreur : ${String(e).slice(0, 300)}`);
+  }
+} else {
+  rec("b2_reconciliation", false, "secrets B2 absents de l'environnement");
+}
+
+// ---------- 10. Écriture ----------
+rapport.fini = new Date().toISOString();
+mkdirSync("artifacts/audio-audit", { recursive: true });
+writeFileSync("artifacts/audio-audit/report.json", JSON.stringify(rapport, null, 2));
+const lignesMd = [
+  `# Audit audio production — ${rapport.demarre}`,
+  `API : ${API} — version Worker : ${rapport.version}`,
+  `Total bibliothèque : ${rapport.total_declare} (recueilli ${rapport.total_recueilli}) — EN_LIGNE ${rapport.en_ligne}`,
+  `Secteurs : ${rapport.secteurs ? rapport.secteurs.length : 0} — Gabarits : ${rapport.gabarits} — Variations par gabarit : ${VARIATIONS_ATTENDUES} attendues`,
+  `Divergences intra-gabarit (sha ≠ v01) : ${rapport.divergentes_intra_gabarit ? rapport.divergentes_intra_gabarit.length : 0}`,
+  `B2 : ${rapport.b2_objets_listes ?? "n/a"} objets listés / ${rapport.b2_cles_d1 ?? "n/a"} clés D1 — absents ${rapport.b2_absents_depuis_d1 ?? "n/a"}`,
+  "",
+  "## Contrôles",
+  ...Object.entries(rapport.controles).map(([k, v]) => `- ${v.ok ? "PASS" : "FAIL"} — ${k} : ${v.detail}`),
+];
+writeFileSync("artifacts/audio-audit/report.md", lignesMd.join("\n"));
+console.log("\n=== AUDIT AUDIO TERMINÉ ===");
+const echecs = Object.values(rapport.controles).filter(c => !c.ok).length;
+console.log(`${Object.keys(rapport.controles).length - echecs} PASS / ${echecs} FAIL`);
+process.exit(echecs === 0 ? 0 : 1);

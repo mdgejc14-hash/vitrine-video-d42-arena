@@ -1,0 +1,59 @@
+name: Audio Production Audit
+
+# D42.22 — Audit RÉEL de la bibliothèque audio de production (600 pistes,
+# 30 gabarits × 20 variations, réconciliation B2, sondes HTTP authentifiées).
+# Déclenché par tag « audio-audit-* ». Lectures uniquement.
+# Secrets déjà configurés : FIREBASE_*, B2_*, CLOUDFLARE_*.
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "audio-audit-*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audio-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    name: Bibliothèque 600 + variations + B2
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Audit audio production (script lecture seule)
+        env:
+          API_BASE_URL: https://vitrine-video-api.mdgejcinfluence.workers.dev
+          FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
+          FIREBASE_TEST_A_EMAIL: ${{ secrets.FIREBASE_TEST_A_EMAIL }}
+          FIREBASE_TEST_A_PASSWORD: ${{ secrets.FIREBASE_TEST_A_PASSWORD }}
+          B2_KEY_ID: ${{ secrets.B2_KEY_ID }}
+          B2_APPLICATION_KEY: ${{ secrets.B2_APPLICATION_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_D1_PREVIEW_API_TOKEN: ${{ secrets.CLOUDFLARE_D1_PREVIEW_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: d7dac13da931423a19812f6d9116bd47
+        run: |
+          for T in "$CLOUDFLARE_API_TOKEN" "$CLOUDFLARE_D1_PREVIEW_API_TOKEN"; do
+            okd1=$(curl -s -H "Authorization: Bearer $T" \
+              "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/d1/database?per_page=1" \
+              | python3 -c "import json,sys;print(json.load(sys.stdin).get('success'))" 2>/dev/null || echo None)
+            if [ "$okd1" = "True" ]; then export CLOUDFLARE_API_TOKEN="$T"; echo "jeton D1 retenu"; break; fi
+          done
+          node scripts/audio-audit.mjs
+      - name: Artefacts audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audio-audit
+          path: artifacts/audio-audit/**
+          retention-days: 30
+          if-no-files-found: warn
