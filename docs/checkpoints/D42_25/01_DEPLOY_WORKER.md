@@ -1,11 +1,36 @@
-# D42.25 — 01. DÉPLOIEMENT WORKER (P1-A) — BLOCKED sur périmètre jeton
+# D42.25 — 01. DÉPLOIEMENT WORKER (P1-A) — **PASS** (worker-deploy-5)
 
-**Run** : `worker-deploy-4` → Deploy Production **42477858757** (tag poussé sur
-`984cda4`, exécuté 08/11 11:55–11:56 UTC). Conclusion : **FAILURE — blocage
-externe (action fondateur, ~2 min)**. Aucun demi-déploiement : l'échec a lieu
-AVANT tout `wrangler deploy`, la production reste intacte (Worker 0.9.0).
+## DÉNOUEMENT (08/11 14:48-14:55 UTC)
 
-## Ce qui a RÉUSSI dans ce run (preuves réelles)
+Le fondateur a recollé les jetons CF à **14:48:27** (principal AVEC le
+périmètre Workers ; preview également recollé et valide). Séquence
+automatique exécutée sans interruption :
+
+| Étape | Preuve |
+|---|---|
+| Sonde durcie cf-token-probe | **42491960095 SUCCESS** : `service vitrine-video-api → HTTP 200 success=True` + « PASS: périmètre Workers CONFIRMÉ — déployable » ; fallback preview verify=True |
+| Tag `worker-deploy-5` (2632f4c) | Deploy Production **42492066614 SUCCESS** — TOUTES les étapes vertes |
+| Migrations D1 distantes | 0001→0012 (idempotes), schéma vérifié |
+| **Déploiement du Worker** | **SUCCESS — première réussite depuis D40 (01/11)** |
+| **Smoke production** | `/health` → `{"status":"ok","database":"connected","schema":"ready","applicationTables":8,"version":"0.9.1-d42.23"}` ; routes auth `catalog=401 library=401 welcome-grant=401` (aligné Phase B/C) ; `billing/return=200` (route SKYPAY D42.23) |
+
+**Production réelle : Worker `vitrine-video-api` = 0.9.1-d42.23, D1
+`vitrine-video-db` = schéma complet 0001→0012 (600 pistes BGM V2).**
+
+Suite immédiate : tag `audio-audit-1` poussé → run **42492361577**
+(audit acoustique réel contre le Worker à jour — P1-D).
+
+---
+
+## Historique de l'échec worker-deploy-4 (conservé pour la mémoire)
+
+**Run** : `worker-deploy-4` → Deploy Production **42477858757** (tag sur
+`984cda4`, 08/11 11:55–11:56 UTC). Conclusion : FAILURE — blocage
+externe (action fondateur, ~2 min). Aucun demi-déploiement : l'échec a eu
+lieu AVANT tout `wrangler deploy`, la production est restée intacte
+(Worker 0.9.0).
+
+## Ce qui avait RÉUSSI dans worker-deploy-4 (preuves réelles)
 
 | Étape | Résultat | Preuve (log du run) |
 |---|---|---|
@@ -14,14 +39,10 @@ AVANT tout `wrangler deploy`, la production reste intacte (Worker 0.9.0).
 | Diagnostic jeton CF | PASS | `verify: success=True status=active` ; D1 : bases `vitrine-video-db` (0dacf519…) + `vitrine-video-db-preview` (5b9060b1…) visibles |
 | Migrations D1 distantes | **PASS — 0001 → 0012 appliquées** | chaque fichier `db/migrations/0001…0012` exécuté ; erreurs « duplicate column name: signup_fingerprint / sector » = re-passages idempotents tolérés (colonnes déjà posées), PAS des échecs |
 | Vérification schéma distant | **PASS** | tables `merchant_identity`, `billing_orders`, `audio_catalog`, `bgm_library` présentes en D1 prod |
-| Déploiement Worker | **FAIL** | sonde service HTTP 403 `success=False` pour les DEUX jetons → refus propre avant deploy |
-| Smoke production | SKIPPED (conséquence) | — |
+| Déploiement Worker | FAIL (à l'époque) | sonde service HTTP 403 → jeton sans périmètre Workers |
+| Smoke production | SKIPPED (à l'époque) | — |
 
-**Conséquence réelle : la base D1 de production est À JOUR (schéma complet
-0001→0012, bibliothèque BGM V2 / 600 pistes en base). Seul le binaire Worker
-reste en 0.9.0.**
-
-## Cause racine (précise, vérifiée)
+## Cause racine de l'échec d'alors (vérifiée, corrigée par le fondateur)
 
 `CLOUDFLARE_API_TOKEN` actuel : **valide, actif, périmètre D1 OK — mais SANS
 périmètre Workers Scripts:Edit**.
@@ -40,7 +61,7 @@ La sonde 42477734593 avait conclu « Workers API OK » à tort : l'appel LIST
 Workers**. Liste vide ≠ périmètre. Le vrai test est la sonde du **service
 nommé** (celle du workflow de déploiement). Ne pas re-sonder inutilement.
 
-## Action fondateur requise (minimale, ~2 minutes)
+## Action fondateur requise à l'époque (~2 minutes) — **✔ ACCOMPLIE 14:48:27Z**
 
 1. Dashboard Cloudflare → **My Profile → API Tokens → Create Token**.
 2. Choisir le modèle **« Edit Cloudflare Workers »** (Workers Scripts: Edit
@@ -52,6 +73,9 @@ nommé** (celle du workflow de déploiement). Ne pas re-sonder inutilement.
 5. Prévenir l'agent : suite automatique = tag `worker-deploy-5` → smoke
    (billing/return 200, version 0.9.1-d42.23, routes auth 401) → tag
    `audio-audit-1`.
+   → **Exécutée intégralement par le fondateur le 08/11 à 14:48:27Z
+   (jeton principal ET preview recollés) ; séquence automatique déroulée
+   ci-dessus avec succès.**
 
 ## Enchaînement dépendant (pour mémoire)
 
