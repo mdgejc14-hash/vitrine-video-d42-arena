@@ -20,13 +20,22 @@ jobs:
     # (inventaire checkpoint D42_23/01). Dans le miroir public (sans secrets),
     # il échouerait systématiquement sans information : on le SAUTE
     # honnêtement ici ; il s'exécute normalement dans le dépôt privé.
-    if: github.repository == 'mdgejc14-hash/vitrine-video'
+    # D42.24 : le miroir public devient l'usine de qualification gratuite
+    # (runners standards ubuntu-latest gratuits en public — mission 0 FCFA).
+    # Exécution autorisée sur le miroir pour dispatch/schedule/tags
+    # (collaborateurs uniquement ; les PR n'ont jamais les secrets).
+    # Kill-switch : variable de dépôt OPS_ENABLED=false coupe la chaîne ops
+    # du miroir sans toucher aux fichiers. Le privé reste autorisé (clause 1).
+    # D42.24 : CLOUDFLARE_ACCOUNT_ID = littéral committé NON-secret (compte
+    # propriétaire des D1, cf. deploy-production.yml) — le secret du privé du
+    # même nom pointait ailleurs (« No access… », 31/10/2026) ; corrigé.
+    if: github.repository == 'mdgejc14-hash/vitrine-video' || (github.repository == 'mdgejc14-hash/vitrine-video-d42-arena' && github.event_name != 'pull_request' && vars.OPS_ENABLED != 'false')
     name: Export D1 and upload private backup
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_ACCOUNT_ID: d7dac13da931423a19812f6d9116bd47
       B2_KEY_ID: ${{ secrets.B2_KEY_ID }}
       B2_APPLICATION_KEY: ${{ secrets.B2_APPLICATION_KEY }}
       B2_BACKUP_BUCKET: ${{ secrets.B2_BACKUP_BUCKET }}

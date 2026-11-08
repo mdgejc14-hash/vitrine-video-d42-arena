@@ -41,7 +41,21 @@ jobs:
     # (inventaire checkpoint D42_23/01). Dans le miroir public (sans secrets),
     # il échouerait systématiquement sans information : on le SAUTE
     # honnêtement ici ; il s'exécute normalement dans le dépôt privé.
-    if: github.repository == 'mdgejc14-hash/vitrine-video'
+    # D42.23 : cadrage architectural — ce workflow exige des secrets Actions
+    # qui n'existent que dans le dépôt PRIVÉ mdgejc14-hash/vitrine-video
+    # (inventaire checkpoint D42_23/01). Dans le miroir public (sans secrets),
+    # il échouerait systématiquement sans information : on le SAUTE
+    # honnêtement ici ; il s'exécute normalement dans le dépôt privé.
+    # D42.24 : le miroir public devient l'usine de qualification gratuite
+    # (runners standards ubuntu-latest gratuits en public — mission 0 FCFA ;
+    # le privé ne peut plus allouer aucun runner, preuve probe 42471658541,
+    # 0 étape, 08/11 10:29 UTC). Exécution autorisée sur le miroir pour
+    # push de tags/dispatch UNIQUEMENT (collaborateurs — jamais
+    # pull_request : les PR n'ont de toute façon pas les secrets ; le
+    # trigger pull_request du privé reste actif via la clause 1).
+    # Kill-switch : variable de dépôt OPS_ENABLED=false coupe la chaîne
+    # ops du miroir sans toucher aux fichiers.
+    if: github.repository == 'mdgejc14-hash/vitrine-video' || (github.repository == 'mdgejc14-hash/vitrine-video-d42-arena' && github.event_name != 'pull_request' && vars.OPS_ENABLED != 'false')
     name: Local D1 and API security tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -60,6 +74,27 @@ jobs:
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+
+      - name: Pré-vol secrets (D42.24 — échec clair si absents)
+        env:
+          FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
+          FIREBASE_TEST_A_EMAIL: ${{ secrets.FIREBASE_TEST_A_EMAIL }}
+          FIREBASE_TEST_A_PASSWORD: ${{ secrets.FIREBASE_TEST_A_PASSWORD }}
+          FIREBASE_TEST_B_EMAIL: ${{ secrets.FIREBASE_TEST_B_EMAIL }}
+          FIREBASE_TEST_B_PASSWORD: ${{ secrets.FIREBASE_TEST_B_PASSWORD }}
+          B2_KEY_ID: ${{ secrets.B2_KEY_ID }}
+          B2_APPLICATION_KEY: ${{ secrets.B2_APPLICATION_KEY }}
+        run: |
+          set -u
+          missing=""
+          for name in FIREBASE_WEB_API_KEY FIREBASE_TEST_A_EMAIL FIREBASE_TEST_A_PASSWORD FIREBASE_TEST_B_EMAIL FIREBASE_TEST_B_PASSWORD B2_KEY_ID B2_APPLICATION_KEY; do
+            if [ -z "${!name:-}" ]; then missing="$missing $name"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Secrets Actions manquants (à ajouter via Settings → Secrets and variables → Actions):$missing"
+            exit 1
+          fi
+          echo "PASS: les 7 secrets requis sont présents (valeurs jamais affichées)"
 
       - name: Initialize local D1 schema
         run: |
