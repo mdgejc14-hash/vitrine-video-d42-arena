@@ -84,6 +84,10 @@ for essai in 1 2 3 4; do
 done
 sleep 2
 shot D2_auth; dump D2_auth
+# D42.27-08b : journal complet (refCode à chaque étape + lancements d'activités
+# pour voir les recréations éventuelles de MainActivity).
+adb logcat -d -s VV_E2E:I ActivityTaskManager:I > "$OUT/D2_log.txt" 2>&1
+echo "E2E D2_LOG ($(wc -l < "$OUT/D2_log.txt") lignes)"
 
 # --- D2 : le code est AFFICHÉ à l'auth ---
 if grep -q "Code parrain détecté : $CODE_LIEN" "$OUT/D2_auth.xml" 2>/dev/null; then

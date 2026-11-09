@@ -66,6 +66,13 @@ class MainActivity : VitrineActivity() {
             video.vitrine.feature.onboarding.auth.RefCodeParser.fromDeepLink(uri.toString())
                 ?.let { refCode = it }
         }
+        // D42.27-08b : instrumenté — le banc deep-link capture ce log pour
+        // distinguer perte à la recréation vs extraction ratée.
+        android.util.Log.i(
+            "VV_E2E",
+            "MainActivity onCreate saved=${savedInstanceState != null} " +
+                "data=${intent?.data} refCode=$refCode instance=${hashCode()}"
+        )
         nettoyageFichiersPerimes()
         restaurerSession()
         // D42.14 : lors d'une recréation (changement de configuration au
@@ -100,6 +107,11 @@ class MainActivity : VitrineActivity() {
         outState.putString(KEY_GABARIT, gabaritId)
         outState.putString(KEY_SKIN_NAME, skinName)
         outState.putInt(KEY_CREDITS, welcomeCredits)
+        // D42.27-08b : le code parrain du deep-link vivait seulement en champ
+        // d'instance — une recréation (mesurée au démarrage, cf. D42.14) le
+        // remettait à null si getIntent() revenait sans data, et l'écran auth
+        // affichait le statut par défaut au lieu de « Code parrain détecté ».
+        outState.putString(KEY_REF_CODE, refCode)
     }
 
     private fun restaurerEtat(saved: Bundle?) {
@@ -108,10 +120,14 @@ class MainActivity : VitrineActivity() {
         gabaritId = saved.getString(KEY_GABARIT)
         skinName = saved.getString(KEY_SKIN_NAME)
         welcomeCredits = saved.getInt(KEY_CREDITS, 0)
+        // D42.27-08b : reprise du code parrain après recréation.
+        saved.getString(KEY_REF_CODE)?.let { refCode = it }
     }
 
     private fun authIntent(): Intent =
-        Intent(this, AuthActivity::class.java).putExtra("ref_code", refCode)
+        Intent(this, AuthActivity::class.java).putExtra("ref_code", refCode).also {
+            android.util.Log.i("VV_E2E", "authIntent refCode=$refCode instance=${hashCode()}")
+        }
 
     /**
      * Audit D41 (F51) : les rushs (filesDir/rushes) et exports (cacheDir/export-*.mp4)
@@ -134,6 +150,10 @@ class MainActivity : VitrineActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        android.util.Log.i(
+            "VV_E2E",
+            "onActivityResult req=$requestCode result=$resultCode refCode=$refCode instance=${hashCode()}"
+        )
         if (resultCode != RESULT_OK) {
             stepBack(requestCode)
             return
@@ -381,5 +401,6 @@ class MainActivity : VitrineActivity() {
         const val KEY_GABARIT = "main_gabarit"
         const val KEY_SKIN_NAME = "main_skin_name"
         const val KEY_CREDITS = "main_credits"
+        const val KEY_REF_CODE = "main_ref_code"
     }
 }
