@@ -25,13 +25,22 @@ TAG="${1:-deeplink}"
 APK="${2:-app/build/outputs/apk/debug/app-debug.apk}"
 PKG="video.vitrine.app"
 OUT="artifacts/${TAG}"
-CODE_LIEN="E2E-123"
 
 UI="python3 tools/e2e/ui.py"
 mkdir -p "$OUT"
 RESULTS="$OUT/results.tsv"
 : > "$RESULTS"
 exec 2> >(tee -a "$OUT/stderr.log" >&2)
+
+# D42.27-08d : LE CODE DOIT ÊTRE CONFORME AU CONTRAT RefCodeParser
+# ^[A-Z]{3,10}-[0-9]{3}$ (lettres MAJUSCULES pures avant le tiret — cf.
+# RefCodeParserTest : « AKWABA-100 » valide). Les codes de test précédents
+# « E2ELIAISON-123 » (> 10 lettres) puis « E2E-123 » (chiffre dans la
+# partie lettres) étaient REJETÉS CORRECTEMENT par l'app : les FAIL
+# D2/D3 des runs 42626010820/42635563154/42641946124 étaient des faux
+# échecs de banc (preuve : D2_log.txt du 42641946124 —
+# « data=https://vitrine.video/r/E2E-123 refCode=null »).
+CODE_LIEN="AKWABA-100"
 
 pass=0; fail=0; blocked=0
 record() {
