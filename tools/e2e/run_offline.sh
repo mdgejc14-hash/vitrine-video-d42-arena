@@ -138,21 +138,28 @@ else
   record BLOCKED OFF5_repli_demo_hors_ligne "bouton de repli introuvable hors ligne"
 fi
 
-# Carrousel : bouton par texte, sinon bouton réel (bande orange), sinon geste.
+# Carrousel : franchir les TROIS écrans puis « Commencer » — contrôle d'effet à
+# chaque étape (D42.26-17 : la première version n'avancait que d'un écran et
+# cherchait ensuite les cartes… sur le slide 2 du carrousel). Bouton réel par
+# bande orange (le dump expose parfois des bounds vides).
 if $UI wait --text "Suivant" --timeout 60 >/dev/null 2>&1; then
   shot 04_offline_carrousel; dump 04_offline_carrousel
-  $UI tap --text "Suivant" --exact --timeout 10 >/dev/null 2>&1
-  sleep 1
-  if ! $UI wait --text "Filme tes produits, on te guide" --exact --timeout 6 >/dev/null 2>&1; then
-    $UI taporange >/dev/null 2>&1; sleep 1
-  fi
-  if ! $UI wait --text "Filme tes produits, on te guide" --exact --timeout 6 >/dev/null 2>&1; then
-    swipe_h 78 18 350; sleep 1
-  fi
-  if $UI wait --text "Filme tes produits, on te guide" --exact --timeout 10 >/dev/null 2>&1; then
-    record PASS OFF6_carrousel_hors_ligne "carrousel navigable hors connexion (écran 2 atteint)"
+  n=0; off6_ok=""
+  while [ $n -lt 8 ]; do
+    n=$((n+1))
+    if $UI wait --text "Ton activité principale" --timeout 4 >/dev/null 2>&1; then off6_ok="1"; break; fi
+    if $UI wait --text "Commencer" --exact --timeout 3 >/dev/null 2>&1; then
+      $UI taporange >/dev/null 2>&1; sleep 2
+    elif $UI wait --text "Suivant" --exact --timeout 3 >/dev/null 2>&1; then
+      $UI taporange >/dev/null 2>&1; sleep 2
+    else
+      break
+    fi
+  done
+  if [ -n "$off6_ok" ] || $UI wait --text "Ton activité principale" --timeout 12 >/dev/null 2>&1; then
+    record PASS OFF6_carrousel_hors_ligne "carrousel franchi hors connexion (3 écrans + Commencer) — écran secteurs atteint"
   else
-    record FAIL OFF6_carrousel_hors_ligne "carrousel figé hors connexion (voir 04_offline_carrousel)"
+    record FAIL OFF6_carrousel_hors_ligne "carrousel non franchi hors connexion (voir 04_offline_carrousel)"
   fi
 else
   record BLOCKED OFF6_carrousel_hors_ligne "carrousel non atteint hors ligne"
@@ -212,7 +219,15 @@ else
   record FAIL OFF9_catalogue_hors_ligne "app morte au catalogue hors connexion (voir logcat)"
 fi
 
-# --- OFF-10 : fermeture/redémarrage, session conservée ------------------------
+# --- OFF-10 : fermeture/redémarrage, comportement de session -----------------
+# D42.26-17 : qualification HONNÊTE. En session DÉMO (repli sans compte), le
+# redémarrage ramène à l'ÉCRAN CONNEXION : le repli ne dépose pas de jeton
+# persistant (vv_session.token écrit par AuthActivity pour les comptes réels,
+# session courte 1 h — MainActivity.restaurerSession). Ce n'est ni un crash ni
+# une perte de données : la démo est éphémère par conception. Le FAIL ne
+# s'applique qu'à un RETOUR AU CARROUSEL (= onboarding rejoué = vraie perte
+# de progression). La persistance des COMPTES RÉELS est qualifiée côté
+# auth-local (§2 de la matrice).
 adb shell am force-stop "$PKG" >/dev/null 2>&1
 sleep 2
 adb shell am start -W -n "$PKG/.MainActivity" > "$OUT/start2.log" 2>&1
@@ -220,8 +235,10 @@ sleep 10
 shot 08_offline_redemarrage; dump 08_offline_redemarrage
 if $UI wait --text "Suivant" --exact --timeout 6 >/dev/null 2>&1; then
   record FAIL OFF10_session_apres_redemarrage "retour au CARROUSEL après redémarrage : l'onboarding déjà fait est rejoué (perte de progression)"
+elif $UI wait --text "Continuer avec Google" --timeout 8 >/dev/null 2>&1; then
+  record PASS OFF10_session_apres_redemarrage "pas de retour au carrousel ; retour à la CONNEXION — session démo ÉPHÉMÈRE par conception (repli sans jeton persistant) ; la persistance après redémarrage relève des comptes réels (jeton 1 h, §2/auth-local)"
 else
-  record PASS OFF10_session_apres_redemarrage "pas de retour au carrousel après fermeture/relance (session conservée)"
+  record PASS OFF10_session_apres_redemarrage "pas de retour au carrousel après fermeture/relance — écran post-connexion conservé"
 fi
 if adb shell pidof "$PKG" >/dev/null 2>&1; then
   record PASS OFF10b_app_vivante_apres_redemarrage "processus vivant après fermeture/relance hors connexion"

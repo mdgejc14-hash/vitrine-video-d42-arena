@@ -70,10 +70,10 @@ achèvement programmé one-shot à 00:15 UTC.
 | 4.2 | Catalogue en cache local | PASS (code) | `library_{secteur}_{format}.json` mis en cache par BgmStore (inspection code) |
 | 4.3 | Lancement sans Internet | **PASS** | **job android-e2e-offline (run 42534049820, 442a21b)** : réseau émulateur coupé AVANT le 1er lancement (svc wifi+data disable, dumpsys en preuve) — OFF1+OFF2 PASS : app démarrée à froid sans réseau, processus vivant |
 | 4.4 | Accès données locales autorisées hors connexion | **PASS** | OFF3+OFF4+OFF4b+OFF5 PASS : langue, écran connexion, tentative Google SANS crash, repli démo — tout l'onboarding local fonctionne hors connexion |
-| 4.5 | Gabarits hors connexion | **PARTIEL — en validation** | OFF6 PASS (carrousel) ; OFF7/OFF8 = blocage HARNAIS (tap « Continuer » sans contrôle d'effet — même cause que small, fix D42.26-16 poussé) ; OFF9 catalogue = BLOCKED en cascade à re-tester |
+| 4.5 | Gabarits hors connexion | **EN VALIDATION (fix D42.26-17)** | Run 42536993228 : OFF7/OFF8/OFF9 BLOCKED — cause = le harnais offline ne franchissait que le 1er slide du carrousel (cherchait les cartes au slide 2 !) ; fix : boucle 3 slides + Commencer avec contrôle d'effet, OFF10 requalifié (session démo éphémère documentée) ; 11 autres contrôles offline PASS |
 | 4.6 | Création/conservation d'un projet local | NOT RUN | §13-B |
 | 4.7 | Interruption réseau pendant un parcours | **PASS (aller-retour)** | OFF11 PASS : retour du réseau (svc enable) après tout le parcours hors ligne — app vivante, aucun crash ; l'interruption DÉBUT de parcours = la coupe préalable OFF1 ; coupure EN COURS de tournage = à couvrir au test physique |
-| 4.8 | Fermeture/redémarrage puis reprise | **PASS** | OFF10+OFF10b PASS : force-stop + relance hors connexion — pas de retour au carrousel (session conservée), processus vivant |
+| 4.8 | Fermeture/redémarrage puis reprise | **PASS (qualifié honnêtement)** | OFF10+OFF10b (run 42536993228) : force-stop + relance hors connexion — pas de retour au carrousel, processus vivant ; **l'écran revient à la CONNEXION : session démo ÉPHÉMÈRE par conception** (le repli ne dépose pas de jeton persistant ; la persistance des comptes réels = jeton 1 h, §2/auth-local) — requalifié ainsi en D42.26-17 |
 | 4.9 | Reprise après reconnexion + synchronisation sans doublon | NOT RUN | §13-B |
 | 4.10 | Absence de perte de projet / double débit | NOT RUN | §13-B (le débit crédits est serveur → double débit client improbable par conception ; à prouver par test) |
 
