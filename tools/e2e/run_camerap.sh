@@ -275,13 +275,26 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
     [ "$restant" = "0" ] && [ "$passe" -ge 2 ] && break
   done
   echo "E2E champs remplis (après complément) : $remplis"
-  # D42.26-18c : CONTRÔLE D'EFFET du REMPLISSAGE. Au run 42547280252, le
-  # champ Quartier est resté VIDE (3/4 remplis) → bouton Continuer désactivé
-  # → 4 taps + taporange sans effet, alors que le P1 du MÊME run réussissait
-  # avec le même code : intermittence du remplissage (tap dans le champ ou
-  # input text perdu), PAS un défaut produit. On boucle jusqu'à zéro vide.
-  local round vide_idx vide_label nb_vides
-  for round in 1 2 3 4 5; do
+  # D42.26-18d : REMPLISSAGE À VÉRIFICATION HAUT+BAS. Le brief de
+  # « Nouvel arrivage » porte SIX champs (Nom de ton commerce *, Ton numéro
+  # whatsapp * — en HAUT —, Nom du vêtement *, Prix *, Monnaie *, Quartier et
+  # ville * — en BAS). champs.txt ne liste que les champs VISIBLES : le « 0
+  # vide » du run 42550801656 était un FAUX complet (commerce/whatsapp hors
+  # écran → jamais re-remplis → bouton Continuer resté GRIS, preuve pixel :
+  # CP (229,233,238) vs P1 orange (249,92,15)). On alterne position haute et
+  # basse et l'on n'accepte la sortie que sur DEUX sondes SANS aucun vide.
+  local round vide_idx vide_label nb_vides haut_ok bas_ok
+  haut_ok=0; bas_ok=0
+  for round in 1 2 3 4 5 6 7 8; do
+    if [ $((round % 2)) -eq 1 ]; then
+      # sonde HAUT : remonter le formulaire (2 swipes descendants lents)
+      swipe_v 26 73 400 >/dev/null 2>&1; sleep 1
+      swipe_v 30 70 400 >/dev/null 2>&1; sleep 1
+    else
+      # sonde BAS : défiler vers le bouton
+      swipe_v 73 26 400 >/dev/null 2>&1; sleep 1
+      swipe_v 70 30 400 >/dev/null 2>&1; sleep 1
+    fi
     fermer_clavier
     $UI champs > "$OUT/champs.txt" 2>&1 || true
     vide_idx=""; vide_label=""
@@ -291,20 +304,28 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
       libelle=$(echo "$ligne" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
       if [ "$etat" = "vide" ]; then vide_idx="$idx"; vide_label="$libelle"; break; fi
     done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
-    [ -z "$vide_idx" ] && break
-    echo "E2E round $round : champ « $vide_label » (idx $vide_idx) encore vide — re-remplissage contrôlé"
+    if [ -z "$vide_idx" ]; then
+      # sonde courante sans vide : créditer la position et sortir si l'autre l'est aussi
+      if [ $((round % 2)) -eq 1 ]; then haut_ok=1; else bas_ok=1; fi
+      [ $haut_ok -eq 1 ] && [ $bas_ok -eq 1 ] && break
+      continue
+    fi
+    echo "E2E round $round (position $([ $((round % 2)) -eq 1 ] && echo HAUT || echo BAS)) : champ « $vide_label » (idx $vide_idx) vide — re-remplissage"
     val=$(valeur_pour "$vide_label")
-    [ -n "$val" ] || { echo "E2E pas de valeur pour « $vide_label » — arrêt des rounds"; break; }
+    if [ -z "$val" ]; then
+      echo "E2E pas de valeur pour « $vide_label » — champ toléré vide (prérempli)"
+      if [ $((round % 2)) -eq 1 ]; then haut_ok=1; else bas_ok=1; fi
+      [ $haut_ok -eq 1 ] && [ $bas_ok -eq 1 ] && break
+      continue
+    fi
     if ! remplir_champ "$vide_idx" "$val" "$OUT/champs.txt"; then
-      # champ absent du dump (sous le pli) : défiler puis régénérer les coordonnées
-      swipe_v 73 26 250 >/dev/null 2>&1; sleep 1
       $UI champs > "$OUT/champs.txt" 2>&1 || true
       remplir_champ "$vide_idx" "$val" "$OUT/champs.txt" || true
     fi
   done
   $UI champs > "$OUT/champs_apres.txt" 2>&1 || true
   nb_vides=$(grep -c " vide |" "$OUT/champs_apres.txt" 2>/dev/null); nb_vides=${nb_vides:-0}
-  echo "E2E champs encore vides après rounds : $nb_vides"
+  echo "E2E sondes : haut=$haut_ok bas=$bas_ok ; champs visibles encore vides : $nb_vides"
   local trouve=0 _
   for _ in 1 2 3 4 5 6; do
     if $UI wait --text "Continuer" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi

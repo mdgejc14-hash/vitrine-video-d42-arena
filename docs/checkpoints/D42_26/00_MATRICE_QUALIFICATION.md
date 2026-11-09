@@ -84,7 +84,7 @@ achèvement programmé one-shot à 00:15 UTC.
 | # | Exigence | Statut | Preuve / note |
 |---|---|---|---|
 | 5.1 | Parcours tournage guidé 4 scènes (émulateur) | PASS | e2e P1 36/0/0 (42497790522) + P1 officiel 37/0/0 (42482295447) : parcours complet jusqu'au MP4 |
-| 5.2 | Enregistrement/arrêt/suppression/reprise d'une prise | **EN VALIDATION (banc D42.26-18)** | Enregistrement+arrêt : PASS (P1). Suppression/reprise : **job android-e2e-camerap** — « Refaire » doit SUPPRIMER le fichier rush (preuve par comptage de fichiers avant/après) puis la prise est re-filmable ; run en cours sur e895a3c |
+| 5.2 | Enregistrement/arrêt/suppression/reprise d'une prise | **EN VALIDATION (banc D42.26-18c, run en cours)** | Enregistrement+arrêt : PASS (P1 ×2 runs du jour). Suppression/reprise : job camerap — « Refaire » doit SUPPRIMER le fichier rush (comptage avant/après) puis re-filmage. Runs précédents 42543641719+42547280252 : 30/2/8 — les 2 FAIL = **défaut HARNAIS** (champ Quartier resté vide → bouton désactivé → tap sans effet ; P1 du même run réussissait — preuve champs.txt 3/4) ; cause racine corrigée en 18c (contrôle d'effet du remplissage) |
 | 5.3 | Conservation des prises | **EN VALIDATION (banc D42.26-18)** | fichiers rush-*.mp4 listés (run-as) jusqu'à l'écran post-guide (B04_rushs_finaux.txt) ; intégration au MP4 = PASS (P1) |
 | 5.4 | Caméra avant/arrière + changement | NOT RUN | Émulateur : caméra virtuelle par défaut uniquement. **Test physique requis** |
 | 5.5 | Aperçu vidéo (preview) | PASS (émulateur) | e2e P1 (écran de capture atteint, frames rendues) |
