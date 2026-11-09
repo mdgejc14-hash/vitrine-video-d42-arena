@@ -48,7 +48,7 @@ jobs:
           for i in $(seq 1 30); do
             URL=$(curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" \
               "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${TAG}" \
-              | python3 -c "import json,sys; a=json.load(sys.stdin).get('assets',[]); print(a[0]['browser_download_url'] if a else '')" \
+              | python3 -c "import json,sys; a=[x for x in json.load(sys.stdin).get('assets',[]) if x['name'].endswith('.apk')]; print(a[0]['browser_download_url'] if a else '')" \
             ) || URL=""
             if [ -n "$URL" ]; then break; fi
             echo "asset pas encore publié, tentative $i/30…"; sleep 20
