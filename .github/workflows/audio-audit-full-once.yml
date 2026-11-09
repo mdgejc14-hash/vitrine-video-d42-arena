@@ -1,17 +1,21 @@
 name: Audio Audit Full (one-shot)
 
 # D42.26 §13-G — Couverture INTÉGRALE des 600 pistes (sha256 byte-level +
-# acoustique complète). ONE-SHOT : programmé à 00:15 UTC (le quota B2 Class B
-# gratuit — 2 500 lectures/jour — se réinitialise à 00:00 UTC ; il a été
-# ÉPUISÉ le 08/11 vers 18:00 par la cumulation des audits, preuve sonde run
-# 42508980573 : 6/6 pistes → 404 track_not_uploaded, y compris celles servies
-# 200 une heure plus tôt). GARDE anti-répétition : dès qu'un run de CE
-# workflow a réussi, les nuits suivantes skippent (aucune consommation de
-# quota). Réessaie chaque nuit jusqu'au premier succès.
+# acoustique complète). ONE-SHOT — DÉSARMÉ le 09/11 (D42.26-20) : le run
+# 42542375491 a mesuré les 600/600 pistes (artefact consigné, matrice §7 :
+# 7.2/7.6 PASS intégral) mais sort en FAILURE à cause du seul seuil 7.7
+# (silence initial, arbitrage A) : la garde « skip après succès » ne peut
+# donc PAS se verrouiller et le cron re-consommerait ~1 260 lectures B2
+# Class B par nuit pour rien. On garde UNIQUEMENT workflow_dispatch : toute
+# ré-exécution est désormais un choix explicite.
+#
+# Historique : programmé à 00:15 UTC car le quota B2 Class B gratuit
+# (2 500 lectures/jour) se réinitialise à 00:00 UTC ; il avait été ÉPUISÉ le
+# 08/11 vers 18:00 par la cumulation des audits (preuve sonde run
+# 42508980573 : 6/6 pistes → 404 track_not_uploaded, y compris celles
+# servies 200 une heure plus tôt).
 
 on:
-  schedule:
-    - cron: '15 0 * * *'
   workflow_dispatch:
 
 permissions:
