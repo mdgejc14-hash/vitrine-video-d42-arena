@@ -134,6 +134,17 @@ class BriefActivity : VitrineActivity() {
                             val intent = Intent()
                             answers.forEach { (k, v) -> intent.putExtra("brief_$k", v) }
                             intent.putExtra("brief_keys", answers.keys.toTypedArray())
+                            // D42.27-05d : le parcours gabarit ne renvoyait AUCUN
+                            // « script » — le brouillon promu CAMÉRA gardait un
+                            // script vide et la reprise retombait en BRIEF (run
+                            // 42635563154 : scriptNonVide=false priseIdx=1). Le
+                            // script du brouillon = les libellés des prises du
+                            // gabarit (exactement les scènes que le guide fera
+                            // tourner), joints comme le parcours générique.
+                            val scenesGabarit = runCatching { GabaritJson.parsePrises(raw) }
+                                .getOrDefault(emptyList())
+                            intent.putExtra("script", scenesGabarit.joinToString(" | ") { it.label })
+                            intent.putExtra("duration_s", summary?.dureeTotaleS ?: 30)
                             setResult(RESULT_OK, intent)
                             finish()
                         },
