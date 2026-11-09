@@ -68,7 +68,18 @@ record PASS A0_installation "APK installée (banc auth)"
 adb shell am start -W -n "$PKG/.MainActivity" > "$OUT/start.log" 2>&1
 sleep 4
 
-etape A0_langue "Choisissez votre langue" 60 || true
+# D42.27-08b : l'image playstore démarre en locale EN — l'écran langue peut
+# s'afficher dans une autre langue que le FR (même constat que le banc
+# deep-link D1). On accepte les 4 langues supportées par l'app.
+a0_vu=0
+for t in "Choisissez votre langue" "Choose your language" "Elige tu idioma" "言語を選んでください"; do
+  if $UI wait --text "$t" --exact --timeout 20 >/dev/null 2>&1; then a0_vu=1; break; fi
+done
+if [ "$a0_vu" = "1" ]; then
+  record PASS A0_langue "écran langue constaté (multi-langues acceptées)"
+else
+  record FAIL A0_langue "écran langue absent après 80s"
+fi
 for essai in 1 2 3 4; do
   $UI tap --text "Français" --exact --timeout 15 >/dev/null 2>&1
   if $UI wait --text "Continuer avec Google" --exact --timeout 25 >/dev/null 2>&1; then break; fi
