@@ -1,0 +1,272 @@
+[
+ {
+  "categorie_audio": "musique_t1_batiment_travaux",
+  "key_m4a": "audio/bgm/batiment_travaux/T1/musique_t1_batiment_travaux.m4a",
+  "key_mp3": "audio/bgm/batiment_travaux/T1/musique_t1_batiment_travaux.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t2_batiment_travaux",
+  "key_m4a": "audio/bgm/batiment_travaux/T2/musique_t2_batiment_travaux.m4a",
+  "key_mp3": "audio/bgm/batiment_travaux/T2/musique_t2_batiment_travaux.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t3_batiment_travaux",
+  "key_m4a": "audio/bgm/batiment_travaux/T3/musique_t3_batiment_travaux.m4a",
+  "key_mp3": "audio/bgm/batiment_travaux/T3/musique_t3_batiment_travaux.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t4_batiment_travaux",
+  "key_m4a": "audio/bgm/batiment_travaux/T4/musique_t4_batiment_travaux.m4a",
+  "key_mp3": "audio/bgm/batiment_travaux/T4/musique_t4_batiment_travaux.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t5_batiment_travaux",
+  "key_m4a": "audio/bgm/batiment_travaux/T5/musique_t5_batiment_travaux.m4a",
+  "key_mp3": "audio/bgm/batiment_travaux/T5/musique_t5_batiment_travaux.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t1_coiffure_beaute",
+  "key_m4a": "audio/bgm/coiffure_beaute/T1/musique_t1_coiffure_beaute.m4a",
+  "key_mp3": "audio/bgm/coiffure_beaute/T1/musique_t1_coiffure_beaute.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t2_coiffure_beaute",
+  "key_m4a": "audio/bgm/coiffure_beaute/T2/musique_t2_coiffure_beaute.m4a",
+  "key_mp3": "audio/bgm/coiffure_beaute/T2/musique_t2_coiffure_beaute.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t3_coiffure_beaute",
+  "key_m4a": "audio/bgm/coiffure_beaute/T3/musique_t3_coiffure_beaute.m4a",
+  "key_mp3": "audio/bgm/coiffure_beaute/T3/musique_t3_coiffure_beaute.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t4_coiffure_beaute",
+  "key_m4a": "audio/bgm/coiffure_beaute/T4/musique_t4_coiffure_beaute.m4a",
+  "key_mp3": "audio/bgm/coiffure_beaute/T4/musique_t4_coiffure_beaute.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t5_coiffure_beaute",
+  "key_m4a": "audio/bgm/coiffure_beaute/T5/musique_t5_coiffure_beaute.m4a",
+  "key_mp3": "audio/bgm/coiffure_beaute/T5/musique_t5_coiffure_beaute.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t1_immo_auto",
+  "key_m4a": "audio/bgm/immo_auto/T1/musique_t1_immo_auto.m4a",
+  "key_mp3": "audio/bgm/immo_auto/T1/musique_t1_immo_auto.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t2_immo_auto",
+  "key_m4a": "audio/bgm/immo_auto/T2/musique_t2_immo_auto.m4a",
+  "key_mp3": "audio/bgm/immo_auto/T2/musique_t2_immo_auto.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t3_immo_auto",
+  "key_m4a": "audio/bgm/immo_auto/T3/musique_t3_immo_auto.m4a",
+  "key_mp3": "audio/bgm/immo_auto/T3/musique_t3_immo_auto.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t4_immo_auto",
+  "key_m4a": "audio/bgm/immo_auto/T4/musique_t4_immo_auto.m4a",
+  "key_mp3": "audio/bgm/immo_auto/T4/musique_t4_immo_auto.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t5_immo_auto",
+  "key_m4a": "audio/bgm/immo_auto/T5/musique_t5_immo_auto.m4a",
+  "key_mp3": "audio/bgm/immo_auto/T5/musique_t5_immo_auto.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t1_restaurants_maquis",
+  "key_m4a": "audio/bgm/restaurants_maquis/T1/musique_t1_restaurants_maquis.m4a",
+  "key_mp3": "audio/bgm/restaurants_maquis/T1/musique_t1_restaurants_maquis.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t2_restaurants_maquis",
+  "key_m4a": "audio/bgm/restaurants_maquis/T2/musique_t2_restaurants_maquis.m4a",
+  "key_mp3": "audio/bgm/restaurants_maquis/T2/musique_t2_restaurants_maquis.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t3_restaurants_maquis",
+  "key_m4a": "audio/bgm/restaurants_maquis/T3/musique_t3_restaurants_maquis.m4a",
+  "key_mp3": "audio/bgm/restaurants_maquis/T3/musique_t3_restaurants_maquis.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t4_restaurants_maquis",
+  "key_m4a": "audio/bgm/restaurants_maquis/T4/musique_t4_restaurants_maquis.m4a",
+  "key_mp3": "audio/bgm/restaurants_maquis/T4/musique_t4_restaurants_maquis.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t5_restaurants_maquis",
+  "key_m4a": "audio/bgm/restaurants_maquis/T5/musique_t5_restaurants_maquis.m4a",
+  "key_mp3": "audio/bgm/restaurants_maquis/T5/musique_t5_restaurants_maquis.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t1_shops_small_business",
+  "key_m4a": "audio/bgm/shops_small_business/T1/musique_t1_shops_small_business.m4a",
+  "key_mp3": "audio/bgm/shops_small_business/T1/musique_t1_shops_small_business.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t2_shops_small_business",
+  "key_m4a": "audio/bgm/shops_small_business/T2/musique_t2_shops_small_business.m4a",
+  "key_mp3": "audio/bgm/shops_small_business/T2/musique_t2_shops_small_business.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t3_shops_small_business",
+  "key_m4a": "audio/bgm/shops_small_business/T3/musique_t3_shops_small_business.m4a",
+  "key_mp3": "audio/bgm/shops_small_business/T3/musique_t3_shops_small_business.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t4_shops_small_business",
+  "key_m4a": "audio/bgm/shops_small_business/T4/musique_t4_shops_small_business.m4a",
+  "key_mp3": "audio/bgm/shops_small_business/T4/musique_t4_shops_small_business.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t5_shops_small_business",
+  "key_m4a": "audio/bgm/shops_small_business/T5/musique_t5_shops_small_business.m4a",
+  "key_mp3": "audio/bgm/shops_small_business/T5/musique_t5_shops_small_business.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t1_vetements_mode",
+  "key_m4a": "audio/bgm/vetements_mode/T1/musique_t1_vetements_mode.m4a",
+  "key_mp3": "audio/bgm/vetements_mode/T1/musique_t1_vetements_mode.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t2_vetements_mode",
+  "key_m4a": "audio/bgm/vetements_mode/T2/musique_t2_vetements_mode.m4a",
+  "key_mp3": "audio/bgm/vetements_mode/T2/musique_t2_vetements_mode.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t3_vetements_mode",
+  "key_m4a": "audio/bgm/vetements_mode/T3/musique_t3_vetements_mode.m4a",
+  "key_mp3": "audio/bgm/vetements_mode/T3/musique_t3_vetements_mode.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t4_vetements_mode",
+  "key_m4a": "audio/bgm/vetements_mode/T4/musique_t4_vetements_mode.m4a",
+  "key_mp3": "audio/bgm/vetements_mode/T4/musique_t4_vetements_mode.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ },
+ {
+  "categorie_audio": "musique_t5_vetements_mode",
+  "key_m4a": "audio/bgm/vetements_mode/T5/musique_t5_vetements_mode.m4a",
+  "key_mp3": "audio/bgm/vetements_mode/T5/musique_t5_vetements_mode.mp3",
+  "m4a_avant": false,
+  "mp3_avant": false,
+  "mp3_uploade": true,
+  "m4a_uploade": true
+ }
+]
