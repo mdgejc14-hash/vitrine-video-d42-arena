@@ -50,7 +50,12 @@ class BriefActivity : VitrineActivity() {
             lifecycleScope.launch {
                 val raw = runCatching { repo.rawJson(gabaritId) }.getOrNull()
                 val brief = raw?.let { runCatching { GabaritJson.parseBrief(it) }.getOrNull() }
-                if (brief != null) renderGabarit(brief, raw.orEmpty()) else refresh()
+                // D42.27 (§7) : valeurs du brouillon de saisie pour CE gabarit
+                // (pré-remplissage — reprise après fermeture pendant la rédaction).
+                val restore = runCatching {
+                    video.vitrine.data.local.DraftStore.valuesPourGabarit(this@BriefActivity, gabaritId)
+                }.getOrDefault(emptyMap())
+                if (brief != null) renderGabarit(brief, raw.orEmpty(), restore) else refresh()
             }
         } else {
             refresh()
@@ -59,7 +64,7 @@ class BriefActivity : VitrineActivity() {
 
     /** E5 V2.0 : formulaire pilote gabarit ; reponses renvoyees en extras cles/valeurs. */
     /** E5 puis E4b : formulaire gabarit, recapitulatif de verification, puis extras. */
-    private fun renderGabarit(brief: GabaritBrief, raw: String) {
+    private fun renderGabarit(brief: GabaritBrief, raw: String, restore: Map<String, String> = emptyMap()) {
         val summary = runCatching { GabaritJson.parse(raw) }.getOrNull()
         val prisesCount = runCatching { GabaritJson.parsePrises(raw) }
             .getOrDefault(emptyList()).size
@@ -68,10 +73,29 @@ class BriefActivity : VitrineActivity() {
                 var ready by remember { mutableStateOf(false) }
                 var answers by remember { mutableStateOf<Map<String, String>>(emptyMap()) }
                 if (!ready) {
-                    GabaritBriefScreen(brief) { values ->
-                        answers = values
-                        ready = true
-                    }
+                    // D42.27 (§7) : pré-remplissage (brouillon) + persistance de
+                    // la saisie à CHAQUE champ (étape BRIEF du brouillon).
+                    GabaritBriefScreen(
+                        brief = brief,
+                        initialValues = restore,
+                        onValuesChange = { valeurs ->
+                            lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                                runCatching {
+                                    video.vitrine.data.local.DraftStore.sauverBrief(
+                                        this@BriefActivity,
+                                        intent.getStringExtra("gabarit_id").orEmpty(),
+                                        intent.getStringExtra("skin_id"),
+                                        intent.getStringExtra("skin_name"),
+                                        valeurs
+                                    )
+                                }
+                            }
+                        },
+                        onSubmit = { values ->
+                            answers = values
+                            ready = true
+                        }
+                    )
                 } else {
                     ReadyCheckScreen(
                         sectorLabel = summary?.secteurLibelle.orEmpty(),

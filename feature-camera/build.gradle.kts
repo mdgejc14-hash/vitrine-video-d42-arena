@@ -23,6 +23,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.lifecycle.runtime)
     implementation(project(":core-model"))
+    implementation(project(":core-guard")) // D42.27 : StorageGate (§8/5.7)
     implementation(project(":core-designsystem"))
     implementation(project(":ins-capture"))
     implementation(project(":ins-effects"))

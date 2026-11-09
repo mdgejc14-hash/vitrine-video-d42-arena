@@ -25,12 +25,12 @@ class StorageGateTest {
     }
 
     @Test
-    fun `requis dynamique : plancher 64 Mo même pour un faible bitrate`() {
+    fun `requis dynamique - plancher 64 Mo même pour un faible bitrate`() {
         assertEquals(64L * 1024 * 1024, StorageGate.requisPourPrise(12, 1_000_000))
     }
 
     @Test
-    fun `requis dynamique : bitrate élevé → marge 3x au-dessus du plancher`() {
+    fun `requis dynamique - bitrate élevé → marge 3x au-dessus du plancher`() {
         val attendu = 15L * (24_000_000 / 8) * 3
         assertEquals(attendu, StorageGate.requisPourPrise(15, 24_000_000))
         assertTrue(attendu > StorageGate.SEUIL_PRISE_OCTETS)

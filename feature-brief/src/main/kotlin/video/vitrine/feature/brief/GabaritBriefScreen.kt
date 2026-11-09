@@ -44,15 +44,20 @@ import video.vitrine.core.model.GabaritBrief
 @Composable
 fun GabaritBriefScreen(
     brief: GabaritBrief,
+    // D42.27 (§7) : pré-remplissage depuis le brouillon (reprise de saisie)
+    // et callback à CHAQUE champ (persistance de la saisie en cours).
+    initialValues: Map<String, String> = emptyMap(),
+    onValuesChange: (Map<String, String>) -> Unit = {},
     onSubmit: (Map<String, String>) -> Unit
 ) {
     // Audit D40 (B10) : defauts du JSON pre-remplis (FCFA « deja choisi »),
     // choix de badge collectes, validations type/contrat appliquees.
+    // D42.27 : les valeurs RESTAURÉES du brouillon priment sur les défauts.
     var values by remember {
         mutableStateOf(
             brief.fields
                 .filter { it.defaultValue.isNotBlank() && it.defaultValue != "false" && it.defaultValue != "true" }
-                .associate { it.id to it.defaultValue }
+                .associate { it.id to it.defaultValue } + initialValues
         )
     }
     var checks by remember {
@@ -83,7 +88,11 @@ fun GabaritBriefScreen(
                 values = values,
                 checks = checks,
                 onToggle = { optionsOpen = !optionsOpen },
-                onValue = { id, v -> values = values + (id to v) },
+                onValue = { id, v ->
+                    values = values + (id to v)
+                    // D42.27 (§7) : persistance de la saisie (étape BRIEF).
+                    onValuesChange(values)
+                },
                 onCheck = { id, c -> checks = checks + (id to c) },
                 choice = { id -> choiceByField[id] },
                 onChoice = { id, c -> choiceByField = choiceByField + (id to c) }

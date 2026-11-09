@@ -14,9 +14,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         TelemetryOutbox::class,
         ReferralLocal::class,
         GabaritCache::class,
-        ExportJournal::class
+        ExportJournal::class,
+        DraftEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class VitrineLocalDatabase : RoomDatabase() {
@@ -26,8 +27,36 @@ abstract class VitrineLocalDatabase : RoomDatabase() {
     abstract fun referrals(): ReferralDao
     abstract fun gabarits(): GabaritDao
     abstract fun journal(): ExportJournalDao
+    abstract fun drafts(): DraftDao
 
     companion object {
+        /** v3 -> v4 : table additive project_draft (D42.27 §7 — brouillon
+         * inter-sessions : saisie brief + prises ; AUCUNE donnée existante
+         * touchée, migration strictement additive comme les précédentes). */
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `project_draft` (" +
+                        "`id` INTEGER NOT NULL, " +
+                        "`etape` TEXT NOT NULL, " +
+                        "`gabaritId` TEXT NOT NULL, " +
+                        "`skinId` TEXT, " +
+                        "`skinName` TEXT, " +
+                        "`briefValuesJson` TEXT NOT NULL, " +
+                        "`script` TEXT, " +
+                        "`durationS` INTEGER NOT NULL, " +
+                        "`objective` TEXT, " +
+                        "`scenes` TEXT, " +
+                        "`clientRushesJson` TEXT, " +
+                        "`priseFilesJson` TEXT, " +
+                        "`priseIdx` INTEGER NOT NULL, " +
+                        "`createdAt` INTEGER NOT NULL, " +
+                        "`updatedAt` INTEGER NOT NULL, " +
+                        "PRIMARY KEY(`id`))"
+                )
+            }
+        }
+
         /** v1 -> v2 : table additive gabarits_cache (30 gabarits V2.0, seed assets). */
         /** v2 -> v3 : table additive export_journal (reservation/confirmation/compensation). */
         val MIGRATION_2_3 = object : Migration(2, 3) {
@@ -77,7 +106,7 @@ abstract class VitrineLocalDatabase : RoomDatabase() {
                     VitrineLocalDatabase::class.java,
                     "vitrine-local.db"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                     .build().also { instance = it }
             }
     }

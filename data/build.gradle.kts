@@ -7,7 +7,7 @@ android {
 }
 dependencies {
     implementation(project(":core-model"))
-    implementation(project(":core-guard"))  // D42.27 : StorageGate (§8/5.7)
+    implementation(project(":core-guard")) // D42.27 : StorageGate (§8/5.7)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)

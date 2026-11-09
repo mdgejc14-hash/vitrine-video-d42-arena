@@ -83,3 +83,30 @@ data class ExportJournal(
     val balanceAfter: Int,
     val ts: Long
 )
+
+/**
+ * D42.27 (§7) — BROUILLON de projet inter-sessions (offline-first).
+ * UN seul brouillon actif (id=1) : le parcours courant gagne (documenté —
+ * le dialogue de reprise tranche au démarrage avant tout nouveau parcours).
+ * etape = BRIEF (saisie en cours) puis CAMERA (brief validé + prises).
+ * Les rushs référencés vivent déjà dans filesDir/rushes (persistants, D41/F50) :
+ * le brouillon n'est QUE l'index du projet, jamais une copie des fichiers.
+ */
+@Entity(tableName = "project_draft")
+data class DraftEntity(
+    @PrimaryKey val id: Int = 1,
+    val etape: String,
+    val gabaritId: String,
+    val skinId: String? = null,
+    val skinName: String? = null,
+    val briefValuesJson: String = "{}",
+    val script: String? = null,
+    val durationS: Int = 0,
+    val objective: String? = null,
+    val scenes: String? = null,
+    val clientRushesJson: String? = null,
+    val priseFilesJson: String? = null,
+    val priseIdx: Int = 0,
+    val createdAt: Long = 0,
+    val updatedAt: Long = 0
+)

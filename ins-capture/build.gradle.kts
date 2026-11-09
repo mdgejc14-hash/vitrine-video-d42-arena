@@ -12,5 +12,5 @@ dependencies {
     implementation(project(":ins-effects"))
     implementation(project(":ins-thermal"))
     implementation(project(":core-model"))
-    implementation(project(":core-guard"))  // D42.27 : StorageGate (§8/5.7)
+    implementation(project(":core-guard")) // D42.27 : StorageGate (§8/5.7)
 }

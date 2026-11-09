@@ -5,6 +5,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import video.vitrine.core.designsystem.VitrineLocale
 import video.vitrine.feature.catalog.CatalogActivity
 import video.vitrine.feature.onboarding.LanguageActivity
@@ -147,7 +149,10 @@ class MainActivity : VitrineActivity() {
             REQ_ONBOARDING -> {
                 sectorCode = data?.getStringExtra("sector")
                 welcomeCredits = data?.getIntExtra("welcome_credits", 0) ?: 0
-                launchCatalog()
+                // D42.27 (§7) : un brouillon inter-sessions existe ? Le proposer
+                // AVANT le catalogue (sinon comportement inchangé — aucun parcours
+                // e2e sur runner frais n'a jamais de brouillon résiduel).
+                peutProposerReprise()
             }
             REQ_CATALOG -> {
                 skinId = data?.getStringExtra("skin_id")
@@ -160,6 +165,24 @@ class MainActivity : VitrineActivity() {
                 briefDuration = data?.getIntExtra("duration_s", 30) ?: 30
                 briefRushs = data?.getStringArrayExtra("client_rushes")
                 collectBriefValues(data)
+                // D42.27 (§7) : le brief VALIDÉ persiste (brouillon étape CAMERA)
+                // — survit à la fermeture de l'app et au redémarrage du téléphone.
+                lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    runCatching {
+                        video.vitrine.data.local.DraftStore.promouvoirCamera(
+                            this@MainActivity,
+                            gabaritId.orEmpty(),
+                            skinId,
+                            skinName,
+                            briefScript.orEmpty(),
+                            briefDuration,
+                            data?.getStringExtra("objective"),
+                            data?.getStringExtra("scenes"),
+                            briefValues,
+                            briefRushs?.toList() ?: emptyList()
+                        )
+                    }
+                }
                 startActivityForResult(
                     Intent(this, video.vitrine.feature.camera.CameraGuideActivity::class.java)
                         .putExtra("script", briefScript)
@@ -244,6 +267,72 @@ class MainActivity : VitrineActivity() {
     private fun collectBriefValues(data: Intent?) {
         data?.getStringArrayExtra("brief_keys")?.forEach { k ->
             briefValues[k] = data.getStringExtra("brief_$k").orEmpty()
+        }
+    }
+
+    /**
+     * D42.27 (§7) — reprise de brouillon. Si un projet est en cours (saisie
+     * brief OU tournage), l'utilisateur choisit : Reprendre (retour exact à
+     * l'étape en cours, rushs restaurés) ou Nouvelle vidéo (brouillon effacé
+     * — décision EXPLICITE, jamais de suppression silencieuse).
+     */
+    private fun peutProposerReprise() {
+        lifecycleScope.launch {
+            val draft = runCatching {
+                video.vitrine.data.local.DraftStore.actif(this@MainActivity)
+            }.getOrNull()
+            if (draft == null) {
+                launchCatalog()
+                return@launch
+            }
+            gabaritId = draft.gabaritId
+            skinId = draft.skinId
+            skinName = draft.skinName
+            android.app.AlertDialog.Builder(this@MainActivity)
+                .setTitle(R.string.draft_resume_title)
+                .setMessage(getString(R.string.draft_resume_body))
+                .setCancelable(false)
+                .setPositiveButton(R.string.draft_resume_yes) { _, _ -> reprendreDraft(draft) }
+                .setNegativeButton(R.string.draft_resume_no) { _, _ ->
+                    lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                        runCatching { video.vitrine.data.local.DraftStore.effacer(this@MainActivity) }
+                    }
+                    launchCatalog()
+                }
+                .show()
+        }
+    }
+
+    private fun reprendreDraft(draft: video.vitrine.data.local.DraftEntity) {
+        if (draft.etape == video.vitrine.data.local.DraftStore.ETAPE_CAMERA && !draft.script.isNullOrBlank()) {
+            // Reprise du TOURNAGE : le guide repart à la prise sauvegardée,
+            // avec les rushs existants (fichiers déjà persistants, filtrés).
+            briefScript = draft.script
+            briefDuration = if (draft.durationS > 0) draft.durationS else 30
+            briefRushs = video.vitrine.data.local.DraftStore.jsonToList(draft.clientRushesJson)
+                .toTypedArray()
+            // Les réponses du brief servent aux extras brief_* de l'export
+            // (aperçu E7 + rendu) : les restaurer depuis le brouillon aussi,
+            // sinon l'export après reprise perdrait les textes du gabarit.
+            briefValues.clear()
+            briefValues.putAll(
+                video.vitrine.data.local.DraftStore.jsonToMap(draft.briefValuesJson)
+            )
+            startActivityForResult(
+                Intent(this, video.vitrine.feature.camera.CameraGuideActivity::class.java)
+                    .putExtra("script", briefScript)
+                    .putExtra("gabarit_id", gabaritId)
+                    .putExtra("duration_s", briefDuration)
+                    .putExtra(
+                        "restore_prise_files",
+                        video.vitrine.data.local.DraftStore.jsonToList(draft.priseFilesJson).toTypedArray()
+                    )
+                    .putExtra("restore_prise_idx", draft.priseIdx),
+                REQ_CAMERA
+            )
+        } else {
+            // Reprise de la SAISIE du brief (formulaire pré-rempli par BriefActivity).
+            launchBrief()
         }
     }
 

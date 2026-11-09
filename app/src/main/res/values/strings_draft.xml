@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- D42.27 (§7) : reprise de brouillon inter-sessions (dialogue MainActivity) -->
+    <string name="draft_resume_title">Reprendre ta vidéo ?</string>
+    <string name="draft_resume_body">Ton brief et tes prises sont conservés. Tu peux continuer où tu t\'es arrêté.</string>
+    <string name="draft_resume_yes">Reprendre</string>
+    <string name="draft_resume_no">Nouvelle vidéo</string>
+</resources>

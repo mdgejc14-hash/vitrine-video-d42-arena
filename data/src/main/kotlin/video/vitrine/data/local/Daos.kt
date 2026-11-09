@@ -101,3 +101,15 @@ interface GabaritDao {
     @Query("DELETE FROM gabarits_cache")
     suspend fun clearAll()
 }
+
+@Dao
+interface DraftDao {
+    @Upsert
+    suspend fun upsert(draft: DraftEntity)
+
+    @Query("SELECT * FROM project_draft WHERE id = 1")
+    suspend fun active(): DraftEntity?
+
+    @Query("DELETE FROM project_draft WHERE id = 1")
+    suspend fun clear()
+}

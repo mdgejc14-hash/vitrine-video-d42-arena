@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- D42.27 (§7) : reprise de brouillon inter-sessions (dialogue MainActivity) -->
+    <string name="draft_resume_title">Resume your video?</string>
+    <string name="draft_resume_body">Your brief and takes are saved. You can continue where you left off.</string>
+    <string name="draft_resume_yes">Resume</string>
+    <string name="draft_resume_no">New video</string>
+</resources>

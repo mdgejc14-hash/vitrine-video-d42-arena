@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- D42.27 (§7) : reprise de brouillon inter-sessions (dialogue MainActivity) -->
+    <string name="draft_resume_title">動画を再開しますか？</string>
+    <string name="draft_resume_body">ブリーフと撮影内容は保存されています。中断したところから再開できます。</string>
+    <string name="draft_resume_yes">再開する</string>
+    <string name="draft_resume_no">新しい動画</string>
+</resources>

@@ -499,6 +499,13 @@ class ExportActivity : VitrineActivity() {
                 val info = infos.lastOrNull() ?: return@observe
                 when {
                     info.state.isFinished && info.state == androidx.work.WorkInfo.State.SUCCEEDED -> {
+                        // D42.27 (§7) : export RÉUSSI = projet terminé → le
+                        // brouillon est CONSOMMÉ (les rushs restent en fichiers).
+                        lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                            runCatching {
+                                video.vitrine.data.local.DraftStore.effacer(this@ExportActivity)
+                            }
+                        }
                         val path = info.outputData.getString(ExportWorker.KEY_OUTPUT)
                         findViewById<ProgressBar>(R.id.export_progress).visibility = android.view.View.GONE
                         findViewById<TextView>(R.id.export_status).setText(R.string.export_done)

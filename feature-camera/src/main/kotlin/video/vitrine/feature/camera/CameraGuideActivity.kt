@@ -103,6 +103,15 @@ class CameraGuideActivity : VitrineActivity() {
         setContentView(R.layout.activity_camera_guide)
         executor = Executors.newSingleThreadExecutor()
         val gabaritId = intent.getStringExtra("gabarit_id")
+        // D42.27 (§7) : REPRISE de tournage — slots restaurés depuis le brouillon
+        // (seuls les fichiers ENCORE EXISTANTS sont restaurés : un chemin disparu
+        // ne bloque jamais la reprise). Les rushs vivent dans filesDir/rushes,
+        // déjà persistants (D41/F50) : aucune copie, juste l'index du projet.
+        intent.getStringArrayExtra("restore_prise_files")?.forEach { chemin ->
+            if (chemin.isNotBlank() && File(chemin).exists()) priseFiles.add(chemin)
+        }
+        val restoreIdx = intent.getIntExtra("restore_prise_idx", -1)
+        if (restoreIdx in 0..99) priseIdx = restoreIdx
         if (gabaritId != null) {
             guideMode = true
             val repo = GabaritRepository(this, VitrineLocalDatabase.get(this).gabarits())
@@ -384,6 +393,19 @@ class CameraGuideActivity : VitrineActivity() {
             // distinct, stocke dans un slot ALIGNE sur son index ("" = sautee).
             setSlot(priseIdx, file.absolutePath)
             lastRecordedForIdx = priseIdx
+            // D42.27 (§7) : persistance du brouillon à CHAQUE prise validée —
+            // une fermeture de l'app (ou un redémarrage du téléphone) juste
+            // après une scène ne perd NI la prise, NI la position.
+            val gabId = intent.getStringExtra("gabarit_id").orEmpty()
+            val fichiers = priseFiles.toList()
+            val position = if (priseIdx < prises.size - 1) priseIdx + 1 else priseIdx
+            lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                runCatching {
+                    video.vitrine.data.local.DraftStore.majPrises(
+                        this@CameraGuideActivity, gabId, fichiers, position
+                    )
+                }
+            }
             if (priseIdx < prises.size - 1) {
                 priseIdx += 1
                 guideMode = true

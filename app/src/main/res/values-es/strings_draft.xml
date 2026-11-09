@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- D42.27 (§7) : reprise de brouillon inter-sessions (dialogue MainActivity) -->
+    <string name="draft_resume_title">¿Retomar tu vídeo?</string>
+    <string name="draft_resume_body">Tu brief y tus tomas están guardados. Puedes continuar donde lo dejaste.</string>
+    <string name="draft_resume_yes">Retomar</string>
+    <string name="draft_resume_no">Vídeo nuevo</string>
+</resources>
