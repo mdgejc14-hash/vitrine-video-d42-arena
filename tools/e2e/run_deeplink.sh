@@ -25,7 +25,7 @@ TAG="${1:-deeplink}"
 APK="${2:-app/build/outputs/apk/debug/app-debug.apk}"
 PKG="video.vitrine.app"
 OUT="artifacts/${TAG}"
-CODE_LIEN="E2ELIAISON"
+CODE_LIEN="E2E-123"
 
 UI="python3 tools/e2e/ui.py"
 mkdir -p "$OUT"
@@ -66,7 +66,11 @@ record PASS D0_installation "APK installée (banc deep-link)"
 adb shell am start -W -a android.intent.action.VIEW \
   -d "https://vitrine.video/r/$CODE_LIEN" -p "$PKG" > "$OUT/am_start_view.log" 2>&1
 sleep 5
-if $UI wait --text "Choisissez votre langue" --exact --timeout 40 >/dev/null 2>&1; then
+d1_vu=0
+for t in "Choisissez votre langue" "Choose your language" "Elige tu idioma" "言語を選んでください"; do
+  if $UI wait --text "$t" --exact --timeout 15 >/dev/null 2>&1; then d1_vu=1; break; fi
+done
+if [ "$d1_vu" = "1" ]; then
   record PASS D1_vue_resolution "ACTION_VIEW https://vitrine.video/r/$CODE_LIEN résolu vers l'app (écran langue atteint)"
 else
   record FAIL D1_vue_resolution "lien non résolu vers l'app (voir am_start_view.log)"

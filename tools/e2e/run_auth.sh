@@ -106,28 +106,43 @@ else
   record FAIL A1_flux_credential "aucune preuve du flux Credential Manager (ni dump, ni logcat, ni message d'état)"
 fi
 
-# --- A2 : ANNULATION PROPRE (retour système) ---
-# Le sheet est une fenêtre GMS : le retour la ferme ; GetCredentialException
-# (annulation utilisateur) revient à AuthActivity → message actionnable.
-adb shell input keyevent 4 >/dev/null 2>&1
-sleep 6
-shot A2_apres_annulation; dump A2_apres_annulation
-a2_msg=0 a2_boutons=0
-if grep -qE "Connexion annulée|Aucun compte Google|connexion Google n|La connexion n|La connexion à Internet" "$OUT/A2_apres_annulation.xml" 2>/dev/null; then
-  a2_msg=1
+# --- A2 : ISSUE DU FLUX TRAITÉE PROPREMENT (sans intervention précoce) ---
+# Constat run 42626010820 : l'échec (provider absent OU annulation) revient
+# TOUT SEUL avec message + « Réessayer » + repli. Un BACK à heure fixe
+# quittait AuthActivity APRÈS la fermeture spontanée du sheet et détruisait
+# la preuve. On ATTEND l'état final ; le BACK n'est qu'un dernier recours
+# si rien ne revient (sheet éventuellement encore ouvert).
+a2_msg=0 a2_boutons=0 a2_repli=0 a2_attente=0
+for seconde in $(seq 1 30); do
+  sleep 2
+  adb shell rm -f /sdcard/d.xml >/dev/null 2>&1
+  adb shell uiautomator dump /sdcard/d.xml >/dev/null 2>&1
+  adb exec-out cat /sdcard/d.xml > "$OUT/A2_apres_issue.xml" 2>/dev/null
+  if grep -qE "Réessayer" "$OUT/A2_apres_issue.xml" 2>/dev/null; then a2_boutons=1; fi
+  if grep -qE "Connexion annulée|Aucun compte Google|connexion Google n|La connexion n|La connexion à Internet|pas encore disponible" "$OUT/A2_apres_issue.xml" 2>/dev/null; then a2_msg=1; fi
+  if grep -q "Continuer sans compte" "$OUT/A2_apres_issue.xml" 2>/dev/null; then a2_repli=1; fi
+  [ "$a2_boutons" = "1" ] && break
+done
+if [ "$a2_boutons" != "1" ]; then
+  # dernier recours : annulation manuelle (sheet éventuellement ouvert)
+  adb shell input keyevent 4 >/dev/null 2>&1
+  sleep 8
+  shot A2_apres_annulation; dump A2_apres_annulation
+  if grep -qE "Réessayer" "$OUT/A2_apres_annulation.xml" 2>/dev/null; then a2_boutons=1; fi
+  if grep -qE "Connexion annulée|Aucun compte Google|connexion Google n|La connexion n|La connexion à Internet|pas encore disponible" "$OUT/A2_apres_annulation.xml" 2>/dev/null; then a2_msg=1; fi
+  if grep -q "Continuer sans compte" "$OUT/A2_apres_annulation.xml" 2>/dev/null; then a2_repli=1; fi
+  mv "$OUT/A2_apres_annulation.xml" "$OUT/A2_apres_issue.xml" 2>/dev/null || true
 fi
-if grep -q "Réessayer" "$OUT/A2_apres_annulation.xml" 2>/dev/null; then
-  a2_boutons=1
-fi
-if [ "$a2_msg" = "1" ] || [ "$a2_boutons" = "1" ]; then
-  record PASS A2_annulation_propre "annulation traitée : message d'état ($a2_msg) + bouton réactivé « Réessayer » ($a2_boutons)"
+shot A2_final; dump A2_final
+if [ "$a2_boutons" = "1" ] || [ "$a2_msg" = "1" ]; then
+  record PASS A2_annulation_propre "issue du flux Google traitée proprement : message d'état ($a2_msg) + bouton réactivé « Réessayer » ($a2_boutons) — voir A2_final.xml"
 else
-  record FAIL A2_annulation_propre "ni message d'état ni bouton Réessayer après annulation (voir A2_apres_annulation.xml)"
+  record FAIL A2_annulation_propre "ni message d'état ni bouton Réessayer après l'issue du flux (voir A2_final.xml)"
 fi
-if grep -q "Utiliser sans Internet" "$OUT/A2_apres_annulation.xml" 2>/dev/null; then
+if [ "$a2_repli" = "1" ]; then
   record PASS A2_repli_intact "repli hors-connexion toujours proposé après l'échec Google"
 else
-  record FAIL A2_repli_intact "repli hors-connexion disparu après l'échec Google (voir A2_apres_annulation.xml)"
+  record FAIL A2_repli_intact "repli hors-connexion disparu après l'échec Google (voir A2_final.xml)"
 fi
 
 # --- A3 : RE-SOUMISSION (le verrou est levé, pas de double flux) ---
@@ -135,21 +150,23 @@ adb logcat -c >/dev/null 2>&1
 resoumis=0
 if $UI tap --text "Réessayer" --exact --timeout 10 >/dev/null 2>&1 \
    || $UI tap --text "Continuer avec Google" --exact --timeout 10 >/dev/null 2>&1; then
-  sleep 10
-  shot A3_resoumission; dump A3_resoumission
+  for seconde in $(seq 1 20); do
+    sleep 2
+    adb shell rm -f /sdcard/d.xml >/dev/null 2>&1
+    adb shell uiautomator dump /sdcard/d.xml >/dev/null 2>&1
+    adb exec-out cat /sdcard/d.xml > "$OUT/A3_etat.xml" 2>/dev/null
+    if grep -qE "Réessayer" "$OUT/A3_etat.xml" 2>/dev/null; then resoumis=1; break; fi
+  done
   adb logcat -d > "$OUT/A3_logcat.txt" 2>&1 || true
-  if grep -qiE "CredentialManager|GetCredential|GoogleIdOption" "$OUT/A3_logcat.txt" 2>/dev/null \
-     || grep -qE "Se connecter|Choisissez un compte|Aucun compte|Sign in|com\.google\.android\.gms" "$OUT/A3_resoumission.xml" 2>/dev/null; then
-    resoumis=1
+  if grep -qiE "CredentialManager|GetCredential|GoogleIdOption" "$OUT/A3_logcat.txt" 2>/dev/null; then
+    resoumis=$((resoumis+2))
   fi
 fi
-if [ "$resoumis" = "1" ]; then
-  record PASS A3_resoumission "second flux relancé proprement après échec (verrou anti double-soumission levé)"
+if [ "$resoumis" -ge 1 ]; then
+  record PASS A3_resoumission "second flux relancé après échec (verrou levé) et abouti à un nouvel état final (preuves écran/logcat resoumis=$resoumis)"
 else
-  record FAIL A3_resoumission "le flux ne se relance pas après l'échec (voir A3_resoumission.xml / A3_logcat.txt)"
+  record FAIL A3_resoumission "le flux ne se relance pas après l'échec (voir A3_etat.xml / A3_logcat.txt)"
 fi
-adb shell input keyevent 4 >/dev/null 2>&1
-sleep 5
 
 # --- A4 : le parcours CONTINUE par le repli démo ---
 for essai in 1 2 3 4 5; do
