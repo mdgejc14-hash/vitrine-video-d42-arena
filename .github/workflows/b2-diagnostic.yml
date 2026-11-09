@@ -75,6 +75,18 @@ jobs:
                   print(f"HEAD {nom:14s} {cle[:64]:66s} -> HTTP {st}")
               except Exception as e:
                   print(f"HEAD {nom:14s} -> EXCEPTION {e}")
+          # corps du 403 : GET d'un petit objet témoin
+          try:
+              st, body = req("GET", "audio/bgm_r2/batiment_travaux/T1/musique_t1_batiment_travaux_v01.mp3",
+                             query="partNumber=1")
+              print(f"GET  nouvelle_r2  -> HTTP {st}, {len(body)} octets, corps[:400]={body[:400]!r}")
+          except Exception as e:
+              print(f"GET  nouvelle_r2  -> EXCEPTION {e}")
+          try:
+              st, body = req("GET", "STRUCTURE.json")
+              print(f"GET  structure    -> HTTP {st}, {len(body)} octets, corps[:400]={body[:400]!r}")
+          except Exception as e:
+              print(f"GET  structure    -> EXCEPTION {e}")
           for prefix in ("audio/bgm/", "audio/bgm_r2/", "audio/"):
               try:
                   st, body = req("GET", "", query=f"list-type=2&max-keys=1000&prefix={prefix}")
