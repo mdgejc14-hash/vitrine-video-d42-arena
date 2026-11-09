@@ -275,6 +275,36 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
     [ "$restant" = "0" ] && [ "$passe" -ge 2 ] && break
   done
   echo "E2E champs remplis (après complément) : $remplis"
+  # D42.26-18c : CONTRÔLE D'EFFET du REMPLISSAGE. Au run 42547280252, le
+  # champ Quartier est resté VIDE (3/4 remplis) → bouton Continuer désactivé
+  # → 4 taps + taporange sans effet, alors que le P1 du MÊME run réussissait
+  # avec le même code : intermittence du remplissage (tap dans le champ ou
+  # input text perdu), PAS un défaut produit. On boucle jusqu'à zéro vide.
+  local round vide_idx vide_label nb_vides
+  for round in 1 2 3 4 5; do
+    fermer_clavier
+    $UI champs > "$OUT/champs.txt" 2>&1 || true
+    vide_idx=""; vide_label=""
+    while IFS= read -r ligne; do
+      idx=$(echo "$ligne" | awk '{print $3}')
+      etat=$(echo "$ligne" | awk '{print $8}')
+      libelle=$(echo "$ligne" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
+      if [ "$etat" = "vide" ]; then vide_idx="$idx"; vide_label="$libelle"; break; fi
+    done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
+    [ -z "$vide_idx" ] && break
+    echo "E2E round $round : champ « $vide_label » (idx $vide_idx) encore vide — re-remplissage contrôlé"
+    val=$(valeur_pour "$vide_label")
+    [ -n "$val" ] || { echo "E2E pas de valeur pour « $vide_label » — arrêt des rounds"; break; }
+    if ! remplir_champ "$vide_idx" "$val" "$OUT/champs.txt"; then
+      # champ absent du dump (sous le pli) : défiler puis régénérer les coordonnées
+      swipe_v 73 26 250 >/dev/null 2>&1; sleep 1
+      $UI champs > "$OUT/champs.txt" 2>&1 || true
+      remplir_champ "$vide_idx" "$val" "$OUT/champs.txt" || true
+    fi
+  done
+  $UI champs > "$OUT/champs_apres.txt" 2>&1 || true
+  nb_vides=$(grep -c " vide |" "$OUT/champs_apres.txt" 2>/dev/null); nb_vides=${nb_vides:-0}
+  echo "E2E champs encore vides après rounds : $nb_vides"
   local trouve=0 _
   for _ in 1 2 3 4 5 6; do
     if $UI wait --text "Continuer" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
