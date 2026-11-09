@@ -9,14 +9,17 @@ Statuts : **PASS** (preuve citée) · **FAIL** (défaut identifié, à corriger)
 · **BLOCKED** (cause externe) · **NOT RUN** (jamais exécuté) ·
 **CONDITIONAL** (preuve partielle/sous condition).
 
-Synthèse au 09/11 ~07:00Z (48 lignes d'exigences, 84 exigences tracées) :
-**26 PASS plein · 9 PASS avec réserve documentée · 3 FAIL-documentés (arbitrages
-fondateur A/7.7, B/7.8, C/5.4) · 1 PARTIAL (4.6, arbitrage D) · 2 EN VALIDATION
-(3.11 test JVM au prochain android-ci ; 5.6 fix harnais — run 42573687240 sur
-2ecf1bc en cours) · 6 CONDITIONAL (dont 12.2 : preuves complètes, confirmation
-du certificat par le fondateur attendue) · 1 NOT RUN (2.4 vrai OAuth Google =
-test physique fondateur) · 0 BLOCKED**.
-Avancées du 09/11 matin : run 42573687240 (2ecf1bc) SUCCESS — P0 5/5 re-confirmé (variantes 23/0/0 ×4), P1 36/0/0, offline 14/0/0 ; 5.6 FERMÉ côté produit (AUTORISER→réglages prouvé par focus ; dialogue système = image CI non matérialisée → physique D8-B1) ; camerap phase B FERMÉE (26/0/0, rushs par fichiers) ;
+Synthèse au 09/11 07:45Z (48 lignes d'exigences, 84 exigences tracées) :
+**27 PASS plein · 9 PASS avec réserve documentée · 3 FAIL-documentés (arbitrages
+fondateur A/7.7, B/7.8, C/5.4) · 1 PARTIAL (4.6, arbitrage D) · 0 EN
+VALIDATION · 6 CONDITIONAL (dont 12.2 : preuves complètes, confirmation du
+certificat par le fondateur attendue) · 1 NOT RUN (2.4 vrai OAuth Google = test
+physique fondateur) · 0 BLOCKED**.
+Avancées du 09/11 matin : **run final 42577296432 (7af4726) : 12/12 jobs
+SUCCESS — P0 5/5 zéro défaut (3e run consécutif), P1 36/0/0, offline 14/0/0,
+CAMERAP 42/0/0 INTÉGRAL (phase A permissions refusées + phase B rushs réels)** ;
+3.11 FERMÉ (test JVM vert, android-ci 42577296436) ; 5.6 FERMÉ (AUTORISER→
+réglages prouvé par focus dumpsys + A01d ; dialogue système = physique D8-B1) ;
 12.2 verrouillé côté logiciel (rc11 APK sha256 + mapping + certificat
 758077eb…e192 identique inter-builds, ZIP intègre, commit privé 2cd6991
 confirmé) ; 3.12/9.4/9.7 fermés ; 3.11/4.6/4.9/4.10/5.4/5.7/5.8 qualifiés
@@ -99,7 +102,7 @@ restore drill PASS (42534124616), P0 5/5 variantes zéro défaut (42562414209).
 | 5.3 | Conservation des prises | **PASS (run 42562414209)** | Rushs conservés jusqu'à l'écran post-guide (B04_rushs_finaux.txt) ; guide complet 3 prises, zéro crash ; intégration MP4 = PASS (P1 ×2 runs) |
 | 5.4 | Caméra avant/arrière + changement | **FAIL-documenté (absence produit) — arbitrage C fondateur** | Code inspecté (09/11) : `InsCameraBinder` l.80 = `CameraSelector.DEFAULT_BACK_CAMERA` **en dur** ; aucune bascule avant/arrière exposée (le cercle « Tourner » du guide partage `onRecord` — ce n'est PAS un flip). Écart au cahier des charges §5 : l'ajout est une évolution → décision fondateur (règle arbitrages) ; le fonctionnement caméra arrière lui-même est PROUVÉ (phase B, rushs réels) |
 | 5.5 | Aperçu vidéo (preview) | PASS (émulateur) | e2e P1 (écran de capture atteint, frames rendues) |
-| 5.6 | Permissions refusées (caméra/micro) | **PASS-produit documenté (runs 42562414209 + 42573687240) — dialogue système = physique (D8-B1)** | Tout le comportement OBSERVABLE côté produit est prouvé : dialogue produit « Accès caméra nécessaire » (A01b), ré-explication au 2e appui, **« AUTORISER » ouvre les RÉGLAGES système de l'app** (focus_apres_autoriser.txt : com.android.settings/InstalledAppDetails = chemin F52 voulu quand shouldShowRequestPermissionRationale=false, dumps A01c/A02), app vivante, zéro FATAL EXCEPTION, RECORD_AUDIO refusé = vidéo muette jamais bloquante (D40/B11). Le DIALOGUE SYSTÈME permissioncontroller n'est PAS matérialisé par l'image CI (3 observations dumpsys : focus=app à l'arrivée et au bouton ; requestPermissions pourtant appelé, CameraGuideActivity l.147) → refus « Don't allow » réel = test physique fondateur (plan D8-B1, préparé). Le FAIL du run 42573687240 était un bug de CASSE du harnais (grep « Settings » vs com.android.settings) — corrigé D42.26-24 ; la preuve (réglages ouverts) était dans l'artefact |
+| 5.6 | Permissions refusées (caméra/micro) | **PASS (run 42577296432 sur 7af4726 : camerap 42/0/0 intégral, 09/11 07:41)** | Tout le comportement OBSERVABLE côté produit est prouvé : dialogue produit « Accès caméra nécessaire » (A01b), ré-explication au 2e appui, **« AUTORISER » ouvre les RÉGLAGES système de l'app** (focus_apres_autoriser.txt : com.android.settings/InstalledAppDetails = chemin F52 voulu quand shouldShowRequestPermissionRationale=false, dumps A01c/A02), app vivante, zéro FATAL EXCEPTION, RECORD_AUDIO refusé = vidéo muette jamais bloquante (D40/B11). Le DIALOGUE SYSTÈME permissioncontroller n'est PAS matérialisé par l'image CI (3 observations dumpsys : focus=app à l'arrivée et au bouton ; requestPermissions pourtant appelé, CameraGuideActivity l.147) → refus « Don't allow » réel = test physique fondateur (plan D8-B1, préparé). Le FAIL du run 42573687240 était un bug de CASSE du harnais (grep « Settings » vs com.android.settings) — corrigé D42.26-24 ; la preuve (réglages ouverts) était dans l'artefact. **Run final 42577296432 : CPA_refus_systeme PASS (AUTORISER→réglages prouvé, retour app), CPA_refus_germe PASS (dialogue produit ré-explicatif), app vivante, zéro crash — camerap 42/0/0** ; le dialogue système permissioncontroller réel reste une vérité terrain (image CI ne le matérialise pas, 3 observations dumpsys) → complément physique D8-B1, préparé |
 | 5.7 | Stockage insuffisant | **PASS-partiel documenté (code) + arbitrage E** | Échec d'E/O pendant la prise (disque plein) → **Finalize F53** : fichier corrompu supprimé, message « prise échouée » (camera_take_failed), utilisateur reste sur la prise et peut REFAIRE — aucun fichier corrompu n'atteint le montage, zéro crash (CameraGuideActivity.onVideoEvent, audit 09/11). Mitigation petits stockages : purge au lancement des fichiers temporaires (MainActivity l.116-117, remplissage progressif des téléphones commerçants). **Limite documentée : pas de contrôle PRÉVENTIF d'espace (StatFs) avant la prise** — l'échec est géré a posteriori ; ajout d'une vérif préventive = arbitrage fondateur. Simulation d'un quota disque plein : non réalisable proprement sur l'émulateur → vérification physique préparée (§13-E) |
 | 5.8 | Erreurs caméra (débranchement, occupation) | **CONDITIONAL — code partiellement gardé + physique requis** | Erreurs PENDANT l'enregistrement (y compris perte du device) → Finalize F53 géré (suppression + message + reprise). **Limite code documentée : le bind initial (bindCamera → provider.bindToLifecycle) n'est PAS entouré d'un garde explicite** — une caméra déjà occupée/indisponible AVANT l'ouverture de l'écran caméra pourrait lever (jamais observé sur les runs, émulateur et émulateur+API 30). Débranchement/occupation réels = matériel → **test physique fondateur** (§13-D, préparé sans prétendre exécuté) |
 

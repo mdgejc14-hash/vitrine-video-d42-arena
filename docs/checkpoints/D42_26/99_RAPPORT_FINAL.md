@@ -4,14 +4,14 @@
 manquants, correction des défauts logiciels, matrice exhaustive — avant tout
 test physique du fondateur. Budget consommé : **0 FCFA**.
 
-**Tête de série des preuves** : run e2e-lab **42562414209** (9505b12, 04:32
-09/11) — **12/12 jobs SUCCESS** : P0 5/5 variantes ZÉRO DÉFAUT, P1 36/0/0,
-camerap 39/1/1 (phase B 26/0/0), offline 14/0/0, gabarits 817, langues ×3,
-auth-local, security, backend, selftest. One-shot audio intégral
-**42542375491** (600/600 mesurés) ; restore drill **42534124616** PASS ;
-backup nuit **42557585700** SUCCESS (03:39 09/11). Run de validation du fix
-camerap phase A : **42573687240** (2ecf1bc) — ⏳ verdict en cours au moment
-de cette consolidation.
+**Tête de série des preuves** : run e2e-lab FINAL **42577296432** (7af4726,
+09/11 07:41) — **12/12 jobs SUCCESS** : P0 5/5 variantes ZÉRO DÉFAUT (3e run
+consécutif : base 22/0/0, font130/rot90/small/petit-font130 23/0/0), P1
+36/0/0, **CAMERAP 42/0/0 INTÉGRAL** (phase A permissions refusées + phase B
+rushs réels), offline 14/0/0, gabarits 817, langues ×3, auth-local, security,
+backend, selftest. android-ci **42577296436** SUCCESS (test JVM réseau 3.11
+inclus). One-shot audio intégral **42542375491** (600/600 mesurés) ; restore
+drill **42534124616** PASS ; backup nuit **42557585700** SUCCESS (03:39 09/11).
 
 ---
 
@@ -45,10 +45,11 @@ de cette consolidation.
    (caméra arrière en dur, aucune bascule avant/arrière). 5.7 = PASS-partiel
    + arbitrage E (échec disque géré au Finalize F53, pas de contrôle préventif
    StatFs). 5.8 = CONDITIONAL (erreurs d'enregistrement gérées ; bind initial
-   non gardé — documenté ; le reste = physique). 5.6 permissions refusées :
-   dialogue produit + ré-explication + zéro crash PROUVÉS ; le FAIL initial
-   était un aveuglement d'OUTIL (uiautomator n'expose pas la fenêtre système)
-   — fix D42.26-19 (dumpsys window + refus BACK) ⏳ run 42573687240.
+   non gardé — documenté ; le reste = physique). 5.6 permissions refusées : FERMÉ —
+   dialogue produit, ré-explication, « AUTORISER »→réglages système (preuve
+   focus dumpsys + A01d), retour app, zéro crash : **camerap 42/0/0** au run
+   final ; le dialogue système permissioncontroller n'est pas matérialisé par
+   l'image CI (documenté) → complément physique D8-B1, préparé.
 5. **Gabarits (§6)** : audit statique 817 contrôles PASS (30/30 : briefs,
    séquences, durées, variables, montage, SFX, guide tournage) + job CI
    permanent. Modes : structure+bancs JVM+e2e ; voix réelle = physique.
@@ -91,13 +92,12 @@ de cette consolidation.
 
 ## 3. Matrice de statuts — voir 00_MATRICE_QUALIFICATION.md (source unique)
 
-Synthèse au 09/11 ~07:00Z (48 lignes / 84 exigences) : **26 PASS plein · 9 PASS
+Synthèse au 09/11 07:45Z (48 lignes / 84 exigences) : **27 PASS plein · 9 PASS
 avec réserve documentée · 3 FAIL-documentés (arbitrages A/B/C) · 1 PARTIAL
-(arbitrage D) · 2 EN VALIDATION (3.11 test JVM, 5.6 fix en run) · 6
-CONDITIONAL (dont 12.2 : confirmation fondateur) · 1 NOT RUN (2.4 = physique
-fondateur) · 0 BLOCKED**. Aucun défaut logiciel connu non corrigé : les
-défauts restants sont soit des arbitrages produit (A-E), soit des vérités
-terrain physiques.
+(arbitrage D) · 0 EN VALIDATION · 6 CONDITIONAL (dont 12.2 : confirmation
+fondateur) · 1 NOT RUN (2.4 = physique fondateur) · 0 BLOCKED**. Aucun défaut
+logiciel connu non corrigé : les défauts restants sont soit des arbitrages
+produit (A-E), soit des vérités terrain physiques.
 
 ## 4. Règles absolues respectées (auto-audit)
 
@@ -127,7 +127,10 @@ terrain physiques.
 | 42555281455/42555687350 | e2e-lab D42.26-18c/d | phase B par fichiers rush ; phase A FAIL diagnostic |
 | 42557585700 | backup cron 03:00 UTC | SUCCESS 03:39 09/11 (dispatch après retard cron GitHub) |
 | 42562414209 | e2e-lab 9505b12 (D42.26-18f) | **SUCCESS 12/12 — P0 5/5 zéro défaut, camerap 39/1/1 (B 26/0/0), offline 14/0/0** |
-| 42573687240 | e2e-lab 2ecf1bc (D42.26-19/20) | ⏳ en cours — verdict camerap phase A (dumpsys+BACK) attendu |
+| 42573687240 | e2e-lab 2ecf1bc (D42.26-19/20) | SUCCESS 12/12 — camerap 39/1/1 : preuve AUTORISER→réglages capturée, FAIL = bug casse harnais (corrigé en 24) |
+| 42577296436 | android-ci 7af4726 | SUCCESS — test JVM réseau 3.11 vert (:data:testDebugUnitTest) |
+| 42577296432 | e2e-lab 7af4726 (D42.26-24) | **SUCCESS 12/12 — CAMERAP 42/0/0 INTÉGRAL, P0 5/5, P1 36/0/0, offline 14/0/0** |
 
-*(Consolidation finale : verdict 42573687240 + android-ci du test JVM
-(ApiClientInvalidReplyTest) + décisions fondateur D1-D9 + rc12.)*
+*(Consolidation logicielle TERMINÉE le 09/11 07:45Z. Restent hors logiciel :
+décisions fondateur D1-D9 (arbitrages A-E, rc12, certificat), tests
+physiques D8, confirmation du certificat 12.2.)*
