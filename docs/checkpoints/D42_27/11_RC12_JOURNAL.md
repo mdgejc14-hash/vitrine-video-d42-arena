@@ -62,11 +62,37 @@
   1 fichier workflow + 2 fichiers docs, **code app strictement
   identique au build validé** (APK inchangée ef85cff7…0655, build
   d42.27-build-rc12 = 83da04e inchangé).
-- **Run 42658920860** (workflow corrigé) : téléchargement asset APK ✓,
-  **contrôle apksigner CI : certificat == 758077eb…33e192 constaté
-  indépendamment ✓**, ffprobe ✓, KVM ✓, P1 export EN COURS.
+- **Run 42658920860** (workflow corrigé) : **COMPLETED SUCCESS — 41 PASS /
+  0 FAIL** :
+  - certificat APK constaté EN CI :
+    758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192 ✓ ;
+  - installation (versionName 0.8.0-b0), langue, auth (repli), carrousel,
+    activité, parrainage, catalogue, gabarit ;
+  - brief : vide refusé, invalide refusé (prix « abc »), valide accepté,
+    retour arrière sans crash ;
+  - caméra émulée : prises filmées, guide terminé (3 rushs non vides),
+    aperçu E7, export E8 lancé, notification FGS ;
+  - **export poursuivi après 45 s d'écran éteint** ;
+  - **« Vidéo prête ! », export-0.mp4 7 536 097 octets, feuille de
+    partage Android, AUCUN FATAL EXCEPTION** ;
+  - ffprobe : h264 + aac, duration 34,99 s.
+- Runs de contrôle du commit ea0edde (code app identique) :
+  android-ci 42658870561 SUCCESS, android-e2e-lab 42658870536 SUCCESS 15/15.
 
 ## Verdict
 
-À compléter à la fin du run 42658920860. Aucune déclaration de
-livraison sans preuves (règle D42.27-11).
+**RC12 LIVRÉE avec preuves.** APK officielle
+`vitrine-video-0.8.0-b0-d42.27-rc12-official.apk` (SHA-256
+ef85cff7924a5d80785e2c35fe5e52d1d42f890ac61a27d46e75c188111a0655,
+certificat EPD HOLDING 758077eb…33e192) :
+
+- build : d42.27-build-rc12 → 83da04e (run 42652646514 SUCCESS) ;
+- re-signature locale : verify --print-certs conforme (étage 2) ;
+- validation CI de l'APK signée : run 42658920860 SUCCESS 41/41 (étage 3) ;
+- release : https://github.com/mdgejc14-hash/vitrine-video-d42-arena/releases/tag/d42.27-rc12
+  (APK + mapping.txt + checksums.txt).
+
+Conditions d'entrée toutes réunies et citées ; aucune modification du
+code app après le build validé (diff 83da04e..ea0edde = workflow + docs
+uniquement). Règles respectées : 0 FCFA, aucune composition audio
+modifiée, aucun secret exposé, aucun PASS sans preuve.
