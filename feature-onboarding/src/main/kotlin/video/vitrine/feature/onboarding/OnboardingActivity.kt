@@ -93,7 +93,10 @@ class OnboardingActivity : VitrineActivity() {
                         sectorCode = chosen.code
                         saveSession(uid, chosen)
                     }
-                    !refStepDone -> ReferralCodeScreen(sector) { code ->
+                    !refStepDone -> ReferralCodeScreen(
+                        sector,
+                        initial = refCode.orEmpty()
+                    ) { code ->
                         refCode = code ?: refCode
                         refStepDone = true
                     }

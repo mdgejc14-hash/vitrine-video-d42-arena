@@ -233,9 +233,13 @@ private fun SectorPreview() {
 @Composable
 fun ReferralCodeScreen(
     sector: Sector,
+    // D42.27-08 : code parrain DÉTECTÉ par le deep-link (affiché à l'auth,
+    // transmis jusqu'ici) — pré-remplissage du champ pour ne pas faire
+    // retaper un code que l'app connaît déjà. Vide = comportement inchangé.
+    initial: String = "",
     onDone: (String?) -> Unit
 ) {
-    var code by remember { mutableStateOf("") }
+    var code by remember { mutableStateOf(initial) }
     var invalid by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
