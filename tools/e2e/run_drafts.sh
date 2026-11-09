@@ -128,6 +128,45 @@ remplir_champ() {
   fermer_clavier
   return 0
 }
+# D42.27-05b : contrôle d'EFFET de la saisie — `input text` peut perdre des
+# frappes sans erreur (constat run 42619096543 : prix/champ 2 restés vides
+# alors que remplir_champ renvoie 0 ; même classe de défaut que les taps
+# sans effet D42.26-18b). On exige l'état « rempli » au re-scan, sinon on
+# re-remplit, jusqu'à 3 fois. $1 = fragment de libellé, $2 = valeur.
+assurer_champ_rempli() {
+  local lbl="$1" val="$2" tour ligne idx etat
+  for tour in 1 2 3; do
+    fermer_clavier
+    $UI champs > "$OUT/champs_ass.txt" 2>&1 || true
+    ligne=$(grep "^E2E CHAMP " "$OUT/champs_ass.txt" | grep -F "$lbl" | head -1)
+    if [ -z "$ligne" ]; then
+      # champ hors écran : descendre d'un écran et re-scanner
+      swipe_v 73 26 400 >/dev/null 2>&1; sleep 1
+      fermer_clavier
+      $UI champs > "$OUT/champs_ass.txt" 2>&1 || true
+      ligne=$(grep "^E2E CHAMP " "$OUT/champs_ass.txt" | grep -F "$lbl" | head -1)
+      [ -z "$ligne" ] && { echo "E2E champ « $lbl » introuvable (essai $tour)"; continue; }
+    fi
+    idx=$(echo "$ligne" | awk '{print $3}')
+    etat=$(echo "$ligne" | awk '{print $8}')
+    if [ "$etat" != "vide" ]; then
+      echo "E2E champ « $lbl » déjà rempli (essai $tour)"
+      return 0
+    fi
+    remplir_champ "$idx" "$val" "$OUT/champs_ass.txt" || true
+    # contrôle d'effet : CE libellé doit être « rempli » au re-scan
+    fermer_clavier
+    $UI champs > "$OUT/champs_ass_verif.txt" 2>&1 || true
+    if grep "^E2E CHAMP " "$OUT/champs_ass_verif.txt" | grep -F "$lbl" | grep -q " rempli "; then
+      echo "E2E champ « $lbl » rempli avec effet vérifié (essai $tour)"
+      return 0
+    fi
+    echo "E2E champ « $lbl » toujours vide après essai $tour — re-remplissage"
+  done
+  echo "E2E champ « $lbl » NON rempli après 3 essais"
+  return 1
+}
+
 filmmer_une_prise() { # -> 0 ok, 1 pas de bouton, 2 jamais parti, 3 arrêt impossible
   $UI tap --text "Tourner" --exact --timeout 12 >/dev/null 2>&1 || true
   $UI wait --id "camera_record_button" --timeout 30 >/dev/null 2>&1 || return 1
@@ -224,27 +263,19 @@ else
   shot DR_brief_rate; dump DR_brief_rate
 fi
 
-# --- S1 : saisie PARTIELLE (2 champs) puis FERMETURE BRUTALE ---
+# --- S1 : saisie PARTIELLE (2 champs, effet vérifié) puis FERMETURE BRUTALE ---
 fermer_clavier
-$UI champs > "$OUT/champs_s1.txt" 2>&1 || true
+s1_a=""; s1_b=""
+assurer_champ_rempli "commerce" "BoutiqueAwa" && s1_a="commerce"
+assurer_champ_rempli "whatsapp" "+22997000000" && s1_b="whatsapp"
 s1_remplis=0
-while IFS= read -r ligne; do
-  idx=$(echo "$ligne" | awk '{print $3}')
-  etat=$(echo "$ligne" | awk '{print $8}')
-  libelle=$(echo "$ligne" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
-  [ "$etat" = "vide" ] || continue
-  val=$(valeur_pour "$libelle")
-  [ -n "$val" ] || continue
-  if remplir_champ "$idx" "$val" "$OUT/champs_s1.txt"; then
-    s1_remplis=$((s1_remplis+1))
-  fi
-  [ "$s1_remplis" -ge 2 ] && break
-done < <(grep "^E2E CHAMP " "$OUT/champs_s1.txt")
+[ -n "$s1_a" ] && s1_remplis=$((s1_remplis+1))
+[ -n "$s1_b" ] && s1_remplis=$((s1_remplis+1))
 shot S01_saisie_partielle; dump S01_saisie_partielle
-if [ "$s1_remplis" -ge 1 ]; then
-  record PASS S1_saisie_partielle "$s1_remplis champ(s) saisi(s) puis fermeture brutale (am force-stop)"
+if [ "$s1_remplis" -ge 2 ]; then
+  record PASS S1_saisie_partielle "2 champs saisis avec effet vérifié ($s1_a, $s1_b) puis fermeture brutale"
 else
-  record FAIL S1_saisie_partielle "aucun champ saisissable (voir S01)"
+  record FAIL S1_saisie_partielle "seulement $s1_remplis champ(s) saisissable(s) avec effet ($s1_a $s1_b — voir S01)"
 fi
 adb shell am force-stop "$PKG"
 sleep 3
@@ -329,6 +360,17 @@ for tour in 1 2 3 4 5 6 7 8 9 10 11 12; do
   swipe_v 73 26 250 >/dev/null 2>&1
   sleep 1
 done
+# D42.27-05b : passe de CONTRÔLE D'EFFET sur chaque champ requis (la boucle
+# ci-dessus peut marquer un champ « fait » alors que la saisie n'a pas pris —
+# le bouton Continuer resterait légitimement désactivé, comme au run
+# 42619096543). Preuve au re-scan pour chacun.
+s2_manquants=""
+assurer_champ_rempli "commerce" "BoutiqueAwa" || s2_manquants="$s2_manquants commerce"
+assurer_champ_rempli "whatsapp" "+22997000000" || s2_manquants="$s2_manquants whatsapp"
+assurer_champ_rempli "vêtement" "RobeWax" || s2_manquants="$s2_manquants offre"
+assurer_champ_rempli "Prix" "15000" || s2_manquants="$s2_manquants prix"
+assurer_champ_rempli "Quartier" "Akpakpa" || s2_manquants="$s2_manquants quartier"
+[ -z "$s2_manquants" ] && record PASS S2_champs_effet "5 champs requis remplis avec effet vérifié (commerce, whatsapp, offre, prix, quartier)"   || record FAIL S2_champs_effet "champs sans effet vérifié :$s2_manquants"
 shot S02_brief_complet; dump S02_brief_complet
 if tap_effet "Continuer" "Avant de commencer" 25; then
   record PASS S2_brief_valide "brief complété et validé après reprise (contrôle d'effet)"
