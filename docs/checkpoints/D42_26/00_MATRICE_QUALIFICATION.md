@@ -9,15 +9,26 @@ Statuts : **PASS** (preuve citée) · **FAIL** (défaut identifié, à corriger)
 · **BLOCKED** (cause externe) · **NOT RUN** (jamais exécuté) ·
 **CONDITIONAL** (preuve partielle/sous condition).
 
-Synthèse au 08/11 18:30Z : **56 PASS · 2 FAIL→corrigés (validation en cours) ·
-0 BLOCKED · 18 NOT RUN · 8 CONDITIONAL** sur 84 exigences tracées ci-dessous.
-Avancées du jour : P1-E FERMÉ (backup 42505158748 SUCCESS), parrainage FERMÉ
-(13/13, 42507249925), corrections UI poussées (verrouillage portrait + layout
-auth ancré), couverture intégrale audio 318/600 (toutes conformes) —
-**découverte majeure : quota B2 Class B quotidien (2 500/jour gratuit) ÉPUISÉ
-par la cumulation des audits** (sonde 42508980573 : 6/6 → 404
-track_not_uploaded, y compris pistes servies 200 une heure avant) ;
-achèvement programmé one-shot à 00:15 UTC.
+Synthèse au 09/11 ~07:00Z (48 lignes d'exigences, 84 exigences tracées) :
+**26 PASS plein · 9 PASS avec réserve documentée · 3 FAIL-documentés (arbitrages
+fondateur A/7.7, B/7.8, C/5.4) · 1 PARTIAL (4.6, arbitrage D) · 2 EN VALIDATION
+(3.11 test JVM au prochain android-ci ; 5.6 fix harnais — run 42573687240 sur
+2ecf1bc en cours) · 6 CONDITIONAL (dont 12.2 : preuves complètes, confirmation
+du certificat par le fondateur attendue) · 1 NOT RUN (2.4 vrai OAuth Google =
+test physique fondateur) · 0 BLOCKED**.
+Avancées du 09/11 matin : camerap phase B FERMÉE (26/0/0, rushs par fichiers) ;
+12.2 verrouillé côté logiciel (rc11 APK sha256 + mapping + certificat
+758077eb…e192 identique inter-builds, ZIP intègre, commit privé 2cd6991
+confirmé) ; 3.12/9.4/9.7 fermés ; 3.11/4.6/4.9/4.10/5.4/5.7/5.8 qualifiés
+(audit code + test JVM ajouté + limites documentées en arbitrages C/D/E) ;
+cron audio one-shot DÉSARMÉ (D42.26-20 : le 600/600 est consigné, le run
+sortait FAILURE sur le seul seuil 7.7 → la garde skip n'aurait jamais
+verrouillé, ~1 260 lectures B2/nuit économisées).
+Historique 08/11 : P1-E FERMÉ (backup 42505158748), parrainage FERMÉ (13/13),
+couverture intégrale audio 600/600 (7.2/7.6 PASS ; 7.7 FAIL arbitrage A :
+silence initial 1,03-3,18 s ; 7.8 FAIL arbitrage B : 54/60 clés), quota B2
+Class B épuisé puis contourné (one-shot 00:15 UTC → run 42542375491),
+restore drill PASS (42534124616), P0 5/5 variantes zéro défaut (42562414209).
 
 ---
 
@@ -57,8 +68,8 @@ achèvement programmé one-shot à 00:15 UTC.
 | 3.8 | Projets (création, historique) | CONDITIONAL | e2e P1 crée un projet + l'historique l'affiche (36/0/0 au lab) ; isolation testée (api-security) ; **API projets : liste/détail/lifecycle à tracer formellement (§13-F)** |
 | 3.9 | Commandes (billing) | CONDITIONAL | billing/return 200 vérifié (smoke) ; webhook 401/400/422 (api-security) ; SKYPAY volontairement 501 (voir 10.6) |
 | 3.10 | Parrainage serveur (implémentation) | CONDITIONAL | Code inspecté : GET /me/referral (JWT), POST /me/referral/claim, anti auto-parrainage (`ref.id === merchantId` → 404), fingerprint signup, refcode_collision géré — **tests d'intégration réels NOT RUN (§13-C)** |
-| 3.11 | Erreurs réseau / réponses invalides côté client | NOT RUN | Comportement de l'app face à un serveur indisponible/réponse invalide — §13-B (offline) |
-| 3.12 | Serveur indisponible (dégradation propre) | NOT RUN | §13-B |
+| 3.11 | Erreurs réseau / réponses invalides côté client | **EN VALIDATION (test JVM ajouté 09/11, prochain android-ci)** | Audit code : le catalogue est EMBARQUÉ (assets+Room, AUCUN fetch distant) ; les seuls échanges réseau (bootstrap/quota/telemetry/entitlements/referral) sont gardés à 3 niveaux : ApiClient `runCatching{}.getOrNull()` (transport → null, jamais d'exception), BackendSync re-runCatching + `reply==null||status!=200 → return` (miroir local intact), parsing `runCatching{JSONObject}` + `opt*` avec repli. Preuve exécutée ajoutée : `data/src/test/.../ApiClientInvalidReplyTest.kt` (serveur mock JDK) — 200 non-JSON / 200 corps pourri / 500 / connexion refusée → Reply brute ou null, zéro exception, parsing avorté proprement. Erreurs réseau RÉELLES côté app : PASS (banc offline OFF4b tentative Google hors ligne sans crash, OFF11 retour réseau sans crash) |
+| 3.12 | Serveur indisponible (dégradation propre) | **PASS (banc offline 14/0/0, run 42562414209)** | OFF1 : réseau coupé AVANT le lancement (svc wifi+data, preuve dumpsys) → démarrage à froid SANS réseau, parcours complet consultable en local (langue, connexion, carrousel ×3, secteurs, bienvenue, catalogue), app vivante, retour réseau propre (OFF11), zéro FATAL EXCEPTION (OFF12) — dégradation intégrale prouvée |
 | 3.13 | Aucun crédit/droit fabriquable côté client | CONDITIONAL | Architecture : crédits et droits uniquement en D1 (écrits par le Worker, JWT obligatoire) ; api-security prouve l'isolation et le refus sans token ; **à renforcer par tests négatifs ciblés (§13-C : welcome-grant unique, claim impossible sans JWT, débit uniquement via route protégée)** |
 | 3.14 | Limite de capacité B2 connue et documentée | **CONDITIONAL (découverte du 08/11)** | Quota gratuit B2 Class B = **2 500 lectures/jour** — épuisé à ~18:00 par la cumulation des audits (654 HEAD ×2 + ~400 GET + labs). ATTNÉNUATION : cache edge Cloudflare 1 mois/immutable (les pistes déjà servies d'une colo ne consomment plus). Tant que l'app n'est pas distribuée : aucun impact utilisateur. **Après le test fondateur : surveiller la consommation (décision budgétaire éventuelle = fondateur)**. Backlog transparence : la route track transforme les refus B2 (403/429 quota) en 404 `track_not_uploaded` — à distinguer (amélioration serveur, pas bloquante) |
 
@@ -71,11 +82,11 @@ achèvement programmé one-shot à 00:15 UTC.
 | 4.3 | Lancement sans Internet | **PASS** | **job android-e2e-offline (run 42534049820, 442a21b)** : réseau émulateur coupé AVANT le 1er lancement (svc wifi+data disable, dumpsys en preuve) — OFF1+OFF2 PASS : app démarrée à froid sans réseau, processus vivant |
 | 4.4 | Accès données locales autorisées hors connexion | **PASS** | OFF3+OFF4+OFF4b+OFF5 PASS : langue, écran connexion, tentative Google SANS crash, repli démo — tout l'onboarding local fonctionne hors connexion |
 | 4.5 | Gabarits hors connexion | **PASS — FERMÉ** | Run **42539964148** (9d49aed, D42.26-17) : OFF6 carrousel franchi (3 écrans + Commencer) ; **OFF7 secteur+Continuer avec effet vérifié ; OFF8 bienvenue + solde local ; OFF9 catalogue consultable** — les 3 BLOCKED précédents étaient purement un défaut de HARNAIS (le script cherchait les cartes au slide 2 du carrousel), jamais un défaut produit |
-| 4.6 | Création/conservation d'un projet local | NOT RUN | §13-B |
+| 4.6 | Création/conservation d'un projet local | **PARTIAL — limite produit documentée (arbitrage D fondateur)** | En session : PASS — projet complet créé et mené jusqu'à l'export (brief 5 champs → guide → rushs conservés PAR FICHIERS → MP4 ; P1 36/0/0 + camerap B 26/0/0, run 42562414209). Inter-sessions : **aucun brouillon persistant** — Room local = caches (gabarits/entitlements/referral/export_journal/telemetry_outbox), pas de table projet ; la session démo est ÉPHÉMÈRE par conception (OFF10 documenté : retour à la connexion après redémarrage) → un projet non exporté est perdu à la fermeture. Ajout d'une persistance de brouillon = évolution → décision fondateur |
 | 4.7 | Interruption réseau pendant un parcours | **PASS (aller-retour)** | OFF11 PASS : retour du réseau (svc enable) après tout le parcours hors ligne — app vivante, aucun crash ; l'interruption DÉBUT de parcours = la coupe préalable OFF1 ; coupure EN COURS de tournage = à couvrir au test physique |
 | 4.8 | Fermeture/redémarrage puis reprise | **PASS (qualifié honnêtement)** | OFF10+OFF10b (run 42536993228) : force-stop + relance hors connexion — pas de retour au carrousel, processus vivant ; **l'écran revient à la CONNEXION : session démo ÉPHÉMÈRE par conception** (le repli ne dépose pas de jeton persistant ; la persistance des comptes réels = jeton 1 h, §2/auth-local) — requalifié ainsi en D42.26-17 |
-| 4.9 | Reprise après reconnexion + synchronisation sans doublon | NOT RUN | §13-B |
-| 4.10 | Absence de perte de projet / double débit | NOT RUN | §13-B (le débit crédits est serveur → double débit client improbable par conception ; à prouver par test) |
+| 4.9 | Reprise après reconnexion + synchronisation sans doublon | **PASS-documenté (preuves croisées)** | Reconnexion : OFF11 retour réseau sans crash (e2e). Sans doublon : BackendSync offline-first — file d'attente `pending_quota` = LinkedHashSet **«uid|eventId»** (un eventId rejoué n'est PAS re-consommé, takeLast MAX_PENDING), `isNonRetryable(4xx)` évite les boucles, `flushPending`/`replayPendingQuota` au retour ; le serveur fait foi pour le débit (§3 : aucun crédit fabricable côté client, api-security CI) |
+| 4.10 | Absence de perte de projet / double débit | **PASS double débit / limite 4.6 pour la perte** | Double débit : idempotence eventId client (4.9) + débit côté serveur uniquement (R1/R3, miroir Room jamais source de vérité) → un replay ne débite pas deux fois. Perte : identique à 4.6 — en session rien n'est perdu (rushs conservés jusqu'à l'export, P1/camerap) ; inter-sessions la limite documentée s'applique (arbitrage D) |
 
 **Bilan §4 (run 42539964148, 9d49aed) : PASS=14 FAIL=0 BLOCKED=0 — parcours hors ligne COMPLET et honnête.** Le mode démo = repli local zéro réseau by design ; session démo éphémère documentée (4.8) ; catalogue/gabarits embarqués consultables sans réseau ; retour réseau sans crash ni double débit (OFF11, aucune opération facturée pendant la coupure — OFF5 zéro appel réseau).
 
@@ -84,13 +95,13 @@ achèvement programmé one-shot à 00:15 UTC.
 | # | Exigence | Statut | Preuve / note |
 |---|---|---|---|
 | 5.1 | Parcours tournage guidé 4 scènes (émulateur) | PASS | e2e P1 36/0/0 (42497790522) + P1 officiel 37/0/0 (42482295447) : parcours complet jusqu'au MP4 |
-| 5.2 | Enregistrement/arrêt/suppression/reprise d'une prise | **EN VALIDATION (banc D42.26-18d, run en cours)** | Enregistrement+arrêt : PASS (P1 ×2 runs du jour). Suppression/reprise : job camerap — « Refaire » doit SUPPRIMER le fichier rush (comptage avant/après) puis re-filmage. Runs précédents 42543641719+42547280252 : 30/2/8 — les 2 FAIL = **défaut HARNAIS** (champ Quartier resté vide → bouton désactivé → tap sans effet ; P1 du même run réussissait — preuve champs.txt 3/4) ; cause racine corrigée en 18c (contrôle d'effet du remplissage) |
-| 5.3 | Conservation des prises | **EN VALIDATION (banc D42.26-18)** | fichiers rush-*.mp4 listés (run-as) jusqu'à l'écran post-guide (B04_rushs_finaux.txt) ; intégration au MP4 = PASS (P1) |
-| 5.4 | Caméra avant/arrière + changement | NOT RUN | Émulateur : caméra virtuelle par défaut uniquement. **Test physique requis** |
+| 5.2 | Enregistrement/arrêt/suppression/reprise d'une prise | **PASS (run 42562414209, banc D42.26-18f)** | Phase B 26/0/0 : enregistrement+arrêt PROUVÉS PAR FICHIERS RUSH (comptage run-as) ; « Refaire » = slot courant uniquement (re-filmée → 2 rushs, précédentes INTACTES, preuves B02/B03) ; reprise après interruption de filmage couverte par P1 |
+| 5.3 | Conservation des prises | **PASS (run 42562414209)** | Rushs conservés jusqu'à l'écran post-guide (B04_rushs_finaux.txt) ; guide complet 3 prises, zéro crash ; intégration MP4 = PASS (P1 ×2 runs) |
+| 5.4 | Caméra avant/arrière + changement | **FAIL-documenté (absence produit) — arbitrage C fondateur** | Code inspecté (09/11) : `InsCameraBinder` l.80 = `CameraSelector.DEFAULT_BACK_CAMERA` **en dur** ; aucune bascule avant/arrière exposée (le cercle « Tourner » du guide partage `onRecord` — ce n'est PAS un flip). Écart au cahier des charges §5 : l'ajout est une évolution → décision fondateur (règle arbitrages) ; le fonctionnement caméra arrière lui-même est PROUVÉ (phase B, rushs réels) |
 | 5.5 | Aperçu vidéo (preview) | PASS (émulateur) | e2e P1 (écran de capture atteint, frames rendues) |
-| 5.6 | Permissions refusées (caméra/micro) | **EN VALIDATION (banc D42.26-18)** | Phase A du camerap : aucune permission accordée → dialogue SYSTÈME refusé → dialogue produit « Accès caméra nécessaire » (F52) exigé, ré-explanation au 2e appui, zéro crash process ; RECORD_AUDIO refusé = vidéo muette jamais bloquante (code D40/B11) |
-| 5.7 | Stockage insuffisant | NOT RUN | §13-E (simulation quota) — basse priorité |
-| 5.8 | Erreurs caméra (débranchement, occupation) | NOT RUN | **Test physique requis** (hardware) |
+| 5.6 | Permissions refusées (caméra/micro) | **EN VALIDATION (fix D42.26-19, run 42573687240 sur 2ecf1bc)** | Run 42562414209 : FAIL = aveuglement d'OUTIL, pas défaut produit (uiautomator n'expose pas la fenêtre permissioncontroller — dumps = app seule, alors que `requestPermissions` est appelé à l'arrivée, CameraGuideActivity l.147). Fix D42.26-19 : preuve de demande par **dumpsys window** (fenêtre active) + refus par **BACK** (fermeture = refus implicite Android, onRequestPermissionsResult reçoit PERMISSION_DENIED) + second chemin produit « AUTORISER » (F52 l.436 : requestPermissions si rationale, réglages sinon). Déjà prouvés au même run : dialogue produit « Accès caméra nécessaire » (A01b), ré-explication au 2e appui (A02), zéro crash, app vivante ; RECORD_AUDIO refusé = vidéo muette jamais bloquante (D40/B11) |
+| 5.7 | Stockage insuffisant | **PASS-partiel documenté (code) + arbitrage E** | Échec d'E/O pendant la prise (disque plein) → **Finalize F53** : fichier corrompu supprimé, message « prise échouée » (camera_take_failed), utilisateur reste sur la prise et peut REFAIRE — aucun fichier corrompu n'atteint le montage, zéro crash (CameraGuideActivity.onVideoEvent, audit 09/11). Mitigation petits stockages : purge au lancement des fichiers temporaires (MainActivity l.116-117, remplissage progressif des téléphones commerçants). **Limite documentée : pas de contrôle PRÉVENTIF d'espace (StatFs) avant la prise** — l'échec est géré a posteriori ; ajout d'une vérif préventive = arbitrage fondateur. Simulation d'un quota disque plein : non réalisable proprement sur l'émulateur → vérification physique préparée (§13-E) |
+| 5.8 | Erreurs caméra (débranchement, occupation) | **CONDITIONAL — code partiellement gardé + physique requis** | Erreurs PENDANT l'enregistrement (y compris perte du device) → Finalize F53 géré (suppression + message + reprise). **Limite code documentée : le bind initial (bindCamera → provider.bindToLifecycle) n'est PAS entouré d'un garde explicite** — une caméra déjà occupée/indisponible AVANT l'ouverture de l'écran caméra pourrait lever (jamais observé sur les runs, émulateur et émulateur+API 30). Débranchement/occupation réels = matériel → **test physique fondateur** (§13-D, préparé sans prétendre exécuté) |
 
 ## 6. GABARITS, SECTEURS ET MONTAGE
 
@@ -139,10 +150,10 @@ achèvement programmé one-shot à 00:15 UTC.
 | 9.1 | Défauts rotation 90° (17/3/3) | **PASS** | Cause : boutons Google/Continuer hors écran en paysage → **verrouillage portrait des 9 activités** (produit vidéo verticale 9:16), commits 532b76b+c120fbd ; **validé 23/0/0** sur c0d7d72 (42509265951) ET e45ba1e (42512514439) |
 | 9.2 | Petits écrans 540×960 | **PASS — FERMÉ (5/5 variantes 0 défaut)** | Run **42536993228** (f175adc, D42.26-16) : base 22/0/0, font130 23/0/0, rot90 23/0/0, **small 23/0/0**, petit/font130 23/0/0. Historique : 42528862955+42534049820 avaient small 19-20/1/2, dont le « FAIL » S18 = **crash du LAUNCHER de l'émulateur** (com.android.launcher3, bug CellLayout des overrides wm — filtré depuis sur `Process: $PKG`) et S14/S17 = tap « Continuer » à bounds [0,0][0,0] sans effet → **fix D42.26-16 : contrôle d'EFFET après chaque tap (écran suivant exigé, sinon taporange sur la bande orange = bouton réel)** — validé vert. Faits maintenus : défaut auth small FERMÉ ; carrousel small = FAUX défaut produit (bouton rendu, dump uiautomator pourri en override 540×960) ; fix produit a0fc28c reverté (régression base/rot90) |
 | 9.3 | 4 langues FR/EN/ES/JA | PASS | FR = parcours principal (22-23/0/0) ; EN/ES/JA = 11/0/0 chacun (42497790522) — **les 4 langues couvertes, à documenter ainsi** |
-| 9.4 | Grandes tailles de police / clavier affiché | NOT RUN | §13-H (config fontScale 1.3 + états clavier) |
+| 9.4 | Grandes tailles de police / clavier affiché | **PASS (run 42562414209)** | Variante font130 (fontScale 1.3) : **23/0/0** — tous les parcours P0 (onboarding→carrousel→activité→parrainage→catalogue→gabarit→brief→guide) avec fontes agrandies, zéro FAIL/BLOCKED ; variante combinée petit-écran+font130 : 23/0/0 également. Clavier affiché : couvert par les saisies de brief (5 champs validés avec contrôle d'effet, phase B camerap 26/0/0) |
 | 9.5 | Zones tactiles / défilement / carrousels / formulaires | CONDITIONAL | Couverts implicitement par les parcours e2e (carrousel onboarding testé en 4 langues) ; matrice dédiée §13-H |
 | 9.6 | Navigation arrière | CONDITIONAL | Back utilisé dans les parcours ; exhaustivité §13-H |
-| 9.7 | Paysage (si pris en charge) | NOT RUN | L'app cible portrait ; rotation 90° testée pour la robustesse (9.1) |
+| 9.7 | Paysage (si pris en charge) | **PASS-par-design (documenté)** | L'app est **portrait-ONLY verrouillé** : `android:screenOrientation="portrait"` sur MainActivity (app/src/main/AndroidManifest.xml l.35) ET CameraGuideActivity (feature-camera l.9) — choix produit assumé (vidéo 9:16 verticale). La rotation de l'appareil ne peut donc PAS produire d'écran paysage cassé ; robustesse à la rotation du device testée : variante rot90 (rotation forcée 90°) **23/0/0** (run 42562414209) |
 | 9.8 | Aucun bouton essentiel inaccessible | **PASS** | 9.1 fermé (23/0/0 ×2) ; 9.2 FERMÉ au run 42536993228 (small 23/0/0, 5/5 variantes à 0 FAIL/0 BLOCKED) — le défaut « Continuer inaccessible » était un artefact du dump uiautomator en override 540×960, le contrôle d'effet le prouve |
 
 ## 10. SAUVEGARDE ET SERVICES DE PRODUCTION
@@ -164,7 +175,7 @@ achèvement programmé one-shot à 00:15 UTC.
 | 11.1 | Matrice exhaustive de qualification | PASS | **Ce document** (84 lignes, mise à jour continue) |
 | 11.2 | Inventaire prod / test-only / Internet / offline / physique | PASS | §14 ci-dessous (tenu à jour) |
 | 12.1 | Correction des défauts bloquants avant remise | **UI FERMÉE** | 9.1 + 9.2 FERMÉS au run 42536993228 (5/5 variantes 0 FAIL/0 BLOCKED) ; restent : offline 4.5 (fix D42.26-17 en validation, run en cours), D auth réel, E modes/permissions, J consolidation, certificat |
-| 12.2 | Intégrité APK + certificat officiel | CONDITIONAL | rc11 : release privée 438156110, sha256 b052e7c9…c83bb6, mapping R8 identique miroir/privé ; **après corrections UI → rc12 à produire et re-certifier** |
+| 12.2 | Intégrité APK + certificat officiel | **CONDITIONAL — preuves logicielles COMPLÈTES (09/11), confirmation fondateur requise** | rc11 (release privée d42.23-rc11, commit 2cd6991 du 08/11 09:17) : APK 44 112 105 o, sha256 **b052e7c94137…d7c83bb6** = EXACTEMENT le consigné (rc11_checksums.txt) ; ZIP intègre (unzip -t) ; signature **V2** (pas de V1 — keytool muet, attendu) ; certificat **CN=Vitrine Video, OU=Mobile, O=EPD HOLDING, L=Cotonou, ST=Littoral, C=BJ**, RSA 2048/SHA256withRSA, validité **31/10/2026 → 23/10/2056**, SHA-256 **758077eb1388…0b33e192**, SHA-1 89fab9b6…ce0cd8a3 — **IDENTIQUE au certificat lu directement (keytool -printcert) sur l'APK rc-audio-v2 de l'arène (bâti du commit 453e470, ancêtre de HEAD)** : keystore officiel unique, cohérence inter-builds prouvée. mapping.txt R8 81 373 445 o, sha256 **8cef1f5a0053…92a2364c7** ✓. Restent au fondateur : (1) CONFIRMER que ce certificat est bien le sien (exigence §12) ; (2) rc12 à produire après validation finale (les fixes UI D42.26-15 sont postérieurs à rc11) puis re-vérifier sha256/mapping (certificat attendu identique) |
 | 12.3 | Rapport final complet avant remise | EN COURS | Présent document + 99_RAPPORT_FINAL (D42.25) à consolider en fin de mission |
 
 ---

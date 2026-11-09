@@ -12,4 +12,6 @@ dependencies {
     ksp(libs.room.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.json)
+    // D42.26 §3.11 : ApiClientInvalidReplyTest (runBlocking sur client suspend)
+    testImplementation(libs.coroutines.android)
 }
