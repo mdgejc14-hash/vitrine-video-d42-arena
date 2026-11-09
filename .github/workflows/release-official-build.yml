@@ -11,7 +11,7 @@ name: release-official-build
 # qualification D42.16/D42.17 ne sont pas relancés).
 on:
   push:
-    tags: ['d42.17-build-*', 'd42.18-build-*', 'd42.21-build-*', 'd42.27-build-*']
+    tags: ['d42.17-build-*', 'd42.18-build-*', 'd42.21-build-*', 'd42.27-build-*', 'd42.28-build-*']
 
 concurrency:
   group: release-official-build-${{ github.ref }}
@@ -21,6 +21,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    env:
+      # D42.28 (P0) : la clé Firebase RÉELLE est injectée comme propriété
+      # projet Gradle par variable d'environnement (jamais en argument de
+      # commande, jamais dans les logs, jamais dans un commit). Sans cet
+      # override, le build reprenait la valeur FACTICE de gradle.properties
+      # et l'APK livrée ne pouvait PAS s'authentifier (preuve RC12 : dex
+      # contenant AIzaSyD42LABDUMMYKEY, 0 clé réelle).
+      ORG_GRADLE_PROJECT_vvFirebaseApiKey: ${{ secrets.FIREBASE_WEB_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -28,6 +36,16 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
+      - name: Pré-vol secret Firebase (échec clair si absent)
+        env:
+          FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
+        run: |
+          set -u
+          if [ -z "${FIREBASE_WEB_API_KEY:-}" ]; then
+            echo "::error::Secret FIREBASE_WEB_API_KEY manquant (Settings → Secrets and variables → Actions)"
+            exit 1
+          fi
+          echo "PASS: FIREBASE_WEB_API_KEY présent (valeur jamais affichée)"
       - name: Tests unitaires feature-export (non-régression FGS D42.18)
         run: |
           set -euo pipefail
@@ -62,6 +80,37 @@ jobs:
           APK=$(ls app/build/outputs/apk/release/*.apk | head -1)
           ls -la "$APK"
           sha256sum "$APK" | tee build_apk_sha256.txt
+      - name: Contrôle dex — clé Firebase réelle présente, factice absente
+        # D42.28 (P0) : PORTE. L'APK de livraison doit contenir la clé du
+        # projet Firebase réel (secret Actions) et NE DOIT PAS contenir la
+        # valeur factice de gradle.properties. Comparaison binaire exacte,
+        # la valeur n'est jamais affichée (pattern du workflow
+        # android-e2e-production-equivalent, run 42482295447).
+        env:
+          FIREBASE_WEB_API_KEY_ENV: ${{ secrets.FIREBASE_WEB_API_KEY }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PYV'
+          import os, subprocess, tempfile, glob
+          key = os.environ.get('FIREBASE_WEB_API_KEY_ENV') or ''
+          assert key, 'secret absent'
+          with tempfile.TemporaryDirectory() as d:
+              subprocess.run(['unzip', '-q', '-o', 'app/build/outputs/apk/release/app-release.apk',
+                              'classes*.dex', '-d', d], check=True)
+              dexes = sorted(glob.glob(os.path.join(d, 'classes*.dex')))
+              real = dummy = 0
+              for dex in dexes:
+                  data = open(dex, 'rb').read()
+                  real += data.count(key.encode())
+                  dummy += data.count(b'AIzaSyD42LABDUMMYKEY')
+                  print('DIAG dex:', os.path.basename(dex), '| taille:', len(data),
+                        '| occurrences clé réelle:', data.count(key.encode()),
+                        '| occurrences factice:', data.count(b'AIzaSyD42LABDUMMYKEY'))
+          print('clé réelle présente (binaire) :', real > 0)
+          print('clé factice présente (binaire) :', dummy > 0)
+          assert real > 0 and dummy == 0, 'échec porte clé Firebase (réelle absente ou factice présente)'
+          print('PASS: dex = clé Firebase réelle uniquement (comparaison binaire exacte)')
+          PYV
       - name: Artefact build (re-signature locale ensuite)
         if: always()
         uses: actions/upload-artifact@v4

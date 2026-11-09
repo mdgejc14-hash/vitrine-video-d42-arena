@@ -13,6 +13,14 @@ on:
   push:
     branches: [d42.13-lab, main]
 
+# D42.28 (P0) : clé Firebase RÉELLE injectée dans les APK debug du lab
+# (identifiant client PUBLIC — embarqué dans toute APK distribuée ; la
+# valeur ne paraît ni en commit ni dans les logs, et l'APK n'est jamais
+# un artefact). Les bancs auth testent ainsi la même chaîne que la
+# production ; le choix d'un vrai compte reste au fondateur.
+env:
+  ORG_GRADLE_PROJECT_vvFirebaseApiKey: ${{ secrets.FIREBASE_WEB_API_KEY }}
+
 # Un seul laboratoire à la fois : un nouveau push annule la run précédente au
 # lieu d'empiler des émulateurs inutiles (coût = temps de runner, pas d'argent).
 concurrency:

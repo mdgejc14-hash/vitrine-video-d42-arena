@@ -14,6 +14,13 @@ on:
     branches: [main]
   pull_request:
 
+# D42.28 (P0) : clé Firebase RÉELLE injectée dans TOUS les builds de ce
+# workflow (identifiant client public, embarqué dans toute APK distribuée —
+# pas un secret serveur ; la valeur ne paraît ni en commit ni dans les logs).
+# Sans elle, les bancs testaient la valeur factice de gradle.properties.
+env:
+  ORG_GRADLE_PROJECT_vvFirebaseApiKey: ${{ secrets.FIREBASE_WEB_API_KEY }}
+
 jobs:
   android:
     runs-on: ubuntu-latest
