@@ -76,7 +76,7 @@ P0/P1/langues/offline/camerap strictement inchangés.
 | 42626010820 (988fa48) | 05b | 29/4/1 : S1 pré-rempli « BoutiqueAwa » COMPLET ✓, brief validé ✓, 1re scène filmée ✓ ; S2_champs_effet (scroll bas), S2_reprise_position (brouillon pas encore promu au force-stop) | 05c : promotion GARANTIE avant le guide + logs VV_E2E + swipe corrigé + dump S02_apres_reprendre |
 | 42635348805 (7a7c06a) | 05c | ANNULÉ (push doc d2b3088 pendant le run — cancel-in-progress) | sans perte : d2b3088 = même code app |
 | 42635563154 (d2b3088) | 05c | **31/3/1** : S1 complet ✓, 5 champs requis + effet ✓ (swipe fixé), brief validé ✓, guide ✓, 1re scène ✓, réseau coupé ✓, S4 retour réseau ✓ ; FAIL S2_reprise_position/S3×2 + BLOCKED S2_rush_conserves | **05d** : cause racine prouvée par S02_log_reprise.txt (voir §7) |
-| 42641946124 (0e26faa) | 05d+08c | EN COURS — attendu : S2 branche=CAMERA, S2_rush_conserves, S3 complets | — |
+| 42641946124 (0e26faa) | 05d | **36/36 PASS** : S2_reprise_position ✓ (PRISE 2/3 affichée, hors connexion), S2_rush_conserves ✓ (rush conservé après fermeture+redémarrage), S3_scenes_restantes ✓ (2→3 rushs), S3_guide_termine ✓ (écran d'aperçu), S4 retour réseau ✓, zéro crash | **VALIDÉ — §7 brouillons qualifiée au lab** |
 
 **Mécanisme de la race (05b)** : un launch(IO) par frappe → upserts Room
 concurrents désordonnés → l'écriture d'une frappe intermédiaire pouvait
@@ -91,8 +91,10 @@ valuesPourGabarit hors étape BRIEF — dump S03 placeholder « Boutique
 
 ## 6. Reste à faire
 
-- Run 42641946124 (0e26faa) : validation 05d (S2 branche=CAMERA, rush
-  conservé, S3 scènes restantes + aperçu) et 08c (deeplink D2/D3).
+- ~~Brouillons~~ : **VALIDÉ au run 42641946124 (36/36)** — §7 qualifiée.
+- Deep-link : re-validation avec code conforme AKWABA-100 (08d) au
+  prochain run — les FAIL D2/D3 étaient des faux échecs de banc (codes
+  de test non conformes au contrat, preuve D2_log.txt 42641946124).
 - 10 : matrice finale ; 11 : RC12. **0 FCFA.**
 
 ## 7. Preuve de la cause racine S2 (run 42635563154) → correctif 05d

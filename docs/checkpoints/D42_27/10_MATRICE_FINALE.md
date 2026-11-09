@@ -17,8 +17,8 @@ externe fondateur) · NOT RUN (non exécuté au lab, raison citée).
 | 1.6 | **Bascule caméra avant/arrière (5.4)** | PASS | **CPC_bascule_avant + CPC_bascule_retour PASS par logs (bascule×2, re-bind AVANT×2) — camerap 62/0/0 run 42626010820 (exigence A, arbitrage C CLOS)** |
 | 1.7 | Montage/aperçu local | PASS | P1 (export MP4 + ffprobe) + camerap B (écran aperçu) |
 | 1.8 | Export MP4 + partage | PASS | P1 36/0/0 ×2 incl. MP4 ffprobe/décodage |
-| 1.9 | **Brouillons inter-sessions (4.6/§7)** | EN VALIDATION | Dialogue « Reprendre » ×3 runs ✓, pré-remplissage complet ✓, brief validé + 1re scène filmée + réseau coupé + retour réseau S4 ✓ (42635563154 : 31/3/1) ; cause racine de S2_reprise prouvée par S02_log_reprise.txt (script vide : sortie gabarit sans extra script) → **fix 05d, attendu au run 42641946124** |
-| 1.10 | Deep-link parrainage bout-en-bout (§3) | EN VALIDATION | Résolution lien ✓ (am_start -W : MainActivity COLD + URI), parcours complet post-lien ✓, zéro crash ✓ ; 42635563154 : D2/D3 FAIL — auth_status = défaut → extra ref_code JAMAIS transmis (recréation MainActivity, getIntent() sans data) → **fix 08c : refCode persisté onSaveInstanceState + instrumentation VV_E2E/D2_log.txt, attendu au run 42641946124** |
+| 1.9 | **Brouillons inter-sessions (4.6/§7)** | **PASS** | Run 42641946124 (0e26faa, fix 05d) : **36/36** — dialogue « Reprendre » ✓, pré-remplissage complet ✓, reprise CAMÉRA à la bonne prise (PRISE 2/3) HORS CONNEXION ✓, rush conservé après fermeture+redémarrage ✓, prises restantes filmées ✓, guide terminé + écran d'aperçu ✓, retour réseau sans perte ✓, zéro crash ✓ |
+| 1.10 | Deep-link parrainage bout-en-bout (§3) | EN VALIDATION | Résolution lien ✓ (am_start -W : MainActivity COLD + URI), parcours complet post-lien ✓, zéro crash ✓, rejet PROPRE des codes non conformes ✓ (comportement spécifié) ; D2/D3 : les FAIL des runs précédents = **faux échecs de banc** — codes de test non conformes au contrat ^[A-Z]{3,10}-[0-9]{3}$ (preuve D2_log.txt 42641946124 : data=…r/E2E-123 → refCode=null, « E2E » contient un chiffre) ; **re-validation avec AKWABA-100 conforme (08d) au prochain run** |
 | 1.11 | Auth Google Credential Manager (§2) | **PASS (lab)** | Vrai flux Credential Manager sur image playstore ✓, échec PROPRE : message + bouton « Réessayer » réactivé ✓, repli hors-connexion intact ✓, re-soumission après échec (resoumis=3, écran+logcat) ✓, parcours continué ✓, zéro crash, 32 lignes de journal VV-AUTH (42635563154 : 10/11) ; A0_langue = faux échec de banc (locale EN, corrigé multi-langues) ; **choix de compte réel = compte physique fondateur (hors lab)** |
 | 1.12 | Repli « Utiliser sans Internet » | PASS | OFF5 + P0 (7 runs) |
 
@@ -49,7 +49,7 @@ externe fondateur) · NOT RUN (non exécuté au lab, raison citée).
 | # | Exigence | Statut | Preuve |
 |---|---|---|---|
 | 4.1 | Parcours sans Internet langue→catalogue | PASS | OFF1-9 (14 tests) ×2 runs |
-| 4.2 | Reprise inter-sessions HORS connexion | EN VALIDATION | Réseau coupé avant force-stop ✓ (svc wifi+data disable, constat 42635563154 S2_reseau_coupe PASS) ; reprise CAMÉRA + rush conservé = S2_reprise_position/S2_rush_conserves → fix 05d, attendu au run 42641946124 |
+| 4.2 | Reprise inter-sessions HORS connexion | **PASS** | Run 42641946124 : réseau coupé (svc wifi+data disable) avant force-stop → reprise CAMÉRA PRISE 2/3 ✓, rush conservé ✓, montage terminé ✓, retour réseau sans perte ✓ (36/36 banc drafts) |
 | 4.3 | Retour réseau sans crash | PASS | OFF11 + drafts S4 ×2 runs |
 | 4.4 | Session après redémarrage | PASS | OFF10/10b |
 | 4.5 | Export final 100 % hors ligne | PARTIAL | rendu local prouvé (P1), uploads best-effort par code ; preuve e2e dédiée manquante (09c §2) |
