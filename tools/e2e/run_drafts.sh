@@ -140,11 +140,20 @@ assurer_champ_rempli() {
     $UI champs > "$OUT/champs_ass.txt" 2>&1 || true
     ligne=$(grep "^E2E CHAMP " "$OUT/champs_ass.txt" | grep -F "$lbl" | head -1)
     if [ -z "$ligne" ]; then
-      # champ hors écran : descendre d'un écran et re-scanner
-      swipe_v 73 26 400 >/dev/null 2>&1; sleep 1
+      # champ hors écran : REMONTER d'abord (les champs requis du haut —
+      # commerce/whatsapp — disparaissent quand la boucle laisse le scroll
+      # en bas ; run 42626010820 : S2_champs_effet FAIL pour cette raison),
+      # puis descendre si toujours introuvable.
+      swipe_v 26 73 400 >/dev/null 2>&1; sleep 1
       fermer_clavier
       $UI champs > "$OUT/champs_ass.txt" 2>&1 || true
       ligne=$(grep "^E2E CHAMP " "$OUT/champs_ass.txt" | grep -F "$lbl" | head -1)
+      if [ -z "$ligne" ]; then
+        swipe_v 73 26 400 >/dev/null 2>&1; sleep 1
+        fermer_clavier
+        $UI champs > "$OUT/champs_ass.txt" 2>&1 || true
+        ligne=$(grep "^E2E CHAMP " "$OUT/champs_ass.txt" | grep -F "$lbl" | head -1)
+      fi
       [ -z "$ligne" ] && { echo "E2E champ « $lbl » introuvable (essai $tour)"; continue; }
     fi
     idx=$(echo "$ligne" | awk '{print $3}')
@@ -402,6 +411,10 @@ sleep 3
 if relance_dialogue S2; then
   if $UI tap --text "Reprendre" --exact --timeout 15 >/dev/null 2>&1 \
      || $UI tap --id "android:id/button1" --timeout 10 >/dev/null 2>&1; then
+    # D42.27-05c : preuve immédiate de l'écran obtenu + branche choisie (log VV_E2E)
+    sleep 3
+    shot S02_apres_reprendre; dump S02_apres_reprendre
+    adb logcat -d | grep "VV_E2E" > "$OUT/S02_log_reprise.txt" 2>&1 || true
     # le guide doit rouvrir à la bonne prise, rush conservé
     if $UI wait --text "Filme ta prise" --exact --timeout 40 >/dev/null 2>&1 \
        || $UI wait --text "Tourner" --exact --timeout 20 >/dev/null 2>&1 \

@@ -165,31 +165,39 @@ class MainActivity : VitrineActivity() {
                 briefDuration = data?.getIntExtra("duration_s", 30) ?: 30
                 briefRushs = data?.getStringArrayExtra("client_rushes")
                 collectBriefValues(data)
-                // D42.27 (§7) : le brief VALIDÉ persiste (brouillon étape CAMERA)
-                // — survit à la fermeture de l'app et au redémarrage du téléphone.
-                lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                    runCatching {
-                        video.vitrine.data.local.DraftStore.promouvoirCamera(
-                            this@MainActivity,
-                            gabaritId.orEmpty(),
-                            skinId,
-                            skinName,
-                            briefScript.orEmpty(),
-                            briefDuration,
-                            data?.getStringExtra("objective"),
-                            data?.getStringExtra("scenes"),
-                            briefValues,
-                            briefRushs?.toList() ?: emptyList()
-                        )
+                // D42.27 (§7/05c) : le brief VALIDÉ persiste (brouillon étape
+                // CAMERA) AVANT l'ouverture du guide — la persistance est
+                // garantie achevée quand le tournage démarre (run 42626010820 :
+                // reprise détournée vers BRIEF alors que la 1re scène était
+                // filmée ; la promotion doit précéder le guide, pas courir en
+                // parallèle).
+                lifecycleScope.launch {
+                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                        runCatching {
+                            video.vitrine.data.local.DraftStore.promouvoirCamera(
+                                this@MainActivity,
+                                gabaritId.orEmpty(),
+                                skinId,
+                                skinName,
+                                briefScript.orEmpty(),
+                                briefDuration,
+                                data?.getStringExtra("objective"),
+                                data?.getStringExtra("scenes"),
+                                briefValues,
+                                briefRushs?.toList() ?: emptyList()
+                            )
+                        }.onFailure {
+                            android.util.Log.w("VV_E2E", "promouvoirCamera échoué : $it")
+                        }
                     }
+                    startActivityForResult(
+                        Intent(this@MainActivity, video.vitrine.feature.camera.CameraGuideActivity::class.java)
+                            .putExtra("script", briefScript)
+                            .putExtra("gabarit_id", gabaritId)
+                            .putExtra("duration_s", briefDuration),
+                        REQ_CAMERA
+                    )
                 }
-                startActivityForResult(
-                    Intent(this, video.vitrine.feature.camera.CameraGuideActivity::class.java)
-                        .putExtra("script", briefScript)
-                        .putExtra("gabarit_id", gabaritId)
-                        .putExtra("duration_s", briefDuration),
-                    REQ_CAMERA
-                )
             }
             REQ_CAMERA -> {
                 val rush = data?.getStringExtra("input") ?: return
@@ -281,6 +289,14 @@ class MainActivity : VitrineActivity() {
             val draft = runCatching {
                 video.vitrine.data.local.DraftStore.actif(this@MainActivity)
             }.getOrNull()
+            android.util.Log.i(
+                "VV_E2E",
+                "reprise : draft=" + (draft?.let {
+                    "etape=${it.etape} gabarit=${it.gabaritId} scriptNonVide=${!it.script.isNullOrBlank()} " +
+                        "priseIdx=${it.priseIdx} priseFichiers=" +
+                        video.vitrine.data.local.DraftStore.jsonToList(it.priseFilesJson).size
+                } ?: "AUCUN")
+            )
             if (draft == null) {
                 launchCatalog()
                 return@launch
@@ -304,6 +320,11 @@ class MainActivity : VitrineActivity() {
     }
 
     private fun reprendreDraft(draft: video.vitrine.data.local.DraftEntity) {
+        android.util.Log.i(
+            "VV_E2E",
+            "reprendreDraft : branche=" +
+                if (draft.etape == video.vitrine.data.local.DraftStore.ETAPE_CAMERA && !draft.script.isNullOrBlank()) "CAMERA" else "BRIEF"
+        )
         if (draft.etape == video.vitrine.data.local.DraftStore.ETAPE_CAMERA && !draft.script.isNullOrBlank()) {
             // Reprise du TOURNAGE : le guide repart à la prise sauvegardée,
             // avec les rushs existants (fichiers déjà persistants, filtrés).
