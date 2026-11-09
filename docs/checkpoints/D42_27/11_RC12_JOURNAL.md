@@ -42,21 +42,31 @@
 
 ## Étage 3/3 — release + validation CI de l'APK signée : EN COURS
 
-- Release GitHub **439370642** (prerelease) :
+- Release GitHub **439393689** (publiée, prerelease) :
   https://github.com/mdgejc14-hash/vitrine-video-d42-arena/releases/tag/d42.27-rc12
-  (tag sur 83da04e) — assets : APK officiel signé + mapping.txt +
-  checksums.txt (empreintes et certificat consignés).
-- Premier run release-official-e2e 42654929203 : FAILURE — déclenché
-  AVANT la fin de l'upload des assets (piège : la création de la
-  release crée le tag, le workflow part immédiatement). Leçon : créer
-  la release, PUIS pousser le tag (ou re-pousser le tag) une fois les
-  assets en place.
-- **Run 42655178977** (re-push du tag après upload complet) :
-  EN COURS — contrôle apksigner CI (certificat == officiel, refus
-  sinon), installation AVD, parcours P1 complet, export réel,
-  ffprobe, crédits, partage, artefacts de preuve.
+  — assets : APK officiel signé + mapping.txt + checksums.txt.
+- Run 42654929203 : FAILURE — déclenché avant la fin de l'upload des
+  assets (la création d'une release publiée crée le tag → le workflow
+  part immédiatement). **Leçon A : publier un DRAFT avec assets déjà
+  en place (la publication crée le tag ensuite).**
+- Run 42655178977 : FAILURE — re-push du tag après suppression : la
+  suppression du tag repasse la release en DRAFT → releases/tags/ 404
+  pour tout le run. **Leçon B : ne jamais supprimer le tag d'une
+  release publiée ; republier un draft APRÈS re-push du tag fonctionne
+  (la boucle d'attente de 10 min couvre ce cas).**
+- Run 42658418318 : FAILURE — release.apk = 688 octets = checksums.txt :
+  l'API liste les assets par ordre ALPHABÉTIQUE, a[0] n'était l'APK
+  qu'en D42.17 par accident de nommage. **Fix 11b (ea0edde) :
+  sélection du premier asset .apk.**
+- Tag d42.27-rc12 : recâblé sur ea0edde — diff 83da04e..ea0edde =
+  1 fichier workflow + 2 fichiers docs, **code app strictement
+  identique au build validé** (APK inchangée ef85cff7…0655, build
+  d42.27-build-rc12 = 83da04e inchangé).
+- **Run 42658920860** (workflow corrigé) : téléchargement asset APK ✓,
+  **contrôle apksigner CI : certificat == 758077eb…33e192 constaté
+  indépendamment ✓**, ffprobe ✓, KVM ✓, P1 export EN COURS.
 
 ## Verdict
 
-À compléter à la fin du run 42655178977. Aucune déclaration de
+À compléter à la fin du run 42658920860. Aucune déclaration de
 livraison sans preuves (règle D42.27-11).
