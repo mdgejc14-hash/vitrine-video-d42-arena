@@ -38,7 +38,10 @@ de cette consolidation.
    absentes, repli v01) — AUCUNE composition modifiée.
 4. **Caméra (§5)** : phase B FERMÉE 26/0/0 (installation → guide complet avec
    rushs RÉELS par fichiers : enregistrement/arrêt, « Refaire » = slot courant
-   uniquement, conservation, zéro crash). 5.4 = FAIL-documenté arbitrage C
+   uniquement, conservation, zéro crash). 5.6 FERMÉ côté produit (dialogue
+   produit + ré-explication + AUTORISER→réglages système PROUVÉS par focus
+   dumpsys, runs 42562414209/42573687240 ; dialogue système = non matérialisé
+   par l'image CI → physique D8-B1). 5.4 = FAIL-documenté arbitrage C
    (caméra arrière en dur, aucune bascule avant/arrière). 5.7 = PASS-partiel
    + arbitrage E (échec disque géré au Finalize F53, pas de contrôle préventif
    StatFs). 5.8 = CONDITIONAL (erreurs d'enregistrement gérées ; bind initial
@@ -69,7 +72,8 @@ de cette consolidation.
    `getOrNull`, status!=200→return, parsing `runCatching{JSONObject}`+replis)
    + test JVM exécuté `ApiClientInvalidReplyTest` (serveur mock : 200 non-JSON,
    corps pourri, 500, connexion refusée → jamais d'exception, parsing avorté
-   proprement, miroir local intact) — ⏳ passage android-ci en attente de push.
+   proprement, miroir local intact) — **PASS** (android-ci 42577296436,
+   :data:testDebugUnitTest vert, 09/11 07:14).
 
 ## 2. Décisions du fondateur (aucune action de ma part sans arbitrage)
 
