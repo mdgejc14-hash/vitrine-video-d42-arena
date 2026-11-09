@@ -1,0 +1,201 @@
+name: android-e2e-p3-modes
+
+# D42.28 (P3) — parcours commercial × langues × modes audio.
+# workflow_dispatch (coût maîtrisé : ~75 min/mode, 3 jobs parallèles).
+# Chaque job teste SON mode audio sur les 4 langues (fr/en/es/ja),
+# parcours complet avec export + preuves acoustiques du MP4.
+# Ne partage PAS le groupe de concurrence du lab principal.
+
+on:
+  workflow_dispatch:
+    inputs:
+      modes:
+        description: 'Modes à tester (liste séparée par espaces : musique voix mix)'
+        required: false
+        default: 'musique voix mix'
+        type: string
+
+concurrency:
+  group: e2e-p3-modes
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  p3-musique:
+    if: contains(github.event.inputs.modes || 'musique voix mix', 'musique')
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Assemblage de l'APK debug (sans secret) + empreinte
+        run: |
+          set -o pipefail
+          ./gradlew :app:assembleDebug --stacktrace 2>&1 | tail -40
+          sha256sum app/build/outputs/apk/debug/app-debug.apk | tee apk_sha256.txt
+
+      - name: Activation KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls -l /dev/kvm || echo "KVM ABSENT"
+
+      - name: ffmpeg (preuves acoustiques + injection voix)
+        run: timeout 240 bash -c 'sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg' >/dev/null 2>&1 || echo "ffmpeg indisponible — le mode ne pourra pas être prouvé"
+
+      - name: 'P3 : mode MUSIQUE SEULE × 4 langues'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
+          script: |
+            adb devices
+            for L in fr en es ja; do
+              echo "===== P3 musique / $L ====="
+              bash tools/e2e/run_audio_modes.sh p3 "$L" musique app/build/outputs/apk/debug/app-debug.apk
+            done
+            true
+
+      - name: Artefact p3-musique
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-p3-musique
+          path: |
+            artifacts/p3_*
+            apk_sha256.txt
+          retention-days: 14
+          if-no-files-found: warn
+
+  p3-voix:
+    if: contains(github.event.inputs.modes || 'musique voix mix', 'voix')
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Assemblage de l'APK debug (sans secret) + empreinte
+        run: |
+          set -o pipefail
+          ./gradlew :app:assembleDebug --stacktrace 2>&1 | tail -40
+          sha256sum app/build/outputs/apk/debug/app-debug.apk | tee apk_sha256.txt
+
+      - name: Activation KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls -l /dev/kvm || echo "KVM ABSENT"
+
+      - name: ffmpeg (preuves acoustiques + injection voix)
+        run: timeout 240 bash -c 'sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg' >/dev/null 2>&1 || echo "ffmpeg indisponible — le mode ne pourra pas être prouvé"
+
+      - name: 'P3 : mode VOIX SEULE × 4 langues'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
+          script: |
+            adb devices
+            for L in fr en es ja; do
+              echo "===== P3 voix / $L ====="
+              bash tools/e2e/run_audio_modes.sh p3 "$L" voix app/build/outputs/apk/debug/app-debug.apk
+            done
+            true
+
+      - name: Artefact p3-voix
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-p3-voix
+          path: |
+            artifacts/p3_*
+            apk_sha256.txt
+          retention-days: 14
+          if-no-files-found: warn
+
+  p3-mix:
+    if: contains(github.event.inputs.modes || 'musique voix mix', 'mix')
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Assemblage de l'APK debug (sans secret) + empreinte
+        run: |
+          set -o pipefail
+          ./gradlew :app:assembleDebug --stacktrace 2>&1 | tail -40
+          sha256sum app/build/outputs/apk/debug/app-debug.apk | tee apk_sha256.txt
+
+      - name: Activation KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls -l /dev/kvm || echo "KVM ABSENT"
+
+      - name: ffmpeg (preuves acoustiques + injection voix)
+        run: timeout 240 bash -c 'sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg' >/dev/null 2>&1 || echo "ffmpeg indisponible — le mode ne pourra pas être prouvé"
+
+      - name: 'P3 : mode VOIX + MUSIQUE × 4 langues'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
+          script: |
+            adb devices
+            for L in fr en es ja; do
+              echo "===== P3 mix / $L ====="
+              bash tools/e2e/run_audio_modes.sh p3 "$L" mix app/build/outputs/apk/debug/app-debug.apk
+            done
+            true
+
+      - name: Artefact p3-mix
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-p3-mix
+          path: |
+            artifacts/p3_*
+            apk_sha256.txt
+          retention-days: 14
+          if-no-files-found: warn

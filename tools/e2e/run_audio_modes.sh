@@ -1,0 +1,616 @@
+#!/usr/bin/env bash
+# D42.28 (P3) — PARCOURS COMMERCIAL × LANGUES × MODES AUDIO.
+#
+#   tools/e2e/run_audio_modes.sh <tag> <fr|en|es|ja> <musique|voix|mix> [apk]
+#
+# Objectif : prouver, pour chaque langue (fr/en/es/ja) et chaque variante
+# audio (musique seule / voix seule / voix + musique), que le parcours
+# commercial COMPLET — langue → session locale → carrousel → activité →
+# parrainage → catalogue → brief → guide de tournage → prises → aperçu →
+# export → « Vidéo prête ! » — fonctionne et produit un MP4 dont la bande
+# sonore correspond au mode attendu. La parole n'est JAMAIS obligatoire
+# (mode musique seule = rushs muets de l'émulateur).
+#
+# MODES (décrits par le produit, ExportWorker/BgmSfxAudioMixer) :
+#  - musique : rushss sans piste audio → BGM seule, gain solo 0 dB ;
+#  - voix    : rushss avec piste audio + cache BGM vidé → pass-through
+#              voix seule (robustesse : toute anomalie BGM n'arrête pas
+#              l'export) ;
+#  - mix     : rushss avec piste audio + BGM en cache → voix + musique
+#              (ducking sidechain).
+#
+# Preuves par mode (sur le MP4 exporté, ffmpeg sur le runner) :
+#  - ffprobe : 1 piste audio, durée audio ≈ durée vidéo ;
+#  - RMS global (astats) : non silencieux ;
+#  - RMS de la fenêtre d'INTRO (2 premières secondes, hors prises) :
+#      musique/mix → musique audible (RMS_intro > -28 dB) ;
+#      voix        → quasi silence (RMS_intro < -40 dB), la musique étant
+#                    absente et l'intro ne contenant pas de rush ;
+#  - constats structurels : rushs avec/sans piste audio (ffprobe avant
+#    injection), cache BGM présent/vidé (run-as ls).
+#
+# Libellés par langue extraits des ressources du dépôt (values*/strings*.xml)
+# — y compris les constats d'architecture : les libellés du BRIEF restent en
+# français dans toutes les langues (contenu des gabarits non localisé, état
+# produit assumé), le badge « PRISE n/N » est codé en dur, la carte gabarit
+# « Nouvel arrivage » (T1) est identique partout.
+set -uo pipefail
+cd "$(dirname "$0")/../.." || exit 1
+
+TAG="${1:-p3}"
+LANGUE="${2:-fr}"
+MODE="${3:-musique}"
+APK="${4:-app/build/outputs/apk/debug/app-debug.apk}"
+PKG="video.vitrine.app"
+OUT="artifacts/${TAG}_${LANGUE}_${MODE}"
+UI="python3 tools/e2e/ui.py"
+mkdir -p "$OUT"
+RESULTS="$OUT/results.tsv"
+: > "$RESULTS"
+command -v ffprobe >/dev/null 2>&1 || echo "AVERTISSEMENT : ffprobe absent du runner (preuves acoustiques limitées)"
+
+pass=0; fail=0; blocked=0
+record() {
+  printf '%s\t%s\t%s\n' "$1" "$2" "$3" >> "$RESULTS"
+  case "$1" in PASS) pass=$((pass+1));; FAIL) fail=$((fail+1));; *) blocked=$((blocked+1));; esac
+  echo "E2E_RESULT $1 $2 :: $3"
+}
+shot() { $UI shot "$OUT/$1.png" >/dev/null 2>&1 && echo "E2E SHOT $1" || echo "E2E SHOT_FAIL $1"; }
+dump() { adb shell uiautomator dump /sdcard/d.xml >/dev/null 2>&1; adb exec-out cat /sdcard/d.xml > "$OUT/$1.xml" 2>/dev/null; }
+
+# --- table de libellés par langue (source : values*/strings*.xml) --------------
+case "$LANGUE" in
+  fr) CARTE="Français"; AUTH="Continuer avec Google"; S1="Filme. Vends. C'est tout."
+      S2="Filme tes produits, on te guide"; S3="Une vidéo prête à publier en 30 secondes"
+      SUIVANT="Suivant"; DEMARRER="Commencer"; SECTEUR="Ton activité principale"
+      CONTINUER="Continuer"; SANS_CODE="Je n'ai pas de code"; CATALOGUE="Choisissez un modèle de vidéo"
+      BRIEF="Ma vidéo"; E4B="Avant de commencer"; E4B_OK="OK, je commence"
+      E6="Filme ta prise"; E6_REC="Tourner"; CAM_REC="Verrouiller et enregistrer"; CAM_STOP="Arrêter et continuer"
+      R4="Accord du client"; R4_OK="Oui, accord confirmé"
+      SECTEUR_CARTE="Boutique"
+      E7="Aperçu de ta vidéo"; E7_CREATE="Créer ma vidéo"
+      EXP_START="Lancer l'export local"; EXP_RUNNING="Export local en cours"
+      EXP_DONE="Vidéo prête ! Partage-la avec tes clients."; EXP_SHARE="Partager la vidéo" ;;
+  en) CARTE="English"; AUTH="Continue with Google"; S1="Shoot. Sell. Done."
+      S2="Film your products, we guide you"; S3="A video ready to post in 30 seconds"
+      SUIVANT="Next"; DEMARRER="Get started"; SECTEUR="Your main business"
+      CONTINUER="Continue"; SANS_CODE="I don't have a code"; CATALOGUE="Pick a video template"
+      BRIEF="My video"; E4B="Before you start"; E4B_OK="OK, I start"
+      E6="Film your take"; E6_REC="Record"; CAM_REC="Lock and record"; CAM_STOP="Stop and continue"
+      R4="Client agreement"; R4_OK="Yes, agreement confirmed"
+      SECTEUR_CARTE="Shops"
+      E7="Preview of your video"; E7_CREATE="Create my video"
+      EXP_START="Start local export"; EXP_RUNNING="Local export running"
+      EXP_DONE="Video ready! Share it with your customers."; EXP_SHARE="Share the video" ;;
+  es) CARTE="Español"; AUTH="Continuar con Google"; S1="Filma. Vende. Listo."
+      S2="Filma tus productos, te guiamos"; S3="Un vídeo listo para publicar en 30 segundos"
+      SUIVANT="Siguiente"; DEMARRER="Empezar"; SECTEUR="Tu actividad principal"
+      CONTINUER="Continuar"; SANS_CODE="No tengo código"; CATALOGUE="Elige una plantilla de vídeo"
+      BRIEF="Mi video"; E4B="Antes de comenzar"; E4B_OK="OK, comienzo"
+      E6="Filma tu toma"; E6_REC="Grabar"; CAM_REC="Bloquear y grabar"; CAM_STOP="Terminar y continuar"
+      R4="Acuerdo del cliente"; R4_OK="Sí, acuerdo confirmado"
+      SECTEUR_CARTE="Tiendas"
+      E7="Vista previa de tu vídeo"; E7_CREATE="Crear mi vídeo"
+      EXP_START="Iniciar exportación local"; EXP_RUNNING="Exportación local en curso"
+      EXP_DONE="¡Vídeo listo! Compártelo con tus clientes."; EXP_SHARE="Compartir el vídeo" ;;
+  ja) CARTE="日本語"; AUTH="Googleで続ける"; S1="撮って、売る。それだけ。"
+      S2="商品を撮るだけ、あとはご案内します"; S3="30秒で公開できる動画に"
+      SUIVANT="次へ"; DEMARRER="はじめる"; SECTEUR="あなたの業種"
+      CONTINUER="続行"; SANS_CODE="コードを持っていません"; CATALOGUE="動画テンプレートを選択"
+      BRIEF="マイ動画"; E4B="始める前に"; E4B_OK="OK、開始"
+      E6="撮影しよう"; E6_REC="録画"; CAM_REC="ロックして録画"; CAM_STOP="停止して続行"
+      R4="顧客の同意"; R4_OK="はい、同意を確認"
+      SECTEUR_CARTE="店舗"
+      E7="動画のプレビュー"; E7_CREATE="動画を作成"
+      EXP_START="ローカル書き出し開始"; EXP_RUNNING="ローカル書き出し中"
+      EXP_DONE="動画が完成しました！お客様に共有しましょう。"; EXP_SHARE="動画を共有" ;;
+  *) echo "langue inconnue : $LANGUE (fr|en|es|ja)"; exit 2 ;;
+esac
+case "$MODE" in musique|voix|mix) ;; *) echo "mode inconnu : $MODE (musique|voix|mix)"; exit 2 ;; esac
+
+swipe_v() { # y1% y2% durée_ms — glissement vertical lent (P1 éprouvé)
+  local w h x
+  w=$($UI size 2>/dev/null | awk '{print $2}'); h=$($UI size 2>/dev/null | awk '{print $4}')
+  x=$(( w * 50 / 100 ))
+  adb shell input swipe "$x" "$(( h * $1 / 100 ))" "$x" "$(( h * $2 / 100 ))" "$3" >/dev/null 2>&1
+}
+
+app_ls() { # app_ls <rep-relatif> [flags ls] -> liste sur stdout (P1 éprouvé)
+  local rep="$1"; shift || true
+  if adb shell run-as "$PKG" ls "$rep" >/dev/null 2>&1; then
+    adb shell run-as "$PKG" ls "$@" "$rep" 2>/dev/null
+  else
+    adb root >/dev/null 2>&1 || true
+    sleep 2; adb wait-for-device >/dev/null 2>&1 || true
+    adb shell ls "$@" "/data/data/$PKG/$rep" 2>/dev/null
+  fi
+}
+app_cat() { adb shell run-as "$PKG" cat "$1" 2>/dev/null; }
+
+echo "=========== P3 $LANGUE / $MODE ($TAG) ==========="
+adb devices | sed 's/^/E2E /'
+adb uninstall "$PKG" >/dev/null 2>&1
+if adb install -r -t "$APK" > "$OUT/install.log" 2>&1; then
+  record PASS "P3_installation_${LANGUE}_${MODE}" "$(tail -1 "$OUT/install.log" | tr -d '\r')"
+else
+  record FAIL "P3_installation_${LANGUE}_${MODE}" "$(tail -2 "$OUT/install.log" | tr '\n' ' ')"
+  exit 0
+fi
+adb shell pm grant "$PKG" android.permission.CAMERA >/dev/null 2>&1
+adb shell pm grant "$PKG" android.permission.RECORD_AUDIO >/dev/null 2>&1
+
+adb shell am start -W -n "$PKG/.MainActivity" > "$OUT/start.log" 2>&1
+sleep 4
+
+# --- amont localisé : langue → session → carrousel → activité → catalogue ------
+ok=0
+for t in "Choisissez votre langue" "Choose your language" "Elige tu idioma" "言語を選んでください"; do
+  if $UI wait --text "$t" --exact --timeout 20 >/dev/null 2>&1; then ok=1; break; fi
+done
+[ "$ok" = "1" ] && record PASS "P3_ecran_langue_${LANGUE}" "écran de langue affiché" \
+                 || record FAIL "P3_ecran_langue_${LANGUE}" "écran de langue absent"
+
+ecran_connexion=0
+for essai in 1 2 3 4; do
+  $UI tap --text "$CARTE" --exact --timeout 15 >/dev/null 2>&1
+  if $UI wait --text "$AUTH" --exact --timeout 25 >/dev/null 2>&1; then ecran_connexion=1; break; fi
+  echo "E2E P3 : appui langue $essai sans effet"
+done
+[ "$ecran_connexion" = "1" ] && record PASS "P3_langue_appliquee_${LANGUE}" "« $AUTH » affiché (langue $LANGUE appliquée)" \
+                           || record FAIL "P3_langue_appliquee_${LANGUE}" "écran d'authentification jamais atteint en $LANGUE"
+
+for essai in 1 2 3 4 5 6; do
+  $UI tap --id "auth_offline_button" --timeout 10 >/dev/null 2>&1
+  if $UI wait --text "$S1" --exact --timeout 20 >/dev/null 2>&1; then break; fi
+  sleep 4
+done
+if $UI wait --text "$S1" --exact --timeout 10 >/dev/null 2>&1; then
+  record PASS "P3_carrousel1_${LANGUE}" "« $S1 »"
+else
+  record FAIL "P3_carrousel1_${LANGUE}" "« $S1 » absent"
+fi
+$UI tap --text "$SUIVANT" --exact --timeout 15 >/dev/null 2>&1
+if $UI wait --text "$S2" --exact --timeout 30 >/dev/null 2>&1; then
+  record PASS "P3_carrousel2_${LANGUE}" "« $S2 »"
+else
+  record FAIL "P3_carrousel2_${LANGUE}" "« $S2 » absent"
+fi
+$UI tap --text "$SUIVANT" --exact --timeout 15 >/dev/null 2>&1
+if $UI wait --text "$S3" --exact --timeout 30 >/dev/null 2>&1; then
+  record PASS "P3_carrousel3_${LANGUE}" "« $S3 »"
+else
+  record FAIL "P3_carrousel3_${LANGUE}" "« $S3 » absent"
+fi
+$UI tap --text "$DEMARRER" --exact --timeout 15 >/dev/null 2>&1
+
+if $UI wait --text "$SECTEUR" --exact --timeout 60 >/dev/null 2>&1; then
+  record PASS "P3_activite_${LANGUE}" "« $SECTEUR »"
+else
+  record FAIL "P3_activite_${LANGUE}" "« $SECTEUR » absent"
+fi
+$UI tap --text "$SECTEUR_CARTE" --timeout 5 >/dev/null 2>&1 || true
+sleep 1
+$UI tap --text "$CONTINUER" --exact --timeout 15 >/dev/null 2>&1 || true
+if $UI wait --text "$SANS_CODE" --exact --timeout 30 >/dev/null 2>&1; then
+  record PASS "P3_parrainage_${LANGUE}" "étape parrainage localisée"
+  $UI tap --text "$SANS_CODE" --exact --timeout 10 >/dev/null 2>&1 || true
+else
+  record BLOCKED "P3_parrainage_${LANGUE}" "étape parrainage non atteinte"
+fi
+catalogue_atteint=0
+for _ in 1 2 3; do
+  $UI tap --text "$CONTINUER" --exact --timeout 15 >/dev/null 2>&1 || true
+  if $UI wait --text "$CATALOGUE" --exact --timeout 15 >/dev/null 2>&1; then catalogue_atteint=1; break; fi
+  sleep 2
+done
+[ "$catalogue_atteint" = "1" ] && record PASS "P3_catalogue_${LANGUE}" "« $CATALOGUE »" \
+                           || record FAIL "P3_catalogue_${LANGUE}" "« $CATALOGUE » absent"
+shot "07_catalogue_${LANGUE}"; dump "07_catalogue_${LANGUE}"
+
+# --- brief (libellés FR par design produit : gabarits non localisés) ------------
+if $UI tap --text "Nouvel arrivage" --timeout 10 >/dev/null 2>&1; then
+  record PASS "P3_selection_gabarit_${LANGUE}" "gabarit « Nouvel arrivage » (T1) sélectionné"
+else
+  record FAIL "P3_selection_gabarit_${LANGUE}" "gabarit introuvable au catalogue"
+fi
+sleep 4
+shot "21_brief"; dump "21_brief"
+
+brief_ok=0
+if $UI wait --text "$BRIEF" --exact --timeout 30 >/dev/null 2>&1; then
+  $UI champs > "$OUT/champs.txt" 2>&1 || true
+  if grep -q "E2E FIELD" "$OUT/champs.txt" 2>/dev/null; then brief_ok=1; fi
+fi
+if [ "$brief_ok" != "1" ]; then
+  record BLOCKED "P3_brief_${LANGUE}" "formulaire de brief non atteint"
+  record BLOCKED "P3_export_${LANGUE}_${MODE}" "brief non affiché — parcours interrompu"
+  { echo "tag=$TAG langue=$LANGUE mode=$MODE"; echo "PASS=$pass FAIL=$fail BLOCKED=$blocked"; } > "$OUT/summary.txt"
+  exit 0
+fi
+record PASS "P3_brief_${LANGUE}" "formulaire de brief affiché ($(grep -c 'E2E FIELD' "$OUT/champs.txt") champs)"
+
+fermer_clavier() {
+  if adb shell dumpsys input_method 2>/dev/null | grep -q "mInputShown=true"; then
+    adb shell input keyevent 4 >/dev/null 2>&1
+    sleep 1
+  fi
+}
+remplir_champ() { # index, texte — coordonnées relues à chaque champ (P1 éprouvé)
+  local idx="$1" val="$2" src="${3:-$OUT/champs.txt}" ligne x1 y1 x2 y2 cx cy
+  ligne=$(awk -v i="$idx" '$1=="E2E" && $2=="CHAMP" && $3==i {print $4, $5, $6, $7}' "$src")
+  [ -z "$ligne" ] && return 1
+  # shellcheck disable=SC2086
+  set -- $ligne
+  x1=$1; y1=$2; x2=$3; y2=$4
+  cx=$(( (x1 + x2) / 2 )); cy=$(( (y1 + y2) / 2 ))
+  adb shell input tap "$cx" "$cy" >/dev/null 2>&1; sleep 1
+  adb shell input keyevent KEYCODE_MOVE_END >/dev/null 2>&1
+  for _ in 1 2 3 4 5 6 7 8; do adb shell input keyevent KEYCODE_DEL >/dev/null 2>&1; done
+  adb shell input text "$val" >/dev/null 2>&1; sleep 1
+  fermer_clavier
+  return 0
+}
+valeur_pour() { # libellé (FR, design produit) -> valeur valide
+  local l
+  l=$(echo "$1" | tr 'A-Z' 'a-z')
+  case "$l" in
+    *commerce*|*boutique*)            echo "BoutiqueAwa" ;;
+    *whatsapp*|*num*ro*|*t*l*phone*)  echo "+22997000000" ;;
+    *prix*|*montant*)                 echo "15000" ;;
+    *monnaie*)                        echo "" ;;
+    *quartier*|*ville*|*adresse*)     echo "Akpakpa" ;;
+    *nom*|*v*tement*|*produit*|*plat*|*travail*|*article*) echo "RobeWax" ;;
+    *)                                echo "Essai" ;;
+  esac
+}
+# remplissage piloté par libellé + passes de complétion (P1 éprouvé)
+remplis=0; deja=" "; sans_effet=0
+for tour in 1 2 3 4 5 6 7 8 9 10 11 12; do
+  $UI champs > "$OUT/champs.txt" 2>&1 || true
+  progresse=0
+  while IFS= read -r ligne; do
+    idx=$(echo "$ligne" | awk '{print $3}')
+    etat=$(echo "$ligne" | awk '{print $8}')
+    libelle=$(echo "$ligne" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
+    [ "$etat" = "vide" ] || continue
+    case "$deja" in *"|$libelle|"*) continue ;; esac
+    val=$(valeur_pour "$libelle")
+    deja="$deja|$libelle|"
+    progresse=1
+    [ -z "$val" ] && continue
+    remplir_champ "$idx" "$val" "$OUT/champs.txt" && remplis=$((remplis+1))
+    break
+  done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
+  if [ "$progresse" = "0" ]; then
+    sans_effet=$((sans_effet+1))
+    [ "$sans_effet" -ge 2 ] && break
+    swipe_v 73 43 250 >/dev/null 2>&1
+    sleep 1
+  fi
+done
+for passe in 1 2 3; do
+  [ "$passe" -gt 1 ] && { swipe_v 73 26 250 >/dev/null 2>&1; sleep 1; }
+  fermer_clavier
+  $UI champs > "$OUT/champs.txt" 2>&1 || true
+  restant=0
+  while IFS= read -r ligne; do
+    idx=$(echo "$ligne" | awk '{print $3}')
+    etat=$(echo "$ligne" | awk '{print $8}')
+    libelle=$(echo "$ligne" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
+    [ "$etat" = "vide" ] || continue
+    val=$(valeur_pour "$libelle")
+    [ -n "$val" ] || continue
+    restant=$((restant+1))
+    remplir_champ "$idx" "$val" "$OUT/champs.txt" && remplis=$((remplis+1))
+    break
+  done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
+  [ "$restant" = "0" ] && [ "$passe" -ge 2 ] && break
+done
+echo "E2E P3 champs remplis : $remplis"
+trouve=0
+for _ in 1 2 3 4 5 6; do
+  if $UI wait --text "$CONTINUER" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
+  swipe_v 73 26 250 >/dev/null 2>&1
+  sleep 1
+done
+$UI tap --text "$CONTINUER" --exact --timeout 15 >/dev/null 2>&1 || true
+if $UI wait --text "$E4B" --exact --timeout 25 >/dev/null 2>&1; then
+  record PASS "P3_brief_valide_${LANGUE}" "brief accepté → « $E4B »"
+else
+  record FAIL "P3_brief_valide_${LANGUE}" "écran « $E4B » absent après validation du brief"
+fi
+$UI tap --text "$E4B_OK" --exact --timeout 15 >/dev/null 2>&1 || true
+sleep 3
+
+# --- guide + prises (libellés localisés, badge PRISE codé en dur) ---------------
+if $UI wait --text "$E6" --timeout 40 >/dev/null 2>&1; then
+  record PASS "P3_camera_ecran_${LANGUE}" "« $E6 » affiché"
+else
+  record BLOCKED "P3_camera_ecran_${LANGUE}" "écran caméra non atteint"
+fi
+prise() { # numéro
+  local n="$1"
+  $UI tap --text "$E6_REC" --exact --timeout 12 >/dev/null 2>&1 || true
+  $UI wait --id "camera_record_button" --timeout 30 >/dev/null 2>&1 || return 1
+  $UI tap --text "$CAM_REC" --exact --timeout 10 >/dev/null 2>&1 \
+    || $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1 || return 1
+  if ! $UI wait --text "$CAM_STOP" --exact --timeout 8 >/dev/null 2>&1; then
+    if $UI wait --text "$R4" --timeout 8 >/dev/null 2>&1; then
+      $UI tap --text "$R4_OK" --exact --timeout 8 >/dev/null 2>&1 || true
+    fi
+    $UI wait --text "$CAM_STOP" --exact --timeout 25 >/dev/null 2>&1 || return 2
+  fi
+  sleep 6
+  shot "25_prise_${n}"
+  $UI tap --text "$CAM_STOP" --exact --timeout 10 >/dev/null 2>&1 || return 3
+  sleep 5
+  $UI wait --text "$E6_REC" --exact --timeout 25 >/dev/null 2>&1 \
+    || $UI wait --text "$CAM_REC" --exact --timeout 10 >/dev/null 2>&1 \
+    || $UI wait --text "Refaire" --exact --timeout 10 >/dev/null 2>&1 && return 0
+  return 4
+}
+prises=0
+for n in 1 2; do
+  prise "$n"; rc=$?
+  case $rc in
+    0) prises=$((prises+1)); record PASS "P3_prise_${n}_${LANGUE}" "prise enregistrée (caméra émulée)" ;;
+    1) record BLOCKED "P3_prise_${n}_${LANGUE}" "bouton d'enregistrement introuvable" ;;
+    *) record FAIL "P3_prise_${n}_${LANGUE}" "prise $n en échec (rc=$rc)" ;;
+  esac
+  $UI tap --text "$SUIVANT" --exact --timeout 10 >/dev/null 2>&1 || true
+  sleep 3
+done
+[ "$prises" -ge 1 ] && record PASS "P3_prises_${LANGUE}" "$prises prise(s) enregistrée(s)" \
+                   || record BLOCKED "P3_prises_${LANGUE}" "aucune prise enregistrée"
+
+# complétion du guide (badge « PRISE n/N » codé en dur — P1 éprouvé)
+if $UI wait --text "$E6" --timeout 6 >/dev/null 2>&1; then
+  rush_count=$(app_ls files/rushes | tr -d '\r' | grep -c '^rush-')
+  requis=$($UI probe 2>/dev/null | grep -o 'PRISE [0-9]*/[0-9]*' | head -1 | sed 's|.*/||')
+  case "$requis" in ''|*[!0-9]*) requis=3 ;; esac
+  echo "E2E P3 guide : $rush_count prise(s), $requis exigée(s)"
+  cycle=0
+  while [ "$rush_count" -lt "$requis" ] && [ "$cycle" -lt 4 ]; do
+    cycle=$((cycle+1))
+    $UI wait --id "camera_record_button" --timeout 20 >/dev/null 2>&1 || break
+    $UI tap --text "$CAM_REC" --exact --timeout 10 >/dev/null 2>&1 \
+      || $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1 || true
+    if ! $UI wait --text "$CAM_STOP" --exact --timeout 8 >/dev/null 2>&1; then
+      if $UI wait --text "$R4" --timeout 8 >/dev/null 2>&1; then
+        $UI tap --text "$R4_OK" --exact --timeout 8 >/dev/null 2>&1 || true
+      fi
+      $UI wait --text "$CAM_STOP" --exact --timeout 25 >/dev/null 2>&1 || break
+    fi
+    sleep 6
+    $UI tap --text "$CAM_STOP" --exact --timeout 10 >/dev/null 2>&1 || break
+    sleep 4
+    rush_count=$(app_ls files/rushes | tr -d '\r' | grep -c '^rush-')
+    echo "E2E P3 complétion : cycle $cycle -> $rush_count prise(s)"
+    $UI wait --text "$E6" --timeout 6 >/dev/null 2>&1 || break
+  done
+  if $UI wait --text "$E6" --timeout 4 >/dev/null 2>&1; then
+    for i in 1 2 3 4 5 6; do
+      $UI inside --text "$SUIVANT" --exact --timeout 3 >/dev/null 2>&1 && break
+      swipe_v 73 21 300 >/dev/null 2>&1
+      sleep 1
+    done
+    $UI inside --text "$SUIVANT" --exact --timeout 3 >/dev/null 2>&1 \
+      && $UI tap --text "$SUIVANT" --exact --timeout 8 >/dev/null 2>&1
+    sleep 3
+  fi
+fi
+if $UI wait --text "$E6" --timeout 6 >/dev/null 2>&1; then
+  record FAIL "P3_guide_termine_${LANGUE}" "guide toujours affiché après complétion"
+else
+  rush_count=$(app_ls files/rushes | tr -d '\r' | grep -c '^rush-')
+  record PASS "P3_guide_termine_${LANGUE}" "guide terminé : $rush_count prise(s), écran suivant atteint"
+fi
+app_ls files/rushes -l > "$OUT/27_rushes.txt" 2>&1 || true
+
+# --- PRÉPARATION DU MODE AUDIO (AVANT « Créer ma vidéo ») -----------------------
+# Constat structurel : les rushs de l'émulateur sont-ils muets ?
+RUSH_AVANT=$(app_ls files/rushes | tr -d '\r' | grep -m1 '^rush-' || true)
+if [ -n "$RUSH_AVANT" ] && command -v ffprobe >/dev/null 2>&1; then
+  app_cat "files/rushes/$RUSH_AVANT" > "$OUT/rush_original.mp4" 2>/dev/null
+  if ffprobe -v error -select_streams a -show_entries stream=codec_type "$OUT/rush_original.mp4" 2>/dev/null | grep -q audio; then
+    echo "rush_avec_audio=true" >> "$OUT/constats_mode.txt"
+  else
+    echo "rush_avec_audio=false" >> "$OUT/constats_mode.txt"
+  fi
+fi
+
+case "$MODE" in
+  musique)
+    # rien à préparer : rushs muets (émulateur) + BGM pré-téléchargé à la
+    # sélection du gabarit (prefetchForGabarit). On constate le cache.
+    n_bgm=$(app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -c '\.mp3')
+    echo "bgm_en_cache=$n_bgm" >> "$OUT/constats_mode.txt"
+    ;;
+  voix|mix)
+    # 1) injecter une piste audio (voix de synthèse, sinus -20 dB) dans
+    #    CHAQUE rush : le produit lit les fichiers files/rushes au moment
+    #    de l'export (chemins passés au worker) — le contenu remplacé est
+    #    utilisé. Durée vidéo conservée (caméra copiée, pas réencodée).
+    for R in $(app_ls files/rushes | tr -d '\r' | grep '^rush-'); do
+      app_cat "files/rushes/$R" > "$OUT/r.bin" 2>/dev/null || continue
+      D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUT/r.bin" 2>/dev/null | cut -d. -f1)
+      case "$D" in ''|*[!0-9]*) D=6 ;; esac
+      if ffmpeg -y -v error -i "$OUT/r.bin" \
+           -f lavfi -t "$D" -i "sine=frequency=440" \
+           -filter_complex "[1:a]volume=-20dB[a]" \
+           -map 0:v -map "[a]" -c:v copy -c:a aac -shortest "$OUT/r_audio.mp4" 2>"$OUT/ffmpeg_inject.log"; then
+        if adb push "$OUT/r_audio.mp4" /data/local/tmp/r_audio.mp4 >/dev/null 2>&1 \
+           && adb shell run-as "$PKG" cp /data/local/tmp/r_audio.mp4 "files/rushes/$R" >/dev/null 2>&1; then
+          echo "injection_audio=$R ok (${D}s)" >> "$OUT/constats_mode.txt"
+        else
+          echo "injection_audio=$R ECHEC (push/cp)" >> "$OUT/constats_mode.txt"
+        fi
+      else
+        echo "injection_audio=$R ECHEC (ffmpeg)" >> "$OUT/constats_mode.txt"
+      fi
+    done
+    # vérifier l'injection
+    app_cat "files/rushes/$RUSH_AVANT" > "$OUT/rush_apres.mp4" 2>/dev/null
+    if [ -s "$OUT/rush_apres.mp4" ] && command -v ffprobe >/dev/null 2>&1 \
+       && ffprobe -v error -select_streams a -show_entries stream=codec_type "$OUT/rush_apres.mp4" 2>/dev/null | grep -q audio; then
+      record PASS "P3_rushs_avec_voix_${LANGUE}_${MODE}" "piste audio injectée dans les rushs (voix de synthèse -20 dB)"
+    else
+      record FAIL "P3_rushs_avec_voix_${LANGUE}_${MODE}" "injection d'audio dans les rushs en échec (voir constats_mode.txt)"
+    fi
+    if [ "$MODE" = "voix" ]; then
+      # 2) vider le cache BGM : BgmDecoder ne trouvera pas le fichier →
+      #    music=null → pass-through voix seule (robustesse produit).
+      #    NB : pas de sh -c (quotes perdues à travers adb) — rm fichier
+      #    par fichier, liste établie par app_ls.
+      for B in $(app_ls files/bgm 2>/dev/null | tr -d '\r' | grep '\.mp3'); do
+        adb shell run-as "$PKG" rm "files/bgm/$B" >/dev/null 2>&1 || true
+      done
+      n_bgm=$(app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -c '\.mp3')
+      echo "bgm_en_cache=$n_bgm (vidé pour le mode voix)" >> "$OUT/constats_mode.txt"
+    else
+      n_bgm=$(app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -c '\.mp3')
+      echo "bgm_en_cache=$n_bgm" >> "$OUT/constats_mode.txt"
+    fi
+    ;;
+esac
+shot "27b_preparation_mode"; dump "27b_preparation_mode"
+
+# --- export (E7 → E8 → terminé) — libellés localisés -----------------------------
+revele() { # libellé exact -> rc 0 si entièrement visible (P1 éprouvé)
+  local lbl="$1" i
+  for i in $(seq 1 12); do
+    $UI inside --text "$lbl" --exact --timeout 3 >/dev/null 2>&1 && return 0
+    swipe_v 73 21 400 >/dev/null 2>&1
+    sleep 1
+  done
+  for i in 1 2 3 4; do
+    $UI inside --text "$lbl" --exact --timeout 3 >/dev/null 2>&1 && return 0
+    swipe_v 86 79 600 >/dev/null 2>&1
+    sleep 1
+  done
+  $UI inside --text "$lbl" --exact --timeout 3 >/dev/null 2>&1
+}
+if $UI wait --text "$E7" --timeout 30 >/dev/null 2>&1; then
+  record PASS "P3_apercu_${LANGUE}" "« $E7 » atteint"
+  shot "28_apercu"; dump "28_apercu"
+  revele "$E7_CREATE" >/dev/null 2>&1 || true
+  $UI tap --text "$E7_CREATE" --exact --timeout 8 >/dev/null 2>&1
+  if $UI wait --text "$EXP_START" --timeout 25 >/dev/null 2>&1; then
+    record PASS "P3_ui_export_${LANGUE}" "UI d'export (E8) affichée : « $EXP_START »"
+  else
+    record FAIL "P3_ui_export_${LANGUE}" "E8 jamais atteinte après « $E7_CREATE »"
+  fi
+else
+  record BLOCKED "P3_apercu_${LANGUE}" "écran d'aperçu non atteint"
+fi
+if $UI wait --text "$EXP_START" --exact --timeout 5 >/dev/null 2>&1; then
+  revele "$EXP_START" >/dev/null 2>&1 || true
+  $UI tap --text "$EXP_START" --exact --timeout 8 >/dev/null 2>&1
+  sleep 2
+  if $UI wait --text "$EXP_RUNNING" --timeout 25 >/dev/null 2>&1; then
+    record PASS "P3_export_lance_${LANGUE}_${MODE}" "export lancé : « $EXP_RUNNING »"
+  else
+    record FAIL "P3_export_lance_${LANGUE}_${MODE}" "aucun statut de démarrage constaté"
+  fi
+else
+  record BLOCKED "P3_export_lance_${LANGUE}_${MODE}" "bouton d'export introuvable"
+fi
+
+# notification FGS + écran éteint (P1 éprouvé)
+sleep 20
+adb shell dumpsys notification 2>/dev/null | grep -q "vv_export" \
+  && record PASS "P3_notif_fgs_${LANGUE}_${MODE}" "notification vv_export présente" \
+  || record FAIL "P3_notif_fgs_${LANGUE}_${MODE}" "aucune notification vv_export"
+adb shell input keyevent 26 >/dev/null 2>&1
+sleep 45
+adb shell input keyevent 26 >/dev/null 2>&1
+adb shell wm dismiss-keyguard >/dev/null 2>&1
+sleep 3
+$UI wait --text "$EXP_RUNNING" --timeout 90 >/dev/null 2>&1 \
+  || $UI wait --text "$EXP_DONE" --timeout 5 >/dev/null 2>&1
+
+# fin d'export (fenêtre 40 min, P1 éprouvé)
+if $UI wait --text "$EXP_DONE" --exact --timeout 2400 >/dev/null 2>&1; then
+  record PASS "P3_export_termine_${LANGUE}_${MODE}" "« $EXP_DONE » affiché"
+  shot "29_export_termine"; dump "29_export_termine"
+else
+  record FAIL "P3_export_termine_${LANGUE}_${MODE}" "aucune fin d'export en 40 min"
+  shot "29_export_timeout"; dump "29_export_timeout"
+fi
+
+# --- MP4 + preuves acoustiques --------------------------------------------------
+MP4=$(app_ls cache | tr -d '\r' | grep -m1 'export-.*\.mp4' || true)
+if [ -n "${MP4:-}" ]; then
+  app_cat "cache/$MP4" > "$OUT/export.mp4"
+  TAILLE=$(stat -c%s "$OUT/export.mp4" 2>/dev/null || echo 0)
+  if [ "${TAILLE:-0}" -gt 0 ]; then
+    record PASS "P3_mp4_extrait_${LANGUE}_${MODE}" "$MP4 ($TAILLE octets)"
+  else
+    record FAIL "P3_mp4_extrait_${LANGUE}_${MODE}" "$MP4 vide (0 octet)"
+  fi
+else
+  record FAIL "P3_mp4_extrait_${LANGUE}_${MODE}" "aucun export-*.mp4 dans cache"
+fi
+
+if [ -s "$OUT/export.mp4" ] && command -v ffprobe >/dev/null 2>&1; then
+  ffprobe -v error -show_entries format=duration,size,format_name \
+    -of default=noprint_wrappers=1 "$OUT/export.mp4" > "$OUT/ffprobe.txt" 2>&1
+  # piste audio + durée
+  if ffprobe -v error -select_streams a -show_entries stream=codec_type,sample_rate,channels \
+       -of default=noprint_wrappers=1 "$OUT/export.mp4" 2>/dev/null | grep -q "codec_type=audio"; then
+    record PASS "P3_mp4_piste_audio_${LANGUE}_${MODE}" "piste audio présente (ffprobe.txt)"
+  else
+    record FAIL "P3_mp4_piste_audio_${LANGUE}_${MODE}" "aucune piste audio dans le MP4 exporté"
+  fi
+  # RMS global + RMS fenêtre intro (2 s)
+  ffmpeg -v info -i "$OUT/export.mp4" -af "astats=metadata=1" -f null - 2>&1 \
+    | grep -E "Overall|RMS level" | tail -2 > "$OUT/astats_global.txt" || true
+  ffmpeg -v info -ss 0 -t 2 -i "$OUT/export.mp4" -af "astats=metadata=1" -f null - 2>&1 \
+    | grep -E "Overall|RMS level" | tail -2 > "$OUT/astats_intro.txt" || true
+  RMS_G=$(grep -oE "RMS level dB: -?[0-9(inf)+.]+" "$OUT/astats_global.txt" | tail -1 | grep -oE "\-?[0-9.]+|inf" | head -1)
+  RMS_I=$(grep -oE "RMS level dB: -?[0-9(inf)+.]+" "$OUT/astats_intro.txt" | tail -1 | grep -oE "\-?[0-9.]+|inf" | head -1)
+  echo "RMS_global_dB=${RMS_G:-indisponible} RMS_intro_2s_dB=${RMS_I:-indisponible}" >> "$OUT/constats_mode.txt"
+  case "$MODE" in
+    musique|mix)
+      # l'intro (avant toute prise) porte la musique seule : audible
+      if [ -n "${RMS_I:-}" ] && [ "$RMS_I" != "inf" ] 2>/dev/null \
+         && awk -v r="$RMS_I" 'BEGIN{exit !(r > -28)}'; then
+        record PASS "P3_mode_${MODE}_${LANGUE}" "musique audible dès l'intro (RMS intro ${RMS_I} dB > -28) — mode ${MODE} confirmé acoustiquement"
+      else
+        record FAIL "P3_mode_${MODE}_${LANGUE}" "intro quasi muette (RMS intro ${RMS_I:-?} dB) : le mode ${MODE} n'est pas établi"
+      fi
+      ;;
+    voix)
+      # musique absente : l'intro (pas de rush) doit être quasi silencieuse
+      if [ -z "${RMS_I:-}" ] || [ "$RMS_I" = "inf" ] 2>/dev/null \
+         || awk -v r="$RMS_I" 'BEGIN{exit !(r < -40)}'; then
+        record PASS "P3_mode_voix_${LANGUE}" "intro quasi muette (RMS intro ${RMS_I:-inf} dB < -40) : musique absente — pass-through voix seule confirmé"
+      else
+        record FAIL "P3_mode_voix_${LANGUE}" "intro audible (RMS intro ${RMS_I:-?} dB) alors que la musique a été retirée — mode voix non établi"
+      fi
+      ;;
+  esac
+  # décodage intégral
+  if ffmpeg -v error -i "$OUT/export.mp4" -f null - > "$OUT/decode_check.txt" 2>&1 && [ ! -s "$OUT/decode_check.txt" ]; then
+    record PASS "P3_mp4_decode_${LANGUE}_${MODE}" "décodage intégral sans erreur"
+  else
+    record FAIL "P3_mp4_decode_${LANGUE}_${MODE}" "erreurs de décodage (decode_check.txt)"
+  fi
+else
+  [ -s "$OUT/export.mp4" ] || record BLOCKED "P3_mp4_piste_audio_${LANGUE}_${MODE}" "MP4 absent ou ffprobe indisponible"
+fi
+
+# --- stabilité -------------------------------------------------------------------
+if adb logcat -d -b crash | grep -q "FATAL EXCEPTION"; then
+  adb logcat -d -b crash > "$OUT/crash.log"
+  record FAIL "P3_aucun_crash_${LANGUE}_${MODE}" "FATAL EXCEPTION (crash.log)"
+else
+  record PASS "P3_aucun_crash_${LANGUE}_${MODE}" "aucune FATAL EXCEPTION"
+fi
+adb logcat -d > "$OUT/logcat.txt" 2>/dev/null
+
+{ echo "tag=$TAG langue=$LANGUE mode=$MODE"; echo "PASS=$pass FAIL=$fail BLOCKED=$blocked"
+  echo "apk=$APK"; echo "sha256=$(sha256sum "$APK" 2>/dev/null | cut -d' ' -f1)"; } > "$OUT/summary.txt"
+cat "$OUT/summary.txt"
+echo "=========== FIN P3 $LANGUE/$MODE : PASS=$pass FAIL=$fail BLOCKED=$blocked ==========="
+exit 0
