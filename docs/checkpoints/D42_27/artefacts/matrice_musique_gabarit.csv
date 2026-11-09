@@ -1,0 +1,601 @@
+gabarit_id,secteur,format,variation,piste_id,bpm,tonalite,genre,duree_s,rms_db,peak_db,silence_debut_s,attaque_s,clipped,loudness_lufs,sha256_8,statut_en_ligne
+batiment_travaux_T1,batiment_travaux,T1,1,musique_t1_batiment_travaux_v01,107,E majeur,afro-house percussif instrumental,40.0,-17.7,-1.8,2.27,2.27,0,-16.02,55f5cfa2,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,2,musique_t1_batiment_travaux_v02,101,A# mineur,afro-house percussif instrumental,38.8,-16.5,-2.3,2.4,2.4,0,-16.02,b42fb993,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,3,musique_t1_batiment_travaux_v03,109,A majeur,afro-house percussif instrumental,39.5,-17.6,-1.0,2.22,2.22,0,-16.06,023948c1,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,4,musique_t1_batiment_travaux_v04,108,C# mineur,afro-house percussif instrumental,42.7,-17.5,-1.7,2.25,2.25,0,-16.02,39ab8520,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,5,musique_t1_batiment_travaux_v05,106,B majeur,afro-house percussif instrumental,42.8,-17.4,-1.1,2.28,2.28,0,-16.02,df1502c9,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,6,musique_t1_batiment_travaux_v06,110,F majeur,afro-house percussif instrumental,39.5,-18.3,-1.2,2.22,2.22,0,-16.06,d6ca1c67,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,7,musique_t1_batiment_travaux_v07,105,B mineur,afro-house percussif instrumental,43.3,-18.1,-1.3,2.31,2.31,0,-16.05,fe136f65,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,8,musique_t1_batiment_travaux_v08,103,E mineur,afro-house percussif instrumental,45.3,-17.4,-1.7,2.36,2.36,0,-16.04,c18dafd3,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,9,musique_t1_batiment_travaux_v09,108,A mineur,afro-house percussif instrumental,43.3,-15.9,-2.3,2.24,2.24,0,-16.01,be6c9c17,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,10,musique_t1_batiment_travaux_v10,100,D# majeur,afro-house percussif instrumental,44.6,-16.2,-2.2,2.43,2.43,0,-16.02,af48d21d,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,11,musique_t1_batiment_travaux_v11,100,D majeur,afro-house percussif instrumental,44.4,-18.2,-1.2,2.41,2.41,0,-16.03,9acb864c,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,12,musique_t1_batiment_travaux_v12,107,G# majeur,afro-house percussif instrumental,42.6,-16.1,-2.4,2.27,2.27,0,-16.01,b9fc37f6,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,13,musique_t1_batiment_travaux_v13,104,G mineur,afro-house percussif instrumental,44.9,-16.3,-2.6,2.34,2.34,0,-16.01,688ef318,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,14,musique_t1_batiment_travaux_v14,108,C# majeur,afro-house percussif instrumental,45.4,-17.5,-1.7,2.24,2.24,0,-16.03,47dcb7ad,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,15,musique_t1_batiment_travaux_v15,106,D mineur,afro-house percussif instrumental,41.1,-18.3,-1.1,2.28,2.28,0,-16.09,398268c8,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,16,musique_t1_batiment_travaux_v16,103,F# mineur,afro-house percussif instrumental,43.4,-16.4,-2.1,2.35,2.35,0,-16.01,b52f8d1b,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,17,musique_t1_batiment_travaux_v17,110,F# majeur,afro-house percussif instrumental,43.8,-18.3,-1.2,2.21,2.21,0,-16.04,088557b3,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,18,musique_t1_batiment_travaux_v18,107,G# mineur,afro-house percussif instrumental,41.3,-17.6,-2.0,2.26,2.26,0,-16.01,d38f1026,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,19,musique_t1_batiment_travaux_v19,100,A# majeur,afro-house percussif instrumental,41.5,-18.1,-2.8,2.42,2.42,0,-16.06,b402d4eb,EN_LIGNE
+batiment_travaux_T1,batiment_travaux,T1,20,musique_t1_batiment_travaux_v20,101,F mineur,afro-house percussif instrumental,42.1,-18.4,-1.4,2.39,2.39,0,-16.1,5b3e145c,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,1,musique_t2_batiment_travaux_v01,100,D# majeur,afrobeats chantier instrumental,43.2,-16.1,-1.6,2.43,2.43,0,-16.03,1921f148,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,2,musique_t2_batiment_travaux_v02,98,C majeur,afrobeats chantier instrumental,44.6,-17.8,-1.3,2.48,2.48,0,-16.02,e3efc69f,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,3,musique_t2_batiment_travaux_v03,104,G# mineur,afrobeats chantier instrumental,43.2,-17.8,-1.1,2.34,2.34,0,-16.11,a678fe16,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,4,musique_t2_batiment_travaux_v04,101,C mineur,afrobeats chantier instrumental,41.8,-17.7,-1.0,2.39,2.39,0,-16.02,82e716fe,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,5,musique_t2_batiment_travaux_v05,103,F majeur,afrobeats chantier instrumental,39.2,-18.7,-1.3,2.35,2.35,0,-16.04,b8d6741d,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,6,musique_t2_batiment_travaux_v06,108,E mineur,afrobeats chantier instrumental,44.2,-16.1,-2.0,2.26,2.26,0,-16.02,3f97e5bb,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,7,musique_t2_batiment_travaux_v07,105,A majeur,afrobeats chantier instrumental,42.5,-18.3,-1.5,2.31,2.31,0,-16.06,4936e03d,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,8,musique_t2_batiment_travaux_v08,102,G majeur,afrobeats chantier instrumental,39.7,-18.4,-1.0,2.38,2.38,0,-16.04,dd4ab259,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,9,musique_t2_batiment_travaux_v09,95,A# mineur,afrobeats chantier instrumental,41.0,-18.5,-1.5,2.54,2.54,0,-16.06,5b60e19a,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,10,musique_t2_batiment_travaux_v10,107,G mineur,afrobeats chantier instrumental,44.1,-18.2,-1.3,2.26,2.26,0,-16.06,cd382906,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,11,musique_t2_batiment_travaux_v11,106,D# mineur,afrobeats chantier instrumental,38.8,-16.3,-1.5,2.29,2.29,0,-16.01,40df15b7,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,12,musique_t2_batiment_travaux_v12,100,A mineur,afrobeats chantier instrumental,39.5,-17.8,-1.1,2.44,2.44,0,-16.08,cb5bf10b,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,13,musique_t2_batiment_travaux_v13,95,E majeur,afrobeats chantier instrumental,42.9,-16.2,-1.5,2.56,2.56,0,-16.03,099194ea,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,14,musique_t2_batiment_travaux_v14,107,G# majeur,afrobeats chantier instrumental,42.6,-17.5,-2.3,2.27,2.27,0,-16.06,e5990db7,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,15,musique_t2_batiment_travaux_v15,101,A# majeur,afrobeats chantier instrumental,42.0,-17.5,-1.3,2.41,2.41,0,-16.07,75168566,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,16,musique_t2_batiment_travaux_v16,94,D mineur,afrobeats chantier instrumental,39.8,-17.7,-1.2,2.57,2.57,0,-16.05,87149722,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,17,musique_t2_batiment_travaux_v17,94,D majeur,afrobeats chantier instrumental,39.8,-18.4,-1.5,2.56,2.56,0,-16.09,36d82aae,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,18,musique_t2_batiment_travaux_v18,98,F# majeur,afrobeats chantier instrumental,40.5,-16.4,-2.1,2.47,2.47,0,-16.02,a02ca5f1,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,19,musique_t2_batiment_travaux_v19,104,B majeur,afrobeats chantier instrumental,44.9,-18.5,-2.3,2.32,2.32,0,-16.06,23086cac,EN_LIGNE
+batiment_travaux_T2,batiment_travaux,T2,20,musique_t2_batiment_travaux_v20,99,F# mineur,afrobeats chantier instrumental,45.0,-18.4,-2.1,2.45,2.45,0,-16.06,89d54e7e,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,1,musique_t3_batiment_travaux_v01,104,B mineur,percussions afro industrielles,48.5,-16.5,-2.0,2.33,2.33,0,-16.05,11ae62ec,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,2,musique_t3_batiment_travaux_v02,92,G majeur,percussions afro industrielles,43.6,-17.4,-1.3,2.62,2.62,0,-16.07,01a1d0cc,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,3,musique_t3_batiment_travaux_v03,91,G mineur,percussions afro industrielles,48.2,-17.0,-1.1,2.67,2.67,0,-16.01,acfd320a,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,4,musique_t3_batiment_travaux_v04,90,C majeur,percussions afro industrielles,43.5,-16.5,-1.2,2.7,2.7,0,-16.03,54ca3e66,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,5,musique_t3_batiment_travaux_v05,93,G# majeur,percussions afro industrielles,45.7,-17.0,-1.4,2.61,2.61,0,-16.02,ef3e4ec5,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,6,musique_t3_batiment_travaux_v06,98,G# mineur,percussions afro industrielles,43.5,-17.5,-1.5,2.48,2.48,0,-16.07,6d12f7eb,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,7,musique_t3_batiment_travaux_v07,97,C# majeur,percussions afro industrielles,45.2,-15.3,-2.2,2.49,2.49,0,-16.01,a5c0a6a6,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,8,musique_t3_batiment_travaux_v08,88,D# majeur,percussions afro industrielles,50.4,-15.4,-2.4,2.74,2.74,0,-16.0,83298dcf,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,9,musique_t3_batiment_travaux_v09,98,E mineur,percussions afro industrielles,50.1,-15.5,-2.7,2.48,2.48,0,-16.01,6464d444,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,10,musique_t3_batiment_travaux_v10,97,F majeur,percussions afro industrielles,44.8,-16.6,-1.6,2.5,2.5,0,-16.01,ccdeb5ba,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,11,musique_t3_batiment_travaux_v11,103,A# majeur,percussions afro industrielles,45.6,-14.8,-2.1,2.36,2.36,0,-16.02,30c8e109,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,12,musique_t3_batiment_travaux_v12,101,E majeur,percussions afro industrielles,46.1,-16.4,-1.3,2.39,2.39,0,-16.01,58d84e59,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,13,musique_t3_batiment_travaux_v13,94,C# mineur,percussions afro industrielles,47.5,-15.2,-2.1,2.58,2.58,0,-16.01,2abc1b44,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,14,musique_t3_batiment_travaux_v14,98,A mineur,percussions afro industrielles,44.5,-16.0,-1.4,2.46,2.46,0,-16.06,45b754d5,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,15,musique_t3_batiment_travaux_v15,100,F mineur,percussions afro industrielles,48.5,-16.9,-1.2,2.44,2.44,0,-16.04,141ddcd1,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,16,musique_t3_batiment_travaux_v16,96,B majeur,percussions afro industrielles,48.0,-15.1,-1.8,2.51,2.51,0,-16.01,343bcdf9,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,17,musique_t3_batiment_travaux_v17,104,A majeur,percussions afro industrielles,46.1,-16.4,-1.1,2.34,2.34,0,-16.04,d6d8f579,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,18,musique_t3_batiment_travaux_v18,88,F# mineur,percussions afro industrielles,44.8,-17.5,-1.1,2.75,2.75,0,-16.09,821a0e05,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,19,musique_t3_batiment_travaux_v19,100,D mineur,percussions afro industrielles,47.8,-16.6,-1.3,2.43,2.43,0,-16.03,e536ec19,EN_LIGNE
+batiment_travaux_T3,batiment_travaux,T3,20,musique_t3_batiment_travaux_v20,94,D# mineur,percussions afro industrielles,48.8,-15.5,-2.4,2.58,2.58,0,-16.01,4c61339f,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,1,musique_t4_batiment_travaux_v01,117,G# majeur,highlife énergique instrumental,40.7,-17.8,-5.6,1.92,1.92,0,-16.0,5954e28d,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,2,musique_t4_batiment_travaux_v02,125,D# mineur,highlife énergique instrumental,37.4,-17.6,-3.5,1.9,1.9,0,-16.0,266f2d3e,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,3,musique_t4_batiment_travaux_v03,116,A# majeur,highlife énergique instrumental,43.1,-17.2,-3.0,1.89,1.89,0,-16.0,e21d2e44,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,4,musique_t4_batiment_travaux_v04,124,E majeur,highlife énergique instrumental,41.1,-17.8,-2.6,1.94,1.94,0,-16.0,05373c33,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,5,musique_t4_batiment_travaux_v05,114,A mineur,highlife énergique instrumental,36.6,-17.1,-3.4,1.9,1.9,0,-16.0,18459352,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,6,musique_t4_batiment_travaux_v06,124,C# majeur,highlife énergique instrumental,38.6,-17.5,-3.4,1.93,1.93,0,-16.0,0db7ce65,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,7,musique_t4_batiment_travaux_v07,120,F# mineur,highlife énergique instrumental,39.7,-17.6,-4.6,1.88,1.88,0,-16.0,42a3c2c7,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,8,musique_t4_batiment_travaux_v08,126,F mineur,highlife énergique instrumental,37.5,-17.8,-4.0,1.93,1.93,0,-16.0,eb908909,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,9,musique_t4_batiment_travaux_v09,114,D# majeur,highlife énergique instrumental,38.9,-17.5,-4.4,1.92,1.92,0,-16.0,b4552686,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,10,musique_t4_batiment_travaux_v10,110,C mineur,highlife énergique instrumental,42.4,-17.4,-3.1,1.91,1.91,0,-16.0,6b3a0d9f,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,11,musique_t4_batiment_travaux_v11,124,G majeur,highlife énergique instrumental,37.3,-17.9,-4.3,1.92,1.92,0,-16.0,61239acf,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,12,musique_t4_batiment_travaux_v12,118,E mineur,highlife énergique instrumental,39.0,-17.7,-4.7,1.94,1.94,0,-16.0,0dbdf050,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,13,musique_t4_batiment_travaux_v13,111,A majeur,highlife énergique instrumental,43.2,-16.9,-2.6,1.9,1.9,0,-16.0,5a3f88b5,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,14,musique_t4_batiment_travaux_v14,115,D mineur,highlife énergique instrumental,42.8,-17.7,-3.0,1.89,1.89,0,-16.0,9d42c723,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,15,musique_t4_batiment_travaux_v15,114,G mineur,highlife énergique instrumental,39.5,-17.6,-5.5,1.9,1.9,0,-16.0,25fcf6f9,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,16,musique_t4_batiment_travaux_v16,114,G# mineur,highlife énergique instrumental,37.6,-18.1,-4.4,1.88,1.88,0,-16.0,e034e4d1,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,17,musique_t4_batiment_travaux_v17,121,D majeur,highlife énergique instrumental,43.2,-17.6,-3.3,1.92,1.92,0,-16.0,ed2bf658,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,18,musique_t4_batiment_travaux_v18,121,C majeur,highlife énergique instrumental,42.3,-17.5,-2.9,1.9,1.9,0,-16.0,485ce4f1,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,19,musique_t4_batiment_travaux_v19,110,B mineur,highlife énergique instrumental,40.4,-16.9,-4.7,1.92,1.92,0,-16.0,f1728e4a,EN_LIGNE
+batiment_travaux_T4,batiment_travaux,T4,20,musique_t4_batiment_travaux_v20,117,F# majeur,highlife énergique instrumental,38.7,-17.7,-5.0,1.93,1.93,0,-16.0,c177e486,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,1,musique_t5_batiment_travaux_v01,79,E mineur,afro-soul confiance instrumental,57.6,-17.8,-5.7,3.07,3.07,0,-16.0,e570b11f,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,2,musique_t5_batiment_travaux_v02,81,G mineur,afro-soul confiance instrumental,59.9,-18.3,-2.8,3,3,0,-16.0,f7dd9401,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,3,musique_t5_batiment_travaux_v03,78,F# mineur,afro-soul confiance instrumental,55.8,-18.1,-5.4,3.11,3.11,0,-16.0,dc8d4d39,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,4,musique_t5_batiment_travaux_v04,80,E majeur,afro-soul confiance instrumental,57.0,-18.0,-4.7,3.04,3.04,0,-16.0,7f329510,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,5,musique_t5_batiment_travaux_v05,82,C# mineur,afro-soul confiance instrumental,53.9,-17.8,-3.5,2.96,2.96,0,-15.99,8e56a785,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,6,musique_t5_batiment_travaux_v06,90,G majeur,afro-soul confiance instrumental,56.7,-18.0,-5.1,2.7,2.7,0,-16.0,64dea7bd,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,7,musique_t5_batiment_travaux_v07,92,A majeur,afro-soul confiance instrumental,54.3,-17.0,-2.6,2.63,2.63,0,-16.0,565f83b3,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,8,musique_t5_batiment_travaux_v08,87,G# mineur,afro-soul confiance instrumental,54.0,-18.2,-4.7,2.78,2.78,0,-16.0,4074d2cd,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,9,musique_t5_batiment_travaux_v09,79,A# mineur,afro-soul confiance instrumental,53.5,-17.8,-3.4,3.06,3.06,0,-16.01,c409c021,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,10,musique_t5_batiment_travaux_v10,89,F mineur,afro-soul confiance instrumental,59.4,-18.1,-3.7,2.73,2.73,0,-16.0,d2f3c289,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,11,musique_t5_batiment_travaux_v11,78,A# majeur,afro-soul confiance instrumental,57.7,-17.3,-4.9,3.12,3.12,0,-16.0,42ac7f06,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,12,musique_t5_batiment_travaux_v12,89,D# mineur,afro-soul confiance instrumental,56.7,-17.7,-5.2,2.71,2.71,0,-16.0,c2b5afb6,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,13,musique_t5_batiment_travaux_v13,80,D# majeur,afro-soul confiance instrumental,54.3,-18.1,-3.9,3.03,3.03,0,-16.0,b8ac7a96,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,14,musique_t5_batiment_travaux_v14,88,D mineur,afro-soul confiance instrumental,58.7,-17.8,-3.0,2.76,2.76,0,-16.0,d32135ca,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,15,musique_t5_batiment_travaux_v15,88,F majeur,afro-soul confiance instrumental,53.4,-18.0,-4.1,2.74,2.74,0,-16.0,be4832ef,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,16,musique_t5_batiment_travaux_v16,87,G# majeur,afro-soul confiance instrumental,55.5,-18.3,-4.5,2.79,2.79,0,-16.0,a2c01148,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,17,musique_t5_batiment_travaux_v17,90,C# majeur,afro-soul confiance instrumental,60.2,-17.7,-2.4,2.69,2.69,0,-16.0,ee215a85,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,18,musique_t5_batiment_travaux_v18,82,A mineur,afro-soul confiance instrumental,55.4,-17.2,-3.4,2.95,2.95,0,-16.0,646c0da1,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,19,musique_t5_batiment_travaux_v19,84,F# majeur,afro-soul confiance instrumental,57.4,-18.0,-5.4,2.87,2.87,0,-16.0,e908c9ef,EN_LIGNE
+batiment_travaux_T5,batiment_travaux,T5,20,musique_t5_batiment_travaux_v20,92,C mineur,afro-soul confiance instrumental,59.1,-17.4,-3.1,2.63,2.63,0,-16.0,49db289e,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,1,musique_t1_coiffure_beaute_v01,110,F# mineur,afro-R&B doux instrumental,44.9,-18.3,-2.8,2.21,2.21,0,-16.0,57fc8a22,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,2,musique_t1_coiffure_beaute_v02,112,D# majeur,afro-R&B doux instrumental,42.9,-17.7,-5.1,2.16,2.16,0,-16.0,6c2e60b3,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,3,musique_t1_coiffure_beaute_v03,110,F majeur,afro-R&B doux instrumental,38.7,-18.2,-3.8,2.21,2.21,0,-16.0,f1ad65da,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,4,musique_t1_coiffure_beaute_v04,105,D majeur,afro-R&B doux instrumental,43.5,-17.9,-3.6,2.31,2.31,0,-16.0,cdf4248e,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,5,musique_t1_coiffure_beaute_v05,107,D mineur,afro-R&B doux instrumental,38.6,-17.9,-4.4,2.26,2.26,0,-16.0,7bbb0f1b,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,6,musique_t1_coiffure_beaute_v06,112,C# majeur,afro-R&B doux instrumental,42.8,-17.4,-5.3,2.17,2.17,0,-16.0,70903a8f,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,7,musique_t1_coiffure_beaute_v07,108,A# majeur,afro-R&B doux instrumental,42.1,-17.0,-4.8,2.26,2.26,0,-16.0,68f68a90,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,8,musique_t1_coiffure_beaute_v08,106,F# majeur,afro-R&B doux instrumental,42.6,-18.0,-4.7,2.29,2.29,0,-16.0,345f480e,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,9,musique_t1_coiffure_beaute_v09,112,A majeur,afro-R&B doux instrumental,41.6,-17.0,-4.7,2.17,2.17,0,-15.99,67f15279,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,10,musique_t1_coiffure_beaute_v10,102,G majeur,afro-R&B doux instrumental,39.2,-18.2,-3.4,2.38,2.38,0,-16.0,d60e8a9b,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,11,musique_t1_coiffure_beaute_v11,111,A# mineur,afro-R&B doux instrumental,45.1,-17.1,-1.7,2.19,2.19,0,-16.0,9fd4327b,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,12,musique_t1_coiffure_beaute_v12,108,B mineur,afro-R&B doux instrumental,41.6,-17.5,-4.7,2.24,2.24,0,-16.0,88eb931b,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,13,musique_t1_coiffure_beaute_v13,112,B majeur,afro-R&B doux instrumental,44.0,-17.4,-2.4,2.16,2.16,0,-16.0,38e25ad0,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,14,musique_t1_coiffure_beaute_v14,106,C mineur,afro-R&B doux instrumental,42.9,-17.4,-4.5,2.29,2.29,0,-16.0,2c65b3e9,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,15,musique_t1_coiffure_beaute_v15,104,A mineur,afro-R&B doux instrumental,45.0,-17.0,-3.0,2.33,2.33,0,-16.0,85cc1ec2,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,16,musique_t1_coiffure_beaute_v16,103,G# majeur,afro-R&B doux instrumental,40.8,-18.2,-5.1,2.36,2.36,0,-16.0,bc999156,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,17,musique_t1_coiffure_beaute_v17,106,C# mineur,afro-R&B doux instrumental,44.1,-17.6,-2.8,2.28,2.28,0,-16.0,65dfca34,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,18,musique_t1_coiffure_beaute_v18,109,F mineur,afro-R&B doux instrumental,38.7,-18.1,-4.2,2.23,2.23,0,-16.0,fd07eb75,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,19,musique_t1_coiffure_beaute_v19,101,G# mineur,afro-R&B doux instrumental,43.5,-18.3,-3.6,2.4,2.4,0,-16.0,fa0127a3,EN_LIGNE
+coiffure_beaute_T1,coiffure_beaute,T1,20,musique_t1_coiffure_beaute_v20,109,E majeur,afro-R&B doux instrumental,44.5,-18.0,-2.4,2.22,2.22,0,-16.0,3bbb4c97,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,1,musique_t2_coiffure_beaute_v01,103,D# majeur,afrobeats lumineux instrumental,42.9,-16.2,-1.9,2.35,2.35,0,-16.01,6bf4231b,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,2,musique_t2_coiffure_beaute_v02,102,G# mineur,afrobeats lumineux instrumental,42.4,-16.1,-2.1,2.36,2.36,0,-16.05,2a16b1b0,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,3,musique_t2_coiffure_beaute_v03,98,G# majeur,afrobeats lumineux instrumental,42.8,-17.9,-1.4,2.48,2.48,0,-16.04,629800e3,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,4,musique_t2_coiffure_beaute_v04,101,D majeur,afrobeats lumineux instrumental,42.4,-17.4,-1.3,2.39,2.39,0,-16.04,b69c6164,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,5,musique_t2_coiffure_beaute_v05,97,B majeur,afrobeats lumineux instrumental,43.9,-17.5,-1.8,2.5,2.5,0,-16.06,a270c2a7,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,6,musique_t2_coiffure_beaute_v06,109,F majeur,afrobeats lumineux instrumental,42.7,-18.2,-1.7,2.22,2.22,0,-16.05,8b82ec1e,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,7,musique_t2_coiffure_beaute_v07,107,C# majeur,afrobeats lumineux instrumental,42.2,-15.9,-2.4,2.26,2.26,0,-16.05,1cee9f64,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,8,musique_t2_coiffure_beaute_v08,106,G mineur,afrobeats lumineux instrumental,43.5,-17.5,-1.3,2.3,2.3,0,-16.03,caa61ca4,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,9,musique_t2_coiffure_beaute_v09,99,F# mineur,afrobeats lumineux instrumental,44.6,-16.2,-2.2,2.45,2.45,0,-16.03,7e314711,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,10,musique_t2_coiffure_beaute_v10,100,D# mineur,afrobeats lumineux instrumental,45.0,-18.2,-1.1,2.41,2.41,0,-16.06,f262538e,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,11,musique_t2_coiffure_beaute_v11,104,D mineur,afrobeats lumineux instrumental,44.4,-17.4,-2.3,2.33,2.33,0,-16.03,e194ee00,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,12,musique_t2_coiffure_beaute_v12,101,B mineur,afrobeats lumineux instrumental,39.5,-18.3,-1.5,2.4,2.4,0,-16.05,6b2d01b8,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,13,musique_t2_coiffure_beaute_v13,96,A# majeur,afrobeats lumineux instrumental,43.5,-18.2,-1.4,2.51,2.51,0,-16.06,888ce8b9,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,14,musique_t2_coiffure_beaute_v14,102,E mineur,afrobeats lumineux instrumental,43.5,-18.4,-1.5,2.39,2.39,0,-16.05,eae17caf,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,15,musique_t2_coiffure_beaute_v15,104,F mineur,afrobeats lumineux instrumental,39.8,-18.3,-1.8,2.32,2.32,0,-16.06,8f699755,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,16,musique_t2_coiffure_beaute_v16,108,A mineur,afrobeats lumineux instrumental,42.6,-18.1,-1.8,2.25,2.25,0,-16.09,a654b2d5,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,17,musique_t2_coiffure_beaute_v17,108,G majeur,afrobeats lumineux instrumental,43.4,-18.0,-1.9,2.23,2.23,0,-16.08,5339d346,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,18,musique_t2_coiffure_beaute_v18,108,C mineur,afrobeats lumineux instrumental,43.2,-17.5,-2.0,2.24,2.24,0,-16.05,099860aa,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,19,musique_t2_coiffure_beaute_v19,106,A# mineur,afrobeats lumineux instrumental,39.9,-16.2,-2.0,2.28,2.28,0,-16.06,2e8e231f,EN_LIGNE
+coiffure_beaute_T2,coiffure_beaute,T2,20,musique_t2_coiffure_beaute_v20,103,C majeur,afrobeats lumineux instrumental,39.4,-16.1,-2.4,2.36,2.36,0,-16.04,df24b8ce,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,1,musique_t3_coiffure_beaute_v01,103,G majeur,afro-house minimal instrumental,44.5,-18.3,-1.5,2.36,2.36,0,-16.04,cec27704,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,2,musique_t3_coiffure_beaute_v02,97,F majeur,afro-house minimal instrumental,49.6,-18.2,-2.0,2.49,2.49,0,-16.05,112a8f0f,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,3,musique_t3_coiffure_beaute_v03,104,C# majeur,afro-house minimal instrumental,48.0,-16.3,-2.2,2.34,2.34,0,-16.04,6dd739e8,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,4,musique_t3_coiffure_beaute_v04,89,C mineur,afro-house minimal instrumental,43.5,-18.4,-1.4,2.72,2.72,0,-16.05,5f4d4544,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,5,musique_t3_coiffure_beaute_v05,96,E majeur,afro-house minimal instrumental,49.4,-17.7,-1.8,2.52,2.52,0,-16.05,b2a8915e,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,6,musique_t3_coiffure_beaute_v06,99,D# majeur,afro-house minimal instrumental,48.5,-18.2,-1.7,2.44,2.44,0,-16.04,9a20df11,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,7,musique_t3_coiffure_beaute_v07,99,C majeur,afro-house minimal instrumental,44.0,-17.6,-1.6,2.46,2.46,0,-16.03,0c682452,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,8,musique_t3_coiffure_beaute_v08,94,C# mineur,afro-house minimal instrumental,44.7,-18.3,-1.3,2.59,2.59,0,-16.06,081f7fa3,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,9,musique_t3_coiffure_beaute_v09,90,D majeur,afro-house minimal instrumental,44.4,-16.5,-1.9,2.69,2.69,0,-16.04,8074bf35,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,10,musique_t3_coiffure_beaute_v10,102,A majeur,afro-house minimal instrumental,48.9,-17.2,-1.5,2.38,2.38,0,-16.04,bdf844bc,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,11,musique_t3_coiffure_beaute_v11,91,F# majeur,afro-house minimal instrumental,49.7,-18.4,-1.5,2.67,2.67,0,-16.08,d593fbbd,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,12,musique_t3_coiffure_beaute_v12,89,G# majeur,afro-house minimal instrumental,44.6,-17.9,-1.6,2.71,2.71,0,-16.03,16312ab9,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,13,musique_t3_coiffure_beaute_v13,92,A# majeur,afro-house minimal instrumental,49.9,-15.8,-2.1,2.63,2.63,0,-16.05,043159c4,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,14,musique_t3_coiffure_beaute_v14,96,B majeur,afro-house minimal instrumental,43.7,-17.7,-2.0,2.54,2.54,0,-16.04,5ecd05b9,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,15,musique_t3_coiffure_beaute_v15,93,G# mineur,afro-house minimal instrumental,47.6,-16.0,-2.9,2.6,2.6,0,-16.03,ec1866f2,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,16,musique_t3_coiffure_beaute_v16,90,F# mineur,afro-house minimal instrumental,44.4,-16.6,-2.7,2.68,2.68,0,-16.04,78b0b42e,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,17,musique_t3_coiffure_beaute_v17,98,A# mineur,afro-house minimal instrumental,43.8,-17.5,-2.0,2.47,2.47,0,-16.02,86466cb5,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,18,musique_t3_coiffure_beaute_v18,92,D# mineur,afro-house minimal instrumental,48.2,-17.7,-1.8,2.62,2.62,0,-16.05,e5272e05,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,19,musique_t3_coiffure_beaute_v19,98,E mineur,afro-house minimal instrumental,48.2,-17.5,-1.7,2.48,2.48,0,-16.04,6e1b20df,EN_LIGNE
+coiffure_beaute_T3,coiffure_beaute,T3,20,musique_t3_coiffure_beaute_v20,101,B mineur,afro-house minimal instrumental,43.9,-16.6,-2.5,2.41,2.41,0,-16.04,773abf4d,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,1,musique_t4_coiffure_beaute_v01,114,C majeur,highlife doux instrumental,40.4,-17.1,-4.3,2.14,2.14,0,-15.99,e2049c4d,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,2,musique_t4_coiffure_beaute_v02,125,F# mineur,highlife doux instrumental,42.4,-18.1,-2.7,1.95,1.95,0,-16.0,6b877cb5,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,3,musique_t4_coiffure_beaute_v03,122,D# mineur,highlife doux instrumental,41.9,-17.8,-3.1,1.98,1.98,0,-16.0,59a1e528,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,4,musique_t4_coiffure_beaute_v04,120,F mineur,highlife doux instrumental,42.4,-18.0,-3.3,2.02,2.02,0,-16.0,f9df0b70,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,5,musique_t4_coiffure_beaute_v05,124,A majeur,highlife doux instrumental,41.9,-17.1,-2.4,1.96,1.96,0,-16.0,ebf35d6f,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,6,musique_t4_coiffure_beaute_v06,121,B mineur,highlife doux instrumental,37.1,-17.4,-3.8,2,2,0,-16.0,40a41b5a,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,7,musique_t4_coiffure_beaute_v07,125,B majeur,highlife doux instrumental,40.6,-16.9,-4.6,1.95,1.95,0,-16.0,86798dd1,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,8,musique_t4_coiffure_beaute_v08,124,C# majeur,highlife doux instrumental,43.0,-17.6,-3.4,1.95,1.95,0,-16.0,d7795031,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,9,musique_t4_coiffure_beaute_v09,112,D majeur,highlife doux instrumental,41.4,-17.8,-2.8,2.16,2.16,0,-16.0,66fa2e1a,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,10,musique_t4_coiffure_beaute_v10,125,G# mineur,highlife doux instrumental,37.2,-18.1,-3.9,1.94,1.94,0,-16.0,9779c26f,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,11,musique_t4_coiffure_beaute_v11,114,G# majeur,highlife doux instrumental,38.9,-17.8,-5.3,2.12,2.12,0,-16.0,88ef0eb4,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,12,musique_t4_coiffure_beaute_v12,118,A mineur,highlife doux instrumental,40.8,-17.0,-5.0,2.05,2.05,0,-16.0,3980970d,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,13,musique_t4_coiffure_beaute_v13,115,A# majeur,highlife doux instrumental,42.5,-17.3,-2.5,2.11,2.11,0,-16.0,dc6c1c0a,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,14,musique_t4_coiffure_beaute_v14,118,F# majeur,highlife doux instrumental,39.1,-17.8,-4.9,2.05,2.05,0,-16.0,74eb5ab3,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,15,musique_t4_coiffure_beaute_v15,119,C# mineur,highlife doux instrumental,36.6,-17.9,-3.8,2.04,2.04,0,-16.0,7ba5dbe7,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,16,musique_t4_coiffure_beaute_v16,122,E majeur,highlife doux instrumental,41.5,-17.8,-3.0,1.99,1.99,0,-16.0,be810523,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,17,musique_t4_coiffure_beaute_v17,112,D# majeur,highlife doux instrumental,40.3,-17.3,-4.2,2.18,2.18,0,-16.0,cced233b,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,18,musique_t4_coiffure_beaute_v18,116,G majeur,highlife doux instrumental,42.6,-18.1,-3.9,2.08,2.08,0,-16.0,42ae08ef,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,19,musique_t4_coiffure_beaute_v19,112,G mineur,highlife doux instrumental,39.8,-17.7,-4.9,2.17,2.17,0,-16.0,4f370258,EN_LIGNE
+coiffure_beaute_T4,coiffure_beaute,T4,20,musique_t4_coiffure_beaute_v20,121,F majeur,highlife doux instrumental,41.5,-18.0,-3.4,2.01,2.01,0,-16.0,b9b2be74,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,1,musique_t5_coiffure_beaute_v01,80,C majeur,percussions afro feutrées,57.9,-15.8,-1.3,3.02,3.02,0,-16.04,86eaf72e,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,2,musique_t5_coiffure_beaute_v02,80,G majeur,percussions afro feutrées,56.8,-16.7,-1.3,3,3,0,-16.09,6087551d,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,3,musique_t5_coiffure_beaute_v03,78,A mineur,percussions afro feutrées,58.7,-15.0,-1.3,3.1,3.1,0,-16.04,7d50eed9,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,4,musique_t5_coiffure_beaute_v04,94,G# majeur,percussions afro feutrées,54.8,-16.8,-1.0,2.59,2.59,0,-16.07,20c528a1,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,5,musique_t5_coiffure_beaute_v05,84,D mineur,percussions afro feutrées,57.6,-15.8,-1.9,2.86,2.86,0,-16.04,3d3110fd,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,6,musique_t5_coiffure_beaute_v06,78,B mineur,percussions afro feutrées,55.8,-15.2,-1.2,3.12,3.12,0,-16.04,1dafe3cd,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,7,musique_t5_coiffure_beaute_v07,82,D# majeur,percussions afro feutrées,54.4,-16.1,-2.1,2.94,2.94,0,-16.05,702dd9bb,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,8,musique_t5_coiffure_beaute_v08,80,C# mineur,percussions afro feutrées,56.7,-15.6,-2.8,3.04,3.04,0,-16.06,7894847d,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,9,musique_t5_coiffure_beaute_v09,91,E majeur,percussions afro feutrées,60.0,-16.1,-1.5,2.65,2.65,0,-16.06,21c8e3c7,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,10,musique_t5_coiffure_beaute_v10,82,F# majeur,percussions afro feutrées,55.1,-16.9,-2.3,2.95,2.95,0,-16.1,55b7d221,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,11,musique_t5_coiffure_beaute_v11,84,A majeur,percussions afro feutrées,58.9,-15.1,-1.5,2.87,2.87,0,-16.06,f1764356,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,12,musique_t5_coiffure_beaute_v12,90,A# majeur,percussions afro feutrées,54.4,-14.9,-1.2,2.7,2.7,0,-16.04,9c5c653b,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,13,musique_t5_coiffure_beaute_v13,86,D# mineur,percussions afro feutrées,58.6,-15.5,-2.2,2.81,2.81,0,-16.05,941e4734,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,14,musique_t5_coiffure_beaute_v14,95,E mineur,percussions afro feutrées,60.1,-16.6,-1.1,2.56,2.56,0,-16.03,00645c39,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,15,musique_t5_coiffure_beaute_v15,94,F mineur,percussions afro feutrées,59.8,-16.6,-1.2,2.57,2.57,0,-16.08,a227cea0,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,16,musique_t5_coiffure_beaute_v16,79,G mineur,percussions afro feutrées,57.9,-17.3,-1.4,3.07,3.07,0,-16.09,9f7af51a,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,17,musique_t5_coiffure_beaute_v17,90,A# mineur,percussions afro feutrées,56.5,-15.0,-1.8,2.69,2.69,0,-16.08,fdbd6161,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,18,musique_t5_coiffure_beaute_v18,78,C mineur,percussions afro feutrées,54.8,-15.5,-1.5,3.09,3.09,0,-16.04,44d5a13b,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,19,musique_t5_coiffure_beaute_v19,87,F# mineur,percussions afro feutrées,55.8,-16.3,-1.6,2.79,2.79,0,-16.04,29f5a07b,EN_LIGNE
+coiffure_beaute_T5,coiffure_beaute,T5,20,musique_t5_coiffure_beaute_v20,93,D majeur,percussions afro feutrées,59.2,-15.7,-2.7,2.6,2.6,0,-16.04,8e1ada8e,EN_LIGNE
+immo_auto_T1,immo_auto,T1,1,musique_t1_immo_auto_v01,108,D majeur,afro-house premium instrumental,45.2,-17.4,-2.1,2.25,2.25,0,-16.03,3e1f0fee,EN_LIGNE
+immo_auto_T1,immo_auto,T1,2,musique_t1_immo_auto_v02,112,A# mineur,afro-house premium instrumental,41.7,-17.2,-1.9,2.16,2.16,0,-16.03,bf6d5d21,EN_LIGNE
+immo_auto_T1,immo_auto,T1,3,musique_t1_immo_auto_v03,102,F# mineur,afro-house premium instrumental,45.2,-17.4,-1.5,2.37,2.37,0,-16.03,f123687d,EN_LIGNE
+immo_auto_T1,immo_auto,T1,4,musique_t1_immo_auto_v04,105,C mineur,afro-house premium instrumental,42.8,-17.9,-1.6,2.3,2.3,0,-16.03,f88abeed,EN_LIGNE
+immo_auto_T1,immo_auto,T1,5,musique_t1_immo_auto_v05,112,F# majeur,afro-house premium instrumental,45.1,-15.7,-2.9,2.16,2.16,0,-16.03,aa104e5d,EN_LIGNE
+immo_auto_T1,immo_auto,T1,6,musique_t1_immo_auto_v06,109,A# majeur,afro-house premium instrumental,43.5,-17.3,-1.2,2.22,2.22,0,-16.04,4b5df26f,EN_LIGNE
+immo_auto_T1,immo_auto,T1,7,musique_t1_immo_auto_v07,113,A majeur,afro-house premium instrumental,40.3,-16.1,-2.9,2.15,2.15,0,-16.02,09124de8,EN_LIGNE
+immo_auto_T1,immo_auto,T1,8,musique_t1_immo_auto_v08,104,D mineur,afro-house premium instrumental,39.1,-18.0,-1.4,2.33,2.33,0,-16.04,d7fcb020,EN_LIGNE
+immo_auto_T1,immo_auto,T1,9,musique_t1_immo_auto_v09,104,G# mineur,afro-house premium instrumental,41.6,-18.1,-1.1,2.33,2.33,0,-16.07,b8450db6,EN_LIGNE
+immo_auto_T1,immo_auto,T1,10,musique_t1_immo_auto_v10,106,E mineur,afro-house premium instrumental,44.4,-17.4,-1.9,2.29,2.29,0,-16.03,d20a76ec,EN_LIGNE
+immo_auto_T1,immo_auto,T1,11,musique_t1_immo_auto_v11,102,D# mineur,afro-house premium instrumental,39.4,-16.5,-2.4,2.39,2.39,0,-16.02,05c6f8ae,EN_LIGNE
+immo_auto_T1,immo_auto,T1,12,musique_t1_immo_auto_v12,102,B majeur,afro-house premium instrumental,41.7,-17.3,-1.2,2.38,2.38,0,-16.03,af62316b,EN_LIGNE
+immo_auto_T1,immo_auto,T1,13,musique_t1_immo_auto_v13,112,G mineur,afro-house premium instrumental,41.2,-17.3,-2.0,2.17,2.17,0,-16.04,b60c7cbe,EN_LIGNE
+immo_auto_T1,immo_auto,T1,14,musique_t1_immo_auto_v14,103,F majeur,afro-house premium instrumental,45.3,-17.4,-2.1,2.36,2.36,0,-16.03,8c6d7900,EN_LIGNE
+immo_auto_T1,immo_auto,T1,15,musique_t1_immo_auto_v15,104,C# mineur,afro-house premium instrumental,40.2,-18.1,-1.4,2.34,2.34,0,-16.04,15d54c42,EN_LIGNE
+immo_auto_T1,immo_auto,T1,16,musique_t1_immo_auto_v16,106,F mineur,afro-house premium instrumental,40.1,-16.3,-2.2,2.28,2.28,0,-16.03,31994ccc,EN_LIGNE
+immo_auto_T1,immo_auto,T1,17,musique_t1_immo_auto_v17,110,G majeur,afro-house premium instrumental,42.9,-17.3,-2.1,2.2,2.2,0,-16.03,ce5af0d7,EN_LIGNE
+immo_auto_T1,immo_auto,T1,18,musique_t1_immo_auto_v18,106,A mineur,afro-house premium instrumental,42.1,-17.9,-1.2,2.29,2.29,0,-16.1,2c9ecdd5,EN_LIGNE
+immo_auto_T1,immo_auto,T1,19,musique_t1_immo_auto_v19,101,B mineur,afro-house premium instrumental,44.5,-17.2,-1.6,2.4,2.4,0,-16.03,52e0b62f,EN_LIGNE
+immo_auto_T1,immo_auto,T1,20,musique_t1_immo_auto_v20,103,C# majeur,afro-house premium instrumental,42.5,-16.1,-2.6,2.36,2.36,0,-16.04,1927eb81,EN_LIGNE
+immo_auto_T2,immo_auto,T2,1,musique_t2_immo_auto_v01,104,A# mineur,afrobeats sobre instrumental,45.3,-17.4,-1.5,2.32,2.32,0,-16.03,be1eca1a,EN_LIGNE
+immo_auto_T2,immo_auto,T2,2,musique_t2_immo_auto_v02,103,D# mineur,afrobeats sobre instrumental,38.4,-17.9,-1.3,2.36,2.36,0,-16.03,a65397a1,EN_LIGNE
+immo_auto_T2,immo_auto,T2,3,musique_t2_immo_auto_v03,96,G mineur,afrobeats sobre instrumental,44.9,-18.6,-1.1,2.54,2.54,0,-16.04,7f140cc6,EN_LIGNE
+immo_auto_T2,immo_auto,T2,4,musique_t2_immo_auto_v04,107,C# majeur,afrobeats sobre instrumental,44.7,-15.9,-2.2,2.27,2.27,0,-16.04,81b17cfd,EN_LIGNE
+immo_auto_T2,immo_auto,T2,5,musique_t2_immo_auto_v05,108,C mineur,afrobeats sobre instrumental,38.9,-18.2,-1.9,2.23,2.23,0,-16.06,d8a31595,EN_LIGNE
+immo_auto_T2,immo_auto,T2,6,musique_t2_immo_auto_v06,108,F# majeur,afrobeats sobre instrumental,40.5,-16.4,-2.4,2.26,2.26,0,-16.03,ed04094d,EN_LIGNE
+immo_auto_T2,immo_auto,T2,7,musique_t2_immo_auto_v07,97,F majeur,afrobeats sobre instrumental,43.6,-16.1,-2.1,2.51,2.51,0,-16.03,9997291f,EN_LIGNE
+immo_auto_T2,immo_auto,T2,8,musique_t2_immo_auto_v08,98,E majeur,afrobeats sobre instrumental,39.9,-17.9,-1.6,2.47,2.47,0,-16.04,8eccb4bf,EN_LIGNE
+immo_auto_T2,immo_auto,T2,9,musique_t2_immo_auto_v09,104,D majeur,afrobeats sobre instrumental,44.6,-16.1,-2.1,2.34,2.34,0,-16.04,952c6e7f,EN_LIGNE
+immo_auto_T2,immo_auto,T2,10,musique_t2_immo_auto_v10,102,C majeur,afrobeats sobre instrumental,42.7,-16.0,-2.2,2.38,2.38,0,-16.05,c64f0e92,EN_LIGNE
+immo_auto_T2,immo_auto,T2,11,musique_t2_immo_auto_v11,99,C# mineur,afrobeats sobre instrumental,41.9,-16.1,-2.3,2.45,2.45,0,-16.04,1fe5ff21,EN_LIGNE
+immo_auto_T2,immo_auto,T2,12,musique_t2_immo_auto_v12,106,F mineur,afrobeats sobre instrumental,42.9,-17.5,-1.5,2.3,2.3,0,-16.01,91666652,EN_LIGNE
+immo_auto_T2,immo_auto,T2,13,musique_t2_immo_auto_v13,104,F# mineur,afrobeats sobre instrumental,40.2,-17.7,-1.4,2.34,2.34,0,-16.03,8514537d,EN_LIGNE
+immo_auto_T2,immo_auto,T2,14,musique_t2_immo_auto_v14,96,G# mineur,afrobeats sobre instrumental,43.4,-18.5,-1.5,2.52,2.52,0,-16.06,09e8085e,EN_LIGNE
+immo_auto_T2,immo_auto,T2,15,musique_t2_immo_auto_v15,96,E mineur,afrobeats sobre instrumental,39.8,-16.4,-2.3,2.51,2.51,0,-16.05,7272f4fe,EN_LIGNE
+immo_auto_T2,immo_auto,T2,16,musique_t2_immo_auto_v16,102,B mineur,afrobeats sobre instrumental,43.7,-17.5,-1.8,2.37,2.37,0,-16.07,f7a61ef8,EN_LIGNE
+immo_auto_T2,immo_auto,T2,17,musique_t2_immo_auto_v17,108,A# majeur,afrobeats sobre instrumental,40.9,-16.0,-1.9,2.24,2.24,0,-16.04,b1280496,EN_LIGNE
+immo_auto_T2,immo_auto,T2,18,musique_t2_immo_auto_v18,106,A mineur,afrobeats sobre instrumental,39.7,-17.5,-1.4,2.27,2.27,0,-16.05,eba5824b,EN_LIGNE
+immo_auto_T2,immo_auto,T2,19,musique_t2_immo_auto_v19,108,G# majeur,afrobeats sobre instrumental,42.5,-18.3,-1.1,2.25,2.25,0,-16.03,ea9bbdb2,EN_LIGNE
+immo_auto_T2,immo_auto,T2,20,musique_t2_immo_auto_v20,106,D# majeur,afrobeats sobre instrumental,44.7,-15.9,-2.1,2.29,2.29,0,-16.04,007b0f7e,EN_LIGNE
+immo_auto_T3,immo_auto,T3,1,musique_t3_immo_auto_v01,92,D mineur,amapiano instrumental,50.3,-15.8,-2.7,2.63,2.63,0,-16.03,f97c1b22,EN_LIGNE
+immo_auto_T3,immo_auto,T3,2,musique_t3_immo_auto_v02,104,E majeur,amapiano instrumental,48.2,-18.1,-1.5,2.33,2.33,0,-16.04,3e495a79,EN_LIGNE
+immo_auto_T3,immo_auto,T3,3,musique_t3_immo_auto_v03,97,G majeur,amapiano instrumental,46.8,-17.5,-1.9,2.51,2.51,0,-16.03,64d8630a,EN_LIGNE
+immo_auto_T3,immo_auto,T3,4,musique_t3_immo_auto_v04,100,A mineur,amapiano instrumental,43.7,-18.1,-1.1,2.42,2.42,0,-16.09,ddd46a28,EN_LIGNE
+immo_auto_T3,immo_auto,T3,5,musique_t3_immo_auto_v05,104,C# majeur,amapiano instrumental,45.3,-17.5,-2.1,2.32,2.32,0,-16.03,e31c0de4,EN_LIGNE
+immo_auto_T3,immo_auto,T3,6,musique_t3_immo_auto_v06,93,C mineur,amapiano instrumental,45.5,-17.5,-1.3,2.61,2.61,0,-16.04,69b950b9,EN_LIGNE
+immo_auto_T3,immo_auto,T3,7,musique_t3_immo_auto_v07,91,B mineur,amapiano instrumental,46.9,-17.5,-1.7,2.65,2.65,0,-16.05,a5fea925,EN_LIGNE
+immo_auto_T3,immo_auto,T3,8,musique_t3_immo_auto_v08,105,D# mineur,amapiano instrumental,46.3,-17.4,-1.9,2.31,2.31,0,-16.03,add10027,EN_LIGNE
+immo_auto_T3,immo_auto,T3,9,musique_t3_immo_auto_v09,89,F majeur,amapiano instrumental,43.5,-18.3,-1.6,2.71,2.71,0,-16.1,991dec23,EN_LIGNE
+immo_auto_T3,immo_auto,T3,10,musique_t3_immo_auto_v10,100,G# majeur,amapiano instrumental,48.7,-17.4,-1.6,2.43,2.43,0,-16.02,78dff398,EN_LIGNE
+immo_auto_T3,immo_auto,T3,11,musique_t3_immo_auto_v11,96,F# majeur,amapiano instrumental,48.4,-18.2,-1.1,2.53,2.53,0,-16.08,37ecfcbc,EN_LIGNE
+immo_auto_T3,immo_auto,T3,12,musique_t3_immo_auto_v12,102,A majeur,amapiano instrumental,49.4,-17.2,-1.7,2.37,2.37,0,-16.03,de9765b7,EN_LIGNE
+immo_auto_T3,immo_auto,T3,13,musique_t3_immo_auto_v13,94,A# majeur,amapiano instrumental,47.1,-17.4,-1.9,2.56,2.56,0,-16.03,e93ffce6,EN_LIGNE
+immo_auto_T3,immo_auto,T3,14,musique_t3_immo_auto_v14,92,B majeur,amapiano instrumental,45.1,-18.1,-1.3,2.65,2.65,0,-16.07,3e00e603,EN_LIGNE
+immo_auto_T3,immo_auto,T3,15,musique_t3_immo_auto_v15,101,D# majeur,amapiano instrumental,49.9,-17.3,-2.0,2.4,2.4,0,-16.03,d05d92df,EN_LIGNE
+immo_auto_T3,immo_auto,T3,16,musique_t3_immo_auto_v16,104,G mineur,amapiano instrumental,50.3,-17.4,-1.8,2.33,2.33,0,-16.02,d8874b62,EN_LIGNE
+immo_auto_T3,immo_auto,T3,17,musique_t3_immo_auto_v17,94,E mineur,amapiano instrumental,43.9,-16.2,-2.6,2.57,2.57,0,-16.02,7ae94e5a,EN_LIGNE
+immo_auto_T3,immo_auto,T3,18,musique_t3_immo_auto_v18,99,C majeur,amapiano instrumental,47.5,-17.3,-1.4,2.44,2.44,0,-16.03,7c3a5c45,EN_LIGNE
+immo_auto_T3,immo_auto,T3,19,musique_t3_immo_auto_v19,98,C# mineur,amapiano instrumental,44.9,-17.5,-2.2,2.47,2.47,0,-16.02,37c1a151,EN_LIGNE
+immo_auto_T3,immo_auto,T3,20,musique_t3_immo_auto_v20,96,A# mineur,amapiano instrumental,45.6,-18.2,-1.4,2.52,2.52,0,-16.09,55657b23,EN_LIGNE
+immo_auto_T4,immo_auto,T4,1,musique_t4_immo_auto_v01,115,D# mineur,highlife calme instrumental,42.1,-17.7,-3.5,1.08,1.08,0,-16.0,2e942f6e,EN_LIGNE
+immo_auto_T4,immo_auto,T4,2,musique_t4_immo_auto_v02,116,A mineur,highlife calme instrumental,43.2,-17.0,-3.1,1.08,1.08,0,-16.0,d980241c,EN_LIGNE
+immo_auto_T4,immo_auto,T4,3,musique_t4_immo_auto_v03,126,C mineur,highlife calme instrumental,38.0,-17.4,-3.6,1.06,1.06,0,-16.0,8132d3a3,EN_LIGNE
+immo_auto_T4,immo_auto,T4,4,musique_t4_immo_auto_v04,114,E majeur,highlife calme instrumental,37.5,-17.9,-3.7,1.08,1.08,0,-16.0,00fb8608,EN_LIGNE
+immo_auto_T4,immo_auto,T4,5,musique_t4_immo_auto_v05,126,E mineur,highlife calme instrumental,37.2,-17.7,-3.9,1.1,1.1,0,-16.0,0f36b2ae,EN_LIGNE
+immo_auto_T4,immo_auto,T4,6,musique_t4_immo_auto_v06,117,A majeur,highlife calme instrumental,37.0,-17.2,-3.8,1.06,1.06,0,-16.0,6d89901a,EN_LIGNE
+immo_auto_T4,immo_auto,T4,7,musique_t4_immo_auto_v07,120,F majeur,highlife calme instrumental,40.8,-17.6,-5.0,1.11,1.11,0,-16.0,31d56eeb,EN_LIGNE
+immo_auto_T4,immo_auto,T4,8,musique_t4_immo_auto_v08,122,C majeur,highlife calme instrumental,40.6,-16.9,-4.0,1.08,1.08,0,-16.0,dd47c3fd,EN_LIGNE
+immo_auto_T4,immo_auto,T4,9,musique_t4_immo_auto_v09,123,F mineur,highlife calme instrumental,39.8,-17.5,-4.3,1.05,1.05,0,-16.0,2c662f33,EN_LIGNE
+immo_auto_T4,immo_auto,T4,10,musique_t4_immo_auto_v10,115,D mineur,highlife calme instrumental,39.3,-17.5,-5.5,1.08,1.08,0,-16.01,f33c06f9,EN_LIGNE
+immo_auto_T4,immo_auto,T4,11,musique_t4_immo_auto_v11,116,A# majeur,highlife calme instrumental,41.0,-16.8,-4.0,1.08,1.08,0,-16.0,d175af86,EN_LIGNE
+immo_auto_T4,immo_auto,T4,12,musique_t4_immo_auto_v12,127,G# mineur,highlife calme instrumental,40.7,-17.6,-5.7,1.11,1.11,0,-16.0,0326920f,EN_LIGNE
+immo_auto_T4,immo_auto,T4,13,musique_t4_immo_auto_v13,120,G# majeur,highlife calme instrumental,42.3,-18.2,-3.2,1.1,1.1,0,-16.0,cfa9561d,EN_LIGNE
+immo_auto_T4,immo_auto,T4,14,musique_t4_immo_auto_v14,124,C# mineur,highlife calme instrumental,40.7,-17.1,-3.7,1.05,1.05,0,-16.0,bc4c8bc4,EN_LIGNE
+immo_auto_T4,immo_auto,T4,15,musique_t4_immo_auto_v15,116,D# majeur,highlife calme instrumental,41.8,-17.7,-2.9,1.06,1.06,0,-16.0,45f8a1b2,EN_LIGNE
+immo_auto_T4,immo_auto,T4,16,musique_t4_immo_auto_v16,116,C# majeur,highlife calme instrumental,36.9,-17.6,-4.0,1.07,1.07,0,-16.0,2acd50d4,EN_LIGNE
+immo_auto_T4,immo_auto,T4,17,musique_t4_immo_auto_v17,111,B majeur,highlife calme instrumental,41.5,-17.3,-2.9,1.07,1.07,0,-16.0,925811fd,EN_LIGNE
+immo_auto_T4,immo_auto,T4,18,musique_t4_immo_auto_v18,117,D majeur,highlife calme instrumental,37.7,-17.7,-3.3,1.11,1.11,0,-16.0,cf35e970,EN_LIGNE
+immo_auto_T4,immo_auto,T4,19,musique_t4_immo_auto_v19,124,F# mineur,highlife calme instrumental,36.8,-17.9,-3.9,1.11,1.11,0,-16.0,d51d9c7c,EN_LIGNE
+immo_auto_T4,immo_auto,T4,20,musique_t4_immo_auto_v20,123,B mineur,highlife calme instrumental,38.3,-17.3,-3.3,1.03,1.03,0,-16.0,c5839804,EN_LIGNE
+immo_auto_T5,immo_auto,T5,1,musique_t5_immo_auto_v01,90,G# mineur,afro-soul confiance instrumental,57.8,-18.0,-5.2,2.69,2.69,0,-16.0,424a421d,EN_LIGNE
+immo_auto_T5,immo_auto,T5,2,musique_t5_immo_auto_v02,82,F# mineur,afro-soul confiance instrumental,59.0,-18.2,-3.4,2.97,2.97,0,-16.0,b257ee06,EN_LIGNE
+immo_auto_T5,immo_auto,T5,3,musique_t5_immo_auto_v03,95,F# majeur,afro-soul confiance instrumental,54.9,-18.0,-4.1,2.55,2.55,0,-16.0,568ca6db,EN_LIGNE
+immo_auto_T5,immo_auto,T5,4,musique_t5_immo_auto_v04,78,F mineur,afro-soul confiance instrumental,56.6,-17.9,-5.3,3.09,3.09,0,-16.0,dc93374b,EN_LIGNE
+immo_auto_T5,immo_auto,T5,5,musique_t5_immo_auto_v05,94,C mineur,afro-soul confiance instrumental,55.6,-17.5,-3.8,2.58,2.58,0,-16.0,ae274215,EN_LIGNE
+immo_auto_T5,immo_auto,T5,6,musique_t5_immo_auto_v06,83,C majeur,afro-soul confiance instrumental,55.5,-17.7,-3.7,2.91,2.91,0,-16.0,78bde180,EN_LIGNE
+immo_auto_T5,immo_auto,T5,7,musique_t5_immo_auto_v07,86,D# majeur,afro-soul confiance instrumental,56.8,-17.6,-4.7,2.83,2.83,0,-15.99,4e9272ed,EN_LIGNE
+immo_auto_T5,immo_auto,T5,8,musique_t5_immo_auto_v08,82,F majeur,afro-soul confiance instrumental,54.2,-18.2,-4.1,2.93,2.93,0,-16.0,b1792d15,EN_LIGNE
+immo_auto_T5,immo_auto,T5,9,musique_t5_immo_auto_v09,89,C# mineur,afro-soul confiance instrumental,56.5,-17.5,-4.6,2.72,2.72,0,-16.0,41e1821c,EN_LIGNE
+immo_auto_T5,immo_auto,T5,10,musique_t5_immo_auto_v10,95,A# majeur,afro-soul confiance instrumental,58.0,-16.9,-4.5,2.56,2.56,0,-16.0,97b0a14a,EN_LIGNE
+immo_auto_T5,immo_auto,T5,11,musique_t5_immo_auto_v11,80,G mineur,afro-soul confiance instrumental,53.4,-18.3,-3.7,3.01,3.01,0,-16.0,bee5b246,EN_LIGNE
+immo_auto_T5,immo_auto,T5,12,musique_t5_immo_auto_v12,78,E mineur,afro-soul confiance instrumental,59.5,-18.1,-2.7,3.12,3.12,0,-16.0,8923e897,EN_LIGNE
+immo_auto_T5,immo_auto,T5,13,musique_t5_immo_auto_v13,79,D# mineur,afro-soul confiance instrumental,56.5,-17.9,-4.0,3.06,3.06,0,-16.0,447f63df,EN_LIGNE
+immo_auto_T5,immo_auto,T5,14,musique_t5_immo_auto_v14,88,B majeur,afro-soul confiance instrumental,56.7,-17.1,-4.5,2.74,2.74,0,-16.0,294d3b71,EN_LIGNE
+immo_auto_T5,immo_auto,T5,15,musique_t5_immo_auto_v15,92,A# mineur,afro-soul confiance instrumental,57.7,-17.0,-4.0,2.63,2.63,0,-16.0,3a216027,EN_LIGNE
+immo_auto_T5,immo_auto,T5,16,musique_t5_immo_auto_v16,92,A mineur,afro-soul confiance instrumental,56.1,-16.7,-4.0,2.64,2.64,0,-16.0,262a93e7,EN_LIGNE
+immo_auto_T5,immo_auto,T5,17,musique_t5_immo_auto_v17,82,G majeur,afro-soul confiance instrumental,54.7,-18.2,-3.9,2.95,2.95,0,-16.01,398593e2,EN_LIGNE
+immo_auto_T5,immo_auto,T5,18,musique_t5_immo_auto_v18,89,A majeur,afro-soul confiance instrumental,57.3,-16.8,-4.4,2.73,2.73,0,-16.0,8ad2f8f6,EN_LIGNE
+immo_auto_T5,immo_auto,T5,19,musique_t5_immo_auto_v19,84,G# majeur,afro-soul confiance instrumental,53.9,-18.3,-4.4,2.9,2.9,0,-16.0,114fbb8b,EN_LIGNE
+immo_auto_T5,immo_auto,T5,20,musique_t5_immo_auto_v20,91,D majeur,afro-soul confiance instrumental,59.6,-17.8,-2.2,2.67,2.67,0,-16.0,77048092,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,1,musique_t1_restaurants_maquis_v01,113,G# mineur,afrobeats percussif instrumental,44.5,-17.6,-1.2,2.14,2.14,0,-16.03,fe6e115e,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,2,musique_t1_restaurants_maquis_v02,114,F# majeur,afrobeats percussif instrumental,43.2,-17.5,-1.6,2.13,2.13,0,-16.1,9d74254e,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,3,musique_t1_restaurants_maquis_v03,104,C# majeur,afrobeats percussif instrumental,39.7,-17.7,-1.3,2.34,2.34,0,-16.08,ebbe8222,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,4,musique_t1_restaurants_maquis_v04,103,A majeur,afrobeats percussif instrumental,44.0,-16.0,-2.1,2.36,2.36,0,-16.06,4b5b2155,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,5,musique_t1_restaurants_maquis_v05,110,A# mineur,afrobeats percussif instrumental,40.9,-17.4,-1.1,2.2,2.2,0,-16.01,0efa41c9,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,6,musique_t1_restaurants_maquis_v06,110,F# mineur,afrobeats percussif instrumental,43.3,-18.2,-1.9,2.21,2.21,0,-16.05,ca3a5b78,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,7,musique_t1_restaurants_maquis_v07,106,D mineur,afrobeats percussif instrumental,41.4,-16.0,-2.1,2.29,2.29,0,-16.04,0e7960f5,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,8,musique_t1_restaurants_maquis_v08,108,F mineur,afrobeats percussif instrumental,40.8,-18.4,-1.4,2.25,2.25,0,-16.06,5f4aecf0,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,9,musique_t1_restaurants_maquis_v09,112,F majeur,afrobeats percussif instrumental,42.2,-16.0,-2.4,2.17,2.17,0,-16.03,53e1f450,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,10,musique_t1_restaurants_maquis_v10,110,D majeur,afrobeats percussif instrumental,41.0,-16.2,-2.6,2.21,2.21,0,-16.04,79bcad83,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,11,musique_t1_restaurants_maquis_v11,110,C mineur,afrobeats percussif instrumental,40.8,-17.5,-1.1,2.19,2.19,0,-16.03,48b77088,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,12,musique_t1_restaurants_maquis_v12,111,C majeur,afrobeats percussif instrumental,43.2,-18.0,-1.5,2.19,2.19,0,-16.03,ef64f6b0,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,13,musique_t1_restaurants_maquis_v13,114,B majeur,afrobeats percussif instrumental,42.0,-18.1,-1.6,2.13,2.13,0,-16.06,73eb5ae8,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,14,musique_t1_restaurants_maquis_v14,105,C# mineur,afrobeats percussif instrumental,40.9,-18.2,-1.7,2.3,2.3,0,-16.07,0a6ab1d6,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,15,musique_t1_restaurants_maquis_v15,108,A mineur,afrobeats percussif instrumental,40.4,-17.5,-1.3,2.25,2.25,0,-16.02,efbe1bab,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,16,musique_t1_restaurants_maquis_v16,107,G majeur,afrobeats percussif instrumental,43.7,-17.6,-1.4,2.27,2.27,0,-16.0,7e1593bf,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,17,musique_t1_restaurants_maquis_v17,103,E majeur,afrobeats percussif instrumental,43.7,-17.6,-1.5,2.36,2.36,0,-16.05,3d9c4d08,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,18,musique_t1_restaurants_maquis_v18,112,D# majeur,afrobeats percussif instrumental,40.4,-16.3,-2.0,2.17,2.17,0,-16.04,3057ca1a,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,19,musique_t1_restaurants_maquis_v19,108,G mineur,afrobeats percussif instrumental,44.5,-18.2,-2.0,2.24,2.24,0,-16.04,3f7d2e40,EN_LIGNE
+restaurants_maquis_T1,restaurants_maquis,T1,20,musique_t1_restaurants_maquis_v20,111,A# majeur,afrobeats percussif instrumental,41.6,-15.9,-2.5,2.19,2.19,0,-16.04,04bcc1e8,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,1,musique_t2_restaurants_maquis_v01,100,A majeur,highlife chaleureux instrumental,39.7,-17.0,-3.6,2.42,2.42,0,-16.0,1b8f37f0,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,2,musique_t2_restaurants_maquis_v02,98,B majeur,highlife chaleureux instrumental,39.0,-17.5,-3.5,2.47,2.47,0,-16.0,734a4731,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,3,musique_t2_restaurants_maquis_v03,98,A mineur,highlife chaleureux instrumental,39.1,-17.2,-3.5,2.46,2.46,0,-16.0,5afb7c4d,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,4,musique_t2_restaurants_maquis_v04,103,F# majeur,highlife chaleureux instrumental,41.7,-17.9,-5.2,2.36,2.36,0,-16.0,d2111971,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,5,musique_t2_restaurants_maquis_v05,100,E majeur,highlife chaleureux instrumental,39.7,-18.0,-4.1,2.44,2.44,0,-16.0,111d93d7,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,6,musique_t2_restaurants_maquis_v06,107,D# mineur,highlife chaleureux instrumental,41.5,-17.6,-5.2,2.26,2.26,0,-16.0,d74f25a0,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,7,musique_t2_restaurants_maquis_v07,105,D mineur,highlife chaleureux instrumental,41.9,-17.7,-4.0,2.31,2.31,0,-16.0,df4d6ce7,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,8,musique_t2_restaurants_maquis_v08,106,A# mineur,highlife chaleureux instrumental,39.7,-17.3,-3.1,2.29,2.29,0,-16.0,325f1667,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,9,musique_t2_restaurants_maquis_v09,106,F majeur,highlife chaleureux instrumental,40.3,-18.1,-3.9,2.28,2.28,0,-16.0,2e3a9973,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,10,musique_t2_restaurants_maquis_v10,109,C majeur,highlife chaleureux instrumental,41.8,-17.1,-3.9,2.22,2.22,0,-16.0,ca73cd8e,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,11,musique_t2_restaurants_maquis_v11,104,F mineur,highlife chaleureux instrumental,43.0,-17.6,-4.1,2.34,2.34,0,-16.0,6c30cecf,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,12,musique_t2_restaurants_maquis_v12,105,E mineur,highlife chaleureux instrumental,43.9,-17.9,-2.2,2.32,2.32,0,-16.0,adc1afdd,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,13,musique_t2_restaurants_maquis_v13,108,C# majeur,highlife chaleureux instrumental,42.0,-17.4,-4.5,2.24,2.24,0,-16.0,2703aa1c,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,14,musique_t2_restaurants_maquis_v14,109,G majeur,highlife chaleureux instrumental,39.5,-18.2,-4.0,2.23,2.23,0,-16.0,6622e5cd,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,15,musique_t2_restaurants_maquis_v15,98,G# majeur,highlife chaleureux instrumental,38.8,-18.2,-4.3,2.47,2.47,0,-16.0,100b9a31,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,16,musique_t2_restaurants_maquis_v16,97,F# mineur,highlife chaleureux instrumental,43.3,-18.2,-2.9,2.5,2.5,0,-16.0,be1add62,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,17,musique_t2_restaurants_maquis_v17,102,A# majeur,highlife chaleureux instrumental,39.0,-17.2,-2.8,2.38,2.38,0,-16.0,9eef8129,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,18,musique_t2_restaurants_maquis_v18,110,D majeur,highlife chaleureux instrumental,45.3,-17.8,-3.2,2.22,2.22,0,-16.0,bb976d81,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,19,musique_t2_restaurants_maquis_v19,104,D# majeur,highlife chaleureux instrumental,42.2,-17.6,-5.0,2.33,2.33,0,-16.0,1679b555,EN_LIGNE
+restaurants_maquis_T2,restaurants_maquis,T2,20,musique_t2_restaurants_maquis_v20,102,B mineur,highlife chaleureux instrumental,38.8,-17.5,-3.7,2.37,2.37,0,-16.0,84298a55,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,1,musique_t3_restaurants_maquis_v01,102,B majeur,coupé-décalé instrumental,49.3,-17.9,-1.5,2.37,2.37,0,-16.08,871f1562,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,2,musique_t3_restaurants_maquis_v02,91,F# mineur,coupé-décalé instrumental,48.4,-17.2,-1.6,2.65,2.65,0,-16.02,5ef317fd,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,3,musique_t3_restaurants_maquis_v03,96,A# mineur,coupé-décalé instrumental,47.0,-17.1,-1.4,2.51,2.51,0,-16.02,291e8d41,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,4,musique_t3_restaurants_maquis_v04,97,A# majeur,coupé-décalé instrumental,45.1,-15.6,-2.3,2.5,2.5,0,-16.0,460db10c,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,5,musique_t3_restaurants_maquis_v05,105,E majeur,coupé-décalé instrumental,47.9,-17.2,-2.0,2.31,2.31,0,-16.01,b26869f2,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,6,musique_t3_restaurants_maquis_v06,96,B mineur,coupé-décalé instrumental,48.0,-17.1,-1.2,2.52,2.52,0,-16.01,42506343,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,7,musique_t3_restaurants_maquis_v07,98,D# mineur,coupé-décalé instrumental,45.4,-17.2,-1.9,2.47,2.47,0,-16.02,ee55d698,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,8,musique_t3_restaurants_maquis_v08,101,A mineur,coupé-décalé instrumental,46.6,-17.8,-1.7,2.4,2.4,0,-16.02,35b9af3b,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,9,musique_t3_restaurants_maquis_v09,91,G# mineur,coupé-décalé instrumental,49.6,-17.2,-1.6,2.67,2.67,0,-16.08,40cf0c1b,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,10,musique_t3_restaurants_maquis_v10,98,G mineur,coupé-décalé instrumental,50.4,-17.1,-1.6,2.47,2.47,0,-16.02,0ce12f9d,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,11,musique_t3_restaurants_maquis_v11,103,E mineur,coupé-décalé instrumental,45.2,-18.0,-1.1,2.35,2.35,0,-16.1,deea9525,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,12,musique_t3_restaurants_maquis_v12,100,C# mineur,coupé-décalé instrumental,48.6,-17.1,-2.1,2.44,2.44,0,-16.07,e274dc29,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,13,musique_t3_restaurants_maquis_v13,96,G majeur,coupé-décalé instrumental,50.2,-15.7,-2.5,2.52,2.52,0,-16.0,d0dac4af,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,14,musique_t3_restaurants_maquis_v14,97,F mineur,coupé-décalé instrumental,44.0,-17.2,-1.5,2.49,2.49,0,-16.03,82f49918,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,15,musique_t3_restaurants_maquis_v15,92,C mineur,coupé-décalé instrumental,50.3,-17.1,-1.4,2.64,2.64,0,-16.03,3f903dcf,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,16,musique_t3_restaurants_maquis_v16,104,D majeur,coupé-décalé instrumental,47.7,-17.9,-1.5,2.34,2.34,0,-16.03,4be7ef7d,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,17,musique_t3_restaurants_maquis_v17,102,C majeur,coupé-décalé instrumental,45.8,-18.0,-1.3,2.37,2.37,0,-16.03,59f803cf,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,18,musique_t3_restaurants_maquis_v18,90,F majeur,coupé-décalé instrumental,47.4,-15.7,-1.9,2.68,2.68,0,-16.0,8269d6b4,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,19,musique_t3_restaurants_maquis_v19,101,F# majeur,coupé-décalé instrumental,45.0,-18.0,-1.2,2.4,2.4,0,-16.09,3c9c71fd,EN_LIGNE
+restaurants_maquis_T3,restaurants_maquis,T3,20,musique_t3_restaurants_maquis_v20,94,D mineur,coupé-décalé instrumental,44.2,-17.2,-1.4,2.57,2.57,0,-16.07,c71d9ab3,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,1,musique_t4_restaurants_maquis_v01,115,F mineur,afro-house cuisine groove,40.0,-17.3,-1.6,2.11,2.11,0,-16.02,c773a055,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,2,musique_t4_restaurants_maquis_v02,123,C# mineur,afro-house cuisine groove,43.3,-17.3,-2.0,1.97,1.97,0,-16.04,6e7a0622,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,3,musique_t4_restaurants_maquis_v03,128,B mineur,afro-house cuisine groove,41.8,-17.3,-1.9,1.9,1.9,0,-16.04,1ccde1a1,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,4,musique_t4_restaurants_maquis_v04,125,F majeur,afro-house cuisine groove,43.2,-16.1,-2.0,1.95,1.95,0,-16.02,cac49a26,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,5,musique_t4_restaurants_maquis_v05,122,F# majeur,afro-house cuisine groove,40.8,-16.3,-3.0,1.99,1.99,0,-16.03,b804e42a,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,6,musique_t4_restaurants_maquis_v06,126,F# mineur,afro-house cuisine groove,43.2,-18.1,-1.1,1.94,1.94,0,-16.09,33254c1c,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,7,musique_t4_restaurants_maquis_v07,114,D# majeur,afro-house cuisine groove,40.1,-17.4,-2.1,2.14,2.14,0,-16.02,b7672bd4,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,8,musique_t4_restaurants_maquis_v08,118,E mineur,afro-house cuisine groove,42.7,-16.0,-2.5,2.05,2.05,0,-16.0,737c2a84,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,9,musique_t4_restaurants_maquis_v09,114,G# majeur,afro-house cuisine groove,43.2,-15.9,-2.8,2.13,2.13,0,-16.03,56eb8469,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,10,musique_t4_restaurants_maquis_v10,113,A# mineur,afro-house cuisine groove,40.4,-15.9,-2.6,2.15,2.15,0,-16.03,f13249e2,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,11,musique_t4_restaurants_maquis_v11,128,C mineur,afro-house cuisine groove,42.9,-17.9,-1.3,1.91,1.91,0,-16.08,d199262d,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,12,musique_t4_restaurants_maquis_v12,122,A majeur,afro-house cuisine groove,36.7,-16.4,-2.7,2,2,0,-16.02,1b419bf9,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,13,musique_t4_restaurants_maquis_v13,115,G majeur,afro-house cuisine groove,43.0,-18.3,-1.5,2.11,2.11,0,-16.09,7a5dc62f,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,14,musique_t4_restaurants_maquis_v14,119,E majeur,afro-house cuisine groove,38.8,-16.1,-2.6,2.04,2.04,0,-16.01,87619d9d,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,15,musique_t4_restaurants_maquis_v15,118,D# mineur,afro-house cuisine groove,37.5,-17.6,-1.8,2.06,2.06,0,-16.0,af99ea81,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,16,musique_t4_restaurants_maquis_v16,114,A# majeur,afro-house cuisine groove,42.5,-15.8,-2.6,2.13,2.13,0,-16.02,e22973e4,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,17,musique_t4_restaurants_maquis_v17,125,B majeur,afro-house cuisine groove,42.7,-16.1,-2.3,1.95,1.95,0,-16.01,e8eaec15,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,18,musique_t4_restaurants_maquis_v18,115,D majeur,afro-house cuisine groove,36.4,-18.3,-1.2,2.12,2.12,0,-16.09,331a3fb7,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,19,musique_t4_restaurants_maquis_v19,112,G# mineur,afro-house cuisine groove,38.1,-16.3,-3.1,2.17,2.17,0,-16.03,ce4fecde,EN_LIGNE
+restaurants_maquis_T4,restaurants_maquis,T4,20,musique_t4_restaurants_maquis_v20,124,D mineur,afro-house cuisine groove,39.5,-18.1,-1.2,1.95,1.95,0,-16.04,17b7d3b7,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,1,musique_t5_restaurants_maquis_v01,92,C# mineur,afro-soul maquis instrumental,58.3,-17.6,-2.8,2.63,2.63,0,-16.0,0273a6ff,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,2,musique_t5_restaurants_maquis_v02,79,D# mineur,afro-soul maquis instrumental,54.3,-18.0,-4.4,3.06,3.06,0,-16.0,f8033ba2,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,3,musique_t5_restaurants_maquis_v03,81,G mineur,afro-soul maquis instrumental,54.2,-18.3,-4.5,2.98,2.98,0,-16.0,754eaca7,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,4,musique_t5_restaurants_maquis_v04,90,C mineur,afro-soul maquis instrumental,59.3,-17.6,-2.7,2.68,2.68,0,-16.0,812fd6d5,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,5,musique_t5_restaurants_maquis_v05,81,F mineur,afro-soul maquis instrumental,58.6,-18.1,-3.0,3,3,0,-16.0,e7fd6678,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,6,musique_t5_restaurants_maquis_v06,92,D majeur,afro-soul maquis instrumental,57.8,-17.6,-4.6,2.63,2.63,0,-16.0,35b8b651,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,7,musique_t5_restaurants_maquis_v07,88,G# mineur,afro-soul maquis instrumental,59.8,-18.2,-3.2,2.74,2.74,0,-16.0,e21116e7,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,8,musique_t5_restaurants_maquis_v08,86,G# majeur,afro-soul maquis instrumental,56.3,-18.0,-4.4,2.8,2.8,0,-16.0,a5c06b75,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,9,musique_t5_restaurants_maquis_v09,92,A mineur,afro-soul maquis instrumental,54.0,-17.1,-3.0,2.65,2.65,0,-16.0,b90501ab,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,10,musique_t5_restaurants_maquis_v10,96,E majeur,afro-soul maquis instrumental,55.1,-18.0,-4.2,2.53,2.53,0,-16.0,b545fee3,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,11,musique_t5_restaurants_maquis_v11,85,F# majeur,afro-soul maquis instrumental,58.6,-18.2,-3.2,2.84,2.84,0,-16.01,6686ca45,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,12,musique_t5_restaurants_maquis_v12,78,B mineur,afro-soul maquis instrumental,53.6,-17.8,-4.5,3.1,3.1,0,-16.0,a4972c89,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,13,musique_t5_restaurants_maquis_v13,94,A# mineur,afro-soul maquis instrumental,59.7,-17.1,-3.2,2.58,2.58,0,-16.0,73cb968e,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,14,musique_t5_restaurants_maquis_v14,95,F majeur,afro-soul maquis instrumental,54.7,-18.0,-4.1,2.54,2.54,0,-16.0,8fc32589,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,15,musique_t5_restaurants_maquis_v15,83,C# majeur,afro-soul maquis instrumental,58.8,-17.7,-3.0,2.93,2.93,0,-16.0,3727aaf1,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,16,musique_t5_restaurants_maquis_v16,96,B majeur,afro-soul maquis instrumental,58.2,-17.5,-3.2,2.52,2.52,0,-16.0,667625b5,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,17,musique_t5_restaurants_maquis_v17,81,A majeur,afro-soul maquis instrumental,55.7,-17.2,-3.9,2.99,2.99,0,-16.0,3db52e10,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,18,musique_t5_restaurants_maquis_v18,82,D# majeur,afro-soul maquis instrumental,59.5,-17.9,-3.2,2.93,2.93,0,-16.0,b0e4e6a7,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,19,musique_t5_restaurants_maquis_v19,84,G majeur,afro-soul maquis instrumental,56.8,-18.0,-5.3,2.87,2.87,0,-16.0,4d1a5b23,EN_LIGNE
+restaurants_maquis_T5,restaurants_maquis,T5,20,musique_t5_restaurants_maquis_v20,87,E mineur,afro-soul maquis instrumental,53.7,-17.9,-4.3,2.78,2.78,0,-16.0,e2ba20bb,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,1,musique_t1_shops_small_business_v01,103,G# majeur,afrobeats commercial instrumental,40.3,-16.4,-1.9,2.36,2.36,0,-16.01,34008723,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,2,musique_t1_shops_small_business_v02,112,E mineur,afrobeats commercial instrumental,44.0,-17.5,-1.7,2.18,2.18,0,-16.06,e4f624d9,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,3,musique_t1_shops_small_business_v03,104,A# mineur,afrobeats commercial instrumental,40.3,-16.3,-1.7,2.34,2.34,0,-16.01,b1ab5a4f,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,4,musique_t1_shops_small_business_v04,103,B mineur,afrobeats commercial instrumental,43.5,-16.2,-1.9,2.35,2.35,0,-16.04,f8b9e2a2,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,5,musique_t1_shops_small_business_v05,112,D# mineur,afrobeats commercial instrumental,43.8,-16.0,-2.4,2.15,2.15,0,-16.03,4d2db199,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,6,musique_t1_shops_small_business_v06,108,E majeur,afrobeats commercial instrumental,43.7,-17.5,-1.1,2.26,2.26,0,-16.04,8e8cc2d2,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,7,musique_t1_shops_small_business_v07,108,D# majeur,afrobeats commercial instrumental,38.9,-18.3,-1.2,2.23,2.23,0,-16.03,bb8bc88a,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,8,musique_t1_shops_small_business_v08,106,C# majeur,afrobeats commercial instrumental,40.7,-18.4,-1.1,2.29,2.29,0,-16.06,0bbec66c,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,9,musique_t1_shops_small_business_v09,111,C mineur,afrobeats commercial instrumental,42.7,-17.5,-1.5,2.18,2.18,0,-16.08,fef68a02,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,10,musique_t1_shops_small_business_v10,114,G mineur,afrobeats commercial instrumental,44.4,-18.3,-1.4,2.13,2.13,0,-16.03,3b6ef655,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,11,musique_t1_shops_small_business_v11,109,G# mineur,afrobeats commercial instrumental,44.5,-16.3,-2.5,2.23,2.23,0,-16.02,40f4206d,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,12,musique_t1_shops_small_business_v12,102,C majeur,afrobeats commercial instrumental,40.4,-17.9,-1.1,2.36,2.36,0,-16.03,53687012,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,13,musique_t1_shops_small_business_v13,110,F# mineur,afrobeats commercial instrumental,40.5,-18.4,-1.3,2.22,2.22,0,-16.04,0acf0bf1,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,14,musique_t1_shops_small_business_v14,110,A# majeur,afrobeats commercial instrumental,42.5,-18.3,-1.9,2.2,2.2,0,-16.05,3b60aaa1,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,15,musique_t1_shops_small_business_v15,104,G majeur,afrobeats commercial instrumental,43.0,-18.4,-1.4,2.32,2.32,0,-16.04,365f12c4,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,16,musique_t1_shops_small_business_v16,106,A mineur,afrobeats commercial instrumental,40.0,-16.0,-2.4,2.3,2.3,0,-16.04,cee3b7dd,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,17,musique_t1_shops_small_business_v17,112,C# mineur,afrobeats commercial instrumental,39.5,-17.6,-2.7,2.16,2.16,0,-16.05,d6ece6d0,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,18,musique_t1_shops_small_business_v18,111,F mineur,afrobeats commercial instrumental,39.2,-17.7,-1.2,2.19,2.19,0,-16.04,1b5a0906,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,19,musique_t1_shops_small_business_v19,104,F# majeur,afrobeats commercial instrumental,38.4,-18.5,-1.4,2.32,2.32,0,-16.03,30bdc0d4,EN_LIGNE
+shops_small_business_T1,shops_small_business,T1,20,musique_t1_shops_small_business_v20,106,B majeur,afrobeats commercial instrumental,42.1,-16.1,-1.6,2.28,2.28,0,-16.02,4f4128b6,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,1,musique_t2_shops_small_business_v01,105,E majeur,coupé-décalé instrumental,39.4,-15.7,-2.3,2.31,2.31,0,-16.01,f45e9eee,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,2,musique_t2_shops_small_business_v02,109,A# mineur,coupé-décalé instrumental,44.8,-17.9,-1.0,2.23,2.23,0,-16.09,7f92bb2d,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,3,musique_t2_shops_small_business_v03,99,B mineur,coupé-décalé instrumental,44.4,-18.1,-1.3,2.45,2.45,0,-16.09,5a8b08cb,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,4,musique_t2_shops_small_business_v04,102,D majeur,coupé-décalé instrumental,38.8,-15.6,-2.0,2.37,2.37,0,-16.01,aeba2854,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,5,musique_t2_shops_small_business_v05,96,C# mineur,coupé-décalé instrumental,44.1,-17.1,-1.5,2.52,2.52,0,-16.02,f90deb4c,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,6,musique_t2_shops_small_business_v06,101,A majeur,coupé-décalé instrumental,44.8,-18.0,-1.1,2.4,2.4,0,-16.09,ad65da88,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,7,musique_t2_shops_small_business_v07,96,D mineur,coupé-décalé instrumental,38.5,-15.8,-1.8,2.52,2.52,0,-16.0,3824f933,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,8,musique_t2_shops_small_business_v08,101,B majeur,coupé-décalé instrumental,43.1,-17.8,-2.0,2.4,2.4,0,-16.03,8262ed61,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,9,musique_t2_shops_small_business_v09,102,D# mineur,coupé-décalé instrumental,41.3,-17.1,-2.1,2.39,2.39,0,-16.08,d23344a5,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,10,musique_t2_shops_small_business_v10,109,F# mineur,coupé-décalé instrumental,42.4,-15.5,-2.4,2.22,2.22,0,-16.0,b4566bc9,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,11,musique_t2_shops_small_business_v11,100,G majeur,coupé-décalé instrumental,41.0,-17.2,-1.2,2.43,2.43,0,-16.07,8c423eb6,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,12,musique_t2_shops_small_business_v12,97,G mineur,coupé-décalé instrumental,40.6,-17.2,-1.6,2.51,2.51,0,-16.03,0991cf45,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,13,musique_t2_shops_small_business_v13,107,D# majeur,coupé-décalé instrumental,38.7,-17.2,-1.9,2.26,2.26,0,-16.02,6b334ebd,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,14,musique_t2_shops_small_business_v14,106,C mineur,coupé-décalé instrumental,43.9,-17.0,-1.4,2.29,2.29,0,-16.03,0f8e7353,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,15,musique_t2_shops_small_business_v15,106,E mineur,coupé-décalé instrumental,43.0,-17.1,-1.9,2.28,2.28,0,-16.01,07ae1586,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,16,musique_t2_shops_small_business_v16,102,G# majeur,coupé-décalé instrumental,41.4,-17.2,-1.4,2.37,2.37,0,-16.01,96e25886,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,17,musique_t2_shops_small_business_v17,102,C# majeur,coupé-décalé instrumental,39.5,-17.9,-2.4,2.38,2.38,0,-16.04,1bb83cb8,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,18,musique_t2_shops_small_business_v18,109,A mineur,coupé-décalé instrumental,40.5,-17.8,-2.2,2.22,2.22,0,-16.04,731a8865,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,19,musique_t2_shops_small_business_v19,110,A# majeur,coupé-décalé instrumental,45.1,-17.2,-1.7,2.22,2.22,0,-16.01,ab9def20,EN_LIGNE
+shops_small_business_T2,shops_small_business,T2,20,musique_t2_shops_small_business_v20,107,F# majeur,coupé-décalé instrumental,38.6,-16.0,-2.8,2.27,2.27,0,-16.0,9da240b9,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,1,musique_t3_shops_small_business_v01,99,D# majeur,amapiano groove instrumental,46.1,-18.2,-1.3,2.45,2.45,0,-16.04,e4b85797,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,2,musique_t3_shops_small_business_v02,105,G mineur,amapiano groove instrumental,46.0,-17.5,-1.7,2.3,2.3,0,-16.02,f731cb65,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,3,musique_t3_shops_small_business_v03,102,E majeur,amapiano groove instrumental,48.7,-18.0,-1.1,2.39,2.39,0,-16.03,710af3fc,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,4,musique_t3_shops_small_business_v04,95,C# majeur,amapiano groove instrumental,48.9,-18.3,-1.7,2.55,2.55,0,-16.07,bcc0d964,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,5,musique_t3_shops_small_business_v05,90,G# majeur,amapiano groove instrumental,48.9,-18.3,-1.7,2.68,2.68,0,-16.03,5ddfd316,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,6,musique_t3_shops_small_business_v06,96,D# mineur,amapiano groove instrumental,50.0,-15.9,-2.4,2.53,2.53,0,-16.02,f1aefd3d,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,7,musique_t3_shops_small_business_v07,100,B mineur,amapiano groove instrumental,47.3,-17.3,-1.9,2.43,2.43,0,-16.02,b99b8b9e,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,8,musique_t3_shops_small_business_v08,92,G majeur,amapiano groove instrumental,45.7,-17.6,-1.7,2.62,2.62,0,-16.04,880287fc,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,9,musique_t3_shops_small_business_v09,91,F# majeur,amapiano groove instrumental,44.2,-18.3,-1.7,2.67,2.67,0,-16.1,32b793d7,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,10,musique_t3_shops_small_business_v10,97,G# mineur,amapiano groove instrumental,47.9,-16.0,-2.5,2.5,2.5,0,-16.02,d897cde2,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,11,musique_t3_shops_small_business_v11,104,F# mineur,amapiano groove instrumental,47.5,-18.0,-1.6,2.34,2.34,0,-16.03,af02a89b,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,12,musique_t3_shops_small_business_v12,96,A mineur,amapiano groove instrumental,50.1,-15.8,-2.6,2.52,2.52,0,-16.02,f58bc77b,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,13,musique_t3_shops_small_business_v13,92,A# majeur,amapiano groove instrumental,50.2,-18.0,-2.2,2.63,2.63,0,-16.06,219fa795,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,14,musique_t3_shops_small_business_v14,100,D majeur,amapiano groove instrumental,47.7,-18.1,-1.7,2.43,2.43,0,-16.04,80e11286,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,15,musique_t3_shops_small_business_v15,103,E mineur,amapiano groove instrumental,44.3,-16.3,-2.6,2.36,2.36,0,-16.01,025100f0,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,16,musique_t3_shops_small_business_v16,91,C majeur,amapiano groove instrumental,44.8,-16.2,-3.0,2.66,2.66,0,-16.02,10476ca8,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,17,musique_t3_shops_small_business_v17,106,C# mineur,amapiano groove instrumental,48.7,-18.0,-1.7,2.3,2.3,0,-16.1,ca9ada8e,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,18,musique_t3_shops_small_business_v18,101,A# mineur,amapiano groove instrumental,48.1,-17.2,-1.9,2.39,2.39,0,-16.02,66e74687,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,19,musique_t3_shops_small_business_v19,106,B majeur,amapiano groove instrumental,46.1,-15.9,-2.9,2.29,2.29,0,-16.03,d2da2df6,EN_LIGNE
+shops_small_business_T3,shops_small_business,T3,20,musique_t3_shops_small_business_v20,97,C mineur,amapiano groove instrumental,49.2,-17.3,-1.4,2.5,2.5,0,-16.03,7bd0a7d7,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,1,musique_t4_shops_small_business_v01,113,A# majeur,highlife léger instrumental,36.6,-17.3,-3.7,2.14,2.14,0,-16.0,1ad2deeb,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,2,musique_t4_shops_small_business_v02,118,A majeur,highlife léger instrumental,38.6,-16.9,-3.5,2.05,2.05,0,-16.0,a17e8da3,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,3,musique_t4_shops_small_business_v03,122,G majeur,highlife léger instrumental,40.5,-17.6,-3.9,2,2,0,-16.0,39aaa19b,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,4,musique_t4_shops_small_business_v04,120,C majeur,highlife léger instrumental,40.5,-17.1,-4.9,2.03,2.03,0,-16.0,a7bf33e9,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,5,musique_t4_shops_small_business_v05,114,F mineur,highlife léger instrumental,37.8,-18.1,-3.6,2.13,2.13,0,-16.0,0d36b765,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,6,musique_t4_shops_small_business_v06,113,D# mineur,highlife léger instrumental,37.0,-17.8,-4.4,2.15,2.15,0,-16.0,699198c9,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,7,musique_t4_shops_small_business_v07,118,D majeur,highlife léger instrumental,41.4,-17.6,-2.4,2.05,2.05,0,-16.0,6c0c97c5,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,8,musique_t4_shops_small_business_v08,127,D# majeur,highlife léger instrumental,38.8,-17.2,-4.0,1.92,1.92,0,-16.0,93feb2bc,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,9,musique_t4_shops_small_business_v09,124,E mineur,highlife léger instrumental,42.8,-17.9,-3.0,1.96,1.96,0,-16.0,eba89060,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,10,musique_t4_shops_small_business_v10,120,B mineur,highlife léger instrumental,39.8,-17.2,-4.6,2.03,2.03,0,-16.0,c9e62d50,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,11,musique_t4_shops_small_business_v11,126,A mineur,highlife léger instrumental,42.5,-17.0,-2.7,1.93,1.93,0,-16.01,7ad40567,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,12,musique_t4_shops_small_business_v12,112,D mineur,highlife léger instrumental,39.1,-17.5,-5.4,2.17,2.17,0,-16.0,c76a7a8b,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,13,musique_t4_shops_small_business_v13,113,C# majeur,highlife léger instrumental,39.9,-17.3,-4.8,2.15,2.15,0,-16.0,9451763d,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,14,musique_t4_shops_small_business_v14,119,B majeur,highlife léger instrumental,40.8,-16.9,-4.4,2.04,2.04,0,-16.0,13ebcbe7,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,15,musique_t4_shops_small_business_v15,118,C mineur,highlife léger instrumental,37.5,-17.3,-3.7,2.06,2.06,0,-16.0,db0b7284,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,16,musique_t4_shops_small_business_v16,115,F# mineur,highlife léger instrumental,41.7,-18.1,-3.4,2.11,2.11,0,-16.0,16e3239d,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,17,musique_t4_shops_small_business_v17,124,F majeur,highlife léger instrumental,36.6,-17.9,-3.9,1.97,1.97,0,-16.0,1f748795,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,18,musique_t4_shops_small_business_v18,126,G# mineur,highlife léger instrumental,36.9,-18.0,-3.7,1.92,1.92,0,-15.99,66fce504,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,19,musique_t4_shops_small_business_v19,115,A# mineur,highlife léger instrumental,38.0,-17.3,-3.8,2.12,2.12,0,-16.0,438cea91,EN_LIGNE
+shops_small_business_T4,shops_small_business,T4,20,musique_t4_shops_small_business_v20,125,E majeur,highlife léger instrumental,42.8,-18.0,-2.2,1.94,1.94,0,-16.0,93c90ad6,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,1,musique_t5_shops_small_business_v01,91,A majeur,afro-house dynamique instrumental,56.3,-16.1,-2.8,2.65,2.65,0,-16.02,24d50d84,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,2,musique_t5_shops_small_business_v02,83,C mineur,afro-house dynamique instrumental,56.4,-18.2,-1.6,2.91,2.91,0,-16.04,e0c37c44,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,3,musique_t5_shops_small_business_v03,93,G mineur,afro-house dynamique instrumental,58.1,-16.1,-2.5,2.61,2.61,0,-16.02,1901b802,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,4,musique_t5_shops_small_business_v04,84,F mineur,afro-house dynamique instrumental,58.1,-18.4,-2.1,2.88,2.88,0,-16.03,226948c9,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,5,musique_t5_shops_small_business_v05,92,B majeur,afro-house dynamique instrumental,58.2,-17.5,-1.7,2.63,2.63,0,-16.05,006d25ec,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,6,musique_t5_shops_small_business_v06,95,C majeur,afro-house dynamique instrumental,57.2,-18.2,-1.2,2.55,2.55,0,-16.05,0d862230,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,7,musique_t5_shops_small_business_v07,90,A# mineur,afro-house dynamique instrumental,59.0,-18.1,-1.5,2.68,2.68,0,-16.05,ff21cb9a,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,8,musique_t5_shops_small_business_v08,79,A mineur,afro-house dynamique instrumental,56.6,-16.1,-2.4,3.07,3.07,0,-16.04,7967dbab,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,9,musique_t5_shops_small_business_v09,83,D# mineur,afro-house dynamique instrumental,59.3,-16.3,-2.5,2.93,2.93,0,-16.04,5f9dd99e,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,10,musique_t5_shops_small_business_v10,85,D mineur,afro-house dynamique instrumental,54.2,-16.5,-2.1,2.85,2.85,0,-16.04,1613a5be,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,11,musique_t5_shops_small_business_v11,82,F# majeur,afro-house dynamique instrumental,55.2,-18.5,-1.8,2.97,2.97,0,-16.04,14441ea1,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,12,musique_t5_shops_small_business_v12,92,B mineur,afro-house dynamique instrumental,54.8,-18.1,-1.0,2.63,2.63,0,-16.04,1b6841ef,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,13,musique_t5_shops_small_business_v13,79,G# majeur,afro-house dynamique instrumental,55.6,-18.6,-1.3,3.06,3.06,0,-16.09,8db716a8,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,14,musique_t5_shops_small_business_v14,93,E mineur,afro-house dynamique instrumental,55.3,-17.9,-2.1,2.6,2.6,0,-16.03,48f4407b,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,15,musique_t5_shops_small_business_v15,94,F# mineur,afro-house dynamique instrumental,59.8,-18.4,-1.3,2.56,2.56,0,-16.08,73b85285,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,16,musique_t5_shops_small_business_v16,80,A# majeur,afro-house dynamique instrumental,54.3,-17.9,-1.6,3.03,3.03,0,-16.04,c2dae729,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,17,musique_t5_shops_small_business_v17,86,C# mineur,afro-house dynamique instrumental,56.6,-16.2,-2.6,2.8,2.8,0,-16.05,50797600,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,18,musique_t5_shops_small_business_v18,88,G# mineur,afro-house dynamique instrumental,58.2,-16.3,-2.5,2.75,2.75,0,-16.04,d1d11d01,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,19,musique_t5_shops_small_business_v19,81,F majeur,afro-house dynamique instrumental,55.0,-16.5,-2.6,2.98,2.98,0,-16.03,97a3c4f9,EN_LIGNE
+shops_small_business_T5,shops_small_business,T5,20,musique_t5_shops_small_business_v20,95,C# majeur,afro-house dynamique instrumental,58.7,-18.2,-1.4,2.54,2.54,0,-16.04,6132e76b,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,1,musique_t1_vetements_mode_v01,110,F# majeur,afrobeats élégant instrumental,42.9,-17.3,-1.3,2.21,2.21,0,-16.04,e7695fb2,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,2,musique_t1_vetements_mode_v02,112,G# mineur,afrobeats élégant instrumental,39.9,-17.5,-1.1,2.17,2.17,0,-16.03,7ea45b0a,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,3,musique_t1_vetements_mode_v03,106,B mineur,afrobeats élégant instrumental,40.0,-17.4,-1.4,2.28,2.28,0,-16.06,5f5874bc,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,4,musique_t1_vetements_mode_v04,111,D mineur,afrobeats élégant instrumental,39.5,-18.1,-1.3,2.19,2.19,0,-16.05,950880ab,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,5,musique_t1_vetements_mode_v05,101,E mineur,afrobeats élégant instrumental,43.6,-17.8,-1.6,2.4,2.4,0,-16.04,2e4a6936,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,6,musique_t1_vetements_mode_v06,112,C majeur,afrobeats élégant instrumental,41.6,-17.3,-1.2,2.18,2.18,0,-16.03,e84a2c97,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,7,musique_t1_vetements_mode_v07,107,G mineur,afrobeats élégant instrumental,44.6,-18.4,-1.7,2.26,2.26,0,-16.05,82fc35c8,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,8,musique_t1_vetements_mode_v08,109,D# majeur,afrobeats élégant instrumental,40.6,-18.2,-1.2,2.23,2.23,0,-16.06,c9576400,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,9,musique_t1_vetements_mode_v09,100,D# mineur,afrobeats élégant instrumental,42.4,-18.6,-1.4,2.42,2.42,0,-16.03,fbc0df1c,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,10,musique_t1_vetements_mode_v10,106,C# majeur,afrobeats élégant instrumental,43.3,-18.2,-1.9,2.29,2.29,0,-16.05,d7af496b,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,11,musique_t1_vetements_mode_v11,102,A# mineur,afrobeats élégant instrumental,41.7,-16.0,-1.5,2.38,2.38,0,-16.03,418c12e3,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,12,musique_t1_vetements_mode_v12,103,A mineur,afrobeats élégant instrumental,38.8,-17.5,-1.6,2.35,2.35,0,-16.03,3ea9ba49,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,13,musique_t1_vetements_mode_v13,111,E majeur,afrobeats élégant instrumental,43.6,-17.7,-1.7,2.18,2.18,0,-16.03,56cfa43d,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,14,musique_t1_vetements_mode_v14,105,F# mineur,afrobeats élégant instrumental,41.1,-16.2,-2.1,2.31,2.31,0,-16.01,d05c3063,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,15,musique_t1_vetements_mode_v15,105,F majeur,afrobeats élégant instrumental,40.8,-16.0,-2.6,2.31,2.31,0,-16.03,6e87e4f3,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,16,musique_t1_vetements_mode_v16,104,C mineur,afrobeats élégant instrumental,43.3,-18.1,-2.0,2.33,2.33,0,-16.07,74248113,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,17,musique_t1_vetements_mode_v17,110,C# mineur,afrobeats élégant instrumental,40.8,-18.3,-1.3,2.2,2.2,0,-16.04,6fbe6417,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,18,musique_t1_vetements_mode_v18,108,G majeur,afrobeats élégant instrumental,39.1,-16.2,-2.4,2.25,2.25,0,-16.02,53bd9de9,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,19,musique_t1_vetements_mode_v19,109,G# majeur,afrobeats élégant instrumental,44.4,-17.4,-1.4,2.22,2.22,0,-16.03,9b2d5bd9,EN_LIGNE
+vetements_mode_T1,vetements_mode,T1,20,musique_t1_vetements_mode_v20,105,A majeur,afrobeats élégant instrumental,41.5,-18.3,-1.1,2.32,2.32,0,-16.05,296d6f6d,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,1,musique_t2_vetements_mode_v01,94,G# mineur,afro-house runway instrumental,42.8,-18.6,-1.7,2.56,2.56,0,-16.03,b7969679,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,2,musique_t2_vetements_mode_v02,106,A# majeur,afro-house runway instrumental,41.7,-18.1,-1.1,2.28,2.28,0,-16.1,a5af667a,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,3,musique_t2_vetements_mode_v03,102,G# majeur,afro-house runway instrumental,42.4,-16.3,-2.9,2.37,2.37,0,-16.04,be678188,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,4,musique_t2_vetements_mode_v04,104,D mineur,afro-house runway instrumental,38.6,-18.3,-1.2,2.34,2.34,0,-16.04,abfd79a2,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,5,musique_t2_vetements_mode_v05,103,D majeur,afro-house runway instrumental,45.1,-16.2,-2.6,2.36,2.36,0,-16.04,9e7d1d71,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,6,musique_t2_vetements_mode_v06,98,A majeur,afro-house runway instrumental,39.7,-17.6,-1.9,2.46,2.46,0,-16.04,5284ef63,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,7,musique_t2_vetements_mode_v07,98,D# majeur,afro-house runway instrumental,39.0,-18.4,-1.2,2.47,2.47,0,-16.05,e6008c82,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,8,musique_t2_vetements_mode_v08,98,F mineur,afro-house runway instrumental,42.9,-16.2,-2.7,2.48,2.48,0,-16.03,47cf97a2,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,9,musique_t2_vetements_mode_v09,102,C majeur,afro-house runway instrumental,38.4,-17.6,-2.2,2.38,2.38,0,-16.04,61c39c1a,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,10,musique_t2_vetements_mode_v10,100,F majeur,afro-house runway instrumental,38.5,-16.7,-2.5,2.42,2.42,0,-16.02,af18e766,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,11,musique_t2_vetements_mode_v11,104,B majeur,afro-house runway instrumental,41.2,-17.4,-1.2,2.32,2.32,0,-16.04,d9dd8c11,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,12,musique_t2_vetements_mode_v12,107,F# majeur,afro-house runway instrumental,43.9,-16.1,-2.7,2.27,2.27,0,-16.03,460b145d,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,13,musique_t2_vetements_mode_v13,98,C# mineur,afro-house runway instrumental,44.4,-16.2,-2.5,2.47,2.47,0,-16.04,7fd6f52b,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,14,musique_t2_vetements_mode_v14,99,C# majeur,afro-house runway instrumental,42.4,-17.5,-2.0,2.46,2.46,0,-16.05,d7eba2e9,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,15,musique_t2_vetements_mode_v15,103,G majeur,afro-house runway instrumental,43.8,-17.5,-1.5,2.35,2.35,0,-16.04,2132c13f,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,16,musique_t2_vetements_mode_v16,108,D# mineur,afro-house runway instrumental,43.4,-18.1,-1.3,2.26,2.26,0,-16.04,1fcf6923,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,17,musique_t2_vetements_mode_v17,96,B mineur,afro-house runway instrumental,42.8,-18.2,-1.3,2.53,2.53,0,-16.05,b70ee223,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,18,musique_t2_vetements_mode_v18,101,F# mineur,afro-house runway instrumental,45.1,-17.4,-1.4,2.4,2.4,0,-16.04,2d9d16f2,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,19,musique_t2_vetements_mode_v19,97,E mineur,afro-house runway instrumental,40.5,-18.4,-1.3,2.5,2.5,0,-16.04,8d88af6f,EN_LIGNE
+vetements_mode_T2,vetements_mode,T2,20,musique_t2_vetements_mode_v20,105,C mineur,afro-house runway instrumental,43.8,-16.2,-2.2,2.3,2.3,0,-16.03,862b0fae,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,1,musique_t3_vetements_mode_v01,102,F mineur,highlife moderne instrumental,43.8,-17.9,-3.7,2.37,2.37,0,-16.0,f3b7525c,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,2,musique_t3_vetements_mode_v02,92,C mineur,highlife moderne instrumental,44.3,-17.5,-3.4,2.62,2.62,0,-16.0,cefbd13a,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,3,musique_t3_vetements_mode_v03,102,A majeur,highlife moderne instrumental,44.0,-17.1,-3.5,2.38,2.38,0,-16.0,a7c151f6,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,4,musique_t3_vetements_mode_v04,93,D mineur,highlife moderne instrumental,48.6,-17.7,-3.6,2.61,2.61,0,-16.0,e750bec2,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,5,musique_t3_vetements_mode_v05,99,A mineur,highlife moderne instrumental,45.0,-16.9,-3.0,2.44,2.44,0,-16.0,e2824d5a,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,6,musique_t3_vetements_mode_v06,90,F# majeur,highlife moderne instrumental,47.3,-17.8,-5.1,2.68,2.68,0,-16.0,27399fc0,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,7,musique_t3_vetements_mode_v07,104,A# majeur,highlife moderne instrumental,45.6,-17.2,-3.8,2.34,2.34,0,-16.0,26c55dae,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,8,musique_t3_vetements_mode_v08,88,D majeur,highlife moderne instrumental,46.8,-17.4,-3.7,2.74,2.74,0,-16.0,9fc657ec,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,9,musique_t3_vetements_mode_v09,102,E mineur,highlife moderne instrumental,50.1,-18.1,-3.0,2.38,2.38,0,-16.0,3c62e80f,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,10,musique_t3_vetements_mode_v10,94,F majeur,highlife moderne instrumental,46.1,-17.7,-4.1,2.58,2.58,0,-16.0,34f270b0,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,11,musique_t3_vetements_mode_v11,97,G# majeur,highlife moderne instrumental,44.4,-18.2,-3.6,2.51,2.51,0,-16.0,c27539c2,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,12,musique_t3_vetements_mode_v12,100,F# mineur,highlife moderne instrumental,45.3,-18.0,-3.8,2.43,2.43,0,-16.0,5282c39e,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,13,musique_t3_vetements_mode_v13,99,C# majeur,highlife moderne instrumental,45.6,-17.6,-3.1,2.45,2.45,0,-16.0,ab41efbf,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,14,musique_t3_vetements_mode_v14,88,B mineur,highlife moderne instrumental,46.2,-17.1,-4.0,2.75,2.75,0,-16.0,4dba9040,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,15,musique_t3_vetements_mode_v15,90,D# mineur,highlife moderne instrumental,45.7,-17.5,-4.9,2.69,2.69,0,-16.0,dccc42c3,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,16,musique_t3_vetements_mode_v16,95,D# majeur,highlife moderne instrumental,49.8,-17.8,-3.0,2.56,2.56,0,-16.0,af6c8141,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,17,musique_t3_vetements_mode_v17,103,E majeur,highlife moderne instrumental,48.2,-17.9,-3.1,2.35,2.35,0,-16.0,521220f8,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,18,musique_t3_vetements_mode_v18,96,G# mineur,highlife moderne instrumental,48.8,-18.3,-3.5,2.52,2.52,0,-16.0,83cb8eaa,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,19,musique_t3_vetements_mode_v19,94,A# mineur,highlife moderne instrumental,48.8,-17.3,-2.5,2.58,2.58,0,-16.0,76de9a23,EN_LIGNE
+vetements_mode_T3,vetements_mode,T3,20,musique_t3_vetements_mode_v20,91,B majeur,highlife moderne instrumental,48.6,-17.4,-2.3,2.66,2.66,0,-16.0,638feecc,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,1,musique_t4_vetements_mode_v01,112,C mineur,afro-soul doux instrumental,43.0,-17.5,-2.6,1.1,1.1,0,-16.0,fa4f2b94,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,2,musique_t4_vetements_mode_v02,119,C# majeur,afro-soul doux instrumental,37.5,-17.7,-3.7,1.09,1.09,0,-16.0,1173dfc1,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,3,musique_t4_vetements_mode_v03,121,A# mineur,afro-soul doux instrumental,36.5,-17.3,-3.1,1.1,1.1,0,-16.0,08bc4d20,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,4,musique_t4_vetements_mode_v04,114,C majeur,afro-soul doux instrumental,38.1,-17.5,-3.6,1.1,1.1,0,-16.01,ff788cab,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,5,musique_t4_vetements_mode_v05,115,D mineur,afro-soul doux instrumental,43.0,-17.7,-3.4,1.11,1.11,0,-16.0,291671ff,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,6,musique_t4_vetements_mode_v06,116,F majeur,afro-soul doux instrumental,41.7,-18.0,-2.5,1.1,1.1,0,-16.0,9ffedb75,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,7,musique_t4_vetements_mode_v07,120,F# majeur,afro-soul doux instrumental,36.5,-18.2,-4.4,1.12,1.12,0,-16.0,954d0822,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,8,musique_t4_vetements_mode_v08,110,F mineur,afro-soul doux instrumental,42.1,-18.1,-3.0,1.11,1.11,0,-16.0,5b84573a,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,9,musique_t4_vetements_mode_v09,110,B majeur,afro-soul doux instrumental,38.8,-17.1,-4.5,1.09,1.09,0,-16.0,8725f1b6,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,10,musique_t4_vetements_mode_v10,120,E majeur,afro-soul doux instrumental,42.0,-17.8,-2.5,1.11,1.11,0,-16.0,74a2121b,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,11,musique_t4_vetements_mode_v11,117,G majeur,afro-soul doux instrumental,37.9,-18.2,-4.8,1.11,1.11,0,-16.0,a36ed658,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,12,musique_t4_vetements_mode_v12,112,D# majeur,afro-soul doux instrumental,38.6,-17.8,-3.8,1.08,1.08,0,-16.0,8425635f,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,13,musique_t4_vetements_mode_v13,126,D majeur,afro-soul doux instrumental,37.3,-17.7,-3.9,1.11,1.11,0,-16.0,15ac72f2,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,14,musique_t4_vetements_mode_v14,117,E mineur,afro-soul doux instrumental,39.2,-17.6,-3.7,1.09,1.09,0,-16.0,e7e19471,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,15,musique_t4_vetements_mode_v15,111,D# mineur,afro-soul doux instrumental,42.7,-17.8,-2.4,1.1,1.1,0,-16.0,a7d9eecb,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,16,musique_t4_vetements_mode_v16,122,G mineur,afro-soul doux instrumental,41.2,-18.2,-3.4,1.1,1.1,0,-16.0,7c425a86,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,17,musique_t4_vetements_mode_v17,118,B mineur,afro-soul doux instrumental,39.1,-17.0,-4.3,1.1,1.1,0,-16.0,b09380f1,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,18,musique_t4_vetements_mode_v18,126,C# mineur,afro-soul doux instrumental,39.3,-17.3,-4.2,1.07,1.07,0,-16.0,7250b1b7,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,19,musique_t4_vetements_mode_v19,116,G# majeur,afro-soul doux instrumental,38.0,-18.3,-4.7,1.12,1.12,0,-16.0,81d95919,EN_LIGNE
+vetements_mode_T4,vetements_mode,T4,20,musique_t4_vetements_mode_v20,125,F# mineur,afro-soul doux instrumental,43.0,-18.0,-3.5,1.09,1.09,0,-16.0,c3c83892,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,1,musique_t5_vetements_mode_v01,82,C majeur,amapiano léger instrumental,53.9,-18.0,-1.8,2.93,2.93,0,-16.04,e430ec0f,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,2,musique_t5_vetements_mode_v02,89,A# majeur,amapiano léger instrumental,55.1,-17.4,-1.8,2.72,2.72,0,-16.1,39f6fdd0,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,3,musique_t5_vetements_mode_v03,88,C# mineur,amapiano léger instrumental,56.9,-17.4,-1.1,2.75,2.75,0,-16.09,1734c9f8,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,4,musique_t5_vetements_mode_v04,79,F# mineur,amapiano léger instrumental,55.9,-18.2,-1.4,3.06,3.06,0,-16.05,076a6b69,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,5,musique_t5_vetements_mode_v05,76,G# mineur,amapiano léger instrumental,59.0,-18.2,-1.5,3.18,3.18,0,-16.06,569d9dac,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,6,musique_t5_vetements_mode_v06,82,D mineur,amapiano léger instrumental,56.6,-16.0,-2.4,2.95,2.95,0,-16.04,9b381127,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,7,musique_t5_vetements_mode_v07,91,A mineur,amapiano léger instrumental,54.6,-16.1,-2.4,2.66,2.66,0,-16.02,083e9a4c,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,8,musique_t5_vetements_mode_v08,86,A majeur,amapiano léger instrumental,55.8,-16.0,-2.1,2.82,2.82,0,-16.03,c8b59dfa,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,9,musique_t5_vetements_mode_v09,92,C mineur,amapiano léger instrumental,54.8,-18.0,-1.3,2.65,2.65,0,-16.03,5aba1bdb,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,10,musique_t5_vetements_mode_v10,90,F majeur,amapiano léger instrumental,57.8,-18.0,-1.4,2.68,2.68,0,-16.02,be1b500e,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,11,musique_t5_vetements_mode_v11,89,G mineur,amapiano léger instrumental,57.3,-17.5,-1.2,2.73,2.73,0,-16.1,fa94cbcd,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,12,musique_t5_vetements_mode_v12,94,A# mineur,amapiano léger instrumental,57.7,-17.3,-1.3,2.58,2.58,0,-16.1,64d62709,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,13,musique_t5_vetements_mode_v13,90,G# majeur,amapiano léger instrumental,57.2,-18.2,-1.2,2.7,2.7,0,-16.04,085ae7fb,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,14,musique_t5_vetements_mode_v14,86,D# mineur,amapiano léger instrumental,58.1,-16.1,-2.3,2.82,2.82,0,-16.03,4dc5813c,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,15,musique_t5_vetements_mode_v15,78,E majeur,amapiano léger instrumental,54.0,-17.6,-1.4,3.08,3.08,0,-16.09,51c318b3,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,16,musique_t5_vetements_mode_v16,82,D# majeur,amapiano léger instrumental,59.2,-18.2,-1.7,2.96,2.96,0,-16.04,8b2587b8,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,17,musique_t5_vetements_mode_v17,80,F mineur,amapiano léger instrumental,55.7,-17.6,-1.6,3.02,3.02,0,-16.04,c0d17e3c,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,18,musique_t5_vetements_mode_v18,89,B mineur,amapiano léger instrumental,60.1,-18.0,-1.3,2.71,2.71,0,-16.03,7ecdd2a7,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,19,musique_t5_vetements_mode_v19,86,B majeur,amapiano léger instrumental,55.5,-18.0,-1.7,2.81,2.81,0,-16.09,bb5fe7bb,EN_LIGNE
+vetements_mode_T5,vetements_mode,T5,20,musique_t5_vetements_mode_v20,84,C# majeur,amapiano léger instrumental,55.2,-16.3,-2.6,2.89,2.89,0,-16.03,fdfd5044,EN_LIGNE
