@@ -67,9 +67,28 @@ aurait été FAIL).
 Sûreté : dialogue uniquement si brouillon actif → runners CI frais =
 P0/P1/langues/offline/camerap strictement inchangés.
 
-## 5. Reste à faire (ordre)
+## 5. Suite des corrections (05b/05c) — journal des runs
 
-- 06 : régénération manifeste gabarits (AUTORISÉE, sans détruire références)
-- 07 : auth bottom sheet ; 08 : deep link ; 09 : rapports ; 10 : matrice ;
-- 11 : RC12 (certificat, vérifs complètes, lien release).
-- **0 FCFA.** Vérifier les runs 42619094767/42619096543 avant tout nouveau push.
+| Run | Commit | Résultats drafts | Corrections qui en découlent |
+|---|---|---|---|
+| 42610768032 (1143bfe) | lot initial cassé | APK non compilé (apostrophes/ktlint/dep) | réparation complète → 200b8a6 |
+| 42619096543 (200b8a6) | 05 complet | 25/7/1 : dialogue ×2 ✓, pré-remplissage « Boutiq » TRONQUÉ, cascade S2/S3 | 05b : race condition (collectLatest+Mutex, dernière valeur gagne) + banc durci (contrôle d'effet par champ) |
+| 42626010820 (988fa48) | 05b | 29/4/1 : S1 pré-rempli « BoutiqueAwa » COMPLET ✓, brief validé ✓, 1re scène filmée ✓ ; S2_champs_effet (scroll bas), S2_reprise_position (brouillon pas encore promu au force-stop) | 05c : promotion GARANTIE avant le guide + logs VV_E2E + swipe corrigé + dump S02_apres_reprendre |
+| 42635348805 (7a7c06a) | 05c | EN COURS | — |
+
+**Mécanisme de la race (05b)** : un launch(IO) par frappe → upserts Room
+concurrents désordonnés → l'écriture d'une frappe intermédiaire pouvait
+commiter en dernier. Preuve : dump S01_saisie_partielle « BoutiqueAwa »
+complet vs S01_brief_repris « Boutiq » (6 caractères).
+
+**Mécanisme du S2 (05c)** : promouvoirCamera courait en parallèle du
+lancement du guide ; un force-stop entre les deux laissait le brouillon
+en état BRIEF → reprise détournée vers le formulaire (vide : pas de
+valuesPourGabarit hors étape BRIEF — dump S03 placeholder « Boutique
+Élégance »). Désormais la promotion PRÉCÈDE le guide.
+
+## 6. Reste à faire
+
+- Runs 42635348927/42635348805 (7a7c06a) : drafts attendu S1+S2+S3
+  complets ; auth (image playstore) ; deeplink (E2E-123).
+- 10 : matrice finale ; 11 : RC12. **0 FCFA.**
