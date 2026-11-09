@@ -84,11 +84,11 @@ achèvement programmé one-shot à 00:15 UTC.
 | # | Exigence | Statut | Preuve / note |
 |---|---|---|---|
 | 5.1 | Parcours tournage guidé 4 scènes (émulateur) | PASS | e2e P1 36/0/0 (42497790522) + P1 officiel 37/0/0 (42482295447) : parcours complet jusqu'au MP4 |
-| 5.2 | Enregistrement/arrêt/suppression/reprise d'une prise | CONDITIONAL | Le parcours nominal couvre enregistrement+arrêt ; suppression/reprise d'une prise : à tracer précisément dans les étapes e2e (§13-E) |
-| 5.3 | Conservation des prises | CONDITIONAL | Le MP4 final intègre les prises (preuve e2e) ; persistance inter-processus à tracer |
+| 5.2 | Enregistrement/arrêt/suppression/reprise d'une prise | **EN VALIDATION (banc D42.26-18)** | Enregistrement+arrêt : PASS (P1). Suppression/reprise : **job android-e2e-camerap** — « Refaire » doit SUPPRIMER le fichier rush (preuve par comptage de fichiers avant/après) puis la prise est re-filmable ; run en cours sur e895a3c |
+| 5.3 | Conservation des prises | **EN VALIDATION (banc D42.26-18)** | fichiers rush-*.mp4 listés (run-as) jusqu'à l'écran post-guide (B04_rushs_finaux.txt) ; intégration au MP4 = PASS (P1) |
 | 5.4 | Caméra avant/arrière + changement | NOT RUN | Émulateur : caméra virtuelle par défaut uniquement. **Test physique requis** |
 | 5.5 | Aperçu vidéo (preview) | PASS (émulateur) | e2e P1 (écran de capture atteint, frames rendues) |
-| 5.6 | Permissions refusées (caméra/micro) | NOT RUN | §13-E (test e2e : deny permission → message/parcours dégradé propre) |
+| 5.6 | Permissions refusées (caméra/micro) | **EN VALIDATION (banc D42.26-18)** | Phase A du camerap : aucune permission accordée → dialogue SYSTÈME refusé → dialogue produit « Accès caméra nécessaire » (F52) exigé, ré-explanation au 2e appui, zéro crash process ; RECORD_AUDIO refusé = vidéo muette jamais bloquante (code D40/B11) |
 | 5.7 | Stockage insuffisant | NOT RUN | §13-E (simulation quota) — basse priorité |
 | 5.8 | Erreurs caméra (débranchement, occupation) | NOT RUN | **Test physique requis** (hardware) |
 

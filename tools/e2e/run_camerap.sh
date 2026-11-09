@@ -142,6 +142,32 @@ remplir_champ() {
 
 parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
   local P="$1"
+  # D42.26-18b : TAP À CONTRÔLE D'EFFET pour les actions critiques du brief —
+  # un `input tap` peut revenir 0 SANS effet (constaté : dumps P1/CP
+  # strictement identiques, P1 valide, CP non — run 42543641719). Même remède
+  # que D42.26-16 (S13/S16) : on exige l'écran suivant, on réessaie, et en
+  # dernier recours la bande orange (bouton réel).
+  tap_effet() { # $1 libellé, $2 texte attendu après, $3 timeout wait
+    local lbl="$1" attendu="$2" tmo="${3:-25}" i rc=1
+    for i in 1 2 3 4; do
+      $UI tap --text "$lbl" --exact --timeout 12 2>&1 | sed 's/^/E2E tap: /'
+      if $UI wait --text "$attendu" --exact --timeout "$tmo" >/dev/null 2>&1; then
+        echo "E2E effet constaté : « $attendu » (essai $i)"
+        return 0
+      fi
+      echo "E2E essai $i sans effet sur « $lbl » — resync + swipe"
+      sleep 2
+      fermer_clavier
+      swipe_v 73 21 300 >/dev/null 2>&1; sleep 1
+      # dernier recours : bande orange = bouton réel (D42.26-16)
+      if [ "$i" -ge 2 ]; then $UI taporange 2>&1 | sed 's/^/E2E taporange: /' || true; sleep 3; fi
+      if $UI wait --text "$attendu" --exact --timeout 8 >/dev/null 2>&1; then
+        echo "E2E effet constaté après repli : « $attendu »"
+        return 0
+      fi
+    done
+    return 1
+  }
   etape_any "${P}_langue" 60 "Choisissez votre langue" "Choose your language" \
     "Elige tu idioma" "言語を選んでください" || true
   local ecran_connexion=0 essai
@@ -256,18 +282,17 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
     sleep 1
   done
   shot "${P}_brief_bas"; dump "${P}_brief_bas"
-  $UI tap --text "Continuer" --exact --timeout 15 >/dev/null 2>&1 \
-    && $UI wait --text "Avant de commencer" --exact --timeout 25 >/dev/null 2>&1 \
-    && record PASS "${P}_brief_valide" "brief accepté → écran « Avant de commencer »" \
-    || record FAIL "${P}_brief_valide" "brief non validé (champ invalide ?)"
-  $UI tap --text "OK, je commence" --exact --timeout 15 >/dev/null 2>&1 || true
-  sleep 3
-  if $UI wait --text "Filme ta prise" --timeout 40 >/dev/null 2>&1; then
-    record PASS "${P}_guide" "écran guide « Filme ta prise » atteint"
+  if tap_effet "Continuer" "Avant de commencer" 25; then
+    record PASS "${P}_brief_valide" "brief accepté → écran « Avant de commencer » (contrôle d'effet)"
+  else
+    record FAIL "${P}_brief_valide" "brief non validé : 4 essais + taporange sans effet (champ invalide ? voir ${P}_brief_bas)"
+  fi
+  if tap_effet "OK, je commence" "Filme ta prise" 40; then
+    record PASS "${P}_entree_guide" "« OK, je commence » actionné — guide atteint (contrôle d'effet)"
     shot "${P}_guide"; dump "${P}_guide"
     return 0
   fi
-  record BLOCKED "${P}_guide" "écran guide non atteint"
+  record BLOCKED "${P}_guide" "écran guide non atteint après « OK, je commence »"
   return 1
 }
 
