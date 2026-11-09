@@ -185,6 +185,16 @@ class BgmStore(
      * l'appelant si nécessaire.
      */
     private fun downloadTrack(cle: String, token: String): File? {
+        // D42.27 (§8/5.7) : contrôle PRÉVENTIF de stockage avant téléchargement
+        // — retour null = replis existants (variation suivante déjà en cache,
+        // piste locale) ; aucun fichier partiel n'est écrit.
+        runCatching {
+            val dispo = android.os.StatFs(dir().absolutePath).availableBytes
+            if (!video.vitrine.core.guard.StorageGate.espaceSuffisant(
+                    dispo, video.vitrine.core.guard.StorageGate.SEUIL_TELECHARGEMENT_OCTETS
+                )
+            ) return null
+        }
         val nomBase = cle.replace(Regex("[^A-Za-z0-9_.-]"), "_")
         val connection = open("$baseUrl/api/v1/audio/track/$cle", token)
             ?: return null

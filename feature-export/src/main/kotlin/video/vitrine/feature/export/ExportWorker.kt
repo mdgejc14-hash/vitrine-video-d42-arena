@@ -137,6 +137,16 @@ class ExportWorker(
     @Suppress("CyclomaticComplexMethod")
     private suspend fun doWorkInner(): Result {
         if (!nativeGateOk()) return Result.failure()
+        // D42.27 (§8/5.7) : filet de sécurité stockage — l'espace a pu changer
+        // depuis le contrôle de l'activité ; échec propre (la compensation
+        // existante rembourse la réservation, aucun crédit perdu).
+        runCatching {
+            val dispo = android.os.StatFs(context.filesDir.absolutePath).availableBytes
+            if (!video.vitrine.core.guard.StorageGate.espaceSuffisant(
+                    dispo, video.vitrine.core.guard.StorageGate.SEUIL_EXPORT_OCTETS
+                )
+            ) return Result.failure()
+        }
         val input = inputData.getString(KEY_INPUT) ?: return Result.failure()
         val rotation = inputData.getFloat(KEY_ROTATION, 0f)
         val rank = inputData.getInt(KEY_CLASS_RANK, 3)

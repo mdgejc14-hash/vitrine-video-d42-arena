@@ -25,6 +25,16 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- D42.27 (5.4) : bascule avant/arrière. Placé AU-DESSUS de l'action
+             critique : camera_record_button (56 dp) reste en position sûre,
+             le bouton de bascule (48 dp) est le premier enfant donc jamais
+             rogné non plus (cf. A4 : seul le DERNIER élément était rognable). -->
+        <Button
+            android:id="@+id/camera_flip_button"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/camera_flip" />
+
         <Button
             android:id="@+id/camera_record_button"
             android:layout_width="match_parent"

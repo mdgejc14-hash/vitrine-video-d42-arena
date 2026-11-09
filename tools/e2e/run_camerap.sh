@@ -680,6 +680,96 @@ else
   record PASS CPB_aucun_crash "aucun FATAL EXCEPTION du processus $PKG (phase B complète)"
 fi
 
+# ============================================================================
+# PHASE C — D42.27 : bascule caméra avant/arrière (5.4)
+# ============================================================================
+echo "=========== PHASE C : bascule caméra avant/arrière ==========="
+adb uninstall "$PKG" >/dev/null 2>&1
+if adb install -r -t "$APK" > "$OUT/install_c.log" 2>&1; then
+  record PASS CPC_installation "APK installée (phase C)"
+else
+  record FAIL CPC_installation "$(tail -2 "$OUT/install_c.log" | tr '\n' ' ')"; exit 0
+fi
+adb shell pm grant "$PKG" android.permission.CAMERA >/dev/null 2>&1 || true
+adb shell pm grant "$PKG" android.permission.RECORD_AUDIO >/dev/null 2>&1 || true
+adb shell am start -W -n "$PKG/.MainActivity" > "$OUT/start_c.log" 2>&1
+sleep 4
+parcours_amont CPC || true
+
+if $UI wait --text "Filme ta prise" --timeout 30 >/dev/null 2>&1; then
+  $UI tap --text "Tourner" --exact --timeout 12 >/dev/null 2>&1 || true
+  if $UI wait --id "camera_record_button" --timeout 30 >/dev/null 2>&1; then
+    # C1 : bascule vers l'AVANT — preuve = log E2E « bascule caméra : AVANT »
+    # + « caméra liée (AVANT) » (re-bind complet), pas seulement un libellé.
+    $UI tap --id "camera_flip_button" --timeout 8 >/dev/null 2>&1
+    sleep 4
+    adb logcat -d | tr -d '\r' | grep -c "bascule caméra : AVANT" > "$OUT/flip_avant_count.txt" 2>&1 || true
+    adb logcat -d | tr -d '\r' | grep -c "caméra liée (AVANT)" > "$OUT/bind_avant_count.txt" 2>&1 || true
+    fa=$(cat "$OUT/flip_avant_count.txt" 2>/dev/null || echo 0)
+    ba=$(cat "$OUT/bind_avant_count.txt" 2>/dev/null || echo 0)
+    if [ "$fa" -ge 1 ] 2>/dev/null && [ "$ba" -ge 1 ] 2>/dev/null; then
+      record PASS CPC_bascule_avant "bascule AVANT prouvée par logs (bascule×$fa, re-bind AVANT×$ba — focus fichier flip_avant_count.txt/bind_avant_count.txt)"
+    else
+      record FAIL CPC_bascule_avant "logs de bascule AVANT absents (flip=$fa bind=$ba — voir flip_avant_count.txt)"
+    fi
+    # C2 : bascule RETOUR vers l'ARRIÈRE (toggle bidirectionnel)
+    $UI tap --id "camera_flip_button" --timeout 8 >/dev/null 2>&1
+    sleep 4
+    adb logcat -d | tr -d '\r' | grep -c "bascule caméra : ARRIÈRE" > "$OUT/flip_arriere_count.txt" 2>&1 || true
+    fr=$(cat "$OUT/flip_arriere_count.txt" 2>/dev/null || echo 0)
+    if [ "$fr" -ge 1 ] 2>/dev/null; then
+      record PASS CPC_bascule_retour "bascule RETOUR vers l'ARRIÈRE prouvée (log ×$fr)"
+    else
+      record FAIL CPC_bascule_retour "log de retour ARRIÈRE absent (flip=$fr)"
+    fi
+    # C3 : re-bascule AVANT puis ENREGISTREMENT réel depuis la caméra avant —
+    # la preuve ultime = un FICHIER rush créé pendant que la lentille avant
+    # est active.
+    $UI tap --id "camera_flip_button" --timeout 8 >/dev/null 2>&1
+    sleep 3
+    shot C01_caméra_avant; dump C01_caméra_avant
+    n0=$(compter_rushs)
+    $UI tap --id "camera_record_button" --timeout 10 >/dev/null 2>&1 || true
+    if $UI wait --text "Arrêter et continuer" --exact --timeout 8 >/dev/null 2>&1; then
+      sleep 6
+      $UI tap --text "Arrêter et continuer" --exact --timeout 10 >/dev/null 2>&1 || true
+      sleep 5
+    elif $UI wait --text "Accord du client" --timeout 8 >/dev/null 2>&1; then
+      $UI tap --text "Oui, accord confirmé" --exact --timeout 8 >/dev/null 2>&1 || true
+      $UI wait --text "Arrêter et continuer" --exact --timeout 25 >/dev/null 2>&1 || true
+      sleep 6
+      $UI tap --text "Arrêter et continuer" --exact --timeout 10 >/dev/null 2>&1 || true
+      sleep 5
+    fi
+    n1=$(compter_rushs)
+    if [ "$n1" -gt "$n0" ] 2>/dev/null; then
+      record PASS CPC_prise_avant "prise ENREGISTRÉE depuis la caméra AVANT ($n0 → $n1 rush(s) — preuve fichier pendant lentille avant)"
+    else
+      record FAIL CPC_prise_avant "aucun rush créé depuis la caméra avant ($n0 → $n1 — voir C01)"
+    fi
+  else
+    record BLOCKED CPC_bascule_avant "écran caméra non atteint en phase C (voir CPC_guide)"
+    record BLOCKED CPC_bascule_retour "écran caméra non atteint"
+    record BLOCKED CPC_prise_avant "écran caméra non atteint"
+  fi
+else
+  record BLOCKED CPC_bascule_avant "guide non atteint en phase C"
+  record BLOCKED CPC_bascule_retour "guide non atteint"
+  record BLOCKED CPC_prise_avant "guide non atteint"
+fi
+
+if adb shell pidof "$PKG" >/dev/null 2>&1; then
+  record PASS CPC_app_vivante "processus vivant après les bascules caméra"
+else
+  record FAIL CPC_app_vivante "processus mort après les bascules caméra"
+fi
+adb logcat -d | grep -A 20 "FATAL EXCEPTION" | grep -B 2 -A 18 "Process: $PKG" > "$OUT/crash_c.txt" 2>&1 || true
+if [ -s "$OUT/crash_c.txt" ]; then
+  record FAIL CPC_aucun_crash "FATAL EXCEPTION pendant les bascules (voir crash_c.txt)"
+else
+  record PASS CPC_aucun_crash "aucun FATAL EXCEPTION pendant les bascules caméra"
+fi
+
 echo "tag=$TAG"
 echo "PASS=$pass FAIL=$fail BLOCKED=$blocked"
 echo "=========== FIN $TAG : PASS=$pass FAIL=$fail BLOCKED=$blocked ==========="

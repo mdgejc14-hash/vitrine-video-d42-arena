@@ -24,4 +24,6 @@
     <string name="export_notif_channel_name">Exportación de vídeo</string>
     <string name="export_notif_title">Exportando…</string>
     <string name="export_notif_text">Tu anuncio se está preparando — puedes apagar la pantalla.</string>
+    <!-- D42.27 (§8/5.7) : contrôle préventif stockage -->
+    <string name="export_storage_low">Espacio insuficiente para exportar. Libera espacio e inténtalo de nuevo.</string>
 </resources>

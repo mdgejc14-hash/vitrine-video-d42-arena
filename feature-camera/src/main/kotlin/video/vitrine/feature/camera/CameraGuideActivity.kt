@@ -31,6 +31,7 @@ import java.util.concurrent.Executors
 import video.vitrine.ins.capture.CaptureSpec
 import video.vitrine.ins.capture.ConsentGate
 import video.vitrine.ins.capture.DeviceProfiler
+import video.vitrine.core.guard.StorageGate
 import video.vitrine.ins.capture.InsCameraBinder
 import video.vitrine.ins.capture.MlKitFaceCounter
 import video.vitrine.core.model.GabaritSummary
@@ -73,6 +74,9 @@ class CameraGuideActivity : VitrineActivity() {
     private var guideFlowActive = false
     private var priseEnCoursDeFinalisation = false
     private var boundCamera: androidx.camera.core.Camera? = null
+    // D42.27 (5.4) : lentille active — arrière par défaut (comportement
+    // historique inchangé), avant après « Changer de caméra ».
+    private var lensFront = false
     private var boundBinder: InsCameraBinder? = null
     private var boundProvider: ProcessCameraProvider? = null
     // D42.16 (A3) : cache des libellés déjà appliqués — voir updateStatus().
@@ -139,6 +143,16 @@ class CameraGuideActivity : VitrineActivity() {
             }
         }
         findViewById<Button>(R.id.camera_record_button).setOnClickListener { onRecord() }
+        // D42.27 (5.4) : bascule caméra avant/arrière — re-bind complet via
+        // bindCamera() (unbindAll + bindToLifecycle remplacent la liaison).
+        // Ignoré pendant un enregistrement : jamais de flip à chaud.
+        findViewById<Button>(R.id.camera_flip_button).setOnClickListener {
+            if (recording == null) {
+                lensFront = !lensFront
+                Log.i(TAG_E2E, "bascule caméra : " + if (lensFront) "AVANT" else "ARRIÈRE")
+                bindCamera()
+            }
+        }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
             PackageManager.PERMISSION_GRANTED
         ) {
@@ -167,17 +181,38 @@ class CameraGuideActivity : VitrineActivity() {
         boundBinder = binder
         val future = ProcessCameraProvider.getInstance(this)
         future.addListener({
-            val provider = future.get()
-            boundProvider = provider
-            // Audit D40 (B1) : UN SEUL bindToLifecycle — CameraX remplace toutes
-            // les liaisons du meme owner ; le second bind (analysis) tuait le
-            // recorder (preview noire, enregistrement impossible).
-            val analysis = ImageAnalysis.Builder()
-                .setTargetResolution(android.util.Size(160, 120))
-                .build()
-            analysis.setAnalyzer(executor, MlKitFaceCounter { count -> onFaces(count) })
-            boundCamera = binder.bind(provider, this, cases, analysis)
-            Log.i(TAG_E2E, "caméra liée : preview + videoCapture + analysis attachés")
+            // D42.27 (5.8) : caméra occupée/indisponible → message clair,
+            // JAMAIS de crash (le bind non gardé était la limite documentée).
+            runCatching {
+                val provider = future.get()
+                boundProvider = provider
+                // Audit D40 (B1) : UN SEUL bindToLifecycle — CameraX remplace toutes
+                // les liaisons du meme owner ; le second bind (analysis) tuait le
+                // recorder (preview noire, enregistrement impossible).
+                val analysis = ImageAnalysis.Builder()
+                    .setTargetResolution(android.util.Size(160, 120))
+                    .build()
+                analysis.setAnalyzer(executor, MlKitFaceCounter { count -> onFaces(count) })
+                boundCamera = binder.bind(
+                    provider, this, cases, analysis,
+                    if (lensFront) CameraSelector.DEFAULT_FRONT_CAMERA
+                    else CameraSelector.DEFAULT_BACK_CAMERA
+                )
+                Log.i(
+                    TAG_E2E,
+                    "caméra liée (" + (if (lensFront) "AVANT" else "ARRIÈRE") +
+                        ") : preview + videoCapture + analysis attachés"
+                )
+            }.onFailure { erreur ->
+                Log.e(TAG_E2E, "échec du bind caméra : ${erreur.message}")
+                runOnUiThread {
+                    // Message EN DERNIER (updateStatus écraserait) — cf. F53.
+                    updateStatus()
+                    dernierTexteGuide = 0
+                    findViewById<TextView>(R.id.camera_guide_text)
+                        .setText(R.string.camera_bind_failed)
+                }
+            }
         }, ContextCompat.getMainExecutor(this))
     }
 
@@ -280,6 +315,21 @@ class CameraGuideActivity : VitrineActivity() {
 
     private fun startRecording() {
         val cases = useCases ?: run { showPermissionDialog(); return }
+        // D42.27 (§8/5.7) : contrôle PRÉVENTIF d'espace disque — refus PROPRE
+        // AVANT de faire jouer la scène à l'utilisateur (le Finalize F53 reste
+        // la seconde ligne si le disque se remplit PENDANT la prise). Ce garde
+        // ne supprime JAMAIS de fichier utilisateur.
+        val disponible = android.os.StatFs(filesDir.absolutePath).availableBytes
+        if (!StorageGate.espaceSuffisant(disponible)) {
+            Log.w(
+                TAG_E2E,
+                "prise refusée : stockage insuffisant ($disponible o < ${StorageGate.SEUIL_PRISE_OCTETS} o)"
+            )
+            dernierTexteGuide = 0
+            findViewById<TextView>(R.id.camera_guide_text)
+                .setText(R.string.camera_storage_low)
+            return
+        }
         // Flux guide = le gabarit declare des prises (slots alignes, D41 F55).
         guideFlowActive = prises.isNotEmpty()
         // D41 (F50) : rushs dans filesDir (persistant) — cacheDir peut etre purge

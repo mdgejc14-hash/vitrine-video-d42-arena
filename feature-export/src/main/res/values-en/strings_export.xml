@@ -24,4 +24,6 @@
     <string name="export_notif_channel_name">Video export</string>
     <string name="export_notif_title">Exporting…</string>
     <string name="export_notif_text">Your ad is being prepared — you can turn off the screen.</string>
+    <!-- D42.27 (§8/5.7) : contrôle préventif stockage -->
+    <string name="export_storage_low">Not enough storage to export. Free up space and try again.</string>
 </resources>

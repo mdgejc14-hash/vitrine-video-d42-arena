@@ -24,4 +24,6 @@
     <string name="export_notif_channel_name">動画書き出し</string>
     <string name="export_notif_title">書き出し中…</string>
     <string name="export_notif_text">広告を準備しています — 画面を消しても大丈夫です。</string>
+    <!-- D42.27 (§8/5.7) : contrôle préventif stockage -->
+    <string name="export_storage_low">エクスポートに十分なストレージがありません。空き容量を確保して再試行してください。</string>
 </resources>

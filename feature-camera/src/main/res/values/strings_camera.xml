@@ -20,4 +20,8 @@
     <string name="camera_permission_body">Sans la caméra, aucune prise ne peut être enregistrée. Autorise l’accès pour continuer.</string>
     <string name="camera_permission_grant">Autoriser</string>
     <string name="camera_permission_later">Plus tard</string>
+    <!-- D42.27 : bascule avant/arrière (5.4), garde bind (5.8), stockage (5.7) -->
+    <string name="camera_flip">Changer de caméra</string>
+    <string name="camera_bind_failed">Caméra indisponible. Ferme les autres applis caméra et réessaie.</string>
+    <string name="camera_storage_low">Stockage insuffisant. Libère de l'espace pour enregistrer ta vidéo.</string>
 </resources>

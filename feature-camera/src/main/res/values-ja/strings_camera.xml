@@ -20,4 +20,8 @@
     <string name="camera_permission_body">カメラがないとテイクを録画できません。続行するには許可してください。</string>
     <string name="camera_permission_grant">許可する</string>
     <string name="camera_permission_later">後で</string>
+    <!-- D42.27 : bascule avant/arrière (5.4), garde bind (5.8), stockage (5.7) -->
+    <string name="camera_flip">カメラを切り替える</string>
+    <string name="camera_bind_failed">カメラを利用できません。他のカメラアプリを閉じて再試行してください。</string>
+    <string name="camera_storage_low">ストレージが不足しています。動画を録画するには空き容量を確保してください。</string>
 </resources>

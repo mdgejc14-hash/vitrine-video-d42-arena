@@ -20,4 +20,8 @@
     <string name="camera_permission_body">Sin la cámara no se puede grabar ninguna toma. Permite el acceso para continuar.</string>
     <string name="camera_permission_grant">Permitir</string>
     <string name="camera_permission_later">Más tarde</string>
+    <!-- D42.27 : bascule avant/arrière (5.4), garde bind (5.8), stockage (5.7) -->
+    <string name="camera_flip">Cambiar de cámara</string>
+    <string name="camera_bind_failed">Cámara no disponible. Cierra otras apps de cámara e inténtalo de nuevo.</string>
+    <string name="camera_storage_low">Espacio insuficiente. Libera espacio para grabar tu vídeo.</string>
 </resources>

@@ -65,19 +65,25 @@ class InsCameraBinder(private val context: Context) {
      * LifecycleOwner a chaque bindToLifecycle — le second appel (ImageAnalysis
      * seule, cote CameraGuideActivity) debindait preview + videoCapture :
      * preview noire et recorder mort. [analysis] est donc fusionne ici.
+     *
+     * D42.27 (exigence 5.4) : le sélecteur de lentille est PARAMÉTRABLE —
+     * arrière par défaut (comportement inchangé), avant pour la bascule
+     * « Changer de caméra ». Un re-bind complet (unbindAll ci-dessous) remplace
+     * proprement la liaison précédente : aucun useCase orphelin.
      */
     fun bind(
         provider: ProcessCameraProvider,
         lifecycleOwner: androidx.lifecycle.LifecycleOwner,
         useCases: InsUseCases,
-        analysis: androidx.camera.core.ImageAnalysis? = null
+        analysis: androidx.camera.core.ImageAnalysis? = null,
+        selector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     ): androidx.camera.core.Camera {
         provider.unbindAll()
         val cases = mutableListOf<androidx.camera.core.UseCase>(useCases.preview, useCases.videoCapture)
         if (analysis != null) cases += analysis
         return provider.bindToLifecycle(
             lifecycleOwner,
-            CameraSelector.DEFAULT_BACK_CAMERA,
+            selector,
             *cases.toTypedArray()
         )
     }

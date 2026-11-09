@@ -412,6 +412,18 @@ class ExportActivity : VitrineActivity() {
     }
 
     private fun enqueue() {
+        // D42.27 (§8/5.7) : contrôle PRÉVENTIF de stockage AVANT toute
+        // réservation de crédit — refus propre, bouton rendu (deny), aucun
+        // débit, aucun enqueue. L'utilisateur est prévenu avant de perdre
+        // sa scène ; le worker garde un filet de sécurité équivalent.
+        val disponible = android.os.StatFs(filesDir.absolutePath).availableBytes
+        if (!video.vitrine.core.guard.StorageGate.espaceSuffisant(
+                disponible, video.vitrine.core.guard.StorageGate.SEUIL_EXPORT_OCTETS
+            )
+        ) {
+            deny(R.string.export_storage_low)
+            return
+        }
         gateThen {
             // D42.21 : retour visuel IMMÉDIAT au tap — le statut « Export local
             // en cours… » et la barre indéterminée n'attendent plus la fin de
