@@ -271,6 +271,94 @@ jobs:
           if-no-files-found: warn
 
   # ---------------------------------------------------------------------------
+  # D42.27 (§2, audit E) — AUTH GOOGLE RÉELLE AU LAB : vrai flux Credential
+  # Manager (bottom sheet GMS OU réponse « aucun compte »), annulation propre,
+  # re-soumission, repli démo intact, zéro crash. Le choix d'un VRAI compte
+  # reste fondateur (aucune simulation de connexion réussie).
+  # ---------------------------------------------------------------------------
+  android-e2e-auth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: APK debug
+        run: ./gradlew :app:assembleDebug --stacktrace 2>&1 | tail -20
+      - name: Activation KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Auth Google réelle (Credential Manager)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front emulated
+          script: |
+            adb devices
+            bash tools/e2e/run_auth.sh auth-debug app/build/outputs/apk/debug/app-debug.apk
+            true
+      - name: Artefacts auth
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-auth
+          path: artifacts/**
+          retention-days: 14
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
+  # D42.27 (§3, audit F) — DEEP-LINK PARRAINAGE BOUT-EN-BOUT : lien
+  # https://vitrine.video/r/CODE → auth (code affiché) → onboarding (champ
+  # pré-rempli, D42.27-08) → catalogue. L'attribution serveur est déjà
+  # prouvée par les bancs API 8.3-8.7.
+  # ---------------------------------------------------------------------------
+  android-e2e-deeplink:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: APK debug
+        run: ./gradlew :app:assembleDebug --stacktrace 2>&1 | tail -20
+      - name: Activation KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Deep-link parrainage
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front emulated
+          script: |
+            adb devices
+            bash tools/e2e/run_deeplink.sh deeplink-debug app/build/outputs/apk/debug/app-debug.apk
+            true
+      - name: Artefacts deeplink
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-deeplink
+          path: artifacts/**
+          retention-days: 14
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
   # D42.17 — EXPORT SUR SIGNATURE OFFICIELLE : déplacé vers
   # release-official-build.yml (étage 1 : build sans secret, tag d42.17-build-*)
   # et release-official-e2e.yml (étage 3 : validation de l'artefact signé,
