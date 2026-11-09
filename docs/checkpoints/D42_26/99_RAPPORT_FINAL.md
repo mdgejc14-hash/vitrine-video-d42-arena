@@ -131,9 +131,12 @@ produit (A-E), soit des vérités terrain physiques.
 | 42573687240 | e2e-lab 2ecf1bc (D42.26-19/20) | SUCCESS 12/12 — camerap 39/1/1 : preuve AUTORISER→réglages capturée, FAIL = bug casse harnais (corrigé en 24) |
 | 42577296436 | android-ci 7af4726 | SUCCESS — test JVM réseau 3.11 vert (:data:testDebugUnitTest) |
 | 42577296432 | e2e-lab 7af4726 (D42.26-24) | **SUCCESS 12/12 — CAMERAP 42/0/0 INTÉGRAL, P0 5/5, P1 36/0/0, offline 14/0/0** |
-| 42581107187 / 42581107224 | android-ci + e2e-lab **24a27ec (HEAD livré, D42.26-26)**, 09/11 08:13 | **SUCCESS — 4e validation consécutive intégrale** : P0 5/5 zéro défaut, camerap 42/0/0, P1 36/0/0, offline 14/0/0, CI vert |
+| 42581107187 / 42581107224 | android-ci + e2e-lab **24a27ec**, 09/11 08:13 | **SUCCESS — 4e validation consécutive intégrale** : P0 5/5 zéro défaut, camerap 42/0/0, P1 36/0/0, offline 14/0/0, CI vert |
+| 42584491910 / 42584491807 | android-ci + e2e-lab **fbd8625 (commit de clôture D42.26-27)**, 09/11 08:47 | **SUCCESS — 5e validation consécutive intégrale** : P0 5/5 zéro défaut, camerap 42/0/0, P1 36/0/0, offline 14/0/0, CI vert |
 
-*(Consolidation logicielle TERMINÉE le 09/11 08:15Z — matrice 12.3 LIVRÉE.
-Le HEAD remis (24a27ec) est validé par 4 runs consécutifs complets. Restent
-hors logiciel : décisions fondateur D1-D9 (arbitrages A-E, rc12, certificat),
-tests physiques D8, confirmation du certificat 12.2.)*
+*(Consolidation logicielle TERMINÉE le 09/11 08:50Z — matrice 12.3 LIVRÉE,
+9.5/9.6 consolidés depuis les preuves existantes (D42.26-28), dossier de
+livraison rc12 rédigé (03_DOSSIER_LIVRAISON_APK.md). Le code remis est validé
+par 5 runs consécutifs complets. Restent hors logiciel : décisions fondateur
+D1-D9 (arbitrages A-E, rc12, certificat), tests physiques D8, confirmation du
+certificat 12.2.)*
