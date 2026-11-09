@@ -17,9 +17,9 @@ externe fondateur) · NOT RUN (non exécuté au lab, raison citée).
 | 1.6 | **Bascule caméra avant/arrière (5.4)** | PASS | **CPC_bascule_avant + CPC_bascule_retour PASS par logs (bascule×2, re-bind AVANT×2) — camerap 62/0/0 run 42626010820 (exigence A, arbitrage C CLOS)** |
 | 1.7 | Montage/aperçu local | PASS | P1 (export MP4 + ffprobe) + camerap B (écran aperçu) |
 | 1.8 | Export MP4 + partage | PASS | P1 36/0/0 ×2 incl. MP4 ffprobe/décodage |
-| 1.9 | **Brouillons inter-sessions (4.6/§7)** | EN VALIDATION | Dialogue « Reprendre » ×2 runs ✓, pré-remplissage complet « BoutiqueAwa » ✓ (42626010820 après fix 05b) ; reprise CAMERA attendue au run 42635563154 (fix 05c : promotion garantie avant guide) |
-| 1.10 | Deep-link parrainage bout-en-bout (§3) | EN VALIDATION | Résolution lien ✓ (am_start_view.log), chaîne intent→auth→onboarding ✓ ; code E2E-123 conforme contrat au run 42635563154 (fix 08b : champ pré-rempli) |
-| 1.11 | Auth Google Credential Manager (§2) | PARTIAL→EN VALIDATION | API A invoquée + échec PROPRE (message actionnable + Réessayer + repli intact — dump A1 run 42626010820) ; image playstore au run 42635563154 pour le vrai bottom sheet ; **choix de compte réel = compte physique fondateur (BLOCKED par nature)** |
+| 1.9 | **Brouillons inter-sessions (4.6/§7)** | EN VALIDATION | Dialogue « Reprendre » ×3 runs ✓, pré-remplissage complet ✓, brief validé + 1re scène filmée + réseau coupé + retour réseau S4 ✓ (42635563154 : 31/3/1) ; cause racine de S2_reprise prouvée par S02_log_reprise.txt (script vide : sortie gabarit sans extra script) → **fix 05d, attendu au run 42641946124** |
+| 1.10 | Deep-link parrainage bout-en-bout (§3) | EN VALIDATION | Résolution lien ✓ (am_start -W : MainActivity COLD + URI), parcours complet post-lien ✓, zéro crash ✓ ; 42635563154 : D2/D3 FAIL — auth_status = défaut → extra ref_code JAMAIS transmis (recréation MainActivity, getIntent() sans data) → **fix 08c : refCode persisté onSaveInstanceState + instrumentation VV_E2E/D2_log.txt, attendu au run 42641946124** |
+| 1.11 | Auth Google Credential Manager (§2) | **PASS (lab)** | Vrai flux Credential Manager sur image playstore ✓, échec PROPRE : message + bouton « Réessayer » réactivé ✓, repli hors-connexion intact ✓, re-soumission après échec (resoumis=3, écran+logcat) ✓, parcours continué ✓, zéro crash, 32 lignes de journal VV-AUTH (42635563154 : 10/11) ; A0_langue = faux échec de banc (locale EN, corrigé multi-langues) ; **choix de compte réel = compte physique fondateur (hors lab)** |
 | 1.12 | Repli « Utiliser sans Internet » | PASS | OFF5 + P0 (7 runs) |
 
 ## 2. Robustesse & gardes
@@ -49,7 +49,7 @@ externe fondateur) · NOT RUN (non exécuté au lab, raison citée).
 | # | Exigence | Statut | Preuve |
 |---|---|---|---|
 | 4.1 | Parcours sans Internet langue→catalogue | PASS | OFF1-9 (14 tests) ×2 runs |
-| 4.2 | Reprise inter-sessions HORS connexion | EN VALIDATION | drafts S2 (svc wifi+data disable avant force-stop) — attendu au run 42635563154 |
+| 4.2 | Reprise inter-sessions HORS connexion | EN VALIDATION | Réseau coupé avant force-stop ✓ (svc wifi+data disable, constat 42635563154 S2_reseau_coupe PASS) ; reprise CAMÉRA + rush conservé = S2_reprise_position/S2_rush_conserves → fix 05d, attendu au run 42641946124 |
 | 4.3 | Retour réseau sans crash | PASS | OFF11 + drafts S4 ×2 runs |
 | 4.4 | Session après redémarrage | PASS | OFF10/10b |
 | 4.5 | Export final 100 % hors ligne | PARTIAL | rendu local prouvé (P1), uploads best-effort par code ; preuve e2e dédiée manquante (09c §2) |
@@ -70,7 +70,7 @@ externe fondateur) · NOT RUN (non exécuté au lab, raison citée).
 | # | Élément | Statut | Preuve |
 |---|---|---|---|
 | 6.1 | Compilation + lint + tests JVM tous modules | PASS | android-ci SUCCESS : 42635348927 (7a7c06a en cours), 42626010571 (988fa48), 42619094767 (200b8a6) |
-| 6.2 | e2e-lab 13→15 jobs | EN VALIDATION | 42619096543 SUCCESS 13/13 (200b8a6) ; 42626010820 SUCCESS 15/15 (988fa48) ; 42635563154 en cours (d2b3088 : + drafts corrigés, auth playstore, deeplink E2E-123) |
+| 6.2 | e2e-lab 13→15 jobs | **PASS** | 42619096543 SUCCESS 13/13 (200b8a6) ; 42626010820 SUCCESS 15/15 (988fa48) ; **42635563154 SUCCESS 15/15 (d2b3088)** ; 42641946124 en cours (0e26faa : fix 05d/08c) |
 | 6.3 | Build local avant push (règle 1143bfe) | PASS | assembleDebug+ktlint+detekt+tests SUCCESS avant chaque push (05/05b/05c/08) |
 | 6.4 | RC12 signé officiellement | À FAIRE | plan 11 : tag d42.27-build-rc12 → re-signature keystore officiel (cert 758077eb…) → release d42.27-rc12 → release-official-e2e |
 

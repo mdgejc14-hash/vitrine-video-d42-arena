@@ -74,7 +74,9 @@ P0/P1/langues/offline/camerap strictement inchangés.
 | 42610768032 (1143bfe) | lot initial cassé | APK non compilé (apostrophes/ktlint/dep) | réparation complète → 200b8a6 |
 | 42619096543 (200b8a6) | 05 complet | 25/7/1 : dialogue ×2 ✓, pré-remplissage « Boutiq » TRONQUÉ, cascade S2/S3 | 05b : race condition (collectLatest+Mutex, dernière valeur gagne) + banc durci (contrôle d'effet par champ) |
 | 42626010820 (988fa48) | 05b | 29/4/1 : S1 pré-rempli « BoutiqueAwa » COMPLET ✓, brief validé ✓, 1re scène filmée ✓ ; S2_champs_effet (scroll bas), S2_reprise_position (brouillon pas encore promu au force-stop) | 05c : promotion GARANTIE avant le guide + logs VV_E2E + swipe corrigé + dump S02_apres_reprendre |
-| 42635348805 (7a7c06a) | 05c | EN COURS | — |
+| 42635348805 (7a7c06a) | 05c | ANNULÉ (push doc d2b3088 pendant le run — cancel-in-progress) | sans perte : d2b3088 = même code app |
+| 42635563154 (d2b3088) | 05c | **31/3/1** : S1 complet ✓, 5 champs requis + effet ✓ (swipe fixé), brief validé ✓, guide ✓, 1re scène ✓, réseau coupé ✓, S4 retour réseau ✓ ; FAIL S2_reprise_position/S3×2 + BLOCKED S2_rush_conserves | **05d** : cause racine prouvée par S02_log_reprise.txt (voir §7) |
+| 42641946124 (0e26faa) | 05d+08c | EN COURS — attendu : S2 branche=CAMERA, S2_rush_conserves, S3 complets | — |
 
 **Mécanisme de la race (05b)** : un launch(IO) par frappe → upserts Room
 concurrents désordonnés → l'écriture d'une frappe intermédiaire pouvait
@@ -89,6 +91,30 @@ valuesPourGabarit hors étape BRIEF — dump S03 placeholder « Boutique
 
 ## 6. Reste à faire
 
-- Runs 42635348927/42635348805 (7a7c06a) : drafts attendu S1+S2+S3
-  complets ; auth (image playstore) ; deeplink (E2E-123).
+- Run 42641946124 (0e26faa) : validation 05d (S2 branche=CAMERA, rush
+  conservé, S3 scènes restantes + aperçu) et 08c (deeplink D2/D3).
 - 10 : matrice finale ; 11 : RC12. **0 FCFA.**
+
+## 7. Preuve de la cause racine S2 (run 42635563154) → correctif 05d
+
+Journal `S02_log_reprise.txt` de l'artefact e2e-drafts :
+
+```
+reprise : draft=etape=CAMERA gabarit=vetements_mode_T1
+  scriptNonVide=false priseIdx=1 priseFichiers=1
+reprendreDraft : branche=BRIEF
+```
+
+La promotion 05c FONCTIONNE (étape CAMERA, prise comptée, rush présent)
+mais le **script** du brouillon reste vide : `BriefActivity.renderGabarit`
+sort par `ReadyCheckScreen.onOk` qui ne renvoyait NI « script » NI
+« duration_s » (seul le parcours générique `refresh()` les renvoyait).
+Or `reprendreDraft` exige `!draft.script.isNullOrBlank()` pour la branche
+CAMERA → la reprise retombait au formulaire brief.
+
+Correctif 05d : `onOk` renvoie le script = libellés des prises du gabarit
+(`GabaritJson.parsePrises`, les scènes réelles du guide) joints par « | »,
++ `duration_s` = `dureeTotaleS` du résumé. Le guide en mode gabarit reste
+piloté par ses prises (le script n'y est qu'un repli) — aucun changement
+de comportement utilisateur, seule la reprise redevient atteignable.
+
