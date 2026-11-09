@@ -37,16 +37,18 @@ retablir_reseau() {
 }
 
 # --- 1. Surveillant : couper le réseau dès que le BGM est en cache -------------
+# NB : PAS de sh -c (les quotes seraient perdues à travers adb, sh -c ne
+# recevrait que « ls » du répertoire courant) — même forme que app_ls de
+# run_p1.sh (éprouvée 40 PASS) : ls du dossier, grep local sur \.mp3.
 (
   while [ ! -f "$MARQUEUR_COUPE" ]; do
-    if adb shell run-as "$PKG" sh -c 'ls files/bgm/*.mp3 2>/dev/null' 2>/dev/null \
-        | tr -d '\r' | grep -q '\.mp3'; then
+    if adb shell run-as "$PKG" ls files/bgm 2>/dev/null | tr -d '\r' | grep -q '\.mp3'; then
       sleep 3   # laisser le téléchargement intégral (sha vérifié côté app) finir
       couper_reseau
       {
         echo "=== COUPURE RÉSEAU ($(date -u +%Y-%m-%dT%H:%M:%SZ)) ==="
         echo "BGM en cache au moment de la coupure :"
-        adb shell run-as "$PKG" sh -c 'ls -la files/bgm/ 2>/dev/null' | tr -d '\r'
+        adb shell run-as "$PKG" ls -la files/bgm 2>/dev/null | tr -d '\r'
         echo "Connectivité après svc disable :"
         adb shell dumpsys connectivity 2>/dev/null | tr -d '\r' \
           | grep -E "Active default network|no default network" | head -2
@@ -131,7 +133,7 @@ sleep 8
 adb shell pidof "$PKG" >/dev/null 2>&1 \
   && printf 'PASS\tOFFX_retour_reseau\tretour du réseau : app vivante\n' >> "$RESULTS" \
   || printf 'FAIL\tOFFX_retour_reseau\tapp morte au retour du réseau\n' >> "$RESULTS"
-adb shell run-as "$PKG" sh -c 'ls files/rushes/ 2>/dev/null' | tr -d '\r' | head -8 > "$OUT/rushs_finaux.txt"
+adb shell run-as "$PKG" ls files/rushes 2>/dev/null | tr -d '\r' | head -8 > "$OUT/rushs_finaux.txt"
 if [ -s "$OUT/rushs_finaux.txt" ]; then
   printf 'PASS\tOFFX_donnees_conservees\trusts toujours présents après export + retour réseau (rushs_finaux.txt)\n' >> "$RESULTS"
 else
