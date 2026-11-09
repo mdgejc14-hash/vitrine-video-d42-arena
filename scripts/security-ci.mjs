@@ -718,6 +718,33 @@ async function main() {
   const entB2 = await mustCall("Droits après consommation (B)", "/api/v1/me/entitlements", { token: b.token });
   check("Décompte strict 3 -> 2 (jamais négatif)", entB2.welcome_credits_left === 2);
 
+  // D42.28 (P2-B) : REJEU OFFLINE du MÊME eventId — c'est le comportement du
+  // flush d'outbox après retour réseau (BackendSync.replayPendingQuota rejoue
+  // les consume mis en file hors connexion). Le worker DOIT répondre
+  // { ok: true, dup: true } (INSERT OR IGNORE sur quota_ledger, PK event_id)
+  // et NE JAMAIS décrémenter deux fois.
+  const evenementRejoue = `ev-ci-${randomUUID()}`;
+  await mustCall("Consume initial (rejoué ensuite)", "/api/v1/quota/consume", {
+    method: "POST",
+    token: b.token,
+    body: { eventId: evenementRejoue, fingerprint: fingerprintB, source: "welcome", kind: "export" },
+  });
+  const entReplay0 = await mustCall("Solde avant rejeu", "/api/v1/me/entitlements", { token: b.token });
+  check("Rejeu : solde avant = 1 (3 - consommé - replayé une fois)", entReplay0.welcome_credits_left === 1);
+  for (let i = 1; i <= 3; i++) {
+    const rejoue = await request("/api/v1/quota/consume", {
+      method: "POST",
+      token: b.token,
+      body: { eventId: evenementRejoue, fingerprint: fingerprintB, source: "welcome", kind: "export" },
+    });
+    check(
+      `Rejeu offline #${i} : dup:true, jamais de second débit`,
+      rejoue.status === 200 && rejoue.data?.ok === true && rejoue.data?.dup === true
+    );
+  }
+  const entReplay = await mustCall("Solde après 3 rejeux", "/api/v1/me/entitlements", { token: b.token });
+  check("Rejeu offline : crédits TOUJOURS 1 après 3 rejeux du même eventId (flush outbox sans double débit)", entReplay.welcome_credits_left === 1);
+
   // Audit D41 : durcissement quota/consume — eventId requis (PRIMARY KEY de
   // quota_ledger : un "" vide entrait en collision GLOBALE) et empreinte
   // vérifiée contre merchant_identity (un client compromis ne peut plus
@@ -745,7 +772,7 @@ async function main() {
   );
 
   const entB3 = await mustCall("Droits après attaques quota (B)", "/api/v1/me/entitlements", { token: b.token });
-  check("Quota : tentatives refusées n'ont rien décrémenté (toujours 2)", entB3.welcome_credits_left === 2);
+  check("Quota : tentatives refusées n'ont rien décrémenté (toujours 1 après le bloc rejeu D42.28)", entB3.welcome_credits_left === 1);
 
   const replayGrant = await mustCall("Re-octroi même empreinte (B)", "/api/v1/me/welcome-grant", {
     method: "POST",

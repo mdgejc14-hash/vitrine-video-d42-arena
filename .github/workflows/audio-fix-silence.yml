@@ -1,0 +1,92 @@
+name: audio-fix-silence
+
+# D42.28 (P1) — Correction ciblée du silence initial des compositions BGM.
+#
+# Preuve du défaut (audit audio-audit-full, artefact 13643105300, 2026-11-09) :
+# attaque (premier son @ -40 dB) entre 1,03 et 3,18 s sur les 600/600 pistes —
+# AUCUNE ne satisfait la cible produit « attaque audible < 0,5 s ». La mission
+# D42.28 autorise la correction des 600 dans ce cas (défaut démontré, pas une
+# campagne globale arbitraire).
+#
+# Ce workflow exécute scripts/audio/fix_initial_silence.py :
+#   1. télécharge les originaux depuis B2 (contrôle sha256 vs manifeste v2) ;
+#   2. rogne le silence initial (marge 120 ms) + fade-in 0,4 s + ré-encodage
+#      MP3 CBR 128 kbps 44,1 kHz stéréo — correction DÉTERMINISTE du master,
+#      la musique elle-même est inchangée ;
+#   3. contrôle qualité : attaque < 0,5 s, 0 clipping, décodable, RMS ±1,5 dB,
+#      durée ≥ 10 s — SI UNE piste échoue : AUCUN upload (garde intégrale) ;
+#   4. upload vers les NOUVELLES clés audio/bgm_r2/** (jamais d'écrasement —
+#      les originaux audio/bgm/** restent en B2) ;
+#   5. ré-ingestion des clés titulaires audio_catalog ABSENTES (404 vérifiés
+#      par HEAD) avec le master v01 corrigé (.mp3 + .m4a AAC) ;
+#   6. produit la migration D1 0013_bgm_library_r2.sql (artefact — appliquée
+#      séparément par deploy-production, acte délibéré).
+#
+# Secrets requis : B2_KEY_ID, B2_APPLICATION_KEY (clé du bucket média).
+# Coût : 0 FCFA (quotas gratuits B2 : ~600 GET + ~60 HEAD + ~710 PUT).
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Limiter à N pistes (test pipeline ; 0 = les 600)"
+        required: false
+        default: "0"
+      upload:
+        description: "Uploader vers B2 (clés bgm_r2 + titulaires manquants)"
+        required: false
+        default: "false"
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audio-fix-silence
+  cancel-in-progress: false
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Pré-vol secrets B2
+        env:
+          B2_KEY_ID: ${{ secrets.B2_KEY_ID }}
+          B2_APPLICATION_KEY: ${{ secrets.B2_APPLICATION_KEY }}
+        run: |
+          set -u
+          for n in B2_KEY_ID B2_APPLICATION_KEY; do
+            if [ -z "${!n}" ]; then echo "::error::Secret $n manquant"; exit 1; fi
+          done
+          echo "PASS: secrets B2 présents (valeurs jamais affichées)"
+      - name: Correction du silence initial (600 masters)
+        env:
+          B2_KEY_ID: ${{ secrets.B2_KEY_ID }}
+          B2_APPLICATION_KEY: ${{ secrets.B2_APPLICATION_KEY }}
+        run: |
+          set -euo pipefail
+          ARGS="--manifest scripts/audio/bgm_lib_manifest_v2.json --out artifacts/audio_r2"
+          if [ "${{ inputs.upload }}" = "true" ]; then ARGS="$ARGS --upload"; fi
+          if [ "${{ inputs.limit }}" != "0" ] && [ -n "${{ inputs.limit }}" ]; then
+            ARGS="$ARGS --limit ${{ inputs.limit }}"
+          fi
+          python3 scripts/audio/fix_initial_silence.py $ARGS
+      - name: Artefacts (manifeste r2 + SQL + journal + rapport)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audio-r2
+          path: |
+            artifacts/audio_r2/bgm_r2_manifest.json
+            artifacts/audio_r2/titulaires_journal.json
+            artifacts/audio_r2/rapport.md
+            artifacts/audio_r2/0013_bgm_library_r2.sql
+          retention-days: 30
+          if-no-files-found: warn
