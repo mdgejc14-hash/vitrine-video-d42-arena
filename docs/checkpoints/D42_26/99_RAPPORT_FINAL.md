@@ -119,6 +119,7 @@ produit (A-E), soit des vérités terrain physiques.
 
 | Run | Objet | Résultat |
 |---|---|---|
+| 42534049820 | e2e-lab 442a21b (D42.26-15, 08/11 23:12→23:41) | FAILURE 10/11 — seul gabarits-audit en échec : constat manifeste périmé sorti FAIL à l'époque (requalifié WARN ensuite par 16/17, MÊME constat documenté = arbitrage D9) ; P0 du fix initial : base 22/0/0, font130/rot90 23/0/0, small 19/1/2, petit/font130 22/1/0 → complété par la nuit → 5/5 zéro défaut dès 42562414209. Verdict récupéré le 09/11 après l'interruption serveur de 23:40 (run resté sans relevé) |
 | 42536993228 | e2e-lab f175adc (D42.26-16) | SUCCESS — UI 5/5 variantes 0 défaut |
 | 42539964148 | e2e-lab 9d49aed (D42.26-17) | SUCCESS — **offline 14/0/0** |
 | 42542375491 | one-shot audio intégral | 600/600 mesurés (7.2/7.6 PASS ; FAILURE = seuil 7.7 arbitrage A) |
@@ -130,7 +131,9 @@ produit (A-E), soit des vérités terrain physiques.
 | 42573687240 | e2e-lab 2ecf1bc (D42.26-19/20) | SUCCESS 12/12 — camerap 39/1/1 : preuve AUTORISER→réglages capturée, FAIL = bug casse harnais (corrigé en 24) |
 | 42577296436 | android-ci 7af4726 | SUCCESS — test JVM réseau 3.11 vert (:data:testDebugUnitTest) |
 | 42577296432 | e2e-lab 7af4726 (D42.26-24) | **SUCCESS 12/12 — CAMERAP 42/0/0 INTÉGRAL, P0 5/5, P1 36/0/0, offline 14/0/0** |
+| 42581107187 / 42581107224 | android-ci + e2e-lab **24a27ec (HEAD livré, D42.26-26)**, 09/11 08:13 | **SUCCESS — 4e validation consécutive intégrale** : P0 5/5 zéro défaut, camerap 42/0/0, P1 36/0/0, offline 14/0/0, CI vert |
 
-*(Consolidation logicielle TERMINÉE le 09/11 07:45Z. Restent hors logiciel :
-décisions fondateur D1-D9 (arbitrages A-E, rc12, certificat), tests
-physiques D8, confirmation du certificat 12.2.)*
+*(Consolidation logicielle TERMINÉE le 09/11 08:15Z — matrice 12.3 LIVRÉE.
+Le HEAD remis (24a27ec) est validé par 4 runs consécutifs complets. Restent
+hors logiciel : décisions fondateur D1-D9 (arbitrages A-E, rc12, certificat),
+tests physiques D8, confirmation du certificat 12.2.)*
