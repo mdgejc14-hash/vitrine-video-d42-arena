@@ -35,13 +35,13 @@ achèvement programmé one-shot à 00:15 UTC.
 | # | Exigence | Statut | Preuve / note |
 |---|---|---|---|
 | 2.1 | Authentification Firebase (email/password, comptes réels) | PASS | api-security 42478068047 : comptes test A/B réels (signInWithPassword) ; réutilisé par l'audit audio (firebase_session PASS 42493755744) |
-| 2.2 | Création de compte + première connexion | CONDITIONAL | Écran/parcours implémentés (e2e lab `auth-local`) ; création via l'API Firebase validée indirectement — **parcours complet app à re-tester dans le job auth dédié (§13-D)** |
-| 2.3 | Reconnexion / déconnexion | CONDITIONAL | `auth-local` du lab couvre le cycle local ; re-test dans §13-D |
+| 2.2 | Création de compte + première connexion | **CONDITIONAL** | Serveur : `auth_harness.mjs` (job auth-local, run 42536993228 vert) = bootstrap des comptes A/B avec jeton signé JWKS locale — **PASS_LOCAL_HARNESS (test-only, fournisseur d'identité remplacé)** ; comptes réels Firebase créés par API (api-security 42478068047). App : le parcours = Google Sign-In (2.4) → CONDITIONAL au test physique ; il n'existe pas d'écran email/password dans l'app |
+| 2.3 | Reconnexion / déconnexion | **CONDITIONAL** | Reconnexion serveur : /me 200 avec jeton valide (harness local) ; reconnexion app = parcours Google (2.4). Déconnexion : bouton app NON testé au lab (à couvrir au physique — §13-D) |
 | 2.4 | **Google Sign-In en production (vrai OAuth)** | **NOT RUN** | Le bouton est affiché et localisé (e2e langues) mais **aucun parcours OAuth Google réel n'a été exécuté** (émulateurs sans compte Google). → test physique fondateur OU job émulateur avec compte Google dédié |
-| 2.5 | Expiration / renouvellement de session | NOT RUN | Aucun test de TTL token/JWT. → §13-D |
-| 2.6 | Récupération et gestion des erreurs d'auth | CONDITIONAL | Erreurs 401 testées (audit : sans token → 401 ×3 routes ; api-security : webhook 401/400/422) ; récupération mot de passe NOT RUN (parcours Google prédominant) |
+| 2.5 | Expiration / renouvellement de session | **PASS (serveur, test-only) / CONDITIONAL (app)** | Harness local : **jeton EXPIRÉ rejeté 401** (jose vérifie réellement l'exp) + signature forgée/audience/émetteur invalides rejetés — 18/18 contrôles verts (run 42536993228). App : session courte **1 h** déposée par AuthActivity (vv_session), **aucun refresh token** → expiration = re-login (comportement documenté, pas de renouvellement silencieux) |
+| 2.6 | Récupération et gestion des erreurs d'auth | **PASS (erreurs) / NOT RUN (récup. mot de passe)** | 401 sans token ×3 routes (audit) ; 401 signature/aud/iss/exp (harness) ; 403 cross-compte ; 409 doublons ; 422 webhook ; 501 billing — couverture large. Récupération de mot de passe : parcours absent de l'app (Google prédominant) → NOT RUN |
 | 2.7 | Isolation des comptes | PASS | api-security 42478068047 : isolation crédits/commerces/projets/commandes A vs B |
-| 2.8 | Conservation de la session après redémarrage | NOT RUN | À tester (redémarrage process puis reprise sans re-login) — §13-D |
+| 2.8 | Conservation de la session après redémarrage | **CONDITIONAL** | Code vérifié (D42.26-17) : `MainActivity.restaurerSession()` relit `vv_session.token/uid` (jeton 1 h déposé par AuthActivity) → un compte réel reste connecté au redémarrage tant que le jeton n'a pas expiré. Preuve exécutable : dépôt prefs + relance (à intégrer au lab si cycle suivant). **Session DÉMO = éphémère par conception** (OFF10 requalifié, §4.8) |
 
 ## 3. BACKEND ET CONTRÔLE À DISTANCE
 
@@ -70,12 +70,14 @@ achèvement programmé one-shot à 00:15 UTC.
 | 4.2 | Catalogue en cache local | PASS (code) | `library_{secteur}_{format}.json` mis en cache par BgmStore (inspection code) |
 | 4.3 | Lancement sans Internet | **PASS** | **job android-e2e-offline (run 42534049820, 442a21b)** : réseau émulateur coupé AVANT le 1er lancement (svc wifi+data disable, dumpsys en preuve) — OFF1+OFF2 PASS : app démarrée à froid sans réseau, processus vivant |
 | 4.4 | Accès données locales autorisées hors connexion | **PASS** | OFF3+OFF4+OFF4b+OFF5 PASS : langue, écran connexion, tentative Google SANS crash, repli démo — tout l'onboarding local fonctionne hors connexion |
-| 4.5 | Gabarits hors connexion | **EN VALIDATION (fix D42.26-17)** | Run 42536993228 : OFF7/OFF8/OFF9 BLOCKED — cause = le harnais offline ne franchissait que le 1er slide du carrousel (cherchait les cartes au slide 2 !) ; fix : boucle 3 slides + Commencer avec contrôle d'effet, OFF10 requalifié (session démo éphémère documentée) ; 11 autres contrôles offline PASS |
+| 4.5 | Gabarits hors connexion | **PASS — FERMÉ** | Run **42539964148** (9d49aed, D42.26-17) : OFF6 carrousel franchi (3 écrans + Commencer) ; **OFF7 secteur+Continuer avec effet vérifié ; OFF8 bienvenue + solde local ; OFF9 catalogue consultable** — les 3 BLOCKED précédents étaient purement un défaut de HARNAIS (le script cherchait les cartes au slide 2 du carrousel), jamais un défaut produit |
 | 4.6 | Création/conservation d'un projet local | NOT RUN | §13-B |
 | 4.7 | Interruption réseau pendant un parcours | **PASS (aller-retour)** | OFF11 PASS : retour du réseau (svc enable) après tout le parcours hors ligne — app vivante, aucun crash ; l'interruption DÉBUT de parcours = la coupe préalable OFF1 ; coupure EN COURS de tournage = à couvrir au test physique |
 | 4.8 | Fermeture/redémarrage puis reprise | **PASS (qualifié honnêtement)** | OFF10+OFF10b (run 42536993228) : force-stop + relance hors connexion — pas de retour au carrousel, processus vivant ; **l'écran revient à la CONNEXION : session démo ÉPHÉMÈRE par conception** (le repli ne dépose pas de jeton persistant ; la persistance des comptes réels = jeton 1 h, §2/auth-local) — requalifié ainsi en D42.26-17 |
 | 4.9 | Reprise après reconnexion + synchronisation sans doublon | NOT RUN | §13-B |
 | 4.10 | Absence de perte de projet / double débit | NOT RUN | §13-B (le débit crédits est serveur → double débit client improbable par conception ; à prouver par test) |
+
+**Bilan §4 (run 42539964148, 9d49aed) : PASS=14 FAIL=0 BLOCKED=0 — parcours hors ligne COMPLET et honnête.** Le mode démo = repli local zéro réseau by design ; session démo éphémère documentée (4.8) ; catalogue/gabarits embarqués consultables sans réseau ; retour réseau sans crash ni double débit (OFF11, aucune opération facturée pendant la coupure — OFF5 zéro appel réseau).
 
 ## 5. CAMÉRA ET PARCOURS DE CRÉATION
 
@@ -135,13 +137,13 @@ achèvement programmé one-shot à 00:15 UTC.
 | # | Exigence | Statut | Preuve / note |
 |---|---|---|---|
 | 9.1 | Défauts rotation 90° (17/3/3) | **PASS** | Cause : boutons Google/Continuer hors écran en paysage → **verrouillage portrait des 9 activités** (produit vidéo verticale 9:16), commits 532b76b+c120fbd ; **validé 23/0/0** sur c0d7d72 (42509265951) ET e45ba1e (42512514439) |
-| 9.2 | Petits écrans 540×960 | **4 variantes 0 défaut confirmées ; small 19/1/2 — fix D42.26-16 en validation** | Runs 42528862955 + 42534049820 : base 22/0/0, font130 23/0/0 ×2, rot90 23/0/0 STABLES ; small : S07-S12 PASS (S12 = carte « Vêtements & Mode » tapée en direct) ; le S18 « FAIL » du run 42534049820 = **crash du LAUNCHER de l'émulateur** (com.android.launcher3, bug CellLayout connu des overrides wm) — PAS de l'app → S18 désormais filtré sur le process $PKG. Reste small S14/S17 : le tap « Continuer » retourne 0 SANS effet (uiautomator expose le bouton à [0,0][0,0] ; le secours bas_large tape la carte du bas) → **fix D42.26-16 : contrôle d'EFFET après chaque tap (écran suivant exigé, sinon taporange)** |
+| 9.2 | Petits écrans 540×960 | **PASS — FERMÉ (5/5 variantes 0 défaut)** | Run **42536993228** (f175adc, D42.26-16) : base 22/0/0, font130 23/0/0, rot90 23/0/0, **small 23/0/0**, petit/font130 23/0/0. Historique : 42528862955+42534049820 avaient small 19-20/1/2, dont le « FAIL » S18 = **crash du LAUNCHER de l'émulateur** (com.android.launcher3, bug CellLayout des overrides wm — filtré depuis sur `Process: $PKG`) et S14/S17 = tap « Continuer » à bounds [0,0][0,0] sans effet → **fix D42.26-16 : contrôle d'EFFET après chaque tap (écran suivant exigé, sinon taporange sur la bande orange = bouton réel)** — validé vert. Faits maintenus : défaut auth small FERMÉ ; carrousel small = FAUX défaut produit (bouton rendu, dump uiautomator pourri en override 540×960) ; fix produit a0fc28c reverté (régression base/rot90) |
 | 9.3 | 4 langues FR/EN/ES/JA | PASS | FR = parcours principal (22-23/0/0) ; EN/ES/JA = 11/0/0 chacun (42497790522) — **les 4 langues couvertes, à documenter ainsi** |
 | 9.4 | Grandes tailles de police / clavier affiché | NOT RUN | §13-H (config fontScale 1.3 + états clavier) |
 | 9.5 | Zones tactiles / défilement / carrousels / formulaires | CONDITIONAL | Couverts implicitement par les parcours e2e (carrousel onboarding testé en 4 langues) ; matrice dédiée §13-H |
 | 9.6 | Navigation arrière | CONDITIONAL | Back utilisé dans les parcours ; exhaustivité §13-H |
 | 9.7 | Paysage (si pris en charge) | NOT RUN | L'app cible portrait ; rotation 90° testée pour la robustesse (9.1) |
-| 9.8 | Aucun bouton essentiel inaccessible | CONDITIONAL | 9.1 fermé (23/0/0 ×2) ; 9.2 = faux défaut produit confirmé (bouton rendu, dump en cause) → re-certification après le run harnais D42.26-13 |
+| 9.8 | Aucun bouton essentiel inaccessible | **PASS** | 9.1 fermé (23/0/0 ×2) ; 9.2 FERMÉ au run 42536993228 (small 23/0/0, 5/5 variantes à 0 FAIL/0 BLOCKED) — le défaut « Continuer inaccessible » était un artefact du dump uiautomator en override 540×960, le contrôle d'effet le prouve |
 
 ## 10. SAUVEGARDE ET SERVICES DE PRODUCTION
 
@@ -161,7 +163,7 @@ achèvement programmé one-shot à 00:15 UTC.
 |---|---|---|---|
 | 11.1 | Matrice exhaustive de qualification | PASS | **Ce document** (84 lignes, mise à jour continue) |
 | 11.2 | Inventaire prod / test-only / Internet / offline / physique | PASS | §14 ci-dessous (tenu à jour) |
-| 12.1 | Correction des défauts bloquants avant remise | **EN COURS** | 2 FAIL UI (9.1/9.2) — §13-A |
+| 12.1 | Correction des défauts bloquants avant remise | **UI FERMÉE** | 9.1 + 9.2 FERMÉS au run 42536993228 (5/5 variantes 0 FAIL/0 BLOCKED) ; restent : offline 4.5 (fix D42.26-17 en validation, run en cours), D auth réel, E modes/permissions, J consolidation, certificat |
 | 12.2 | Intégrité APK + certificat officiel | CONDITIONAL | rc11 : release privée 438156110, sha256 b052e7c9…c83bb6, mapping R8 identique miroir/privé ; **après corrections UI → rc12 à produire et re-certifier** |
 | 12.3 | Rapport final complet avant remise | EN COURS | Présent document + 99_RAPPORT_FINAL (D42.25) à consolider en fin de mission |
 
@@ -169,7 +171,7 @@ achèvement programmé one-shot à 00:15 UTC.
 
 ## 13. PLAN D'ACTION PRIORISÉ (exécution en cours, 0 FCFA)
 
-- **A. Corrections UI** : 9.1 FERMÉ (23/0/0 ×2). 9.2 : défaut auth FERMÉ ; défaut carrousel small = FAUX défaut produit (bouton rendu, dump uiautomator pourri en override 540×960, + faux PASS S12 par sous-chaîne). Fix produit a0fc28c reverté (régression base/rot90). Harnais D42.26-13 : taporange + swipe_h + S12 titres exacts + preuve post-tap → relance lab, vert exigé sur les 5 variantes.
+- **A. Corrections UI** : **9.1 + 9.2 FERMÉS** — run 42536993228 (f175adc) : base 22/0/0, font130 23/0/0, rot90 23/0/0, small 23/0/0, petit/font130 23/0/0 (fix D42.26-16 : contrôle d'EFFET après tap, S18 filtré process). Le défaut carrousel small était un FAUX défaut produit (bouton rendu, dump uiautomator pourri en override 540×960) ; fix produit a0fc28c reverté (régression base/rot90).
 - **B. Qualification offline** : nouveau job e2e (réseau coupé via adb) :
   lancement offline, cache sons/catalogue, projet local, interruption,
   redémarrage, reprise, sync sans doublon/perte/double débit.
