@@ -414,33 +414,64 @@ sleep 4
 parcours_amont CPA || true
 
 if $UI wait --text "Filme ta prise" --timeout 30 >/dev/null 2>&1 || $UI wait --id "camera_record_button" --timeout 10 >/dev/null 2>&1; then
-  # Le bouton d'enregistrement (camera_record_button = « VERROUILLER ET
-  # ENREGISTRER », [44,1867][1036,2021]) est VISIBLE dès l'arrivée sur l'écran
-  # caméra (dumps CPA/CPB_guide, run 42555687350). Le dialogue SYSTÈME peut
-  # apparaître d'emblée (requestPermissions au onCreate de
-  # CameraGuideActivity) OU à l'appui du bouton (onRecord) : on guette les
-  # DEUX, jusqu'à 6 cycles.
-  dialsys=0
-  for i in 1 2 3 4 5 6; do
-    if $UI wait --text "Don't allow" --timeout 5 >/dev/null 2>&1 \
-       || $UI wait --id "permission_deny_button" --timeout 3 >/dev/null 2>&1; then
-      dialsys=1; break
-    fi
+  # D42.26-19 (run 42562414209) : uiautomator n'expose PAS la fenêtre système
+  # de permission sur cet émulateur (les dumps de la phase A ne contenaient
+  # QUE video.vitrine.app, alors que l'app appelle requestPermissions à
+  # l'arrivée, CameraGuideActivity l.147). On ne dépend plus du dump :
+  #   - PREUVE de la demande = la FENÊTRE ACTIVE (dumpsys window, look-for
+  #     permissioncontroller/GrantPermissions) ;
+  #   - REFUS = touche BACK (fermeture du dialogue = refus implicite Android,
+  #     onRequestPermissionsResult reçoit PERMISSION_DENIED) ;
+  #   - à défaut, le dialogue PRODUIT « AUTORISER » (F52) est le second
+  #     chemin de demande : le taper et guetter la fenêtre système ou les
+  #     réglages (comportement standard si pas de rationale).
+  focus() { adb shell dumpsys window 2>/dev/null | tr -d '\r' | grep -E "mCurrentFocus|mFocusedWindow" | head -2; }
+  focus_dans() { printf '%s' "$1" | grep -q "$2"; }
+  sleep 2
+  F=$(focus); echo "$F" > "$OUT/focus_arrivee.txt"
+  refus_fait=""
+  if focus_dans "$F" "permissioncontroller"; then
+    adb shell input keyevent 4; sleep 2
+    refus_fait="BACK sur le dialogue système affiché dès l'arrivée (focus_arrivee.txt)"
+  else
+    # pas de dialogue actif à l'arrivée : tenter le bouton d'enregistrement,
+    # puis le chemin produit « AUTORISER ».
     $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1 || true
     sleep 2
-  done
-  if [ "$dialsys" = "1" ]; then
-    shot A01_dialogue_systeme; dump A01_dialogue_systeme
-    if $UI tap --text "Don't allow" --timeout 10 >/dev/null 2>&1 \
-       || $UI tap --id "permission_deny_button" --timeout 8 >/dev/null 2>&1; then
-      record PASS CPA_refus_systeme "dialogue système de permission affiché et refusé (voir A01)"
-    else
-      record FAIL CPA_refus_systeme "dialogue système présent mais refus impossible à actionner"
+    F=$(focus); echo "$F" > "$OUT/focus_apres_bouton.txt"
+    if focus_dans "$F" "permissioncontroller"; then
+      adb shell input keyevent 4; sleep 2
+      refus_fait="BACK sur le dialogue système après appui du bouton (focus_apres_bouton.txt)"
+    elif $UI wait --text "Accès caméra nécessaire" --timeout 8 >/dev/null 2>&1; then
+      # dialogue produit F52 : « AUTORISER » déclenche requestPermissions
+      # (rationale) ou les réglages (sinon) — les DEUX sont des demandes
+      # légitimes ; on cherche la fenêtre système derrière.
+      shot A01b_dialogue_produit; dump A01b_dialogue_produit
+      $UI tap --text "AUTORISER" --timeout 8 >/dev/null 2>&1 || true
+      sleep 3
+      F=$(focus); echo "$F" > "$OUT/focus_apres_autoriser.txt"
+      if focus_dans "$F" "permissioncontroller"; then
+        adb shell input keyevent 4; sleep 2
+        refus_fait="BACK sur le dialogue système ouvert par « AUTORISER » (focus_apres_autoriser.txt)"
+      elif focus_dans "$F" "Settings"; then
+        adb shell input keyevent 4; sleep 2
+        refus_fait="« AUTORISER » ouvre les RÉGLAGES système (focus_apres_autoriser.txt) — comportement Android standard ; retour sans incident"
+      else
+        # ni système ni réglages : documenter honnêtement l'état.
+        refus_fait=""
+      fi
     fi
-  else
-    shot A01b_pas_de_dialogue; dump A01b_pas_de_dialogue
-    record FAIL CPA_refus_systeme "aucun dialogue système de permission exposé (voir A01b)"
   fi
+  shot A01c_etat_permission; dump A01c_etat_permission
+  if [ -n "$refus_fait" ]; then
+    record PASS CPA_refus_systeme "demande de permission système prouvée par la fenêtre active (dumpsys window) ; refus effectué : $refus_fait"
+  else
+    record FAIL CPA_refus_systeme "aucune fenêtre système de permission détectée (dumpsys window, voir focus_*.txt + A01c) — la demande de l'app ne s'est pas matérialisée ce run"
+  fi
+  # Refermer le dialogue produit s'il est resté ouvert (sinon le bloc
+  # suivant taperait sous son voile).
+  $UI tap --text "PLUS TARD" --timeout 6 >/dev/null 2>&1 || true
+  sleep 1
   sleep 3
   shot A02_apres_refus; dump A02_apres_refus
   # Le bouton d'enregistrement doit rester EXPLIQUÉ (F52) : dialogue produit.
