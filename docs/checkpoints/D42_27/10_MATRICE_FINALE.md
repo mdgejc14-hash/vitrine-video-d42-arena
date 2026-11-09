@@ -18,8 +18,8 @@ externe fondateur) · NOT RUN (non exécuté au lab, raison citée).
 | 1.7 | Montage/aperçu local | PASS | P1 (export MP4 + ffprobe) + camerap B (écran aperçu) |
 | 1.8 | Export MP4 + partage | PASS | P1 36/0/0 ×2 incl. MP4 ffprobe/décodage |
 | 1.9 | **Brouillons inter-sessions (4.6/§7)** | **PASS** | Run 42641946124 (0e26faa, fix 05d) : **36/36** — dialogue « Reprendre » ✓, pré-remplissage complet ✓, reprise CAMÉRA à la bonne prise (PRISE 2/3) HORS CONNEXION ✓, rush conservé après fermeture+redémarrage ✓, prises restantes filmées ✓, guide terminé + écran d'aperçu ✓, retour réseau sans perte ✓, zéro crash ✓ |
-| 1.10 | Deep-link parrainage bout-en-bout (§3) | EN VALIDATION | Résolution lien ✓ (am_start -W : MainActivity COLD + URI), parcours complet post-lien ✓, zéro crash ✓, rejet PROPRE des codes non conformes ✓ (comportement spécifié) ; D2/D3 : les FAIL des runs précédents = **faux échecs de banc** — codes de test non conformes au contrat ^[A-Z]{3,10}-[0-9]{3}$ (preuve D2_log.txt 42641946124 : data=…r/E2E-123 → refCode=null, « E2E » contient un chiffre) ; **re-validation avec AKWABA-100 conforme (08d) au prochain run** |
-| 1.11 | Auth Google Credential Manager (§2) | **PASS (lab)** | Vrai flux Credential Manager sur image playstore ✓, échec PROPRE : message + bouton « Réessayer » réactivé ✓, repli hors-connexion intact ✓, re-soumission après échec (resoumis=3, écran+logcat) ✓, parcours continué ✓, zéro crash, 32 lignes de journal VV-AUTH (42635563154 : 10/11) ; A0_langue = faux échec de banc (locale EN, corrigé multi-langues) ; **choix de compte réel = compte physique fondateur (hors lab)** |
+| 1.10 | Deep-link parrainage bout-en-bout (§3) | **PASS** | Run 42647493665 (83da04e) : **7/7** — ACTION_VIEW https://vitrine.video/r/AKWABA-100 résolu vers l'app ✓, « Code parrain détecté : AKWABA-100 » AFFICHÉ à l'écran auth ✓, étape parrainage champ PRÉ-REMPULI ✓, parcours complet post-lien (catalogue) ✓, app vivante ✓, zéro crash ✓ ; rejet propre des codes non conformes prouvé au passage (runs précédents) |
+| 1.11 | Auth Google Credential Manager (§2) | **PASS (lab)** | Vrai flux Credential Manager sur image playstore ✓, échec PROPRE : message + bouton « Réessayer » réactivé ✓, repli hors-connexion intact ✓, re-soumission après échec (resoumis=3, écran+logcat) ✓, parcours continué ✓, zéro crash, 32 lignes de journal VV-AUTH ; **11/11 au run 42647493665** (A0_langue multi-langues) ; **choix de compte réel = compte physique fondateur (hors lab)** |
 | 1.12 | Repli « Utiliser sans Internet » | PASS | OFF5 + P0 (7 runs) |
 
 ## 2. Robustesse & gardes
@@ -70,7 +70,7 @@ externe fondateur) · NOT RUN (non exécuté au lab, raison citée).
 | # | Élément | Statut | Preuve |
 |---|---|---|---|
 | 6.1 | Compilation + lint + tests JVM tous modules | PASS | android-ci SUCCESS : 42635348927 (7a7c06a en cours), 42626010571 (988fa48), 42619094767 (200b8a6) |
-| 6.2 | e2e-lab 13→15 jobs | **PASS** | 42619096543 SUCCESS 13/13 (200b8a6) ; 42626010820 SUCCESS 15/15 (988fa48) ; **42635563154 SUCCESS 15/15 (d2b3088)** ; 42641946124 en cours (0e26faa : fix 05d/08c) |
+| 6.2 | e2e-lab 13→15 jobs | **PASS** | 42619096543 SUCCESS 13/13 (200b8a6) ; 42626010820 SUCCESS 15/15 (988fa48) ; 42635563154 SUCCESS 15/15 (d2b3088) ; 42641946124 SUCCESS 15/15 (0e26faa, drafts 36/36) ; 42647493665 en cours (83da04e : deeplink 7/7 + auth 11/11 constatés) |
 | 6.3 | Build local avant push (règle 1143bfe) | PASS | assembleDebug+ktlint+detekt+tests SUCCESS avant chaque push (05/05b/05c/08) |
 | 6.4 | RC12 signé officiellement | À FAIRE | plan 11 : tag d42.27-build-rc12 → re-signature keystore officiel (cert 758077eb…) → release d42.27-rc12 → release-official-e2e |
 
