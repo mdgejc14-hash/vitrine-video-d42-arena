@@ -326,6 +326,58 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
   $UI champs > "$OUT/champs_apres.txt" 2>&1 || true
   nb_vides=$(grep -c " vide |" "$OUT/champs_apres.txt" 2>/dev/null); nb_vides=${nb_vides:-0}
   echo "E2E sondes : haut=$haut_ok bas=$bas_ok ; champs visibles encore vides : $nb_vides"
+  # D42.26-18f : CONTRÔLE DE CONTENU. « Rempli » (texte non vide) ne prouve
+  # pas la VALEUR : au run 42559334178 (phase A), les 6 champs étaient
+  # « remplis » et le bouton Continuer restait GRIS (pixel 229,233,238) —
+  # un champ est INVALIDE (suspect n°1 : le whatsapp, validation
+  # format_international — le '+' peut se perdre au 1er clavier d'une
+  # session vierge). On exige le CONTENU attendu, sinon on re-remplit.
+  local att=""; local k
+  for k in 1 2 3; do
+    adb shell rm -f /sdcard/d.xml >/dev/null 2>&1
+    adb shell uiautomator dump /sdcard/d.xml >/dev/null 2>&1
+    adb exec-out cat /sdcard/d.xml > "$OUT/verif_contenu.xml" 2>/dev/null
+    att=""
+    grep -q "+229" "$OUT/verif_contenu.xml" 2>/dev/null || att="$att whatsapp"
+    grep -q "15000" "$OUT/verif_contenu.xml" 2>/dev/null || att="$att prix"
+    grep -q "RobeWax" "$OUT/verif_contenu.xml" 2>/dev/null || att="$att nom_offre"
+    grep -q "BoutiqueAwa" "$OUT/verif_contenu.xml" 2>/dev/null || att="$att commerce"
+    grep -q "Akpakpa" "$OUT/verif_contenu.xml" 2>/dev/null || att="$att quartier"
+    [ -z "$att" ] && break
+    echo "E2E contenu manquant (passe $k) :$att — re-remplissage ciblé"
+    # remonter en haut du formulaire pour les coordonnées des champs du haut
+    swipe_v 26 73 400 >/dev/null 2>&1; sleep 1
+    fermer_clavier
+    $UI champs > "$OUT/champs.txt" 2>&1 || true
+    local l idx etat libelle val
+    while IFS= read -r l; do
+      idx=$(echo "$l" | awk '{print $3}')
+      etat=$(echo "$l" | awk '{print $8}')
+      libelle=$(echo "$l" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
+      case "$libelle" in
+        *whatsapp*)   [ -z "$(grep -o '+229' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { remplir_champ "$idx" "+22997000000" "$OUT/champs.txt" || true; } ;;
+        *Prix*|*prix*) [ -z "$(grep -o '15000' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { remplir_champ "$idx" "15000" "$OUT/champs.txt" || true; } ;;
+      esac
+    done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
+    # redescendre pour les champs du bas si nécessaire
+    swipe_v 73 26 400 >/dev/null 2>&1; sleep 1
+    fermer_clavier
+    $UI champs > "$OUT/champs.txt" 2>&1 || true
+    while IFS= read -r l; do
+      idx=$(echo "$l" | awk '{print $3}')
+      etat=$(echo "$l" | awk '{print $8}')
+      libelle=$(echo "$l" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
+      case "$libelle" in
+        *v*tement*)   [ -z "$(grep -o 'RobeWax' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { remplir_champ "$idx" "RobeWax" "$OUT/champs.txt" || true; } ;;
+        *Quartier*|*quartier*) [ -z "$(grep -o 'Akpakpa' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { remplir_champ "$idx" "Akpakpa" "$OUT/champs.txt" || true; } ;;
+        *commerce*)   [ -z "$(grep -o 'BoutiqueAwa' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { remplir_champ "$idx" "BoutiqueAwa" "$OUT/champs.txt" || true; } ;;
+      esac
+    done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
+  done
+  adb shell rm -f /sdcard/d.xml >/dev/null 2>&1
+  adb shell uiautomator dump /sdcard/d.xml >/dev/null 2>&1
+  adb exec-out cat /sdcard/d.xml > "$OUT/verif_contenu_final.xml" 2>/dev/null
+  echo "E2E preuve contenu final : +229=$(grep -c '+229' "$OUT/verif_contenu_final.xml" 2>/dev/null || echo 0) 15000=$(grep -c '15000' "$OUT/verif_contenu_final.xml" 2>/dev/null || echo 0) RobeWax=$(grep -c 'RobeWax' "$OUT/verif_contenu_final.xml" 2>/dev/null || echo 0)"
   local trouve=0 _
   for _ in 1 2 3 4 5 6; do
     if $UI wait --text "Continuer" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
