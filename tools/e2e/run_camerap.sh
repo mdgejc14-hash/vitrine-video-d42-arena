@@ -426,7 +426,19 @@ if $UI wait --text "Filme ta prise" --timeout 30 >/dev/null 2>&1 || $UI wait --i
   #     chemin de demande : le taper et guetter la fenêtre système ou les
   #     réglages (comportement standard si pas de rationale).
   focus() { adb shell dumpsys window 2>/dev/null | tr -d '\r' | grep -E "mCurrentFocus|mFocusedWindow" | head -2; }
-  focus_dans() { printf '%s' "$1" | grep -q "$2"; }
+  # focus_dins : grep INSENSIBLE À LA CASSE — le focus réel des réglages est
+  # "com.android.settings" (minuscules) : un grep sensible a râté la preuve
+  # au run 42573687240 alors qu'elle était présente (bug corrigé ici).
+  focus_dans() { printf '%s' "$1" | grep -qi "$2"; }
+  ramener_app() {
+    # Retour fiable au premier plan depuis les réglages : BACK seul peut
+    # rester dans settings (run 42573687240, dump A02) — on relance
+    # l'activité (déjà en arrière-plan : ramène sans la recréer).
+    adb shell input keyevent 4 >/dev/null 2>&1 || true
+    sleep 1
+    adb shell am start -n "$PKG/.MainActivity" >/dev/null 2>&1 || true
+    sleep 2
+  }
   sleep 2
   F=$(focus); echo "$F" > "$OUT/focus_arrivee.txt"
   refus_fait=""
@@ -453,9 +465,16 @@ if $UI wait --text "Filme ta prise" --timeout 30 >/dev/null 2>&1 || $UI wait --i
       if focus_dans "$F" "permissioncontroller"; then
         adb shell input keyevent 4; sleep 2
         refus_fait="BACK sur le dialogue système ouvert par « AUTORISER » (focus_apres_autoriser.txt)"
-      elif focus_dans "$F" "Settings"; then
-        adb shell input keyevent 4; sleep 2
-        refus_fait="« AUTORISER » ouvre les RÉGLAGES système (focus_apres_autoriser.txt) — comportement Android standard ; retour sans incident"
+      elif focus_dans "$F" "settings"; then
+        # Chemin F52 voulu (run 42573687240, preuve focus_apres_autoriser.txt :
+        # com.android.settings/InstalledAppDetails) : quand
+        # shouldShowRequestPermissionRationale=false (refus permanent / 1re
+        # demande selon l'image), « AUTORISER » guide vers les RÉGLAGES de
+        # l'app — le seul chemin d'octroi restant. C'est le comportement
+        # PRODUIT attendu, pas un défaut.
+        shot A01d_reglages_ouverts; dump A01d_reglages_ouverts
+        ramener_app
+        refus_fait="« AUTORISER » ouvre les RÉGLAGES système de l'app (InstalledAppDetails — preuve focus_apres_autoriser.txt + A01d), comportement F52 quand shouldShowRequestPermissionRationale=false ; retour app sans incident"
       else
         # ni système ni réglages : documenter honnêtement l'état.
         refus_fait=""
