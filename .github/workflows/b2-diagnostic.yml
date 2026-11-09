@@ -1,0 +1,94 @@
+name: b2-diagnostic
+
+# D42.28 — diagnostic ponctuel de l'état du bucket B2 (HEAD/GET directs,
+# listing avec query signée). workflow_dispatch, aucun secret affiché.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Sonde B2 (HEAD + listings signés)
+        env:
+          B2_KEY_ID: ${{ secrets.B2_KEY_ID }}
+          B2_APPLICATION_KEY: ${{ secrets.B2_APPLICATION_KEY }}
+        run: |
+          set -u
+          python3 - <<'PYEOF'
+          import os, hashlib, hmac, datetime, urllib.request, urllib.error, urllib.parse, re
+
+          KEY_ID = os.environ["B2_KEY_ID"]
+          APP_KEY = os.environ["B2_APPLICATION_KEY"]
+          HOST = "s3.us-east-005.backblazeb2.com"
+          BUCKET = "vitrine-video-media"
+          REGION = "us-east-005"
+
+          def _sign(key, msg):
+              return hmac.new(key, msg.encode(), hashlib.sha256).digest()
+
+          def req(method, key, query="", body=b""):
+              now = datetime.datetime.now(datetime.timezone.utc)
+              amzdate, datestamp = now.strftime("%Y%m%dT%H%M%SZ"), now.strftime("%Y%m%d")
+              path = "/" + BUCKET + "/" + urllib.parse.quote(key, safe="/")
+              # canonical query : paires triées, valeurs encodées
+              q = "&".join(f"{urllib.parse.quote(k, safe='')}={urllib.parse.quote(v, safe='')}"
+                           for k, v in sorted(urllib.parse.parse_qsl(query)))
+              payload_hash = hashlib.sha256(body).hexdigest()
+              headers = {"host": HOST, "x-amz-content-sha256": payload_hash, "x-amz-date": amzdate}
+              signed = ";".join(sorted(headers))
+              canon_h = "".join(f"{k}:{headers[k]}\n" for k in sorted(headers))
+              canon = f"{method}\n{path}\n{q}\n{canon_h}\n{signed}\n{payload_hash}"
+              scope = f"{datestamp}/{REGION}/s3/aws4_request"
+              sts = f"AWS4-HMAC-SHA256\n{amzdate}\n{scope}\n{hashlib.sha256(canon.encode()).hexdigest()}"
+              k = _sign(("AWS4" + APP_KEY).encode(), datestamp)
+              k = _sign(k, REGION); k = _sign(k, "s3"); k = _sign(k, "aws4_request")
+              sig = hmac.new(k, sts.encode(), hashlib.sha256).hexdigest()
+              rh = {"x-amz-date": amzdate, "x-amz-content-sha256": payload_hash,
+                    "Authorization": f"AWS4-HMAC-SHA256 Credential={KEY_ID}/{scope}, SignedHeaders={signed}, Signature={sig}"}
+              url = f"https://{HOST}{path}" + (f"?{q}" if q else "")
+              r = urllib.request.Request(url, data=body or None, headers=rh, method=method)
+              try:
+                  with urllib.request.urlopen(r, timeout=60) as resp:
+                      return resp.status, resp.read()
+              except urllib.error.HTTPError as e:
+                  return e.code, e.read()
+
+          sondes = [
+              ("ancienne_v01",  "audio/bgm/batiment_travaux/T1/musique_t1_batiment_travaux_v01.mp3"),
+              ("titulaire_mp3", "audio/bgm/batiment_travaux/T1/musique_t1_batiment_travaux.mp3"),
+              ("titulaire_m4a", "audio/bgm/batiment_travaux/T2/musique_t2_batiment_travaux.m4a"),
+              ("nouvelle_r2",   "audio/bgm_r2/batiment_travaux/T1/musique_t1_batiment_travaux_v01.mp3"),
+              ("structure",     "STRUCTURE.json"),
+          ]
+          for nom, cle in sondes:
+              try:
+                  st, body = req("HEAD", cle)
+                  print(f"HEAD {nom:14s} {cle[:64]:66s} -> HTTP {st}")
+              except Exception as e:
+                  print(f"HEAD {nom:14s} -> EXCEPTION {e}")
+          for prefix in ("audio/bgm/", "audio/bgm_r2/", "audio/"):
+              try:
+                  st, body = req("GET", "", query=f"list-type=2&max-keys=1000&prefix={prefix}")
+                  n = len(re.findall(rb"<Key>", body))
+                  extrait = body[:300].decode("utf-8", "replace")
+                  print(f"LIST {prefix:15s} -> HTTP {st}, {n} clés ; début : {extrait!r}")
+              except Exception as e:
+                  print(f"LIST {prefix:15s} -> EXCEPTION {e}")
+          # racine entière
+          try:
+              st, body = req("GET", "", query="list-type=2&max-keys=1000")
+              n = len(re.findall(rb"<Key>", body))
+              trunc = re.search(rb"<IsTruncated>([^<]+)</IsTruncated>", body)
+              print(f"LIST racine -> HTTP {st}, {n} clés, IsTruncated={trunc.group(1) if trunc else b'?'}")
+          except Exception as e:
+              print(f"LIST racine -> EXCEPTION {e}")
+          PYEOF
