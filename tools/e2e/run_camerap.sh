@@ -361,13 +361,23 @@ adb shell am start -W -n "$PKG/.MainActivity" > "$OUT/start_a.log" 2>&1
 sleep 4
 parcours_amont CPA || true
 
-if $UI wait --text "Tourner" --exact --timeout 15 >/dev/null 2>&1; then
-  # « Tourner » lance CameraGuideActivity, qui demande CAMERA+RECORD_AUDIO au
-  # système (aucune permission accordée) : le dialogue SYSTÈME doit apparaître.
-  $UI tap --text "Tourner" --exact --timeout 10 >/dev/null 2>&1
-  sleep 3
-  if $UI wait --text "Don't allow" --timeout 20 >/dev/null 2>&1 \
-     || $UI wait --id "permission_deny_button" --timeout 10 >/dev/null 2>&1; then
+if $UI wait --text "Filme ta prise" --timeout 30 >/dev/null 2>&1 || $UI wait --id "camera_record_button" --timeout 10 >/dev/null 2>&1; then
+  # Le bouton d'enregistrement (camera_record_button = « VERROUILLER ET
+  # ENREGISTRER », [44,1867][1036,2021]) est VISIBLE dès l'arrivée sur l'écran
+  # caméra (dumps CPA/CPB_guide, run 42555687350). Le dialogue SYSTÈME peut
+  # apparaître d'emblée (requestPermissions au onCreate de
+  # CameraGuideActivity) OU à l'appui du bouton (onRecord) : on guette les
+  # DEUX, jusqu'à 6 cycles.
+  dialsys=0
+  for i in 1 2 3 4 5 6; do
+    if $UI wait --text "Don't allow" --timeout 5 >/dev/null 2>&1 \
+       || $UI wait --id "permission_deny_button" --timeout 3 >/dev/null 2>&1; then
+      dialsys=1; break
+    fi
+    $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1 || true
+    sleep 2
+  done
+  if [ "$dialsys" = "1" ]; then
     shot A01_dialogue_systeme; dump A01_dialogue_systeme
     if $UI tap --text "Don't allow" --timeout 10 >/dev/null 2>&1 \
        || $UI tap --id "permission_deny_button" --timeout 8 >/dev/null 2>&1; then
@@ -408,9 +418,9 @@ if $UI wait --text "Tourner" --exact --timeout 15 >/dev/null 2>&1; then
   else
     record BLOCKED CPA_refus_germe "bouton d'enregistrement introuvable après refus (voir A02)"
   fi
-else
-  record BLOCKED CPA_refus_systeme "bouton « Tourner » introuvable (guide non atteint)"
-fi
+  else
+    record BLOCKED CPA_refus_systeme "écran caméra non atteint (ni « Filme ta prise » ni bouton d'enregistrement)"
+  fi
 sleep 2
 if adb shell pidof "$PKG" >/dev/null 2>&1; then
   record PASS CPA_app_vivante "processus vivant après refus de permission (aucun crash)"
@@ -473,17 +483,25 @@ if $UI wait --text "Filme ta prise" --timeout 30 >/dev/null 2>&1; then
     else
       record FAIL CPB_prise1 "retour au guide mais AUCUN fichier rush (voir B01)"
     fi
-    # B2 : « Refaire » — le fichier de la prise DOIT disparaître
+    # B2 : « Refaire » — SÉMANTIQUE PRODUIT RÉELLE (D42.26-18e) : le bouton
+    # vide le slot de la prise COURANTE (CameraGuideActivity.redoCurrentPrise,
+    # L382-386 : garde lastRecordedForIdx == priseIdx). Or après une prise
+    # VALIDÉE, le guide AUTO-AVANCE (onPriseFinalisee : priseIdx++ — dumps
+    # B01 : « PRISE 2/3 ») : « Refaire » ne peut DONC PAS supprimer la prise
+    # précédente — c'est le comportement conçu, pas un défaut. La reprise
+    # d'une prise = la re-TOURNER (B3). Ici on vérifie l'HONNÊTETÉ de cette
+    # sémantique : « Refaire » actionné après auto-avancement NE DÉTRUIT PAS
+    # les prises déjà faites (aucune perte de travail du commerçant).
     if $UI wait --text "Refaire" --exact --timeout 15 >/dev/null 2>&1 \
        || { swipe_v 73 21 300 >/dev/null 2>&1; sleep 1; $UI wait --text "Refaire" --exact --timeout 10 >/dev/null 2>&1; }; then
       $UI tap --text "Refaire" --exact --timeout 10 >/dev/null 2>&1
       sleep 3
       n2=$(compter_rushs)
       shot B02_apres_refaire; dump B02_apres_refaire
-      if [ "$n2" -lt "$n1" ] || [ "$n2" -eq 0 ]; then
-        record PASS CPB_refaire_supprime "« Refaire » : fichier de la prise SUPPRIMÉ ($n1 -> $n2 rush(s))"
+      if [ "$n2" -eq "$n1" ]; then
+        record PASS CPB_refaire_semantique "« Refaire » après auto-avancement (PRISE $((n1+1))/N) : prises précédentes INTACTES ($n2 rush(s)) — sémantique conçue : le bouton ne vide que le slot COURANT (L382-386) ; reprendre une prise = la re-tourner (contrôle suivant)"
       else
-        record FAIL CPB_refaire_supprime "« Refaire » actionné mais $n2 rush(s) toujours en fichiers (voir B02)"
+        record FAIL CPB_refaire_semantique "« Refaire » a modifié les fichiers ($n1 -> $n2) après auto-avancement — inattendu pour la sémantique conçue (voir B02)"
       fi
       # B3 : re-filmage de la prise
       filmmer_une_prise; rcB=$?
@@ -495,12 +513,12 @@ if $UI wait --text "Filme ta prise" --timeout 30 >/dev/null 2>&1; then
         record FAIL CPB_reprise "re-filmage impossible (rc=$rcB, $n3 rush(s)) — voir B03"
       fi
     else
-      record BLOCKED CPB_refaire_supprime "bouton « Refaire » introuvable après la prise (voir B01)"
+      record BLOCKED CPB_refaire_semantique "bouton « Refaire » introuvable après la prise (voir B01)"
       record BLOCKED CPB_reprise "dépend du bouton Refaire"
     fi
   else
     record BLOCKED CPB_prise1 "première prise impossible (rc=$rcA)"
-    record BLOCKED CPB_refaire_supprime "dépend de la première prise"
+    record BLOCKED CPB_refaire_semantique "dépend de la première prise"
     record BLOCKED CPB_reprise "dépend de la première prise"
   fi
 
@@ -542,7 +560,7 @@ if $UI wait --text "Filme ta prise" --timeout 30 >/dev/null 2>&1; then
   fi
 else
   record BLOCKED CPB_prise1 "guide non atteint en phase B (voir CPB_guide)"
-  record BLOCKED CPB_refaire_supprime "guide non atteint"
+  record BLOCKED CPB_refaire_semantique "guide non atteint"
   record BLOCKED CPB_reprise "guide non atteint"
   record BLOCKED CPB_guide_termine "guide non atteint"
   record BLOCKED CPB_conservation "guide non atteint"
