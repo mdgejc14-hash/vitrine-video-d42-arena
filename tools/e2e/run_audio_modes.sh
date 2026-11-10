@@ -147,11 +147,29 @@ injecter_bgm() { # -> nombre de fichiers réellement injectés
   echo "$n"
 }
 
-swipe_v() { # y1% y2% durée_ms — glissement vertical lent (P1 éprouvé)
-  local w h x
-  w=$($UI size 2>/dev/null | awk '{print $2}'); h=$($UI size 2>/dev/null | awk '{print $4}')
-  x=$(( w * 50 / 100 ))
-  adb shell input swipe "$x" "$(( h * $1 / 100 ))" "$x" "$(( h * $2 / 100 ))" "$3" >/dev/null 2>&1
+# D42.28-29 : lecture de taille ÉPROUVÉE de run_p1.sh (adb wm size direct,
+# override prioritaire, repli 1080x2340). L'ancienne swipe_v locale parsait
+# « $UI size | awk '{print $2}' » en attendant « w W h H », mais ui.py cmd_size
+# sort « E2E screen=1080x2340 » : w recevait « screen=1080x2340 » et
+# $(( w * 50 / 100 )) levait « value too great for base (error token is
+# "1080x2340") » — erreur arithmétique qui fait ABANDONNER par bash la
+# commande composite appelante (le for de la passe basse ENTIER) : c'est le
+# « corps avalé » des runs v7b→v12 (42771629495→42811797111), invisible car
+# le message partait dans le >/dev/null 2>&1 de l'appel.
+lire_taille_ecran() { # override prioritaire sur la taille physique
+  EFF_W=1080; EFF_H=2340
+  local sz ov ph
+  sz=$(adb shell wm size 2>/dev/null | tr -d '\r')
+  ov=$(printf '%s\n' "$sz" | sed -n 's/.*Override size: \([0-9]*\)x\([0-9]*\).*/\1 \2/p')
+  if [ -n "$ov" ]; then EFF_W=${ov% *}; EFF_H=${ov#* }; else
+    ph=$(printf '%s\n' "$sz" | sed -n 's/.*Physical size: \([0-9]*\)x\([0-9]*\).*/\1 \2/p')
+    [ -n "$ph" ] && { EFF_W=${ph% *}; EFF_H=${ph#* }; }
+  fi
+}
+lire_taille_ecran
+swipe_v() { # y1pct y2pct [ms] — swipe VERTICAL au centre, relatif à la hauteur
+  adb shell input swipe $(( EFF_W / 2 )) $(( EFF_H * $1 / 100 )) \
+    $(( EFF_W / 2 )) $(( EFF_H * $2 / 100 )) "${3:-250}" >/dev/null 2>&1
 }
 
 app_ls() { # app_ls <rep-relatif> [flags ls] -> liste sur stdout (P1 éprouvé)
@@ -742,16 +760,18 @@ sleep 3
 $UI wait --text "$EXP_RUNNING" --timeout 90 >/dev/null 2>&1 \
   || $UI wait --text "$EXP_DONE" --timeout 5 >/dev/null 2>&1
 
-# fin d'export (fenêtre 40 min, P1 éprouvé). D42.28-17 : l'attente ne
+# fin d'export (fenêtre 75 min — D42.28-29 : avec la BGM réellement mixée,
+# l'export dépasse 40 min sur l'émulateur swiftshader, cf. lab 42811778574 ;
+# jobs portés à timeout-minutes: 330). D42.28-17 : l'attente ne
 # s'applique QUE si l'export a été lancé — sinon le parcours est déjà en échec
 # et la cellule brûlait 40 min pour rien (run 42742781593 : 3×45 min stériles,
 # timeout job 150 min atteint, run annulé).
 if [ "$export_lance" = "1" ]; then
-  if $UI wait --text "$EXP_DONE" --exact --timeout 2400 >/dev/null 2>&1; then
+  if $UI wait --text "$EXP_DONE" --exact --timeout 4500 >/dev/null 2>&1; then
     record PASS "P3_export_termine_${LANGUE}_${MODE}" "« $EXP_DONE » affiché"
     shot "29_export_termine"; dump "29_export_termine"
   else
-    record FAIL "P3_export_termine_${LANGUE}_${MODE}" "aucune fin d'export en 40 min"
+    record FAIL "P3_export_termine_${LANGUE}_${MODE}" "aucune fin d'export en 75 min"
     shot "29_export_timeout"; dump "29_export_timeout"
   fi
 else

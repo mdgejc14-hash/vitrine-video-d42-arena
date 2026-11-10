@@ -26,7 +26,7 @@ jobs:
   p3-musique:
     if: contains(github.event.inputs.modes || 'musique voix mix', 'musique')
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v4
 
@@ -85,7 +85,7 @@ jobs:
   p3-voix:
     if: contains(github.event.inputs.modes || 'musique voix mix', 'voix')
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v4
 
@@ -144,7 +144,7 @@ jobs:
   p3-mix:
     if: contains(github.event.inputs.modes || 'musique voix mix', 'mix')
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v4
 
