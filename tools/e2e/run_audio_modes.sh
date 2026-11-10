@@ -321,7 +321,18 @@ valeur_pour() { # libellé (FR, design produit) -> valeur valide
     *)                                echo "Essai" ;;
   esac
 }
-# remplissage piloté par libellé + passes de complétion (P1 éprouvé)
+# remplissage piloté par libellé + passes de complétion (copie EXACTE du P1,
+# éprouvée 16/16 au lab — y compris remonter_formulaire, absent de la version
+# précédente : le quartier, sous le pli en bas, restait vide et le bouton
+# Continuer désactivé → parcours figé sur le brief, run 42742781593).
+remonter_formulaire() { # retour en haut : les coordonnées des champs y sont valides
+  local i
+  for i in 1 2 3; do
+    swipe_v 26 73 250 >/dev/null 2>&1
+    sleep 1
+  done
+}
+remonter_formulaire
 remplis=0; deja=" "; sans_effet=0
 for tour in 1 2 3 4 5 6 7 8 9 10 11 12; do
   $UI champs > "$OUT/champs.txt" 2>&1 || true
@@ -335,7 +346,8 @@ for tour in 1 2 3 4 5 6 7 8 9 10 11 12; do
     val=$(valeur_pour "$libelle")
     deja="$deja|$libelle|"
     progresse=1
-    [ -z "$val" ] && continue
+    if [ -z "$val" ]; then echo "E2E P3 champ laissé prérempli : [$libelle]"; continue; fi
+    echo "E2E P3 remplissage [$libelle] <- $val"
     remplir_champ "$idx" "$val" "$OUT/champs.txt" && remplis=$((remplis+1))
     break
   done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
@@ -347,7 +359,10 @@ for tour in 1 2 3 4 5 6 7 8 9 10 11 12; do
   fi
 done
 for passe in 1 2 3; do
-  [ "$passe" -gt 1 ] && { swipe_v 73 26 250 >/dev/null 2>&1; sleep 1; }
+  if [ "$passe" -gt 1 ]; then
+    swipe_v 73 26 250 >/dev/null 2>&1
+    sleep 1
+  fi
   fermer_clavier
   $UI champs > "$OUT/champs.txt" 2>&1 || true
   restant=0
@@ -359,23 +374,34 @@ for passe in 1 2 3; do
     val=$(valeur_pour "$libelle")
     [ -n "$val" ] || continue
     restant=$((restant+1))
+    echo "E2E P3 complément [$libelle] <- $val"
     remplir_champ "$idx" "$val" "$OUT/champs.txt" && remplis=$((remplis+1))
     break
   done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
   [ "$restant" = "0" ] && [ "$passe" -ge 2 ] && break
 done
-echo "E2E P3 champs remplis : $remplis"
+echo "E2E P3 champs remplis (après complément) : $remplis"
+$UI champs > "$OUT/champs_apres.txt" 2>&1 || true
+sed 's/^/E2E P3 /' "$OUT/champs_apres.txt"
 trouve=0
 for _ in 1 2 3 4 5 6; do
   if $UI wait --text "$CONTINUER" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
   swipe_v 73 26 250 >/dev/null 2>&1
   sleep 1
 done
+if grep -q " vide " "$OUT/champs_apres.txt" 2>/dev/null; then
+  champ_manquant=$(grep " vide " "$OUT/champs_apres.txt" | head -1 | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
+  echo "E2E P3 AVERTISSEMENT : champ encore vide après complément : [$champ_manquant]"
+fi
 $UI tap --text "$CONTINUER" --exact --timeout 15 >/dev/null 2>&1 || true
 if $UI wait --text "$E4B" --exact --timeout 25 >/dev/null 2>&1; then
   record PASS "P3_brief_valide_${LANGUE}" "brief accepté → « $E4B »"
 else
-  record FAIL "P3_brief_valide_${LANGUE}" "écran « $E4B » absent après validation du brief"
+  if grep -q " vide " "$OUT/champs_apres.txt" 2>/dev/null; then
+    record FAIL "P3_brief_valide_${LANGUE}" "champ requis resté vide ([$champ_manquant]) : bouton Continuer désactivé — écran « $E4B » jamais atteint"
+  else
+    record FAIL "P3_brief_valide_${LANGUE}" "tous les champs remplis mais écran « $E4B » absent après Continuer (voir champs_apres.txt / dumps)"
+  fi
 fi
 $UI tap --text "$E4B_OK" --exact --timeout 15 >/dev/null 2>&1 || true
 sleep 3
@@ -582,11 +608,13 @@ if $UI wait --text "$E7" --timeout 30 >/dev/null 2>&1; then
 else
   record BLOCKED "P3_apercu_${LANGUE}" "écran d'aperçu non atteint"
 fi
+export_lance=0
 if $UI wait --text "$EXP_START" --exact --timeout 5 >/dev/null 2>&1; then
   revele "$EXP_START" >/dev/null 2>&1 || true
   $UI tap --text "$EXP_START" --exact --timeout 8 >/dev/null 2>&1
   sleep 2
   if $UI wait --text "$EXP_RUNNING" --timeout 25 >/dev/null 2>&1; then
+    export_lance=1
     record PASS "P3_export_lance_${LANGUE}_${MODE}" "export lancé : « $EXP_RUNNING »"
   else
     record FAIL "P3_export_lance_${LANGUE}_${MODE}" "aucun statut de démarrage constaté"
@@ -608,12 +636,20 @@ sleep 3
 $UI wait --text "$EXP_RUNNING" --timeout 90 >/dev/null 2>&1 \
   || $UI wait --text "$EXP_DONE" --timeout 5 >/dev/null 2>&1
 
-# fin d'export (fenêtre 40 min, P1 éprouvé)
-if $UI wait --text "$EXP_DONE" --exact --timeout 2400 >/dev/null 2>&1; then
-  record PASS "P3_export_termine_${LANGUE}_${MODE}" "« $EXP_DONE » affiché"
-  shot "29_export_termine"; dump "29_export_termine"
+# fin d'export (fenêtre 40 min, P1 éprouvé). D42.28-17 : l'attente ne
+# s'applique QUE si l'export a été lancé — sinon le parcours est déjà en échec
+# et la cellule brûlait 40 min pour rien (run 42742781593 : 3×45 min stériles,
+# timeout job 150 min atteint, run annulé).
+if [ "$export_lance" = "1" ]; then
+  if $UI wait --text "$EXP_DONE" --exact --timeout 2400 >/dev/null 2>&1; then
+    record PASS "P3_export_termine_${LANGUE}_${MODE}" "« $EXP_DONE » affiché"
+    shot "29_export_termine"; dump "29_export_termine"
+  else
+    record FAIL "P3_export_termine_${LANGUE}_${MODE}" "aucune fin d'export en 40 min"
+    shot "29_export_timeout"; dump "29_export_timeout"
+  fi
 else
-  record FAIL "P3_export_termine_${LANGUE}_${MODE}" "aucune fin d'export en 40 min"
+  record FAIL "P3_export_termine_${LANGUE}_${MODE}" "export jamais lancé — attente de fin esquivée (voir verdicts amont)"
   shot "29_export_timeout"; dump "29_export_timeout"
 fi
 
