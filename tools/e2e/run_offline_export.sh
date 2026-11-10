@@ -37,10 +37,13 @@ rm -f "$MARQUEUR_COUPE"
 # connexion ». La coupure a lieu APRÈS l'injection : tout le reste du
 # parcours (fin de brief, prises, aperçu, export) se fait SANS réseau.
 CAT_BGM="musique_t1_shops_small_business"   # T1 « Nouvel arrivage » du secteur commerce (P1)
-BGM_LOCAL="$OUT/bgm_titulaire.mp3"
-if bash tools/e2e/fetch_bgm_titulaire.sh "$CAT_BGM" "$BGM_LOCAL"; then
-  echo "E2E BGM titulaire téléchargé : $(wc -c < "$BGM_LOCAL") octets"
+BGM_BASE="$OUT/bgm_titulaire"               # base : .mp3/.m4a + .ext selon le format servi
+if bash tools/e2e/fetch_bgm_titulaire.sh "$CAT_BGM" "$BGM_BASE"; then
+  BGM_EXT=$(cat "$BGM_BASE.ext" 2>/dev/null | tr -d '\r\n' || echo mp3)
+  BGM_LOCAL="$BGM_BASE.$BGM_EXT"
+  echo "E2E BGM titulaire téléchargé : $BGM_LOCAL ($(wc -c < "$BGM_LOCAL") octets, format $BGM_EXT)"
 else
+  BGM_EXT=""; BGM_LOCAL=""
   echo "E2E AVERTISSEMENT : BGM titulaire non téléchargé — le test offline avec musique ne peut pas s'établir"
 fi
 
@@ -65,10 +68,10 @@ retablir_reseau() {
     i=$((i+1))
     if adb shell uiautomator dump /sdcard/offexp_probe.xml >/dev/null 2>&1 \
        && adb exec-out cat /sdcard/offexp_probe.xml 2>/dev/null | grep -q "Ma vidéo"; then
-      if [ -s "$BGM_LOCAL" ] \
-         && adb push "$BGM_LOCAL" /data/local/tmp/bgm_inject.mp3 >/dev/null 2>&1 \
-         && adb shell run-as "$PKG" cp /data/local/tmp/bgm_inject.mp3 "files/bgm/${CAT_BGM}.mp3" >/dev/null 2>&1 \
-         && adb shell run-as "$PKG" ls files/bgm 2>/dev/null | tr -d '\r' | grep -q "${CAT_BGM}.mp3"; then
+      if [ -n "$BGM_EXT" ] && [ -s "$BGM_LOCAL" ] \
+         && adb push "$BGM_LOCAL" /data/local/tmp/bgm_inject."$BGM_EXT" >/dev/null 2>&1 \
+         && adb shell run-as "$PKG" cp /data/local/tmp/bgm_inject."$BGM_EXT" "files/bgm/${CAT_BGM}.${BGM_EXT}" >/dev/null 2>&1 \
+         && adb shell run-as "$PKG" ls files/bgm 2>/dev/null | tr -d '\r' | grep -q "${CAT_BGM}.${BGM_EXT}"; then
         sleep 2
         couper_reseau
         {
@@ -82,8 +85,8 @@ retablir_reseau() {
         touch "$MARQUEUR_COUPE"
         break
       else
-        TAILLE_BGM=0; [ -f "$BGM_LOCAL" ] && TAILLE_BGM=$(wc -c < "$BGM_LOCAL")
-        echo "[$(date -u +%H:%M:%S)] it=$i : brief détecté mais injection BGM impossible (fichier runner : ${TAILLE_BGM} o)" >> "$OUT/surveillant.log"
+        TAILLE_BGM=0; [ -n "$BGM_LOCAL" ] && [ -f "$BGM_LOCAL" ] && TAILLE_BGM=$(wc -c < "$BGM_LOCAL")
+        echo "[$(date -u +%H:%M:%S)] it=$i : brief détecté mais injection BGM impossible (fichier runner : ${TAILLE_BGM} o, ext=${BGM_EXT:-aucune})" >> "$OUT/surveillant.log"
       fi
     fi
     if [ $((i % 20)) -eq 1 ]; then

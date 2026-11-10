@@ -63,7 +63,7 @@ case "$LANGUE" in
   fr) CARTE="Français"; AUTH="Continuer avec Google"; S1="Filme. Vends. C'est tout."
       S2="Filme tes produits, on te guide"; S3="Une vidéo prête à publier en 30 secondes"
       SUIVANT="Suivant"; DEMARRER="Commencer"; SECTEUR="Ton activité principale"
-      CONTINUER="Continuer"; SANS_CODE="Je n'ai pas de code"; CATALOGUE="Choisissez un modèle de vidéo"
+      CONTINUER="Continuer"; CONTINUER_BRIEF="Continuer"; SANS_CODE="Je n'ai pas de code"; CATALOGUE="Choisissez un modèle de vidéo"
       BRIEF="Ma vidéo"; E4B="Avant de commencer"; E4B_OK="OK, je commence"
       E6="Filme ta prise"; E6_REC="Tourner"; CAM_REC="Verrouiller et enregistrer"; CAM_STOP="Arrêter et continuer"
       R4="Accord du client"; R4_OK="Oui, accord confirmé"
@@ -76,7 +76,7 @@ case "$LANGUE" in
   en) CARTE="English"; AUTH="Continue with Google"; S1="Shoot. Sell. Done."
       S2="Film your products, we guide you"; S3="A video ready to post in 30 seconds"
       SUIVANT="Next"; DEMARRER="Get started"; SECTEUR="Your main business"
-      CONTINUER="Continue"; SANS_CODE="I don't have a code"; CATALOGUE="Pick a video template"
+      CONTINUER="Continue"; CONTINUER_BRIEF="Continue"; SANS_CODE="I don't have a code"; CATALOGUE="Pick a video template"
       BRIEF="My video"; E4B="Before you start"; E4B_OK="OK, I start"
       E6="Film your take"; E6_REC="Record"; CAM_REC="Lock and record"; CAM_STOP="Stop and continue"
       R4="Client agreement"; R4_OK="Yes, agreement confirmed"
@@ -89,7 +89,7 @@ case "$LANGUE" in
   es) CARTE="Español"; AUTH="Continuar con Google"; S1="Filma. Vende. Listo."
       S2="Filma tus productos, te guiamos"; S3="Un vídeo listo para publicar en 30 segundos"
       SUIVANT="Siguiente"; DEMARRER="Empezar"; SECTEUR="Tu actividad principal"
-      CONTINUER="Continuar"; SANS_CODE="No tengo código"; CATALOGUE="Elige una plantilla de vídeo"
+      CONTINUER="Continuar"; CONTINUER_BRIEF="Continuar"; SANS_CODE="No tengo código"; CATALOGUE="Elige una plantilla de vídeo"
       BRIEF="Mi video"; E4B="Antes de comenzar"; E4B_OK="OK, comienzo"
       E6="Filma tu toma"; E6_REC="Grabar"; CAM_REC="Bloquear y grabar"; CAM_STOP="Terminar y continuar"
       R4="Acuerdo del cliente"; R4_OK="Sí, acuerdo confirmado"
@@ -102,7 +102,7 @@ case "$LANGUE" in
   ja) CARTE="日本語"; AUTH="Googleで続ける"; S1="撮って、売る。それだけ。"
       S2="商品を撮るだけ、あとはご案内します"; S3="30秒で公開できる動画に"
       SUIVANT="次へ"; DEMARRER="はじめる"; SECTEUR="あなたの業種"
-      CONTINUER="次へ"; SANS_CODE="コードを持っていません"; CATALOGUE="動画テンプレートを選択"
+      CONTINUER="次へ"; CONTINUER_BRIEF="続行"; SANS_CODE="コードを持っていません"; CATALOGUE="動画テンプレートを選択"
       BRIEF="マイ動画"; E4B="始める前に"; E4B_OK="OK、開始"
       E6="撮影しよう"; E6_REC="録画"; CAM_REC="ロックして録画"; CAM_STOP="停止して続行"
       R4="顧客の同意"; R4_OK="はい、同意を確認"
@@ -120,10 +120,13 @@ case "$MODE" in musique|voix|mix) ;; *) echo "mode inconnu : $MODE (musique|voix
 # de test A — le produit ne télécharge pas le BGM en session démo). Injecté
 # plus bas selon le mode (musique/mix).
 CAT_BGM="musique_t1_shops_small_business"
-BGM_LOCAL="$OUT/bgm_titulaire.mp3"
+BGM_BASE="$OUT/bgm_titulaire"   # base : .mp3/.m4a + .ext selon le format servi
+BGM_EXT=""; BGM_LOCAL=""
 if [ "$MODE" != "voix" ]; then
-  if bash "$(dirname "$0")/fetch_bgm_titulaire.sh" "$CAT_BGM" "$BGM_LOCAL"; then
-    echo "bgm_telecharge=$(wc -c < "$BGM_LOCAL") o" >> "$OUT/constats_mode.txt"
+  if bash "$(dirname "$0")/fetch_bgm_titulaire.sh" "$CAT_BGM" "$BGM_BASE"; then
+    BGM_EXT=$(cat "$BGM_BASE.ext" 2>/dev/null | tr -d '\r\n' || echo mp3)
+    BGM_LOCAL="$BGM_BASE.$BGM_EXT"
+    echo "bgm_telecharge=$(wc -c < "$BGM_LOCAL") o (format $BGM_EXT)" >> "$OUT/constats_mode.txt"
   else
     echo "bgm_telecharge=ECHEC" >> "$OUT/constats_mode.txt"
   fi
@@ -315,7 +318,7 @@ valeur_pour() { # libellé (FR, design produit) -> valeur valide
     *commerce*|*boutique*)            echo "BoutiqueAwa" ;;
     *whatsapp*|*num*ro*|*t*l*phone*)  echo "+22997000000" ;;
     *prix*|*montant*)                 echo "15000" ;;
-    *monnaie*)                        echo "" ;;
+    *monnaie*)                        echo "FCFA" ;;   # si non préremplie (requis chez le mode, run 42764463666 : 4/6)
     *quartier*|*ville*|*adresse*)     echo "Akpakpa" ;;
     *nom*|*v*tement*|*produit*|*plat*|*travail*|*article*) echo "RobeWax" ;;
     *)                                echo "Essai" ;;
@@ -385,18 +388,27 @@ $UI champs > "$OUT/champs_apres.txt" 2>&1 || true
 sed 's/^/E2E P3 /' "$OUT/champs_apres.txt"
 trouve=0
 for _ in 1 2 3 4 5 6; do
-  if $UI wait --text "$CONTINUER" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
+  if $UI wait --text "$CONTINUER_BRIEF" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
   swipe_v 73 26 250 >/dev/null 2>&1
   sleep 1
 done
-# D42.28-19 : au bas du formulaire (bouton Continuer atteint), les DERNIERS
-# champs (quartier) sont enfin visibles — ils échappaient aux passes de
-# complément, qui s'arrêtaient sur un « restant=0 » de champs INVISIBLES
-# (run 42759742973 : 4/5 remplis, bouton désactivé, parcours figé).
-# Passe finale ICI, puis on redescend vers le bouton.
+# D42.28-20 : les champs du bas (quartier) échappent aux passes de complément
+# qui lisent les champs AVANT de défiler (run 42764463666 : champs_bas.txt
+# pris en HAUT du formulaire, 4/6 requis remplis, bouton Continuer désactivé,
+# parcours figé sur le brief). Méthode d'un utilisateur réel : DESCENDRE
+# D'ABORD jusqu'au bouton Continuer (preuve par wait), PUIS lire et remplir
+# ce qui est visible, et recommencer tant qu'un champ visible est vide.
 for passe_bas in 1 2 3; do
   fermer_clavier
+  # descendre jusqu'au bouton Continuer (le clavier fermé, 6 pas suffisent)
+  for _ in 1 2 3 4 5 6; do
+    if $UI wait --text "$CONTINUER_BRIEF" --exact --timeout 2 >/dev/null 2>&1; then break; fi
+    swipe_v 73 26 250 >/dev/null 2>&1
+    sleep 1
+  done
+  shot "22b_bas_${passe_bas}"; dump "22b_bas_${passe_bas}"
   $UI champs > "$OUT/champs_bas.txt" 2>&1 || true
+  sed 's/^/E2E P3 bas /' "$OUT/champs_bas.txt"
   vide_bas=$(grep -c " vide " "$OUT/champs_bas.txt" 2>/dev/null || echo 0)
   [ "$vide_bas" = "0" ] && break
   while IFS= read -r ligne; do
@@ -414,7 +426,7 @@ $UI champs > "$OUT/champs_apres.txt" 2>&1 || true
 sed 's/^/E2E P3 /' "$OUT/champs_apres.txt"
 # redescendre vers le bouton si la passe basse a fait défiler
 for _ in 1 2 3 4; do
-  if $UI wait --text "$CONTINUER" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
+  if $UI wait --text "$CONTINUER_BRIEF" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
   swipe_v 73 26 250 >/dev/null 2>&1
   sleep 1
 done
@@ -422,7 +434,7 @@ if grep -q " vide " "$OUT/champs_apres.txt" 2>/dev/null; then
   champ_manquant=$(grep " vide " "$OUT/champs_apres.txt" | head -1 | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
   echo "E2E P3 AVERTISSEMENT : champ encore vide après complément : [$champ_manquant]"
 fi
-$UI tap --text "$CONTINUER" --exact --timeout 15 >/dev/null 2>&1 || true
+$UI tap --text "$CONTINUER_BRIEF" --exact --timeout 15 >/dev/null 2>&1 || true
 if $UI wait --text "$E4B" --exact --timeout 25 >/dev/null 2>&1; then
   record PASS "P3_brief_valide_${LANGUE}" "brief accepté → « $E4B »"
 else
@@ -539,15 +551,15 @@ case "$MODE" in
     # la piste titulaire T1 (téléchargée au démarrage de la cellule via le
     # compte de test A) : l'export doit alors l'utiliser (localFile au
     # repli de ExportActivity) — c'est le mode « musique » réel.
-    if [ -s "$BGM_LOCAL" ] \
-       && adb push "$BGM_LOCAL" /data/local/tmp/bgm.mp3 >/dev/null 2>&1 \
-       && adb shell run-as "$PKG" cp /data/local/tmp/bgm.mp3 "files/bgm/${CAT_BGM}.mp3" >/dev/null 2>&1 \
-       && app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -q "${CAT_BGM}.mp3"; then
-      echo "bgm_injecte=${CAT_BGM}.mp3 ($(wc -c < "$BGM_LOCAL") o)" >> "$OUT/constats_mode.txt"
+    if [ -n "$BGM_EXT" ] && [ -s "$BGM_LOCAL" ] \
+       && adb push "$BGM_LOCAL" /data/local/tmp/bgm."$BGM_EXT" >/dev/null 2>&1 \
+       && adb shell run-as "$PKG" cp /data/local/tmp/bgm."$BGM_EXT" "files/bgm/${CAT_BGM}.${BGM_EXT}" >/dev/null 2>&1 \
+       && app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -q "${CAT_BGM}.${BGM_EXT}"; then
+      echo "bgm_injecte=${CAT_BGM}.${BGM_EXT} ($(wc -c < "$BGM_LOCAL") o)" >> "$OUT/constats_mode.txt"
     else
       echo "bgm_injection=ECHEC" >> "$OUT/constats_mode.txt"
     fi
-    n_bgm=$(app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -c '\.mp3')
+    n_bgm=$(app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -cE '\.mp3|\.m4a')
     echo "bgm_en_cache=$n_bgm" >> "$OUT/constats_mode.txt"
     ;;
   voix|mix)
@@ -594,15 +606,15 @@ case "$MODE" in
     else
       # mode MIX : injecter AUSSI le BGM titulaire (même méthode que le mode
       # musique) : voix dans les rushs + musique en cache = mix réel.
-      if [ -s "$BGM_LOCAL" ] \
-         && adb push "$BGM_LOCAL" /data/local/tmp/bgm.mp3 >/dev/null 2>&1 \
-         && adb shell run-as "$PKG" cp /data/local/tmp/bgm.mp3 "files/bgm/${CAT_BGM}.mp3" >/dev/null 2>&1 \
-         && app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -q "${CAT_BGM}.mp3"; then
-        echo "bgm_injecte=${CAT_BGM}.mp3 ($(wc -c < "$BGM_LOCAL") o)" >> "$OUT/constats_mode.txt"
+      if [ -n "$BGM_EXT" ] && [ -s "$BGM_LOCAL" ] \
+         && adb push "$BGM_LOCAL" /data/local/tmp/bgm."$BGM_EXT" >/dev/null 2>&1 \
+         && adb shell run-as "$PKG" cp /data/local/tmp/bgm."$BGM_EXT" "files/bgm/${CAT_BGM}.${BGM_EXT}" >/dev/null 2>&1 \
+         && app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -q "${CAT_BGM}.${BGM_EXT}"; then
+        echo "bgm_injecte=${CAT_BGM}.${BGM_EXT} ($(wc -c < "$BGM_LOCAL") o)" >> "$OUT/constats_mode.txt"
       else
         echo "bgm_injection=ECHEC" >> "$OUT/constats_mode.txt"
       fi
-      n_bgm=$(app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -c '\.mp3')
+      n_bgm=$(app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -cE '\.mp3|\.m4a')
       echo "bgm_en_cache=$n_bgm" >> "$OUT/constats_mode.txt"
     fi
     ;;
