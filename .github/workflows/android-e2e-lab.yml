@@ -639,7 +639,7 @@ jobs:
 
   # ---------------------------------------------------------------------------
   # Backend HTTP — Worker réellement démarré (wrangler dev) sur une base D1
-  # locale construite par les 12 migrations. Aucun accès réseau externe, aucune
+  # locale construite par les migrations du dépôt. Aucun accès réseau externe, aucune
   # donnée de production, aucun jeton Cloudflare.
   # ---------------------------------------------------------------------------
   backend-http:
@@ -652,7 +652,7 @@ jobs:
           node-version: '22'
       - name: Dépendances
         run: npm install --no-audit --no-fund 2>&1 | tail -5
-      - name: Appliquer les 12 migrations sur D1 local
+      - name: Appliquer les migrations du dépôt sur D1 local
         run: |
           set -euo pipefail
           for m in db/migrations/*.sql; do

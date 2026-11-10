@@ -154,7 +154,7 @@ async function main() {
     base.exec(readFileSync(join(RACINE, "db/migrations", f), "utf8"));
     appliquees += 1;
   }
-  verifier("Migrations appliquées sur SQLite locale", appliquees === 12, `${appliquees}/12 fichiers`);
+  verifier("Migrations appliquées sur SQLite locale", appliquees >= 12, `${appliquees} fichiers (>= 12, migrations additives)`);
   base.close();
 
   // 2. Clé de test + JWKS locale + interception

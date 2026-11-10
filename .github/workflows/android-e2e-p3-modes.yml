@@ -63,13 +63,7 @@ jobs:
           profile: pixel_5
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
-          script: |
-            adb devices
-            for L in fr en es ja; do
-              echo "===== P3 musique / $L ====="
-              bash tools/e2e/run_audio_modes.sh p3 "$L" musique app/build/outputs/apk/debug/app-debug.apk
-            done
-            true
+          script: adb devices && bash tools/e2e/run_p3_matrix.sh musique app/build/outputs/apk/debug/app-debug.apk
 
       - name: Artefact p3-musique
         if: always()
@@ -122,13 +116,7 @@ jobs:
           profile: pixel_5
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
-          script: |
-            adb devices
-            for L in fr en es ja; do
-              echo "===== P3 voix / $L ====="
-              bash tools/e2e/run_audio_modes.sh p3 "$L" voix app/build/outputs/apk/debug/app-debug.apk
-            done
-            true
+          script: adb devices && bash tools/e2e/run_p3_matrix.sh voix app/build/outputs/apk/debug/app-debug.apk
 
       - name: Artefact p3-voix
         if: always()
@@ -181,13 +169,7 @@ jobs:
           profile: pixel_5
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front none
-          script: |
-            adb devices
-            for L in fr en es ja; do
-              echo "===== P3 mix / $L ====="
-              bash tools/e2e/run_audio_modes.sh p3 "$L" mix app/build/outputs/apk/debug/app-debug.apk
-            done
-            true
+          script: adb devices && bash tools/e2e/run_p3_matrix.sh mix app/build/outputs/apk/debug/app-debug.apk
 
       - name: Artefact p3-mix
         if: always()
