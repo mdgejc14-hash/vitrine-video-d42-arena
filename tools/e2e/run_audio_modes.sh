@@ -430,15 +430,23 @@ basse_passe() { # $1 = numéro de passe
       pas_bas=1
       break
     fi
-    swipe_v 78 20 600 >/dev/null 2>&1
+    # D42.28-27 (v12) : PAS de redirection sur cet appel — v11 a montré la
+    # trace s'arrêter précisément ici ; le corps de swipe_v et la suite de
+    # la boucle étaient invisibles car >/dev/null 2>&1 masque aussi le
+    # xtrace interne de la fonction appelée (swipe_v est auto-contenue :
+    # ses sorties sont déjà capturées/redirigées en son sein).
+    swipe_v 78 20 600
+    echo "E2E P3 [passe basse $1] apres swipe n=$n rc=$?"
     sleep 1
     if $UI wait --text "$CONTINUER_BRIEF" --exact --timeout 1 >/dev/null 2>&1; then
       pas_bas=1
       break
     fi
-    adb shell input keyevent KEYCODE_PAGE_DOWN >/dev/null 2>&1
+    adb shell input keyevent KEYCODE_PAGE_DOWN
+    echo "E2E P3 [passe basse $1] apres page_down n=$n rc=$?"
     sleep 1
   done
+  echo "E2E P3 [passe basse $1] boucle while finie n=$n pas_bas=${pas_bas:-0}"
   echo "E2E P3 [passe basse $1] bouton atteint=${pas_bas:-0} (essais=${n})"
   shot "22b_bas_$1"
   dump "22b_bas_$1"
