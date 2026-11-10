@@ -407,44 +407,61 @@ for _ in 1 2 3 4 5 6; do
   swipe_v 73 26 250 >/dev/null 2>&1
   sleep 1
 done
-# D42.28-20 : les champs du bas (quartier) échappent aux passes de complément
-# qui lisent les champs AVANT de défiler (run 42764463666 : champs_bas.txt
-# pris en HAUT du formulaire, 4/6 requis remplis, bouton Continuer désactivé,
-# parcours figé sur le brief). Méthode d'un utilisateur réel : DESCENDRE
-# D'ABORD jusqu'au bouton Continuer (preuve par wait), PUIS lire et remplir
-# ce qui est visible, et recommencer tant qu'un champ visible est vide.
-for passe_bas in 1 2 3; do
-  echo "E2E P3 [passe basse ${passe_bas}] début"
+# D42.28-23 : passe basse ISOLÉE EN FONCTION (contournement : aux runs
+# 42771629495/42779450774, l'écho d'entrée de la boucle inline s'affichait
+# puis le corps sautait — ni shot 22b_bas, ni champs_bas.txt dans les
+# artefacts — alors que le blob exécuté les contient ; même structure que
+# les fonctions qui, elles, s'exécutent toujours (remplir_champ, etc.).
+basse_passe() { # $1 = numéro de passe
+  echo "E2E P3 [passe basse $1] début"
   fermer_clavier
-  # descendre jusqu'au bouton Continuer — 6 pas, alternatives de méthode :
-  # swipe lent PUIS keyevent PAGE_DOWN (certains scrollables Compose
-  # n'adhèrent pas aux swipes courts de input swipe)
   pas_bas=0
-  for _ in 1 2 3 4 5 6; do
-    if $UI wait --text "$CONTINUER_BRIEF" --exact --timeout 2 >/dev/null 2>&1; then pas_bas=1; break; fi
+  n=0
+  while [ "$n" -lt 6 ]; do
+    n=$((n+1))
+    if $UI wait --text "$CONTINUER_BRIEF" --exact --timeout 2 >/dev/null 2>&1; then
+      pas_bas=1
+      break
+    fi
     swipe_v 78 20 600 >/dev/null 2>&1
     sleep 1
-    if $UI wait --text "$CONTINUER_BRIEF" --exact --timeout 1 >/dev/null 2>&1; then pas_bas=1; break; fi
+    if $UI wait --text "$CONTINUER_BRIEF" --exact --timeout 1 >/dev/null 2>&1; then
+      pas_bas=1
+      break
+    fi
     adb shell input keyevent KEYCODE_PAGE_DOWN >/dev/null 2>&1
     sleep 1
   done
-  echo "E2E P3 [passe basse ${passe_bas}] bouton atteint=${pas_bas}"
-  shot "22b_bas_${passe_bas}"; dump "22b_bas_${passe_bas}"
-  echo "E2E P3 [passe basse ${passe_bas}] shot/dump faits"
+  echo "E2E P3 [passe basse $1] bouton atteint=${pas_bas:-0} (essais=${n})"
+  shot "22b_bas_$1"
+  dump "22b_bas_$1"
+  echo "E2E P3 [passe basse $1] shot/dump faits ($(wc -c < "$OUT/22b_bas_$1.xml" 2>/dev/null || echo 0) octets de dump)"
   $UI champs > "$OUT/champs_bas.txt" 2>&1 || true
-  sed 's/^/E2E P3 bas /' "$OUT/champs_bas.txt"
+  nb_lignes=$(grep -c "^E2E CHAMP" "$OUT/champs_bas.txt" 2>/dev/null)
+  nb_lignes=${nb_lignes:-0}
+  echo "E2E P3 [passe basse $1] champs visibles=${nb_lignes} : $(tr '\n' ';' < "$OUT/champs_bas.txt" 2>/dev/null | head -c 400)"
+  vide_bas=$(grep -c " vide " "$OUT/champs_bas.txt" 2>/dev/null)
+  vide_bas=${vide_bas:-0}
+  echo "E2E P3 [passe basse $1] champs vides=${vide_bas}"
+  if [ "$vide_bas" != "0" ]; then
+    while IFS= read -r ligne; do
+      idx=$(echo "$ligne" | awk '{print $3}')
+      libelle=$(echo "$ligne" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
+      val=$(valeur_pour "$libelle")
+      if [ -n "$val" ]; then
+        echo "E2E P3 passe basse [$libelle] <- $val"
+        remplir_champ "$idx" "$val" "$OUT/champs_bas.txt" && remplis=$((remplis+1))
+      fi
+    done < <(grep "^E2E CHAMP " "$OUT/champs_bas.txt" | grep " vide " | head -1)
+  fi
+  return 0
+}
+
+for _passe_bas in 1 2 3; do
+  basse_passe "$_passe_bas"
   vide_bas=$(grep -c " vide " "$OUT/champs_bas.txt" 2>/dev/null)
   vide_bas=${vide_bas:-0}
   [ "$vide_bas" = "0" ] && [ -s "$OUT/champs_bas.txt" ] && break
-  while IFS= read -r ligne; do
-    idx=$(echo "$ligne" | awk '{print $3}')
-    libelle=$(echo "$ligne" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
-    val=$(valeur_pour "$libelle")
-    [ -n "$val" ] || continue
-    echo "E2E P3 passe basse [$libelle] <- $val"
-    remplir_champ "$idx" "$val" "$OUT/champs_bas.txt" && remplis=$((remplis+1))
-    break
-  done < <(grep "^E2E CHAMP " "$OUT/champs_bas.txt" | grep " vide ")
 done
 echo "E2E P3 champs remplis (passe basse incluse) : $remplis"
 $UI champs > "$OUT/champs_apres.txt" 2>&1 || true
