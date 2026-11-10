@@ -66,7 +66,12 @@ upload 42697768061 (600/600 r2 + 30 m4a + 30 mp3 titulaires). Déterminisme prou
 sha identiques entre les deux runs. Déploiement : deploy-production 42702350485
 (migrations 0001→0013 appliquées, worker redéployé, smoke PASS).
 
-**Re-audit post-déploiement** : ⏳ (résultat à inscrire — run 42728213996).
+**Re-audit post-déploiement (42728213996) : 26 PASS / 0 FAIL.** Attaque max
+**0,00 s** sur 600/600 ; silence en bord 0,00 s ; titulaires sans ?v : HTTP 206
+audio/mpeg (0/60 absente) ; sha256 intégral 600/600 ; EN_LIGNE 600/600, 6 secteurs,
+30 gabarits × 20 variations ; erreurs attendues 400/400/404 ; décodabilité 600/600 ;
+durées 34,4–57,7 s ; RMS moyen −17,6 dB (−18,9…−15,0) ; dynamique 11,7–17,5 dB ;
+0 clippé (peak −1,00 dB) ; σ inter-pistes 0,81 dB ; réconciliation B2 600/600.
 
 **Incident B2 (documenté, résolu par attente)** : le re-audit initial
 (42702694932) a échoué en masse (403 AccessDenied « Class B cap exceeded ») :
@@ -91,7 +96,24 @@ Premier passage : 40 PASS / 2 FAIL — DEUX DÉFAUTS DU BANC (adb perd les quote
 `sh -c 'ls …'` → surveillance inopérante, réseau resté ON ; ffprobe absent du
 runner), PAS de l'app (l'export lui-même a réussi : CONFIRMED, solde 2, rushs
 présents, zéro crash). Correctifs poussés (forme app_ls éprouvée + step ffmpeg).
-**Re-run : ⏳ (42728150094).**
+
+**Re-runs et diagnostic définitif** : 42728504073 : 40/2 puis 42737266239
+(banc instrumenté, abf3b5e) : 41/1. L'instrumentation (double sonde run-as/root,
+trace horodatée toutes les ~30 s, diagnostic post-run) a tranché : **files/bgm
+est créé mais reste VIDE du début à la fin (646 itérations)** — le message
+D42-VERIF « BGM planifiée — gain solo » ne prouve pas la musique : le worker
+l'émet pour BGM **OU SFX** (ExportWorker l.186) ; la piste audio 34 992 ms du MP4
+était la base silencieuse + SFX. Cause PRODUIT (et non un défaut) :
+ExportActivity l.250 — `token?.let { ensureGabaritCached } ?: localFile(categorie)` :
+**en session démo (sans jeton Firebase), le produit ne télécharge JAMAIS le BGM** ;
+l'export sort avec les SFX seuls. Le prérequis du banc (« BGM en cache ») ne peut
+donc être établi que PAR le banc : **v3 (4bef52b)** — piste titulaire
+`musique_t1_shops_small_business` téléchargée côté runner (compte de test A,
+signIn REST identitytoolkit + GET /audio/track, 206 audio/mpeg — route vérifiée
+401 en anonyme), INJECTÉE dans files/bgm au moment du brief, puis coupure réseau :
+fin du parcours et export hors connexion AVEC musique ; verdict musqué par le
+seul log worker interdit — preuve RMS global > −28 dB exigée (musique ≈ −18 dB,
+SFX épars < −30 dB). **Re-run v3 : 42742724174 (en cours).**
 
 ## 5. P3 — Parcours commercial × langues × modes audio
 
@@ -109,7 +131,22 @@ dans toutes les langues (contenu des gabarits non localisé — état produit as
 le badge « PRISE n/N » est codé en dur ; la carte gabarit « Nouvel arrivage » (T1)
 est identique partout.
 
-**Exécution : ⏳ (42728217504 — 12 cellules).**
+**Exécutions** : 42728217504 — défaut d'infrastructure (émulateur non démarré,
+annulé) ; 42732996211 — les 3 jobs tournent mais les cellules s'arrêtent au brief :
+DEUX défauts du banc (a) test brief par grep « E2E FIELD » sur la sortie de
+`champs` (qui émet « E2E CHAMP ») — jamais de match alors que le dump 21_brief.xml
+prouvait l'écran affiché (titre + champs + exemples préremplis) ; (b) écran
+d'activité PAGINÉ (2 cartes/page × 3) : la carte commerce n'est pas en page 1 en
+ja — sélection désormais paginée (commerce prioritaire, sinon toute carte visible :
+les 6 secteurs ont chacun un T1 « Nouvel arrivage »). 42737312734 (fix secteurs +
+brief par wait) : catalogue + sélection OK mais le wait ui.py --exact du titre
+s'interrompt en ~5 s au lieu de 30 (8/8 cellules) alors que le dump prouve
+l'écran — la preuve du brief est désormais le DUMP ARCHIVÉ (grep du titre,
+3 tentatives) et le wait reste affiché à titre diagnostic. **Mode audio
+(D42.28-16) : le BGM titulaire est injecté en cache pour musique/mix** (le
+produit ne télécharge pas en session démo — cf. §4) : les verdicts RMS
+(> −28 dB musique/mix, < −40 dB voix) deviennent atteignables. **Re-run :
+42742781593 (en cours).**
 
 ## 6. Livraison — RC13
 
@@ -128,8 +165,14 @@ est identique partout.
 
 ## 7. Non-régression
 
-- android-ci 42728150107 ⏳ ; e2e-lab 16 jobs 42728150094 ⏳ (inclut le banc A
-  corrigé et le security-local 69 contrôles).
+- android-ci : 42732930938, 42737266223 et 42742723848 SUCCESS (a1565d2,
+  abf3b5e, 4bef52b).
+- e2e-lab 16 jobs : 42728504073 15/16 (auth-local FAIL : compteur 12 migrations
+  codé dur — fix additif a1565d2) ; 42732930889 14/16 (les 2 échecs sont
+  d'INFRASTRUCTURE : « could not connect to TCP port 5554 », émulateur non
+  démarré, zéro E2E_RESULT émis — jobs android-e2e-offline et langues-ja) ;
+  **42737266239 (abf3b5e) : 16/16 SUCCESS — auth-local 13 migrations PASS,
+  non-régression VALIDÉE** ; 42742724174 (4bef52b, banc A v3) en cours.
 
 ## 8. Incidents et conduite
 
@@ -158,10 +201,11 @@ est identique partout.
 BLOCKED/NOT RUN par exigence, commit, workflow, run, artefact, SHA-256.)
 
 - P0 : **PASS** (P0-1..4) ; P0-5 NOT RUN par choix (test physique fondateur).
-- P1 : P1-1..4 **PASS** ; P1-5 ⏳ ; P1-6 PASS (diagnostic).
-- P2 : P2-2/P2-3 **PASS** ; P2-1 ⏳ (PARTIAL en attendant le re-run).
-- P3 : ⏳ (12 cellules).
-- L-1/L-2 : **PASS** (RC13 construite, signée, validée) ; L-3 ⏳ ; L-4 PARTIAL.
+- P1 : P1-1..4 **PASS** ; **P1-5 PASS (re-audit 26/0)** ; P1-6 PASS (diagnostic).
+- P2 : P2-2/P2-3 **PASS** ; P2-1 PARTIAL → banc v3 en cours (preuve RMS musique).
+- P3 : banc requalifié (injection BGM + brief par dump) — re-run en cours.
+- L-1/L-2 : **PASS** (RC13 construite, signée, validée) ; **L-3 PASS (16/16)** ;
+  L-4 PARTIAL.
 
 ---
 

@@ -82,7 +82,8 @@ retablir_reseau() {
         touch "$MARQUEUR_COUPE"
         break
       else
-        echo "[$(date -u +%H:%M:%S)] it=$i : brief détecté mais injection BGM impossible (fichier runner : $(wc -c < "$BGM_LOCAL" 2>/dev/null || echo 0) o)" >> "$OUT/surveillant.log"
+        TAILLE_BGM=0; [ -f "$BGM_LOCAL" ] && TAILLE_BGM=$(wc -c < "$BGM_LOCAL")
+        echo "[$(date -u +%H:%M:%S)] it=$i : brief détecté mais injection BGM impossible (fichier runner : ${TAILLE_BGM} o)" >> "$OUT/surveillant.log"
       fi
     fi
     if [ $((i % 20)) -eq 1 ]; then

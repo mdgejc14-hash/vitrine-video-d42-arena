@@ -56,12 +56,10 @@ jobs:
 
       - name: 'P3 : mode MUSIQUE SEULE × 4 langues'
         env:
-          # D42.28-16 : BGM titulaire téléchargé via le compte de test A (REST)
+          # D42.28-16 : BGM titulaire téléchargé via le compte sonde (REST)
           # pour injection en cache (musique/mix) — session démo = pas de
           # téléchargement produit.
           FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
-          FIREBASE_TEST_A_EMAIL: ${{ secrets.FIREBASE_TEST_A_EMAIL }}
-          FIREBASE_TEST_A_PASSWORD: ${{ secrets.FIREBASE_TEST_A_PASSWORD }}
           API_BASE_URL: ${{ vars.API_BASE_URL_PROD }}
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -117,12 +115,10 @@ jobs:
 
       - name: 'P3 : mode VOIX SEULE × 4 langues'
         env:
-          # D42.28-16 : BGM titulaire téléchargé via le compte de test A (REST)
+          # D42.28-16 : BGM titulaire téléchargé via le compte sonde (REST)
           # pour injection en cache (musique/mix) — session démo = pas de
           # téléchargement produit.
           FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
-          FIREBASE_TEST_A_EMAIL: ${{ secrets.FIREBASE_TEST_A_EMAIL }}
-          FIREBASE_TEST_A_PASSWORD: ${{ secrets.FIREBASE_TEST_A_PASSWORD }}
           API_BASE_URL: ${{ vars.API_BASE_URL_PROD }}
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -178,12 +174,10 @@ jobs:
 
       - name: 'P3 : mode VOIX + MUSIQUE × 4 langues'
         env:
-          # D42.28-16 : BGM titulaire téléchargé via le compte de test A (REST)
+          # D42.28-16 : BGM titulaire téléchargé via le compte sonde (REST)
           # pour injection en cache (musique/mix) — session démo = pas de
           # téléchargement produit.
           FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
-          FIREBASE_TEST_A_EMAIL: ${{ secrets.FIREBASE_TEST_A_EMAIL }}
-          FIREBASE_TEST_A_PASSWORD: ${{ secrets.FIREBASE_TEST_A_PASSWORD }}
           API_BASE_URL: ${{ vars.API_BASE_URL_PROD }}
         uses: reactivecircus/android-emulator-runner@v2
         with:

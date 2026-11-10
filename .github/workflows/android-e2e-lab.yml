@@ -529,12 +529,10 @@ jobs:
       - name: Export hors connexion (BGM en cache puis réseau coupé)
         uses: reactivecircus/android-emulator-runner@v2
         env:
-          # D42.28-16 : le banc télécharge la piste titulaire via le compte de
-          # test A (REST) pour l'injecter en cache local — le produit ne
+          # D42.28-16 : le banc télécharge la piste titulaire via le compte
+          # sonde (REST) pour l'injecter en cache local — le produit ne
           # télécharge pas le BGM en session démo (sans jeton Firebase).
           FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
-          FIREBASE_TEST_A_EMAIL: ${{ secrets.FIREBASE_TEST_A_EMAIL }}
-          FIREBASE_TEST_A_PASSWORD: ${{ secrets.FIREBASE_TEST_A_PASSWORD }}
           API_BASE_URL: ${{ vars.API_BASE_URL_PROD }}
         with:
           api-level: 30

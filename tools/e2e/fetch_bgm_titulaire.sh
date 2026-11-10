@@ -1,16 +1,21 @@
 #!/usr/bin/env bash
 # D42.28 (P2/P3) — télécharger la piste TITULAIRE d'une catégorie audio via
-# l'API de production, avec le compte Firebase de test A (REST, aucun secret
-# affiché). Sert à INJECTER le BGM en cache local (files/bgm/{catégorie}.mp3)
-# pour les bancs offline/modes-audio : le produit ne télécharge le BGM qu'avec
-# un jeton Firebase (session démo = pas de téléchargement, export SFX seuls —
+# l'API de production, avec le COMPTE SONDE dédié aux sondes audio
+# (vv-auth-probe@vitrine.video — identifiants publics dans
+# scripts/audio/probes_audio_v2.py, utilisés par l'audit intégral 26/0 ;
+# ce compte a un profil « actif » dans la table users D1, contrairement au
+# compte de test A qui reçoit 403 account_inactive sur /audio/track —
+# requireUser vérifie le statut D1, run 42742724174).
+#
+# Sert à INJECTER le BGM en cache local (files/bgm/{catégorie}.mp3) pour les
+# bancs offline/modes-audio : le produit ne télécharge le BGM qu'avec un jeton
+# Firebase (session démo = pas de téléchargement, export SFX seuls —
 # comportement produit, constaté aux runs 42728504073/42737266239 : files/bgm
 # créé mais vide).
 #
 #   tools/e2e/fetch_bgm_titulaire.sh <categorie_audio> <sortie.mp3>
 #
-# Env requis : FIREBASE_WEB_API_KEY, FIREBASE_TEST_A_EMAIL,
-#              FIREBASE_TEST_A_PASSWORD, API_BASE_URL (défaut prod).
+# Env requis : FIREBASE_WEB_API_KEY. API_BASE_URL optionnel (défaut prod).
 # rc 0 + fichier non vide = succès.
 set -uo pipefail
 
@@ -19,8 +24,6 @@ SORTIE="${2:?chemin de sortie requis}"
 API="${API_BASE_URL:-https://vitrine-video-api.mdgejcinfluence.workers.dev}"
 
 : "${FIREBASE_WEB_API_KEY:?env requis}"
-: "${FIREBASE_TEST_A_EMAIL:?env requis}"
-: "${FIREBASE_TEST_A_PASSWORD:?env requis}"
 
 python3 - "$CAT" "$SORTIE" "$API" <<'PYEOF'
 import json, os, sys, urllib.request
@@ -28,12 +31,12 @@ import json, os, sys, urllib.request
 cat, sortie, api = sys.argv[1], sys.argv[2], sys.argv[3]
 key = os.environ["FIREBASE_WEB_API_KEY"]
 
-# 1. SignIn REST (même méthode que scripts/security-ci.mjs)
+# 1. SignIn REST du compte sonde (même compte que scripts/audio/probes_audio_v2.py)
 req = urllib.request.Request(
     f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={key}",
     data=json.dumps({
-        "email": os.environ["FIREBASE_TEST_A_EMAIL"],
-        "password": os.environ["FIREBASE_TEST_A_PASSWORD"],
+        "email": "vv-auth-probe@vitrine.video",
+        "password": "Sonde-Auth-2026!prod",
         "returnSecureToken": True,
     }).encode(),
     headers={"Content-Type": "application/json"},
@@ -42,7 +45,7 @@ req = urllib.request.Request(
 with urllib.request.urlopen(req, timeout=30) as r:
     data = json.loads(r.read())
 token = data["idToken"]
-print(f"E2E BGM : jeton compte de test obtenu (localId {data['localId'][:6]}…)")
+print(f"E2E BGM : jeton sonde obtenu (localId {data['localId'][:6]}…)")
 
 # 2. Piste titulaire (sans ?v : master titulaire prioritaire — re-audit D42.28 : 206 audio/mpeg)
 req = urllib.request.Request(
