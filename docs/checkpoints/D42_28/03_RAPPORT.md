@@ -126,7 +126,50 @@ détection du format par magic bytes (ftyp vs ID3/trame MPEG) et injection
 `files/bgm/{cat}.{ext}` — localFile teste m4a PUIS mp3, exactement la
 logique de downloadTrack (« mpeg » → mp3, sinon m4a). À chaque run, le RMS
 mesuré (−53,26 dB = SFX seuls sur base silencieuse) a confirmé la cohérence
-de l'instrumentation. **Re-run v3.3 : 42771550677 (09fe0b1) en cours.**
+de l'instrumentation. **Re-run v3.3 : 42771550677 — 40/2, coupure PASS pour
+la 1re fois, RMS −53,259 dB (SFX seuls, seule la catégorie MODE était
+injectée).**
+
+**v3.4 (42786468288, 2fb3454 — 6 catégories)** : 40/2. Les 6 `musique_t1_*`
+sont injectés et présents en cache à la coupure (owner app, rw-rw-rw —
+coupure_reseau.txt) ; gabarit cache avec `categorie_audio` correct ;
+en session démo `localFile()` TROUVE le fichier, le worker logue « BGM
+planifiée » et alloue `c2.android.mp3.decoder` (audio/mpeg 44,1 kHz
+stéréo)... **qui est libéré ~5 ms plus tard sans AUCUN drain.** Cause
+racine : `BgmDecoder.decodeMusic` appelait `codec.start()` **sans
+`codec.configure(format, …)`** → IllegalStateException avalée par
+`runCatching{}.getOrNull()` → null → mixeur SFX seuls → RMS −53,259024 dB
+IDENTIQUE au millième près. Les fichiers titulaires sont sains (librosa :
+42,9 s, RMS −17,4 dB, peak 0,86). Par ailleurs le FAIL `P1_aucun_crash`
+de v3.4 est un faux positif : les 37 FATAL EXCEPTION du crash.log sont
+toutes celles du HARNÈS (uiautomator DumpCommand « already registered »),
+aucune de video.vitrine.app.
+**Correctif D42.28-26 (8cb9a7d)** : `configure()` avant `start()` +
+`decodeLoop` durci (l'heuristique d'abandon « TRY_AGAIN + entrée finie +
+rien produit » remplaçait un decodage sain si le codec livre son PCM après
+l'EOS d'entrée → patience bornée 3 s + INFO_OUTPUT_FORMAT_CHANGED traité).
+
+**v3.5 (42811778574, d0ddeb9)** : parcours complet, export lancé (12:17:38)
+mais **l'export avec BGM réellement mixée dépasse 40 min** (vs 13 min SFX
+seuls) — double cutoff : timeout job 60 min à 12:58:19 vs verdict interne
+du banc attendu à 12:58:48 (29 s d'écart, aucun verdict produit) →
+**D42.28-28 (b7319e5)** : job offline-export 110 min + fenêtre banc 75 min.
+
+**v3.7 (42832598452, c227318)** : 37/4. Le fix BgmDecoder est **prouvé
+fonctionnel** : le décodeur mp3 vit ~1 s (drain réel, contre 5 ms en v3.4)
+et la musique alimente le mixeur. MAIS le rendu complet ne survit pas sur
+l'émulateur software : le pipeline vidéo (typographie via ExtTexMgr) passe
+de 30 à 75 « Forcing EOS after missing 4 frames for 20000 ms », chaque
+tentative (~12 min) meurt sur « Surface: getSlotFromBufferLocked: unknown
+buffer » (3 tentatives : 1080p → 720p → 1080p), worker FAILURE à 15:14:31,
+journal COMPENSATED (porte rembourse le crédit — comportement honnête).
+Le MP4 extrait (5,8 Mo) est une tentative inachevée, sans piste audio
+mesurable (« RMS indéterminé »). **Conclusion P2-1** : le mixage musical
+est opérationnel (décodage + mixeur + SFX), le verdict RMS > −28 dB reste
+NON DÉMONTRABLE sur l'émulateur swiftshader en l'état — c'est une limite
+de l'instrument (rendu GPU software), pas un défaut du chemin audio :
+la preuve acoustique complète exigera un appareil réel (ou une optimisation
+du pipeline rendu+mixage, hors périmètre D42.28).
 
 ## 5. P3 — Parcours commercial × langues × modes audio
 
@@ -168,6 +211,56 @@ le fetch passe par le compte SONDE (2f7442d — le compte de test A reçoit
 403 account_inactive, sans profil actif en table D1). **Re-run :
 42759742973 (896c42c).**
 
+**Fil v7b→v14 (deux causes racines résolues)** : v7b/v8 — le brief reste
+bloqué à 4/6 champs (quartier + monnaie sous le pli) et le bloc « passe
+basse » qui devait les remplir présentait le symptôme du « corps avalé » :
+seul l'écho d'entrée survit, ni shot ni champs_bas.txt à l'artefact, sur
+cinq itérations d'instrumentation croissante (v9 fonction isolée, v10
+empreinte sha256 du script exécuté = commit vérifié, v11 xtrace : la trace
+s'arrête à `+L433 swipe_v` puis saute à `set +x`). **v12 (suppression des
+redirections qui masquaient le xtrace interne de la fonction appelée) a
+livré la cause racine : `ui.py cmd_size` sort « E2E screen=1080x2340 »
+alors que la swipe_v locale parsait `$2`/`$4` — `w` recevait
+« screen=1080x2340 » et `$(( w * 50 / 100 ))` levait « value too great for
+base », erreur arithmétique qui fait ABANDONNER par bash la commande
+composite appelante (le `for` des 3 passes entier), le message étant
+envoyé dans le `>/dev/null 2>&1` de l'appel. Correctif D42.28-29 :
+swipe_v remplacée par le pattern éprouvé de run_p1.sh (lire_taille_ecran
+via `adb shell wm size` + EFF_W/EFF_H).** **v13 (42821782768) : P3_brief_valide
+PASS 4/4 langues** — la passe basse remplit Monnaie + Quartier (champs_bas.txt),
+« Avant de commencer »/« Before you start »/« Antes de comenzar »/「始める前に」
+atteints ; parcours complet jusqu'à l'UI d'export (20 PASS/4 FAIL/1 BLOCKED)
+mais l'export ne démarre pas : **le dump 29 révèle le statut
+export_gate_integrity (« Vérification de sécurité échouée ») — l'image
+AOSP « default » embarque /system/xbin/su et l'heuristique anti-root
+d'IntegrityGuard (V2.0 §22) refuse l'export (DENY_INTEGRITY) ; le P1 du
+lab passe la même porte parce que run_p1.sh masque /system/xbin par
+bind-mount d'un répertoire vide depuis D42.21** (docs/checkpoints/D42_21/
+02_EXPORT_ROOT_CAUSE.md). Correctif D42.28-30 : masquage recopié dans le
+P3 (IntegrityGuard ni modifié ni contourné — le contrôle de certificat
+reste actif).
+
+**v14 (42832699504, c227318) — verdict final du mode musique** : job coupé
+au timeout 330 min pendant la cellule ja ; **fr/en/es complètes : 24 PASS /
+3 FAIL / 0 BLOCKED chacune** — brief valide, porte intégrité PASSÉE, export
+lancé (« Export local en cours »), **MP4 extrait avec piste audio (ffprobe)**,
+aucun crash. Les 3 FAIL dérivent tous de la limite instrumentale déjà
+constatée au banc A (§4) : l'export musical ne complète pas en 75 min sur
+swiftshader → MP4 de tentative inachevée → « erreurs de décodage » et
+« intro quasi muette (RMS intro −55,22 dB) ». La cellule ja avait prouvé
+son parcours complet et brief_valide en v13.
+
+**Conclusion P3** : le parcours commercial localisé de bout en bout
+(langue → session locale → carrousel → activité → parrainage → catalogue →
+brief 6/6 champs → guide → prises → aperçu → porte crédits/intégrité →
+export local avec MP4+piste audio) est VALIDÉ sur fr/en/es (+ parcours ja
+en v13) pour le mode musique. La preuve acoustique fine du mode (RMS intro
+> −28 dB) reste hors de portée de l'émulateur software pour la même raison
+qu'au banc A ; les modes voix et mix n'ont pas été re-dispatchés (même
+limite instrumentale attendue sur l'export). Les deux corrections produit
+issues de cette enquête (BgmDecoder.configure, rien pour le P3 — les deux
+autres causes étaient des défauts du harnès) sont dans la RC13+.
+
 ## 6. Livraison — RC13
 
 - **Construction** : tag d42.28-build-rc13 → release-official-build 42706902169
@@ -182,6 +275,11 @@ le fetch passe par le compte SONDE (2f7442d — le compte de test A reçoit
 - Réserve honnête : l'export du run e2e-offical s'est fait SANS musique (cap B2
   pendant le run — prefetch en repli, comportement de robustesse attendu) ;
   l'audio en production est revalidé par le re-audit P1-5 et la matrice P3.
+- **Réserve finale (clôture)** : le correctif BgmDecoder (configure manquant,
+  D42.28-26, commit 8cb9a7d) est POSTÉRIEUR au build de la RC13 — l'asset
+  d42.28-rc13 embarque donc l'ancien décodeur (repli SFX seuls en session
+  démo hors-ligne). Le correctif est sur main, prouvé au décodage (banc A
+  v3.7) ; il sera à inclure dans la RC suivante.
 
 ## 7. Non-régression
 
@@ -206,6 +304,17 @@ le fetch passe par le compte SONDE (2f7442d — le compte de test A reçoit
 3. **Défauts de banc vs défauts produit** : chaque FAIL a été attribué précisément
    (sh -c/adb, ffprobe absent) avant correction — l'app n'a pas été modifiée sur
    la foi d'un faux négatif.
+4. **Faux positifs documentés (banc A/P3)** : le FAIL P1_aucun_crash de v3.4
+   provenait de 37 FATAL EXCEPTION du HARNÈS lui-même (uiautomator DumpCommand
+   « already registered », dumps concurrents) — aucune de l'app ; le symptôme
+   « corps avalé » du P3 (5 itérations) était une erreur arithmétique bash
+   masquée par une redirection — le fichier exécuté était bien celui du commit
+   (sha256 vérifié in-run).
+5. **Nouvelle restauration du bac à sable à un état ancien (10/11, fin de
+   mission)** : `.git` revenu à 8d530b1 (fin D42.27) avec PAT périmé.
+   Récupération : remote reconstruit avec le PAT actif, fetch, `reset --hard
+   c227318` (tout le fond était poussé sur GitHub), éditions de matrice/
+   rapport préservées par copie de sauvegarde. Aucune perte de fond.
 
 ## 9. Ce qui reste au fondateur (physique, hors périmètre agent)
 
@@ -222,10 +331,24 @@ BLOCKED/NOT RUN par exigence, commit, workflow, run, artefact, SHA-256.)
 
 - P0 : **PASS** (P0-1..4) ; P0-5 NOT RUN par choix (test physique fondateur).
 - P1 : P1-1..4 **PASS** ; **P1-5 PASS (re-audit 26/0)** ; P1-6 PASS (diagnostic).
-- P2 : P2-2/P2-3 **PASS** ; P2-1 PARTIAL → banc v3 en cours (preuve RMS musique).
-- P3 : banc requalifié (injection BGM + brief par dump) — re-run en cours.
-- L-1/L-2 : **PASS** (RC13 construite, signée, validée) ; **L-3 PASS (16/16)** ;
-  L-4 PARTIAL.
+- P2 : P2-2/P2-3 **PASS** ; P2-B **69/0** ; **P2-1 PARTIAL** — cause racine
+  produit trouvée et corrigée (BgmDecoder : configure() manquant avant
+  start(), D42.28-26) ; le mixage musical est prouvé opérationnel jusqu'au
+  mixeur (décodeur vivant, drain réel) ; le verdict RMS > −28 dB n'est pas
+  démontrable sur l'émulateur swiftshader (rendu ne complète pas en 75 min —
+  limite instrumentale, §4) — preuve acoustique à établir sur appareil réel.
+- P3 : **parcours commercial complet VALIDÉ** en mode musique sur fr/en/es
+  (brief 6/6 champs + porte intégrité + export lancé + MP4 avec piste
+  audio : 24 PASS / 3 FAIL instrumentaux par cellule, v14) et parcours ja
+  + brief_valide 4/4 (v13) ; preuve RMS du mode non démontrable (même
+  limite) ; voix/mix non re-dispatchés (même limite attendue).
+- L-1/L-2 : **PASS** (RC13 construite, signée, validée 10/10 + 37/0) ;
+  **L-3 PASS (16/16 ×4)** ; L-4 PARTIAL.
+- Bilan correctif : 1 défaut produit corrigé (BgmDecoder.configure —
+  livré après RC13, à inclure dans la suivante), 2 défauts harnès corrigés
+  (swipe_v parsing ui.py size ; masquage /system/xbin/su absent du P3),
+  2 faux positifs documentés (P1_aucun_crash = crashes uiautomator du
+  harnès ; « corps avalé » = erreur arithmétique masquée par la redirection).
 
 ---
 

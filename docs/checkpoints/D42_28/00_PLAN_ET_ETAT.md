@@ -52,3 +52,51 @@
   revalidé par le re-audit P1-5 + P3.
 - **Reprise après reset cap (00:00 UTC)** : e2e-lab complet (banc A
   corrigé + non-régression), audio-audit full, P3 (3 jobs × 4 langues).
+
+## Clôture (10/11, 20:00 UTC) — trois causes racines, mission close
+
+- **Banc A v3.4 (42786468288)** : BGM 6/6 injectés et en cache à la coupure,
+  décodeur mp3 alloué puis libéré en ~5 ms SANS drain → **cause racine
+  produit : BgmDecoder.decodeMusic appelait codec.start() sans
+  codec.configure()** (IllegalStateException avalée par runCatching → null →
+  SFX seuls, RMS −53,259024 dB identique au millième) ; correctif
+  **D42.28-26 (8cb9a7d)** : configure() + decodeLoop durci. Faux FAIL
+  P1_aucun_crash = 37 crashes du harnès uiautomator (aucun de l'app).
+- **v3.5 (42811778574)** : export musical >40 min (vs 13 min SFX seuls) —
+  double cutoff job 60 min/banc 40 min (29 s d'écart) → **D42.28-28
+  (b7319e5)** : job 110 min + fenêtre 75 min.
+- **P3, mystère du « corps avalé » clos en 3 itérations** : v10 sha256
+  in-run = commit ; v11 xtrace → arrêt à +L433 swipe_v, saut à set +x ;
+  v12 (redirections retirées) → **w=screen=1080x2340, « value too great
+  for base » : ui.py size sort « E2E screen=WxH », la swipe_v locale
+  parsait $2/$4 → erreur arithmétique → bash abandonne le for entier, le
+  message partant dans >/dev/null 2>&1** → **D42.28-29 (0c7ec9f)** :
+  swipe_v = pattern run_p1.sh (lire_taille_ecran + EFF_W/EFF_H).
+- **P3 v13 (42821782768)** : **P3_brief_valide PASS 4/4 langues** (passe
+  basse exécutée : champs_bas.txt avec Monnaie + Quartier remplis) ;
+  parcours complet jusqu'à l'UI d'export ; 4 FAIL export = **2e cause
+  racine harnès : l'image AOSP « default » embarque /system/xbin/su →
+  IntegrityGuard DENY_INTEGRITY** (« Vérification de sécurité échouée »
+  dans le dump 29) — le P1 masque /system/xbin depuis D42.21, le P3 non →
+  **D42.28-30 (c227318)** : masquage bind-mount recopié.
+- **Banc A v3.7 (42832598452, success, 37/4)** : fix BgmDecoder PROUVÉ au
+  décodage (décodeur vivant ~1 s, drain réel) mais le rendu complet ne
+  survit pas sur swiftshader (75 « Forcing EOS », 3 tentatives mortes sur
+  « Surface: unknown buffer », worker FAILURE, journal COMPENSATED).
+- **P3 v14 (42832699504)** : fr/en/es complètes **24 PASS / 3 FAIL /
+  0 BLOCKED** — porte PASSÉE, export lancé, **MP4 avec piste audio
+  (ffprobe)**, aucun crash ; les 3 FAIL = export >75 min → MP4 de
+  tentative inachevée (décode/RMS intro −55,2 dB). Ja coupée au timeout
+  job 330 min (parcours + brief_valide prouvés en v13).
+- **Restauration sandbox (fin)** : .git revenu à 8d530b1 + PAT périmé →
+  remote reconstruit, fetch, reset --hard c227318, éditions docs
+  préservées. Aucune perte (tout était poussé).
+- **BILAN FINAL** : P0 ✔ ; P1 ✔ (re-audit 26/0) ; P2-B 69/0 ✔ ;
+  P2-1 PARTIAL (fix produit livré et prouvé au mixeur ; verdict RMS non
+  démontrable sur swiftshader — limite instrumentale, à établir sur
+  appareil réel) ; P3 parcours complet validé fr/en/es + ja (v13) en mode
+  musique, preuve acoustique fine et modes voix/mix hors portée
+  instrumentale ; RC13 LIVRÉE VALIDÉE (10/10 + 37/0) ; L-3 16/16 ×4.
+  1 défaut produit corrigé (BgmDecoder.configure, postérieur à la RC13 —
+  à inclure dans la RC suivante), 2 défauts harnès corrigés, 2 faux
+  positifs documentés. 0 FCFA dépensé.
