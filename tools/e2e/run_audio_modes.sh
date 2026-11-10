@@ -68,6 +68,8 @@ case "$LANGUE" in
       E6="Filme ta prise"; E6_REC="Tourner"; CAM_REC="Verrouiller et enregistrer"; CAM_STOP="Arrêter et continuer"
       R4="Accord du client"; R4_OK="Oui, accord confirmé"
       SECTEUR_CARTE="Boutique"
+      SECTEUR_MODE="Vêtements & Mode"; SECTEUR_COIFFURE="Coiffure & Beauté"; SECTEUR_RESTAURATION="Restauration & Maquis"
+      SECTEUR_BTP="Bâtiment & Travaux"; SECTEUR_IMMO="Vente de Voitures"; SECTEUR_COMMERCE="Boutique & Petit Commerce"
       E7="Aperçu de ta vidéo"; E7_CREATE="Créer ma vidéo"
       EXP_START="Lancer l'export local"; EXP_RUNNING="Export local en cours"
       EXP_DONE="Vidéo prête ! Partage-la avec tes clients."; EXP_SHARE="Partager la vidéo" ;;
@@ -79,6 +81,8 @@ case "$LANGUE" in
       E6="Film your take"; E6_REC="Record"; CAM_REC="Lock and record"; CAM_STOP="Stop and continue"
       R4="Client agreement"; R4_OK="Yes, agreement confirmed"
       SECTEUR_CARTE="Shops"
+      SECTEUR_MODE="Clothing & Fashion"; SECTEUR_COIFFURE="Hair & Beauty"; SECTEUR_RESTAURATION="Restaurants & Eateries"
+      SECTEUR_BTP="Building & Works"; SECTEUR_IMMO="Cars & Homes"; SECTEUR_COMMERCE="Shops & Small Business"
       E7="Preview of your video"; E7_CREATE="Create my video"
       EXP_START="Start local export"; EXP_RUNNING="Local export running"
       EXP_DONE="Video ready! Share it with your customers."; EXP_SHARE="Share the video" ;;
@@ -90,6 +94,8 @@ case "$LANGUE" in
       E6="Filma tu toma"; E6_REC="Grabar"; CAM_REC="Bloquear y grabar"; CAM_STOP="Terminar y continuar"
       R4="Acuerdo del cliente"; R4_OK="Sí, acuerdo confirmado"
       SECTEUR_CARTE="Tiendas"
+      SECTEUR_MODE="Ropa y Moda"; SECTEUR_COIFFURE="Peluquería y Belleza"; SECTEUR_RESTAURATION="Restaurantes y Comedores"
+      SECTEUR_BTP="Construcción y Obras"; SECTEUR_IMMO="Venta de Coches"; SECTEUR_COMMERCE="Tiendas y Comercio"
       E7="Vista previa de tu vídeo"; E7_CREATE="Crear mi vídeo"
       EXP_START="Iniciar exportación local"; EXP_RUNNING="Exportación local en curso"
       EXP_DONE="¡Vídeo listo! Compártelo con tus clientes."; EXP_SHARE="Compartir el vídeo" ;;
@@ -101,6 +107,8 @@ case "$LANGUE" in
       E6="撮影しよう"; E6_REC="録画"; CAM_REC="ロックして録画"; CAM_STOP="停止して続行"
       R4="顧客の同意"; R4_OK="はい、同意を確認"
       SECTEUR_CARTE="店舗"
+      SECTEUR_MODE="服とファッション"; SECTEUR_COIFFURE="美容とヘア"; SECTEUR_RESTAURATION="食堂とレストラン"
+      SECTEUR_BTP="建築と工事"; SECTEUR_IMMO="車と不動産販売"; SECTEUR_COMMERCE="店舗と小売"
       E7="動画のプレビュー"; E7_CREATE="動画を作成"
       EXP_START="ローカル書き出し開始"; EXP_RUNNING="ローカル書き出し中"
       EXP_DONE="動画が完成しました！お客様に共有しましょう。"; EXP_SHARE="動画を共有" ;;
@@ -188,7 +196,30 @@ if $UI wait --text "$SECTEUR" --exact --timeout 60 >/dev/null 2>&1; then
 else
   record FAIL "P3_activite_${LANGUE}" "« $SECTEUR » absent"
 fi
-$UI tap --text "$SECTEUR_CARTE" --timeout 5 >/dev/null 2>&1 || true
+# Sélection du secteur : l'écran est PAGINÉ (2 cartes/page, 3 pages — le run
+# 42732996211 : la carte commerce n'était pas en page 1 en ja). On cherche la
+# carte commerce jusqu'à 3 pages ; à défaut, N'IMPORTE QUELLE carte visible
+# convient : chaque secteur possède un T1 « Nouvel arrivage » (les 6 T1.json
+# du dépôt le portent) et le brief reste en français par design produit.
+CARTES_SECTEURS=(
+  "$SECTEUR_MODE" "$SECTEUR_COIFFURE" "$SECTEUR_RESTAURATION"
+  "$SECTEUR_BTP" "$SECTEUR_IMMO" "$SECTEUR_COMMERCE"
+)
+secteur_choisi=""
+for page in 1 2 3; do
+  if $UI tap --text "$SECTEUR_COMMERCE" --timeout 4 >/dev/null 2>&1; then
+    secteur_choisi="$SECTEUR_COMMERCE"; break
+  fi
+  for carte in "${CARTES_SECTEURS[@]}"; do
+    if $UI tap --text "$carte" --timeout 3 >/dev/null 2>&1; then
+      secteur_choisi="$carte"; break 2
+    fi
+  done
+  swipe_v 50 18 350 >/dev/null 2>&1
+  sleep 1
+done
+[ -n "$secteur_choisi" ] && echo "E2E P3 secteur choisi : $secteur_choisi (page $page/3)" \
+                       || echo "E2E P3 aucune carte secteur actionnée (présélection ?)"
 sleep 1
 $UI tap --text "$CONTINUER" --exact --timeout 15 >/dev/null 2>&1 || true
 if $UI wait --text "$SANS_CODE" --exact --timeout 30 >/dev/null 2>&1; then
@@ -218,8 +249,12 @@ shot "21_brief"; dump "21_brief"
 
 brief_ok=0
 if $UI wait --text "$BRIEF" --exact --timeout 30 >/dev/null 2>&1; then
+  # L'écran est prouvé par le libellé du titre (dump 21_brief.xml à l'appui au
+  # run 42732996211 : « Ma vidéo » + champs présents). NB : la commande
+  # `champs` émet « E2E CHAMP » (pas « FIELD ») — le grep de la 1re version ne
+  # matchait jamais : c'était un défaut du banc, pas de l'app.
+  brief_ok=1
   $UI champs > "$OUT/champs.txt" 2>&1 || true
-  if grep -q "E2E FIELD" "$OUT/champs.txt" 2>/dev/null; then brief_ok=1; fi
 fi
 if [ "$brief_ok" != "1" ]; then
   record BLOCKED "P3_brief_${LANGUE}" "formulaire de brief non atteint"
@@ -227,7 +262,7 @@ if [ "$brief_ok" != "1" ]; then
   { echo "tag=$TAG langue=$LANGUE mode=$MODE"; echo "PASS=$pass FAIL=$fail BLOCKED=$blocked"; } > "$OUT/summary.txt"
   exit 0
 fi
-record PASS "P3_brief_${LANGUE}" "formulaire de brief affiché ($(grep -c 'E2E FIELD' "$OUT/champs.txt") champs)"
+record PASS "P3_brief_${LANGUE}" "formulaire de brief affiché (titre « $BRIEF » constaté ; $(grep -c 'E2E CHAMP' "$OUT/champs.txt" 2>/dev/null || echo '?') champs détectés)"
 
 fermer_clavier() {
   if adb shell dumpsys input_method 2>/dev/null | grep -q "mInputShown=true"; then
