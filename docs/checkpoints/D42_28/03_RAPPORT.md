@@ -113,7 +113,20 @@ signIn REST identitytoolkit + GET /audio/track, 206 audio/mpeg — route vérifi
 401 en anonyme), INJECTÉE dans files/bgm au moment du brief, puis coupure réseau :
 fin du parcours et export hors connexion AVEC musique ; verdict musqué par le
 seul log worker interdit — preuve RMS global > −28 dB exigée (musique ≈ −18 dB,
-SFX épars < −30 dB). **Re-run v3 : 42742724174 (en cours).**
+SFX épars < −30 dB).
+
+**Fil des re-runs v3.1→v3.3** : 42742724174 — fetch 403 account_inactive
+(compte de test A sans profil actif en table D1 : requireUser le vérifie)
+→ compte sonde vv-auth-probe (2f7442d, celui de l'audit 26/0) ; 42759689694
+— 403 à nouveau : le UA python par défaut est refusé, l'audit passe avec le
+UA « vv-probes-audio-v2/1.0 » → UA repris (8dfc45e) ; 42764414507 — fetch
+ENFIN OK (HTTP 200, 595 932 octets) mais le titulaire de la catégorie est
+servi en **M4A audio/mp4** : la garde magic-bytes MP3 le rejetait →
+détection du format par magic bytes (ftyp vs ID3/trame MPEG) et injection
+`files/bgm/{cat}.{ext}` — localFile teste m4a PUIS mp3, exactement la
+logique de downloadTrack (« mpeg » → mp3, sinon m4a). À chaque run, le RMS
+mesuré (−53,26 dB = SFX seuls sur base silencieuse) a confirmé la cohérence
+de l'instrumentation. **Re-run v3.3 : 42771550677 (09fe0b1) en cours.**
 
 ## 5. P3 — Parcours commercial × langues × modes audio
 
