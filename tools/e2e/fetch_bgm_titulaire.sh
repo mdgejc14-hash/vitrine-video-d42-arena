@@ -31,6 +31,12 @@ import json, os, sys, urllib.request
 cat, sortie, api = sys.argv[1], sys.argv[2], sys.argv[3]
 key = os.environ["FIREBASE_WEB_API_KEY"]
 
+# UA dédié (celui de scripts/audio/probes_audio_v2.py) : le UA python par
+# défaut est refusé (403) sur les routes de l'API — constaté aux runs
+# 42742724174/42759689694 avec la sonde pourtant valide (l'audit 26/0 du
+# même jour passait avec ce UA).
+UA = "vv-probes-audio-v2/1.0 (curl-compatible)"
+
 # 1. SignIn REST du compte sonde (même compte que scripts/audio/probes_audio_v2.py)
 req = urllib.request.Request(
     f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={key}",
@@ -39,7 +45,7 @@ req = urllib.request.Request(
         "password": "Sonde-Auth-2026!prod",
         "returnSecureToken": True,
     }).encode(),
-    headers={"Content-Type": "application/json"},
+    headers={"Content-Type": "application/json", "User-Agent": UA},
     method="POST",
 )
 with urllib.request.urlopen(req, timeout=30) as r:
@@ -50,10 +56,15 @@ print(f"E2E BGM : jeton sonde obtenu (localId {data['localId'][:6]}…)")
 # 2. Piste titulaire (sans ?v : master titulaire prioritaire — re-audit D42.28 : 206 audio/mpeg)
 req = urllib.request.Request(
     f"{api}/api/v1/audio/track/{cat}",
-    headers={"Authorization": f"Bearer {token}"},
+    headers={"Authorization": f"Bearer {token}", "User-Agent": UA},
     method="GET",
 )
-with urllib.request.urlopen(req, timeout=120) as r:
+try:
+    r = urllib.request.urlopen(req, timeout=120)
+except urllib.error.HTTPError as e:
+    print(f"E2E BGM : ECHEC HTTP {e.code} — corps : {e.read()[:300]!r}")
+    sys.exit(1)
+with r:
     corps = r.read()
     ctype = r.headers.get("Content-Type", "")
     print(f"E2E BGM : HTTP {r.status}, {len(corps)} octets, {ctype}")

@@ -139,14 +139,21 @@ prouvait l'écran affiché (titre + champs + exemples préremplis) ; (b) écran
 d'activité PAGINÉ (2 cartes/page × 3) : la carte commerce n'est pas en page 1 en
 ja — sélection désormais paginée (commerce prioritaire, sinon toute carte visible :
 les 6 secteurs ont chacun un T1 « Nouvel arrivage »). 42737312734 (fix secteurs +
-brief par wait) : catalogue + sélection OK mais le wait ui.py --exact du titre
-s'interrompt en ~5 s au lieu de 30 (8/8 cellules) alors que le dump prouve
-l'écran — la preuve du brief est désormais le DUMP ARCHIVÉ (grep du titre,
-3 tentatives) et le wait reste affiché à titre diagnostic. **Mode audio
-(D42.28-16) : le BGM titulaire est injecté en cache pour musique/mix** (le
-produit ne télécharge pas en session démo — cf. §4) : les verdicts RMS
-(> −28 dB musique/mix, < −40 dB voix) deviennent atteignables. **Re-run :
-42742781593 (en cours).**
+brief par wait) : catalogue + sélection OK, et le wait trouve le titre au run
+suivant (E2E FOUND — les ~5 s d'échec du run précédent restaient inexpliqués,
+la preuve par dump est désormais la référence). 42742781593 : **P3_brief PASS
+(fr/en/es — titre + 5 champs détectés)** mais brief_valide FAIL : le 5e champ
+(« Quartier et ville ») reste SOUS LE PLI en bas du formulaire scrollable →
+bouton Continuer désactivé → parcours figé (dump 29 : brief « 1 / 4 », valeurs
+saisies visibles) ; mon bloc de remplissage omettait la remontée du formulaire
+du P1 — remplacé par la copie EXACTE du bloc P1 (éprouvé 16/16) ; l'attente de
+fin d'export (40 min) devient conditionnelle au lancement effectif (3 cellules
+avaient brûlé 45 min stériles → timeout job 150 min, run annulé avant ja).
+**Mode audio (D42.28-16) : le BGM titulaire est injecté en cache pour
+musique/mix** (le produit ne télécharge pas en session démo — cf. §4) ;
+le fetch passe par le compte SONDE (2f7442d — le compte de test A reçoit
+403 account_inactive, sans profil actif en table D1). **Re-run :
+42759742973 (896c42c).**
 
 ## 6. Livraison — RC13
 

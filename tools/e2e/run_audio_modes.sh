@@ -102,7 +102,7 @@ case "$LANGUE" in
   ja) CARTE="日本語"; AUTH="Googleで続ける"; S1="撮って、売る。それだけ。"
       S2="商品を撮るだけ、あとはご案内します"; S3="30秒で公開できる動画に"
       SUIVANT="次へ"; DEMARRER="はじめる"; SECTEUR="あなたの業種"
-      CONTINUER="続行"; SANS_CODE="コードを持っていません"; CATALOGUE="動画テンプレートを選択"
+      CONTINUER="次へ"; SANS_CODE="コードを持っていません"; CATALOGUE="動画テンプレートを選択"
       BRIEF="マイ動画"; E4B="始める前に"; E4B_OK="OK、開始"
       E6="撮影しよう"; E6_REC="録画"; CAM_REC="ロックして録画"; CAM_STOP="停止して続行"
       R4="顧客の同意"; R4_OK="はい、同意を確認"
@@ -385,6 +385,35 @@ $UI champs > "$OUT/champs_apres.txt" 2>&1 || true
 sed 's/^/E2E P3 /' "$OUT/champs_apres.txt"
 trouve=0
 for _ in 1 2 3 4 5 6; do
+  if $UI wait --text "$CONTINUER" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
+  swipe_v 73 26 250 >/dev/null 2>&1
+  sleep 1
+done
+# D42.28-19 : au bas du formulaire (bouton Continuer atteint), les DERNIERS
+# champs (quartier) sont enfin visibles — ils échappaient aux passes de
+# complément, qui s'arrêtaient sur un « restant=0 » de champs INVISIBLES
+# (run 42759742973 : 4/5 remplis, bouton désactivé, parcours figé).
+# Passe finale ICI, puis on redescend vers le bouton.
+for passe_bas in 1 2 3; do
+  fermer_clavier
+  $UI champs > "$OUT/champs_bas.txt" 2>&1 || true
+  vide_bas=$(grep -c " vide " "$OUT/champs_bas.txt" 2>/dev/null || echo 0)
+  [ "$vide_bas" = "0" ] && break
+  while IFS= read -r ligne; do
+    idx=$(echo "$ligne" | awk '{print $3}')
+    libelle=$(echo "$ligne" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
+    val=$(valeur_pour "$libelle")
+    [ -n "$val" ] || continue
+    echo "E2E P3 passe basse [$libelle] <- $val"
+    remplir_champ "$idx" "$val" "$OUT/champs_bas.txt" && remplis=$((remplis+1))
+    break
+  done < <(grep "^E2E CHAMP " "$OUT/champs_bas.txt" | grep " vide ")
+done
+echo "E2E P3 champs remplis (passe basse incluse) : $remplis"
+$UI champs > "$OUT/champs_apres.txt" 2>&1 || true
+sed 's/^/E2E P3 /' "$OUT/champs_apres.txt"
+# redescendre vers le bouton si la passe basse a fait défiler
+for _ in 1 2 3 4; do
   if $UI wait --text "$CONTINUER" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
   swipe_v 73 26 250 >/dev/null 2>&1
   sleep 1
