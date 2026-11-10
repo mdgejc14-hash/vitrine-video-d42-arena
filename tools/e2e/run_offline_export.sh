@@ -27,6 +27,23 @@ mkdir -p "$OUT"
 MARQUEUR_COUPE="/tmp/offexp_reseau_coupe"
 rm -f "$MARQUEUR_COUPE"
 
+# D42.28-16 : le produit ne télécharge le BGM qu'avec un jeton Firebase
+# (ExportActivity : token?.let { ensureGabaritCached } ?: localFile) — en
+# session démo, files/bgm reste VIDE et l'export sort en SFX seuls (base
+# silencieuse ; message « BGM planifiée » = BGM OU SFX, ExportWorker l.186).
+# Le banc télécharge donc la piste titulaire côté RUNNER (compte de test A,
+# REST — même méthode que security-ci) et l'INJECTE dans files/bgm au moment
+# du brief : le test redevient exactement « BGM en cache + export hors
+# connexion ». La coupure a lieu APRÈS l'injection : tout le reste du
+# parcours (fin de brief, prises, aperçu, export) se fait SANS réseau.
+CAT_BGM="musique_t1_shops_small_business"   # T1 « Nouvel arrivage » du secteur commerce (P1)
+BGM_LOCAL="$OUT/bgm_titulaire.mp3"
+if bash tools/e2e/fetch_bgm_titulaire.sh "$CAT_BGM" "$BGM_LOCAL"; then
+  echo "E2E BGM titulaire téléchargé : $(wc -c < "$BGM_LOCAL") octets"
+else
+  echo "E2E AVERTISSEMENT : BGM titulaire non téléchargé — le test offline avec musique ne peut pas s'établir"
+fi
+
 couper_reseau() {
   adb shell svc wifi disable >/dev/null 2>&1
   adb shell svc data disable >/dev/null 2>&1
@@ -36,45 +53,42 @@ retablir_reseau() {
   adb shell svc data enable >/dev/null 2>&1
 }
 
-# --- 1. Surveillant : couper le réseau dès que le BGM est en cache -------------
-# NB : PAS de sh -c (les quotes seraient perdues à travers adb, sh -c ne
-# recevrait que « ls » du répertoire courant) — même forme que app_ls de
-# run_p1.sh (éprouvée 40 PASS) : ls du dossier, grep local sur \.mp3.
-# D42.28-13 : DOUBLE sonde (run-as PUIS adb root — si run-as échoue pour
-# une raison quelconque, root voit le dossier) + trace horodatée toutes
-# les ~30 s dans surveillant.log (diagnostic du run 42728504073 : le BGM
-# était bien servi à l'export [D42-VERIF gain solo, hasAudioTrack=true]
-# mais la sonde unique n'a jamais rien vu).
-sonde_bgm() {  # -> rc 0 si un morceau (.mp3/.m4a, cache définitif) est présent
-  local sortie
-  sortie=$(adb shell run-as "$PKG" ls files/bgm 2>/dev/null | tr -d '\r')
-  printf '%s\n' "$sortie" | grep -qE '\.mp3|\.m4a' && return 0
-  sortie=$(adb shell ls "/data/data/$PKG/files/bgm" 2>/dev/null | tr -d '\r')
-  printf '%s\n' "$sortie" | grep -qE '\.mp3|\.m4a'
-}
+# --- 1. Surveillant v3 : au BRIEF, injecter le BGM puis couper le réseau ------
+# (D42.28-13/16 : les sondes « fichiers .mp3 apparus » ne pouvaient jamais se
+# déclencher — le produit ne télécharge pas le BGM en session démo. On détecte
+# désormais l'écran du BRIEF (titre « Ma vidéo » dans le dump UI), on injecte
+# le BGM téléchargé côté runner, puis on coupe : la fin du parcours et l'export
+# se font hors connexion AVEC la musique en cache local.)
 (
   i=0
   while [ ! -f "$MARQUEUR_COUPE" ]; do
     i=$((i+1))
-    if sonde_bgm; then
-      sleep 3   # laisser le téléchargement intégral (sha vérifié côté app) finir
-      couper_reseau
-      {
-        echo "=== COUPURE RÉSEAU ($(date -u +%Y-%m-%dT%H:%M:%SZ)) ==="
-        echo "BGM en cache au moment de la coupure :"
-        adb shell run-as "$PKG" ls -la files/bgm 2>/dev/null | tr -d '\r'
-        echo "Connectivité après svc disable :"
-        adb shell dumpsys connectivity 2>/dev/null | tr -d '\r' \
-          | grep -E "Active default network|no default network" | head -2
-      } > "$OUT/coupure_reseau.txt" 2>&1
-      touch "$MARQUEUR_COUPE"
-      break
+    if adb shell uiautomator dump /sdcard/offexp_probe.xml >/dev/null 2>&1 \
+       && adb exec-out cat /sdcard/offexp_probe.xml 2>/dev/null | grep -q "Ma vidéo"; then
+      if [ -s "$BGM_LOCAL" ] \
+         && adb push "$BGM_LOCAL" /data/local/tmp/bgm_inject.mp3 >/dev/null 2>&1 \
+         && adb shell run-as "$PKG" cp /data/local/tmp/bgm_inject.mp3 "files/bgm/${CAT_BGM}.mp3" >/dev/null 2>&1 \
+         && adb shell run-as "$PKG" ls files/bgm 2>/dev/null | tr -d '\r' | grep -q "${CAT_BGM}.mp3"; then
+        sleep 2
+        couper_reseau
+        {
+          echo "=== COUPURE RÉSEAU ($(date -u +%Y-%m-%dT%H:%M:%SZ)) — après injection BGM au brief ==="
+          echo "BGM en cache au moment de la coupure :"
+          adb shell run-as "$PKG" ls -la files/bgm 2>/dev/null | tr -d '\r'
+          echo "Connectivité après svc disable :"
+          adb shell dumpsys connectivity 2>/dev/null | tr -d '\r' \
+            | grep -E "Active default network|no default network" | head -2
+        } > "$OUT/coupure_reseau.txt" 2>&1
+        touch "$MARQUEUR_COUPE"
+        break
+      else
+        echo "[$(date -u +%H:%M:%S)] it=$i : brief détecté mais injection BGM impossible (fichier runner : $(wc -c < "$BGM_LOCAL" 2>/dev/null || echo 0) o)" >> "$OUT/surveillant.log"
+      fi
     fi
-    # trace légère : état de la sonde toutes les ~30 s (preuve de vie + diagnostic)
-    if [ $((i % 15)) -eq 1 ]; then
-      echo "[$(date -u +%H:%M:%S)] it=$i sonde=$(adb shell run-as "$PKG" ls files/bgm 2>&1 | tr -d '\r' | head -2 | tr '\n' ' ')" >> "$OUT/surveillant.log"
+    if [ $((i % 20)) -eq 1 ]; then
+      echo "[$(date -u +%H:%M:%S)] it=$i : attente du brief…" >> "$OUT/surveillant.log"
     fi
-    sleep 2
+    sleep 3
   done
 ) &
 SURVEILLANT=$!
@@ -89,7 +103,7 @@ RESULTS="$OUT/results.tsv"
 
 # --- 3. Verdicts offline -------------------------------------------------------
 if [ -f "$MARQUEUR_COUPE" ]; then
-  printf 'PASS\tOFFX_coupure_apres_prefetch\tBGM pré-téléchargé puis réseau coupé (preuve : coupure_reseau.txt)\n' >> "$RESULTS"
+  printf 'PASS\tOFFX_coupure_apres_prefetch\tBGM injecté en cache local au brief puis réseau coupé — parcours et export hors connexion (preuve : coupure_reseau.txt)\n' >> "$RESULTS"
 else
   # Diagnostic (D42.28-13, run 42728504073) : le BGM était-il en cache À LA FIN
   # (sonde non-détection) ou jamais téléchargé ? Capture systématique.
@@ -127,9 +141,20 @@ if [ -s "$OUT/export.mp4" ]; then
   # SANS qu'aucun décodage n'échoue. Vraies erreurs = Invalid data found /
   # Error while decoding / « error: ». ffprobe.txt non vide + aucune vraie
   # erreur = décodable.
+  # D42.28-16 : preuve que la MUSIQUE (pas seulement SFX sur base silencieuse)
+  # est dans le MP4 : RMS global astats. Musique ~-18 dB ; SFX épars sur base
+  # silencieuse <-30 dB (le message « BGM planifiée » du worker couvre BGM OU
+  # SFX : lui seul ne prouve pas la musique).
+  ffmpeg -hide_banner -i "$OUT/export.mp4" -map 0:a -af astats=measure_overall=RMS_level:measure_perchannel=none -f null - 2>&1 \
+    | grep -E "RMS level dB" | head -2 > "$OUT/rms_musique.txt" || true
+  RMS_DB=$(grep -oE "\-?[0-9]+\.[0-9]+" "$OUT/rms_musique.txt" 2>/dev/null | head -1)
   if [ -s "$OUT/ffprobe.txt" ] \
      && ! grep -qE "Invalid data found|Error while decoding|error:" "$OUT/decode_check.txt" 2>/dev/null; then
-    printf 'PASS\tOFFX_mp4_decode_offline\tMP4 exporté HORS CONNEXION, décodage intégral OK (ffprobe.txt ; warnings DTS de rushs émulés exclus)\n' >> "$RESULTS"
+    if [ -n "$RMS_DB" ] && awk -v r="$RMS_DB" 'BEGIN{exit !(r > -28)}'; then
+      printf 'PASS\tOFFX_mp4_decode_offline\tMP4 exporté HORS CONNEXION avec musique (RMS %s dB > -28 ; ffprobe.txt, rms_musique.txt, decode_check.txt sans erreur réelle)\n' "$RMS_DB" >> "$RESULTS"
+    else
+      printf 'FAIL\tOFFX_mp4_decode_offline\tMP4 hors connexion décodable mais SANS musique (RMS %s dB : SFX sur base silencieuse ? — rms_musique.txt)\n' "${RMS_DB:-indéterminé}" >> "$RESULTS"
+    fi
   else
     printf 'FAIL\tOFFX_mp4_decode_offline\tMP4 produit mais ffprobe/decode en échec (voir ffprobe.txt/decode_check.txt)\n' >> "$RESULTS"
   fi

@@ -116,6 +116,19 @@ case "$LANGUE" in
 esac
 case "$MODE" in musique|voix|mix) ;; *) echo "mode inconnu : $MODE (musique|voix|mix)"; exit 2 ;; esac
 
+# D42.28-16 : BGM titulaire T1 du secteur commerce (téléchargé via le compte
+# de test A — le produit ne télécharge pas le BGM en session démo). Injecté
+# plus bas selon le mode (musique/mix).
+CAT_BGM="musique_t1_shops_small_business"
+BGM_LOCAL="$OUT/bgm_titulaire.mp3"
+if [ "$MODE" != "voix" ]; then
+  if bash "$(dirname "$0")/fetch_bgm_titulaire.sh" "$CAT_BGM" "$BGM_LOCAL"; then
+    echo "bgm_telecharge=$(wc -c < "$BGM_LOCAL") o" >> "$OUT/constats_mode.txt"
+  else
+    echo "bgm_telecharge=ECHEC" >> "$OUT/constats_mode.txt"
+  fi
+fi
+
 swipe_v() { # y1% y2% durée_ms — glissement vertical lent (P1 éprouvé)
   local w h x
   w=$($UI size 2>/dev/null | awk '{print $2}'); h=$($UI size 2>/dev/null | awk '{print $4}')
@@ -248,12 +261,22 @@ sleep 4
 shot "21_brief"; dump "21_brief"
 
 brief_ok=0
-if $UI wait --text "$BRIEF" --exact --timeout 30 >/dev/null 2>&1; then
-  # L'écran est prouvé par le libellé du titre (dump 21_brief.xml à l'appui au
-  # run 42732996211 : « Ma vidéo » + champs présents). NB : la commande
-  # `champs` émet « E2E CHAMP » (pas « FIELD ») — le grep de la 1re version ne
-  # matchait jamais : c'était un défaut du banc, pas de l'app.
-  brief_ok=1
+# D42.28-15 : le wait ui.py --exact a échoué 8 fois (2 runs) alors que le dump
+# 21_brief.xml prouvait l'écran (« Ma vidéo » + champs + exemples). La preuve
+# retenue est le DUMP ARCHIVÉ (grep du titre), avec re-tentatives : plus solide
+# et diagnostiqué dans le log (nœuds comptés). Le wait reste tenté à titre de
+# diagnostic (sa sortie EST affichée cette fois).
+echo "E2E P3 brief : dump 21_brief.xml = $(wc -c < "$OUT/21_brief.xml" 2>/dev/null || echo 0) octets, $(grep -c '<node' "$OUT/21_brief.xml" 2>/dev/null || echo 0) nœuds"
+$UI wait --text "$BRIEF" --exact --timeout 8 || echo "E2E P3 brief : wait diagnostic échoué (ci-dessus : nodes= vide = dump KO ; nodes=N = titre non trouvé)"
+for essai_brief in 1 2 3; do
+  if [ -s "$OUT/21_brief.xml" ] && grep -q "text=\"$BRIEF\"" "$OUT/21_brief.xml"; then
+    brief_ok=1; break
+  fi
+  sleep 3
+  shot "21_brief_r${essai_brief}"; dump "21_brief_r${essai_brief}"
+  cp "$OUT/21_brief_r${essai_brief}.xml" "$OUT/21_brief.xml" 2>/dev/null || true
+done
+if [ "$brief_ok" = "1" ]; then
   $UI champs > "$OUT/champs.txt" 2>&1 || true
 fi
 if [ "$brief_ok" != "1" ]; then
@@ -456,8 +479,19 @@ fi
 
 case "$MODE" in
   musique)
-    # rien à préparer : rushs muets (émulateur) + BGM pré-téléchargé à la
-    # sélection du gabarit (prefetchForGabarit). On constate le cache.
+    # D42.28-16 : le produit ne télécharge le BGM qu'avec un jeton Firebase
+    # (session démo : files/bgm reste vide, export SFX seuls). Le banc injecte
+    # la piste titulaire T1 (téléchargée au démarrage de la cellule via le
+    # compte de test A) : l'export doit alors l'utiliser (localFile au
+    # repli de ExportActivity) — c'est le mode « musique » réel.
+    if [ -s "$BGM_LOCAL" ] \
+       && adb push "$BGM_LOCAL" /data/local/tmp/bgm.mp3 >/dev/null 2>&1 \
+       && adb shell run-as "$PKG" cp /data/local/tmp/bgm.mp3 "files/bgm/${CAT_BGM}.mp3" >/dev/null 2>&1 \
+       && app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -q "${CAT_BGM}.mp3"; then
+      echo "bgm_injecte=${CAT_BGM}.mp3 ($(wc -c < "$BGM_LOCAL") o)" >> "$OUT/constats_mode.txt"
+    else
+      echo "bgm_injection=ECHEC" >> "$OUT/constats_mode.txt"
+    fi
     n_bgm=$(app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -c '\.mp3')
     echo "bgm_en_cache=$n_bgm" >> "$OUT/constats_mode.txt"
     ;;
@@ -503,6 +537,16 @@ case "$MODE" in
       n_bgm=$(app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -c '\.mp3')
       echo "bgm_en_cache=$n_bgm (vidé pour le mode voix)" >> "$OUT/constats_mode.txt"
     else
+      # mode MIX : injecter AUSSI le BGM titulaire (même méthode que le mode
+      # musique) : voix dans les rushs + musique en cache = mix réel.
+      if [ -s "$BGM_LOCAL" ] \
+         && adb push "$BGM_LOCAL" /data/local/tmp/bgm.mp3 >/dev/null 2>&1 \
+         && adb shell run-as "$PKG" cp /data/local/tmp/bgm.mp3 "files/bgm/${CAT_BGM}.mp3" >/dev/null 2>&1 \
+         && app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -q "${CAT_BGM}.mp3"; then
+        echo "bgm_injecte=${CAT_BGM}.mp3 ($(wc -c < "$BGM_LOCAL") o)" >> "$OUT/constats_mode.txt"
+      else
+        echo "bgm_injection=ECHEC" >> "$OUT/constats_mode.txt"
+      fi
       n_bgm=$(app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -c '\.mp3')
       echo "bgm_en_cache=$n_bgm" >> "$OUT/constats_mode.txt"
     fi
