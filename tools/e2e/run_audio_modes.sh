@@ -167,6 +167,13 @@ app_ls() { # app_ls <rep-relatif> [flags ls] -> liste sur stdout (P1 éprouvé)
 app_cat() { adb shell run-as "$PKG" cat "$1" 2>/dev/null; }
 
 echo "=========== P3 $LANGUE / $MODE ($TAG) ==========="
+# D42.28-24 : EMPREINTE DU SCRIPT EXÉCUTÉ (diagnostic du saut de corps :
+# les traces de la passe basse n'apparaissent ni au log ni à l'artefact
+# alors que le blob du commit les contient — si cette empreinte diverge du
+# blob, le fichier exécuté n'est pas celui du commit ; si elle concorde,
+# le corps s'exécute et c'est la collecte de sorties qui perd tout)
+sha256sum "$0" 2>/dev/null | sed 's/^/E2E P3 SCRIPT_SHA /'
+echo "E2E P3 SCRIPT_LIGNES=$(wc -l < "$0") BASSE_PASSE_PRESENTE=$(grep -c 'basse_passe()' "$0")"
 adb devices | sed 's/^/E2E /'
 adb uninstall "$PKG" >/dev/null 2>&1
 if adb install -r -t "$APK" > "$OUT/install.log" 2>&1; then
