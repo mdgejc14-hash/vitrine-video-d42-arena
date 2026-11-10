@@ -495,7 +495,12 @@ jobs:
   # ---------------------------------------------------------------------------
   android-e2e-offline-export:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # D42.28-26 : 110 min — l'export AVEC BGM réelle (fix configure du
+    # BgmDecoder) est ~3x plus lent sur l'émulateur swiftshader : >40 min
+    # observées (lab 42811778574 coupé au timeout 60 min 29 s avant le
+    # verdict interne du banc). Setup+parcours ~20 min + export <=75 min
+    # + vérifications OFFX ~6 min.
+    timeout-minutes: 110
     steps:
       - uses: actions/checkout@v4
 

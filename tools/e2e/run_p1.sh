@@ -749,11 +749,15 @@ fi
 # (rc6 : complété à ~8 min, juste après la fenêtre de 8 ; rc7 : tentative 1
 # interrompue par le quota JobScheduler de 10 min puis relancée). Fenêtre
 # portée à 40 min pour couvrir jusqu à 3-4 tentatives WorkManager.
-if $UI wait --text "Vidéo prête ! Partage-la avec tes clients." --exact --timeout 2400 >/dev/null 2>&1; then
+# D42.28-26 : 75 min (4500 s) — avec la BGM réellement mixée (fix
+# configure du BgmDecoder), l export dépasse 40 min sur l émulateur
+# (lab 42811778574 : cutoff job à 12:58:19, verdict interne attendu
+# 12:58:48) ; le job workflow est passé à timeout-minutes: 110.
+if $UI wait --text "Vidéo prête ! Partage-la avec tes clients." --exact --timeout 4500 >/dev/null 2>&1; then
   record PASS P1_export_termine "« Vidéo prête ! » affiché"
   shot 29_export_termine; dump 29_export_termine
 else
-  record FAIL P1_export_termine "aucune fin d'export en 40 min"; shot 29_export_timeout; dump 29_export_timeout
+  record FAIL P1_export_termine "aucune fin d'export en 75 min"; shot 29_export_timeout; dump 29_export_timeout
 fi
 
 # --- S26 fichier MP4 (uniquement si l'APK est débuggable) ----------------------
