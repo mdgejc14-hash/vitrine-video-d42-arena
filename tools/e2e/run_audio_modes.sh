@@ -119,18 +119,33 @@ case "$MODE" in musique|voix|mix) ;; *) echo "mode inconnu : $MODE (musique|voix
 # D42.28-16 : BGM titulaire T1 du secteur commerce (téléchargé via le compte
 # de test A — le produit ne télécharge pas le BGM en session démo). Injecté
 # plus bas selon le mode (musique/mix).
-CAT_BGM="musique_t1_shops_small_business"
-BGM_BASE="$OUT/bgm_titulaire"   # base : .mp3/.m4a + .ext selon le format servi
-BGM_EXT=""; BGM_LOCAL=""
+# D42.28-21 : les 6 catégories T1 sont téléchargées puis TOUTES injectées :
+# la carte secteur tapée dépend de la pagination (le commerce n'est pas en
+# page 1) donc la catégorie attendue (bgmCategorie du gabarit choisi) varie —
+# avec les 6 en cache, localFile trouve la sienne quelle que soit la carte.
+SECTEURS_BGM="vetements_mode coiffure_beaute restaurants_maquis batiment_travaux immo_auto shops_small_business"
+BGM_OK=0
 if [ "$MODE" != "voix" ]; then
-  if bash "$(dirname "$0")/fetch_bgm_titulaire.sh" "$CAT_BGM" "$BGM_BASE"; then
-    BGM_EXT=$(cat "$BGM_BASE.ext" 2>/dev/null | tr -d '\r\n' || echo mp3)
-    BGM_LOCAL="$BGM_BASE.$BGM_EXT"
-    echo "bgm_telecharge=$(wc -c < "$BGM_LOCAL") o (format $BGM_EXT)" >> "$OUT/constats_mode.txt"
-  else
-    echo "bgm_telecharge=ECHEC" >> "$OUT/constats_mode.txt"
-  fi
+  for s in $SECTEURS_BGM; do
+    if bash "$(dirname "$0")/fetch_bgm_titulaire.sh" "musique_t1_${s}" "$OUT/bgm_${s}"; then
+      BGM_OK=$((BGM_OK+1))
+    fi
+  done
+  echo "bgm_telecharges=${BGM_OK}/6 secteurs" >> "$OUT/constats_mode.txt"
 fi
+injecter_bgm() { # -> nombre de fichiers réellement injectés
+  local s e n=0
+  for s in $SECTEURS_BGM; do
+    e=$(cat "$OUT/bgm_${s}.ext" 2>/dev/null | tr -d '\r\n')
+    [ -n "$e" ] && [ -s "$OUT/bgm_${s}.$e" ] || continue
+    if adb push "$OUT/bgm_${s}.$e" /data/local/tmp/bgm_inj."$e" >/dev/null 2>&1 \
+       && adb shell run-as "$PKG" cp /data/local/tmp/bgm_inj."$e" "files/bgm/musique_t1_${s}.${e}" >/dev/null 2>&1; then
+      n=$((n+1))
+      echo "bgm_injecte=musique_t1_${s}.${e}" >> "$OUT/constats_mode.txt"
+    fi
+  done
+  echo "$n"
+}
 
 swipe_v() { # y1% y2% durée_ms — glissement vertical lent (P1 éprouvé)
   local w h x
@@ -399,18 +414,28 @@ done
 # D'ABORD jusqu'au bouton Continuer (preuve par wait), PUIS lire et remplir
 # ce qui est visible, et recommencer tant qu'un champ visible est vide.
 for passe_bas in 1 2 3; do
+  echo "E2E P3 [passe basse ${passe_bas}] début"
   fermer_clavier
-  # descendre jusqu'au bouton Continuer (le clavier fermé, 6 pas suffisent)
+  # descendre jusqu'au bouton Continuer — 6 pas, alternatives de méthode :
+  # swipe lent PUIS keyevent PAGE_DOWN (certains scrollables Compose
+  # n'adhèrent pas aux swipes courts de input swipe)
+  pas_bas=0
   for _ in 1 2 3 4 5 6; do
-    if $UI wait --text "$CONTINUER_BRIEF" --exact --timeout 2 >/dev/null 2>&1; then break; fi
-    swipe_v 73 26 250 >/dev/null 2>&1
+    if $UI wait --text "$CONTINUER_BRIEF" --exact --timeout 2 >/dev/null 2>&1; then pas_bas=1; break; fi
+    swipe_v 78 20 600 >/dev/null 2>&1
+    sleep 1
+    if $UI wait --text "$CONTINUER_BRIEF" --exact --timeout 1 >/dev/null 2>&1; then pas_bas=1; break; fi
+    adb shell input keyevent KEYCODE_PAGE_DOWN >/dev/null 2>&1
     sleep 1
   done
+  echo "E2E P3 [passe basse ${passe_bas}] bouton atteint=${pas_bas}"
   shot "22b_bas_${passe_bas}"; dump "22b_bas_${passe_bas}"
+  echo "E2E P3 [passe basse ${passe_bas}] shot/dump faits"
   $UI champs > "$OUT/champs_bas.txt" 2>&1 || true
   sed 's/^/E2E P3 bas /' "$OUT/champs_bas.txt"
-  vide_bas=$(grep -c " vide " "$OUT/champs_bas.txt" 2>/dev/null || echo 0)
-  [ "$vide_bas" = "0" ] && break
+  vide_bas=$(grep -c " vide " "$OUT/champs_bas.txt" 2>/dev/null)
+  vide_bas=${vide_bas:-0}
+  [ "$vide_bas" = "0" ] && [ -s "$OUT/champs_bas.txt" ] && break
   while IFS= read -r ligne; do
     idx=$(echo "$ligne" | awk '{print $3}')
     libelle=$(echo "$ligne" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
@@ -546,16 +571,13 @@ fi
 
 case "$MODE" in
   musique)
-    # D42.28-16 : le produit ne télécharge le BGM qu'avec un jeton Firebase
+    # D42.28-16/21 : le produit ne télécharge le BGM qu'avec un jeton Firebase
     # (session démo : files/bgm reste vide, export SFX seuls). Le banc injecte
-    # la piste titulaire T1 (téléchargée au démarrage de la cellule via le
-    # compte de test A) : l'export doit alors l'utiliser (localFile au
-    # repli de ExportActivity) — c'est le mode « musique » réel.
-    if [ -n "$BGM_EXT" ] && [ -s "$BGM_LOCAL" ] \
-       && adb push "$BGM_LOCAL" /data/local/tmp/bgm."$BGM_EXT" >/dev/null 2>&1 \
-       && adb shell run-as "$PKG" cp /data/local/tmp/bgm."$BGM_EXT" "files/bgm/${CAT_BGM}.${BGM_EXT}" >/dev/null 2>&1 \
-       && app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -q "${CAT_BGM}.${BGM_EXT}"; then
-      echo "bgm_injecte=${CAT_BGM}.${BGM_EXT} ($(wc -c < "$BGM_LOCAL") o)" >> "$OUT/constats_mode.txt"
+    # les 6 pistes titulaires T1 (compte sonde) : l'export utilise celle du
+    # gabarit choisi (localFile au repli de ExportActivity) — mode « musique » réel.
+    n_inj=$(injecter_bgm)
+    if [ "$n_inj" -ge 1 ]; then
+      echo "bgm_injection=${n_inj} fichier(s)" >> "$OUT/constats_mode.txt"
     else
       echo "bgm_injection=ECHEC" >> "$OUT/constats_mode.txt"
     fi
@@ -604,13 +626,11 @@ case "$MODE" in
       n_bgm=$(app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -c '\.mp3')
       echo "bgm_en_cache=$n_bgm (vidé pour le mode voix)" >> "$OUT/constats_mode.txt"
     else
-      # mode MIX : injecter AUSSI le BGM titulaire (même méthode que le mode
-      # musique) : voix dans les rushs + musique en cache = mix réel.
-      if [ -n "$BGM_EXT" ] && [ -s "$BGM_LOCAL" ] \
-         && adb push "$BGM_LOCAL" /data/local/tmp/bgm."$BGM_EXT" >/dev/null 2>&1 \
-         && adb shell run-as "$PKG" cp /data/local/tmp/bgm."$BGM_EXT" "files/bgm/${CAT_BGM}.${BGM_EXT}" >/dev/null 2>&1 \
-         && app_ls files/bgm 2>/dev/null | tr -d '\r' | grep -q "${CAT_BGM}.${BGM_EXT}"; then
-        echo "bgm_injecte=${CAT_BGM}.${BGM_EXT} ($(wc -c < "$BGM_LOCAL") o)" >> "$OUT/constats_mode.txt"
+      # mode MIX : injecter AUSSI les 6 BGM titulaires (même méthode que le
+      # mode musique) : voix dans les rushs + musique en cache = mix réel.
+      n_inj=$(injecter_bgm)
+      if [ "$n_inj" -ge 1 ]; then
+        echo "bgm_injection=${n_inj} fichier(s)" >> "$OUT/constats_mode.txt"
       else
         echo "bgm_injection=ECHEC" >> "$OUT/constats_mode.txt"
       fi

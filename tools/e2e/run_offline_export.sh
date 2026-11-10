@@ -36,16 +36,20 @@ rm -f "$MARQUEUR_COUPE"
 # du brief : le test redevient exactement « BGM en cache + export hors
 # connexion ». La coupure a lieu APRÈS l'injection : tout le reste du
 # parcours (fin de brief, prises, aperçu, export) se fait SANS réseau.
-CAT_BGM="musique_t1_shops_small_business"   # T1 « Nouvel arrivage » du secteur commerce (P1)
-BGM_BASE="$OUT/bgm_titulaire"               # base : .mp3/.m4a + .ext selon le format servi
-if bash tools/e2e/fetch_bgm_titulaire.sh "$CAT_BGM" "$BGM_BASE"; then
-  BGM_EXT=$(cat "$BGM_BASE.ext" 2>/dev/null | tr -d '\r\n' || echo mp3)
-  BGM_LOCAL="$BGM_BASE.$BGM_EXT"
-  echo "E2E BGM titulaire téléchargé : $BGM_LOCAL ($(wc -c < "$BGM_LOCAL") octets, format $BGM_EXT)"
-else
-  BGM_EXT=""; BGM_LOCAL=""
-  echo "E2E AVERTISSEMENT : BGM titulaire non téléchargé — le test offline avec musique ne peut pas s'établir"
-fi
+# D42.28-21 : les 6 catégories T1 sont téléchargées puis TOUTES injectées :
+# la carte secteur tapée dépend de la pagination (le commerce n'est pas en
+# page 1), donc la catégorie attendue par le produit (bgmCategorie du gabarit
+# choisi) varie — avec les 6 en cache, localFile trouve la sienne quelle que
+# soit la carte choisie (run 42771887080 : coupure PASS mais RMS SFX seuls —
+# secteur MODE choisi, catégorie shops injectée : aucune correspondance).
+SECTEURS_BGM="vetements_mode coiffure_beaute restaurants_maquis batiment_travaux immo_auto shops_small_business"
+BGM_OK=0
+for s in $SECTEURS_BGM; do
+  if bash tools/e2e/fetch_bgm_titulaire.sh "musique_t1_${s}" "$OUT/bgm_${s}"; then
+    BGM_OK=$((BGM_OK+1))
+  fi
+done
+echo "E2E BGM titulaires téléchargés : ${BGM_OK}/6 secteurs"
 
 couper_reseau() {
   adb shell svc wifi disable >/dev/null 2>&1
@@ -68,10 +72,19 @@ retablir_reseau() {
     i=$((i+1))
     if adb shell uiautomator dump /sdcard/offexp_probe.xml >/dev/null 2>&1 \
        && adb exec-out cat /sdcard/offexp_probe.xml 2>/dev/null | grep -q "Ma vidéo"; then
-      if [ -n "$BGM_EXT" ] && [ -s "$BGM_LOCAL" ] \
-         && adb push "$BGM_LOCAL" /data/local/tmp/bgm_inject."$BGM_EXT" >/dev/null 2>&1 \
-         && adb shell run-as "$PKG" cp /data/local/tmp/bgm_inject."$BGM_EXT" "files/bgm/${CAT_BGM}.${BGM_EXT}" >/dev/null 2>&1 \
-         && adb shell run-as "$PKG" ls files/bgm 2>/dev/null | tr -d '\r' | grep -q "${CAT_BGM}.${BGM_EXT}"; then
+      # injection de TOUTES les catégories téléchargées (la bonne sera trouvée
+      # par localFile quelle que soit la carte secteur choisie)
+      injectes=0
+      for s in $SECTEURS_BGM; do
+        e=$(cat "$OUT/bgm_${s}.ext" 2>/dev/null | tr -d '\r\n')
+        [ -n "$e" ] && [ -s "$OUT/bgm_${s}.$e" ] || continue
+        if adb push "$OUT/bgm_${s}.$e" /data/local/tmp/bgm_inj."$e" >/dev/null 2>&1 \
+           && adb shell run-as "$PKG" cp /data/local/tmp/bgm_inj."$e" "files/bgm/musique_t1_${s}.${e}" >/dev/null 2>&1; then
+          injectes=$((injectes+1))
+        fi
+      done
+      if [ "$injectes" -ge 1 ] \
+         && adb shell run-as "$PKG" ls files/bgm 2>/dev/null | tr -d '\r' | grep -qE '\.mp3|\.m4a'; then
         sleep 2
         couper_reseau
         {
@@ -85,8 +98,7 @@ retablir_reseau() {
         touch "$MARQUEUR_COUPE"
         break
       else
-        TAILLE_BGM=0; [ -n "$BGM_LOCAL" ] && [ -f "$BGM_LOCAL" ] && TAILLE_BGM=$(wc -c < "$BGM_LOCAL")
-        echo "[$(date -u +%H:%M:%S)] it=$i : brief détecté mais injection BGM impossible (fichier runner : ${TAILLE_BGM} o, ext=${BGM_EXT:-aucune})" >> "$OUT/surveillant.log"
+        echo "[$(date -u +%H:%M:%S)] it=$i : brief détecté mais injection BGM impossible (${injectes} fichier(s) runner)" >> "$OUT/surveillant.log"
       fi
     fi
     if [ $((i % 20)) -eq 1 ]; then
