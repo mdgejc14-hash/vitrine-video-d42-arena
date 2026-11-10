@@ -193,6 +193,29 @@ echo "=========== P3 $LANGUE / $MODE ($TAG) ==========="
 sha256sum "$0" 2>/dev/null | sed 's/^/E2E P3 SCRIPT_SHA /'
 echo "E2E P3 SCRIPT_LIGNES=$(wc -l < "$0") BASSE_PASSE_PRESENTE=$(grep -c 'basse_passe()' "$0")"
 adb devices | sed 's/^/E2E /'
+# D42.28-30 — APPAREIL CLIENT PROPRE (recopie du bloc éprouvé de run_p1.sh
+# D42.21, aligné sur run_official_e2e.sh rc9). L'image AOSP « default »
+# embarque /system/xbin/su : l'heuristique anti-root d'IntegrityGuard
+# (V2.0 §22) le voit et refuse l'export (DENY_INTEGRITY). Cause racine des
+# FAIL P3_export_lance « aucun statut de démarrage constaté » du run v13
+# (42821782768) : le dump 29 affichait le statut export_gate_integrity
+# (« Vérification de sécurité échouée. Réinstallez l'application ») alors
+# que le P1 du lab, qui masque /system/xbin, passe la même porte.
+# IntegrityGuard n'est NI modifié NI contourné — le contrôle de certificat
+# reste pleinement actif. /system n'est pas écrit, pas de reboot.
+adb root >/dev/null 2>&1 || true
+sleep 3
+adb shell setenforce 0 2>/dev/null || true
+adb shell mkdir -p /data/local/tmp/vv_xbin_vide
+{
+  echo "=== avant masquage (su visible = heuristique anti-root active) ==="
+  adb shell 'ls -la /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1'
+  echo "=== masquage : bind-mount d'un répertoire vide sur /system/xbin ==="
+  adb shell mount -o bind /data/local/tmp/vv_xbin_vide /system/xbin 2>&1 \
+    || adb shell mount --bind /data/local/tmp/vv_xbin_vide /system/xbin 2>&1
+  echo "=== après masquage (attendu : su invisible) ==="
+  adb shell 'ls /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1'
+} | tee "$OUT/su_mask_proof.txt"
 adb uninstall "$PKG" >/dev/null 2>&1
 if adb install -r -t "$APK" > "$OUT/install.log" 2>&1; then
   record PASS "P3_installation_${LANGUE}_${MODE}" "$(tail -1 "$OUT/install.log" | tr -d '\r')"
