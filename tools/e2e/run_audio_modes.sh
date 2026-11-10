@@ -464,12 +464,25 @@ basse_passe() { # $1 = numéro de passe
   return 0
 }
 
+# D42.28-25 : trace xtrace de la passe basse (le corps de la fonction est
+# « avalé » depuis 5 runs : premier écho visible, puis plus RIEN — ni echoes,
+# ni shot, ni champs_bas.txt à l'artefact — alors que le script exécuté est
+# le bon (sha256 vérifié en tête de cellule). La trace ci-dessous, écrite
+# dans bash_x.log (artefact) + résumée au log, montrera la commande exacte
+# où l'exécution dévie.
+exec 9>>"$OUT/bash_x.log"
+echo "=== $(date -u +%H:%M:%S) passe basse ===" >&9
+PS4='+L${LINENO}: ' 
+set -x
 for _passe_bas in 1 2 3; do
   basse_passe "$_passe_bas"
   vide_bas=$(grep -c " vide " "$OUT/champs_bas.txt" 2>/dev/null)
   vide_bas=${vide_bas:-0}
   [ "$vide_bas" = "0" ] && [ -s "$OUT/champs_bas.txt" ] && break
 done
+set +x
+exec 9>&-
+echo "E2E P3 xtrace : $(wc -l < "$OUT/bash_x.log" 2>/dev/null || echo 0) lignes dans bash_x.log"
 echo "E2E P3 champs remplis (passe basse incluse) : $remplis"
 $UI champs > "$OUT/champs_apres.txt" 2>&1 || true
 sed 's/^/E2E P3 /' "$OUT/champs_apres.txt"
