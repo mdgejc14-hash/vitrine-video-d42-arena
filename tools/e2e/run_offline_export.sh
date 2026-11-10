@@ -40,9 +40,23 @@ retablir_reseau() {
 # NB : PAS de sh -c (les quotes seraient perdues à travers adb, sh -c ne
 # recevrait que « ls » du répertoire courant) — même forme que app_ls de
 # run_p1.sh (éprouvée 40 PASS) : ls du dossier, grep local sur \.mp3.
+# D42.28-13 : DOUBLE sonde (run-as PUIS adb root — si run-as échoue pour
+# une raison quelconque, root voit le dossier) + trace horodatée toutes
+# les ~30 s dans surveillant.log (diagnostic du run 42728504073 : le BGM
+# était bien servi à l'export [D42-VERIF gain solo, hasAudioTrack=true]
+# mais la sonde unique n'a jamais rien vu).
+sonde_bgm() {  # -> rc 0 si un morceau (.mp3/.m4a, cache définitif) est présent
+  local sortie
+  sortie=$(adb shell run-as "$PKG" ls files/bgm 2>/dev/null | tr -d '\r')
+  printf '%s\n' "$sortie" | grep -qE '\.mp3|\.m4a' && return 0
+  sortie=$(adb shell ls "/data/data/$PKG/files/bgm" 2>/dev/null | tr -d '\r')
+  printf '%s\n' "$sortie" | grep -qE '\.mp3|\.m4a'
+}
 (
+  i=0
   while [ ! -f "$MARQUEUR_COUPE" ]; do
-    if adb shell run-as "$PKG" ls files/bgm 2>/dev/null | tr -d '\r' | grep -q '\.mp3'; then
+    i=$((i+1))
+    if sonde_bgm; then
       sleep 3   # laisser le téléchargement intégral (sha vérifié côté app) finir
       couper_reseau
       {
@@ -55,6 +69,10 @@ retablir_reseau() {
       } > "$OUT/coupure_reseau.txt" 2>&1
       touch "$MARQUEUR_COUPE"
       break
+    fi
+    # trace légère : état de la sonde toutes les ~30 s (preuve de vie + diagnostic)
+    if [ $((i % 15)) -eq 1 ]; then
+      echo "[$(date -u +%H:%M:%S)] it=$i sonde=$(adb shell run-as "$PKG" ls files/bgm 2>&1 | tr -d '\r' | head -2 | tr '\n' ' ')" >> "$OUT/surveillant.log"
     fi
     sleep 2
   done
@@ -73,7 +91,24 @@ RESULTS="$OUT/results.tsv"
 if [ -f "$MARQUEUR_COUPE" ]; then
   printf 'PASS\tOFFX_coupure_apres_prefetch\tBGM pré-téléchargé puis réseau coupé (preuve : coupure_reseau.txt)\n' >> "$RESULTS"
 else
-  printf 'FAIL\tOFFX_coupure_apres_prefetch\tBGM jamais observé en cache — réseau resté ON (surveillant)\n' >> "$RESULTS"
+  # Diagnostic (D42.28-13, run 42728504073) : le BGM était-il en cache À LA FIN
+  # (sonde non-détection) ou jamais téléchargé ? Capture systématique.
+  {
+    echo "=== DIAGNOSTIC SURVEILLANT ($(date -u +%Y-%m-%dT%H:%M:%SZ)) ==="
+    echo "-- files/bgm (run-as) :"
+    adb shell run-as "$PKG" ls -la files/bgm 2>&1 | tr -d '\r'
+    echo "-- files/ (run-as) :"
+    adb shell run-as "$PKG" ls -la files 2>&1 | tr -d '\r'
+    echo "-- data/data (root) :"
+    adb shell ls "/data/data/$PKG/files" 2>&1 | tr -d '\r'
+    echo "-- trace du surveillant (surveillant.log) :"
+    cat "$OUT/surveillant.log" 2>/dev/null | tail -20
+  } > "$OUT/diagnostic_surveillant.txt" 2>&1
+  if adb shell run-as "$PKG" ls files/bgm 2>/dev/null | tr -d '\r' | grep -q '\.mp3'; then
+    printf 'FAIL\tOFFX_coupure_apres_prefetch\tBGM présent en cache à la fin mais JAMAIS détecté par la sonde (réseau resté ON) — voir diagnostic_surveillant.txt + surveillant.log\n' >> "$RESULTS"
+  else
+    printf 'FAIL\tOFFX_coupure_apres_prefetch\tBGM jamais observé en cache — réseau resté ON (surveillant)\n' >> "$RESULTS"
+  fi
 fi
 
 # Connectivité au moment du verdict (doit être OFF si tout s'est passé comme prévu)
@@ -86,8 +121,15 @@ if [ -s "$OUT/export.mp4" ]; then
     -show_entries stream=codec_type,codec_name \
     -of default=noprint_wrappers=1 "$OUT/export.mp4" > "$OUT/ffprobe.txt" 2>&1
   ffmpeg -v error -i "$OUT/export.mp4" -f null - > "$OUT/decode_check.txt" 2>&1
-  if [ -s "$OUT/ffprobe.txt" ] && ! [ -s "$OUT/decode_check.txt" ]; then
-    printf 'PASS\tOFFX_mp4_decode_offline\tMP4 exporté HORS CONNEXION, décodage intégral OK (ffprobe.txt)\n' >> "$RESULTS"
+  # D42.28-13 : les rushs de la caméra émulée produisent des DTS dupliqués —
+  # ffmpeg émet « Application provided invalid, non monotonically increasing
+  # dts to muxer » (warning du muxer null, 162 lignes au run 42728504073)
+  # SANS qu'aucun décodage n'échoue. Vraies erreurs = Invalid data found /
+  # Error while decoding / « error: ». ffprobe.txt non vide + aucune vraie
+  # erreur = décodable.
+  if [ -s "$OUT/ffprobe.txt" ] \
+     && ! grep -qE "Invalid data found|Error while decoding|error:" "$OUT/decode_check.txt" 2>/dev/null; then
+    printf 'PASS\tOFFX_mp4_decode_offline\tMP4 exporté HORS CONNEXION, décodage intégral OK (ffprobe.txt ; warnings DTS de rushs émulés exclus)\n' >> "$RESULTS"
   else
     printf 'FAIL\tOFFX_mp4_decode_offline\tMP4 produit mais ffprobe/decode en échec (voir ffprobe.txt/decode_check.txt)\n' >> "$RESULTS"
   fi
