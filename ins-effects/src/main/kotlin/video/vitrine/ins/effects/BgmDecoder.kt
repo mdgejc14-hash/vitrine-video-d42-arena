@@ -40,6 +40,14 @@ object BgmDecoder {
             val codec = MediaCodec.createDecoderByType(mime)
             val out = ArrayList<Short>(sampleRate * channels * 2)
             try {
+                // D42.28-26 (bug racine banc A v3.3/v3.4) : configure() est
+                // OBLIGATOIRE avant start(). Sans lui, start() leve
+                // IllegalStateException, avalee par le runCatching ci-dessous :
+                // decodeMusic rendait null en ~5 ms et l'export sortait en SFX
+                // seuls (RMS -53,26 dB) alors que le BGM cache etait valide,
+                // trouve et reconnu (audio/mpeg 44100 Hz stereo dans les logs
+                // CCodec). run 42786468288, lab banc A v3.4.
+                codec.configure(format, null, null, 0)
                 codec.start()
                 decodeLoop(extractor, codec, out)
             } finally {
@@ -67,11 +75,35 @@ object BgmDecoder {
         out: ArrayList<Short>
     ) {
         var inputDone = false
-        var outputDone = false
         val info = MediaCodec.BufferInfo()
-        while (!outputDone) {
+        // D42.28-26 : patience bornee. L'ancienne heuristique d'abandon
+        // (TRY_AGAIN + entree epuisee + rien produit) coupait un decodage
+        // sain si le codec logiciel livre son premier PCM seulement apres
+        // l'EOS d'entree (mise en tampon C2). On n'abandonne plus qu'apres
+        // 300 attentes vides consecutives (3 s) une fois l'entree epuisee ;
+        // INFO_OUTPUT_FORMAT_CHANGED est attendu avant le premier buffer
+        // utile et ne compte pas comme un echec. Borne globale de 20 000
+        // tours contre toute boucle infinie theorique.
+        var attentesVides = 0
+        var tours = 0
+        while (attentesVides < 300 && tours < 20_000) {
+            tours++
             if (!inputDone) inputDone = feedDecoder(extractor, codec)
-            outputDone = drainDecoder(codec, info, out, inputDone)
+            when (val outIndex = codec.dequeueOutputBuffer(info, TIMEOUT_US)) {
+                MediaCodec.INFO_TRY_AGAIN_LATER -> if (inputDone) attentesVides++
+                MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> Unit
+                else -> if (outIndex >= 0) {
+                    attentesVides = 0
+                    val buffer = codec.getOutputBuffer(outIndex)
+                    if (buffer != null && info.size > 0) {
+                        appendPcm16(buffer, info.size, out)
+                    }
+                    val finFlux =
+                        info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0
+                    codec.releaseOutputBuffer(outIndex, false)
+                    if (finFlux) return
+                }
+            }
         }
     }
 
@@ -88,26 +120,6 @@ object BgmDecoder {
         codec.queueInputBuffer(inIndex, 0, size, extractor.sampleTime, 0)
         extractor.advance()
         return false
-    }
-
-    /** Recueille le PCM produit ; true quand le drain est complet. */
-    private fun drainDecoder(
-        codec: MediaCodec,
-        info: MediaCodec.BufferInfo,
-        out: ArrayList<Short>,
-        inputDone: Boolean
-    ): Boolean {
-        val outIndex = codec.dequeueOutputBuffer(info, TIMEOUT_US)
-        if (outIndex >= 0) {
-            val buffer = codec.getOutputBuffer(outIndex)
-            if (buffer != null && info.size > 0) {
-                appendPcm16(buffer, info.size, out)
-            }
-            codec.releaseOutputBuffer(outIndex, false)
-            return info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0
-        }
-        // Certains decodeurs renvoient TRY_AGAIN avant le drain final : borne haute.
-        return outIndex == MediaCodec.INFO_TRY_AGAIN_LATER && inputDone && out.isEmpty()
     }
 
     /** Le decodeur AAC livre du PCM 16 bits little-endian (contrat MediaCodec audio). */
