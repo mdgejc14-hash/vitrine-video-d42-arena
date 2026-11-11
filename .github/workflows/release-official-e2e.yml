@@ -21,7 +21,7 @@ name: release-official-e2e
 # verts de la qualification ne sont pas relancés.
 on:
   push:
-    tags: ['d42.17-rc*', 'd42.18-rc*', 'd42.21-rc*', 'd42.27-rc*', 'd42.28-rc*']
+    tags: ['d42.17-rc*', 'd42.18-rc*', 'd42.21-rc*', 'd42.27-rc*', 'd42.28-rc*', 'd42.29-rc*']
 
 concurrency:
   group: release-official-e2e-${{ github.ref }}
