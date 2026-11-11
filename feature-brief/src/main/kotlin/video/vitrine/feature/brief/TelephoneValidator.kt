@@ -1,7 +1,6 @@
 package video.vitrine.feature.brief
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil
-import com.google.i18n.phonenumbers.Phonenumber
 
 /**
  * D42.30 — validation internationale des numéros WhatsApp (retour terrain RC14 :
@@ -69,7 +68,7 @@ object TelephoneValidator {
     fun paysTriés(langue: String): List<String> {
         val regions = util.supportedRegions.toMutableList()
         regions.remove(PAYS_DEFAUT)
-        return listOf(PAYS_DEFAUT) + regions.sortedBy { nomPays(it, langue).lowercase(langue) }
+        return listOf(PAYS_DEFAUT) + regions.sortedBy { nomPays(it, langue).lowercase() }
     }
 
     /** Numéro E.164 → forme nationale lisible (pour ré-affichage). */
