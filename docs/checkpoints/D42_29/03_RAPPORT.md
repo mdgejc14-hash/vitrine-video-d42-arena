@@ -129,10 +129,11 @@ replayQuota/claim/WelcomeGrant + syncEntitlements).
   rien). La file étant durable et rejouée à chaque affichage du dashboard, l'événement
   n'est pas perdu — mais la preuve à 40 s ne pouvait pas être PASS.
 
-**Correctif d'observabilité (b522290)** : sonde produit `D42-SYNC` (flushPending
+**Correctif (b522290 + 67b5cd8)** : sonde produit `D42-SYNC` (flushPending
 déclenché ; flushTelemetry : nb d'événements, code HTTP) + harnais durci : attente
-d'une connectivité RÉELLE (dumpsys, max 60 s) avant de déclencher le flush, double
-déclenchement dashboard, logcat app non filtré. Re-run : 42998315636.
+d'une connectivité RÉELLE (dumpsys, max 60 s) avant de déclencher le flush,
+composant dashboard corrigé (bug 667), captures tolérantes. Verdict final :
+section 9.
 
 ## 7. Incidents et conduite
 
@@ -153,12 +154,51 @@ déclenchement dashboard, logcat app non filtré. Re-run : 42998315636.
 | android-ci 42992432920 (a6519b5) | SUCCESS |
 | android-e2e-lab 42992432909 (a6519b5) | **SUCCESS 15/15 jobs** |
 | pilote offline P4 42994891267 (a6519b5) | SUCCESS — journal PASS, débit PASS, musique offline = online ; télémétrie PARTIAL (fenêtre reconnect) |
-| re-run offline P4 42998315636 (b522290, sonde D42-SYNC) | section 9 |
-| android-ci 42998293963 / e2e-lab 42998294237 (b522290) | section 9 |
+| re-run offline 42998315636 (b522290) | FAILURE d'instrumentation (bug 667b pidof) — le rendu offline lui-même avait réussi |
+| **re-run final 43000828805 (67b5cd8)** | **SUCCESS — OFFX 3/3 PASS, P4 fermé** |
+| android-ci b522290 / 67b5cd8 | 42998293963 / 43000822006 SUCCESS |
+| android-e2e-lab 67b5cd8 (HEAD final) | 43000822216 : **16/16 jobs SUCCESS** |
 
-## 9. Re-run offline sonde D42-SYNC (b522290)
+## 9. P4 fermé — re-run avec sonde D42-SYNC (67b5cd8)
 
-(À compléter avec le verdict de 42998315636 et les non-régressions b522290.)
+**Bug 667 (instrument, résolu)** : le harnais lançait `am start -n
+$PKG_APP/.DashboardActivity` — or DashboardActivity vit dans le module
+feature-dashboard : la classe réelle est
+`video.vitrine.feature.dashboard.DashboardActivity`. Le composant inexistant faisait
+échouer `am start` en silence et le repli `.MainActivity` (onboarding) ne déclenche
+JAMAIS flushPending — **le dashboard ne s'est donc jamais ouvert dans les runs
+offline précédents** : voilà la cause réelle du PARTIAL télémétrie (et non un simple
+problème de fenêtre de reconnect). Bug 667b : `pidof` non protégé tuait le script
+sous pipefail quand le process était mort (FAILURE d'instrumentation du re-run
+42998315636).
+
+**Re-run final 43000828805 (67b5cd8) : SUCCESS — OFFX 3/3 PASS, réserve P4 FERMÉE** :
+
+```
+PASS  OFFX_journal_confirme   dernier état journal = CONFIRMED
+PASS  OFFX_debit_unique       welcomeCreditsLeft=4 (5 − 1, pas de double débit)
+PASS  OFFX_telemetry_sync     1/1 ligne(s) export uploaded=1 après retour réseau
+```
+
+Preuve de bout en bout (sonde produit D42-SYNC, logcat app) :
+
+```
+10:16:26.292 D42-SYNC: flushPending declenche (retour reseau / dashboard)
+10:16:26.315 D42-SYNC: flush telemetry : 1 evenement(s) en attente,
+            POST https://vitrine-video-api.mdgejcinfluence.workers.dev/api/v1/telemetry
+10:16:26.760 D42-SYNC: flush telemetry : HTTP 200
+```
+
+- réseau : coupé AVANT le rendu (dumpsys 101 → none), restauré puis **attendu
+  réellement** (none → 102) avant de déclencher le dashboard ;
+- DB : `journal RESERVED → CONFIRMED`, débit unique (4), `telemetry uploaded=1` ;
+- musique offline : RMS(2-6 s) −17,64 dB — **identique à l'online** ;
+- chaine complète prouvée : export hors connexion → file durable → retour réseau →
+  dashboard → POST réel vers le worker de production → HTTP 200 → marquée uploaded.
+
+Non-régressions du HEAD final (67b5cd8) : android-ci 43000822006 SUCCESS ;
+android-e2e-lab 43000822216 : **16/16 jobs SUCCESS** (a6519b5 : 42992432909 15/15 ;
+b522290 : 42998294237 annulé par le push suivant — supplanté).
 
 ## 10. Ce qui reste au fondateur (physique, hors périmètre agent)
 
@@ -169,9 +209,17 @@ déclenchement dashboard, logcat app non filtré. Re-run : 42998315636.
 
 - Défaut produit majeur corrigé et prouvé : l'export musical ne finalisait JAMAIS
   (latent depuis l'origine) — 439c56d.
-- 3 modes audio × 4 langues : **12/12 SUCCESS avec preuves acoustiques quantifiées**.
-- Harnais de preuve remis en état (4 bugs d'instrument) — les preuves audio sont
-  désormais automatisées et parallèles.
-- RC14 construite, signée, publiée (release 441446648) avec correctifs export.
+- 3 modes audio × 4 langues : **12/12 SUCCESS avec preuves acoustiques quantifiées**
+  (musique −17,64 dB ; voix notchée −8,05 dB ; mix par soustraction −49,85 dBFS).
+- **Réserve P4 offline FERMÉE : OFFX 3/3 PASS** (journal CONFIRMED, débit unique,
+  télémétrie uploadée HTTP 200 au retour réseau, musique offline = online), 4 langues
+  sur le pilote initial + re-run sonde sur HEAD final.
+- **RC14 qualifiée sur l'APK signée : e2e-official 37/0, auth-officiel-playstore
+  10/10, portes dex + apksigner PASS** (release 441446648, asset sha256
+  a4efd275…f80e78). Les 4 FAIL de la RC13 sont éteints.
+- Non-régression : android-ci SUCCESS et android-e2e-lab 15/15 puis **16/16**
+  sur les HEAD successifs (a6519b5, 67b5cd8).
+- Harnais de preuve remis en état (bugs d'instrument 663-667) — preuves audio
+  automatisées, parallèles et observables (sonde D42-SYNC).
 - SKYPAY : seule fonctionnalité volontairement non configurée (501).
 - Budget : **0 FCFA**.

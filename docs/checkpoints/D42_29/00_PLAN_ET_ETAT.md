@@ -238,3 +238,23 @@ variante hors connexion.
   journalisés) + harnais durci (attente connectivité réelle, double déclenchement,
   logcat app). Re-run offline 42998315636 + non-régressions b522290 (android-ci
   42998293963, e2e-lab 42998294237) : verdicts à reporter dans 03_RAPPORT.md §9.
+- **11/11 — BUG 667 (instrument, résolu)** : le harnais offline lançait
+  `am start -n $PKG_APP/.DashboardActivity` — classe INEXISTANTE (DashboardActivity
+  vit dans feature-dashboard : `video.vitrine.feature.dashboard.DashboardActivity`).
+  Le repli silencieux `.MainActivity` (onboarding) ne déclenche jamais flushPending →
+  le dashboard ne s'est JAMAIS ouvert dans les runs offline → cause réelle du PARTIAL
+  télémétrie. Bug 667b : `pidof` non protégé tuait le script sous pipefail (FAILURE
+  d'instrumentation du re-run 42998315636 — le rendu offline lui-même avait réussi).
+- **11/11 (D42.29-10, 67b5cd8) — P4 FERMÉ : re-run 43000828805 SUCCESS, OFFX 3/3
+  PASS** : `flushPending declenche` (sonde D42-SYNC) → POST réel vers le worker de
+  production → **HTTP 200** → uploaded=1 ; journal RESERVED→CONFIRMED ; débit unique
+  (4) ; musique offline RMS(2-6 s) −17,64 dB = online. Réseau coupé avant rendu
+  (dumpsys 101→none) puis réellement attendu au retour (none→102).
+- **11/11 — non-régressions HEAD** : android-ci SUCCESS ×3 (a6519b5 42992432920,
+  b522290 42998293963, 67b5cd8 43000822006) ; android-e2e-lab 15/15 (a6519b5
+  42992432909) ; **e2e-lab 67b5cd8 43000822216 (HEAD final) : 16/16 jobs SUCCESS**.
+- **11/11 — SCELLAGE D42_29** : matrice/rapport/plan complétés, commit de scellage
+  poussé sur main. ÉTAT FINAL : P2 PASS, P3 PASS (12/12), P4 FERMÉ (3/3), RC14
+  qualifiée (37/0 + 10/10 + portes), non-régression verte. Reste au fondateur :
+  test compte Google personnel + option cap B2. SKYPAY non configuré (volontaire).
+  Budget : 0 FCFA.
