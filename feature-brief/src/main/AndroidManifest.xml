@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application>
-        <!-- D42.30 : adjustResize — le formulaire redimensionne SOUS le clavier
-             (avant : pan par défaut, le champ prix « tremblait » à chaque frappe
-             et les boutons passaient sous Gboard). -->
+        <!-- D42.30 : PAS d'adjustResize — les insets clavier sont gérés par
+             imePadding() dans les écrans Compose (Brief/ReadyCheck). Combiner
+             adjustResize + imePadding applique l'inset DEUX FOIS : preuve p1
+             run 5082856, bouton Continuer écrasé à 1 px de haut clavier ouvert
+             (dump 22b) → tap sans effet, parcours bloqué. imePadding SEUL :
+             le formulaire remonte au-dessus du clavier, une seule fois. -->
         <activity
             android:name=".BriefActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

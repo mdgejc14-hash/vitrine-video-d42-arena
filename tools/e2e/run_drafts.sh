@@ -105,7 +105,7 @@ valeur_pour() {
   l=$(echo "$1" | tr 'A-Z' 'a-z')
   case "$l" in
     *commerce*|*boutique*)            echo "BoutiqueAwa" ;;
-    *whatsapp*|*num*ro*|*t*l*phone*)  echo "+22997000000" ;;
+    *whatsapp*|*num*ro*|*t*l*phone*)  echo "+2290197000000" ;;
     *prix*|*montant*)                 echo "15000" ;;
     *monnaie*)                        echo "" ;;
     *quartier*|*ville*|*adresse*)     echo "Akpakpa" ;;
@@ -276,7 +276,7 @@ fi
 fermer_clavier
 s1_a=""; s1_b=""
 assurer_champ_rempli "commerce" "BoutiqueAwa" && s1_a="commerce"
-assurer_champ_rempli "whatsapp" "+22997000000" && s1_b="whatsapp"
+assurer_champ_rempli "whatsapp" "+2290197000000" && s1_b="whatsapp"
 s1_remplis=0
 [ -n "$s1_a" ] && s1_remplis=$((s1_remplis+1))
 [ -n "$s1_b" ] && s1_remplis=$((s1_remplis+1))
@@ -375,7 +375,7 @@ done
 # 42619096543). Preuve au re-scan pour chacun.
 s2_manquants=""
 assurer_champ_rempli "commerce" "BoutiqueAwa" || s2_manquants="$s2_manquants commerce"
-assurer_champ_rempli "whatsapp" "+22997000000" || s2_manquants="$s2_manquants whatsapp"
+assurer_champ_rempli "whatsapp" "+2290197000000" || s2_manquants="$s2_manquants whatsapp"
 assurer_champ_rempli "vêtement" "RobeWax" || s2_manquants="$s2_manquants offre"
 assurer_champ_rempli "Prix" "15000" || s2_manquants="$s2_manquants prix"
 assurer_champ_rempli "Quartier" "Akpakpa" || s2_manquants="$s2_manquants quartier"

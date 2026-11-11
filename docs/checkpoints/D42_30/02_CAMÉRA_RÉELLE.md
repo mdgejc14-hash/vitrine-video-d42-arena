@@ -51,6 +51,25 @@ ticker/horloge de progression ne vit QUE dans le mode générique sans gabarit.
   priseValidee, faceCount, gateAllowed) et `GuidedShootingOverlay` vérifiées
   conformes aux appels.
 
+## Machine à états du tournage (audit complété, correctif D42.30-07)
+
+États : PRÊT → DÉCOMPTE 3-2-1 → (ANNULÉ) → VERROUILLAGE 3A → ENREGISTREMENT →
+ARRÊT → FINALISATION → PRISE VALIDÉE / ÉCHEC.
+
+| Règle | Constat d'audit | Statut |
+|---|---|---|
+| 2e appui pendant le décompte = annulation | `onRecord` : `compteAReboursJob?.isActive` → cancel + retour PRÊT, aucun `start()` | déjà en place (dd5ca28) |
+| `VideoCapture.start()` jamais avant la fin du décompte | `startRecording()` n'est appelé qu'après la boucle 3×`delay(1000)` | déjà en place |
+| **Fenêtre verrouillage 3A couverte** | **TROU (5082856) : le job se terminait avant `lockThreeA` (≤3 s) ; l'écran montrait PRÊT → un re-tap relançait un décompte → 2e `startRecording()` pendant que le 1er enregistrement tournait (référence `Recording` écrasée, fichier orphelin)** | **CORRIGÉ (non poussé) : `launchLockedRecording()` devient SUSPEND et vit DANS le job du décompte — `isActive` couvre décompte + verrouillage, le 2e tap annule dans les deux fenêtres** |
+| `runCatching` avalait la `CancellationException` | un tap d'annulation pendant `lockThreeA` n'aurait PAS interrompu `startRecording()` | CORRIGÉ : `onFailure { if (it is CancellationException) throw it }` |
+| Aucune prise vide/incomplète | Finalize `hasError()` → `file.delete()` + message + prise rejouable ; `start()` blindé try/catch → échec de démarrage = fichier supprimé + sortie propre | renforcé |
+| Appuis rapides ≠ plusieurs enregistrements | gardes : `priseEnCoursDeFinalisation` (taps ignorés), `isActive` (annulation), `recording != null` (stop) | vérifié |
+| Bouton/indication = état réel | `updateStatus()` : `lancement = compteARebours != null || verrouillageEnCours` → texte « Prépare-toi… » + bouton « Annuler le décompte » pendant décompte ET verrouillage ; « Arrêter et continuer » dès l'enregistrement réel | vérifié |
+
+Compatibilité harnais conservée : l'attente « Arrêter et continuer » (8 s) couvre
+décompte 3 s + verrouillage 3 s ; le harnais ne tape jamais pendant ces fenêtres
+(il attend d'abord le libellé).
+
 ## Réfection detekt/AAPT (-suite dd5ca28, corrigée dans 10a12e1)
 
 - `onCreate` 98 → ~20 lignes : extraction `restaurerBrouillon()`,
@@ -72,7 +91,14 @@ fondateur. Les preuves caméra D42.30 seront produites par :
 
 ## État
 
-- Codé et poussé (dd5ca28 puis correctifs 10a12e1 + lot suivant). CI à confirmer
-  verte sur le dernier commit (voir 00_PLAN_ET_ETAT.md, journal).
-- Points de contrôle restants : run e2e-lab sur APK rebuildée (étape 8), preuve
-  STREAMING sur émulateur, prises réelles ×3 dans le parcours 25 étapes.
+- **android-ci SUCCESS sur 5082856** (D42.30-06) : ktlint + detekt + tests JVM +
+  compile tous modules + packaging APK — tout le lot D42.30 (caméra, WhatsApp,
+  catalogue, prix, FR/EN) compile et passe la qualité.
+- **e2e-lab 5082856 : suite principale (run_p0 base/font130/rot90, petit écran)
+  SUCCESS** ; auth/offline/deeplink/security/gabarits/backend-http SUCCESS ;
+  **langues (en) SUCCESS** ; langues (es)/(ja) FAILURE attendue (matrices non
+  encore restreintes dans android-e2e-lab.yml — corrigé dans le commit suivant).
+- Correctif machine à états (fenêtre verrouillage) codé, commit en attente de
+  la fin du lab (pour ne pas annuler la validation en cours).
+- Points de contrôle restants : verdict camerap (en cours au moment de l'écriture),
+  preuve STREAMING sur émulateur, prises réelles ×3 dans le parcours 25 étapes.

@@ -116,7 +116,7 @@ valeur_pour() {
   l=$(echo "$1" | tr 'A-Z' 'a-z')
   case "$l" in
     *commerce*|*boutique*)            echo "BoutiqueAwa" ;;
-    *whatsapp*|*num*ro*|*t*l*phone*)  echo "+22997000000" ;;
+    *whatsapp*|*num*ro*|*t*l*phone*)  echo "+2290197000000" ;;
     *prix*|*montant*)                 echo "15000" ;;
     *monnaie*)                        echo "" ;;
     *quartier*|*ville*|*adresse*)     echo "Akpakpa" ;;
@@ -355,7 +355,7 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
       etat=$(echo "$l" | awk '{print $8}')
       libelle=$(echo "$l" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
       case "$libelle" in
-        *whatsapp*)   [ -z "$(grep -o '+229' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { remplir_champ "$idx" "+22997000000" "$OUT/champs.txt" || true; } ;;
+        *whatsapp*)   [ -z "$(grep -o '+229' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { remplir_champ "$idx" "+2290197000000" "$OUT/champs.txt" || true; } ;;
         *Prix*|*prix*) [ -z "$(grep -o '15000' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { remplir_champ "$idx" "15000" "$OUT/champs.txt" || true; } ;;
       esac
     done < <(grep "^E2E CHAMP " "$OUT/champs.txt")

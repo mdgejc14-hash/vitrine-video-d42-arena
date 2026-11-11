@@ -70,6 +70,11 @@ class CameraGuideActivity : VitrineActivity() {
     // qu'à la fin du décompte (avant : démarrage immédiat, cercle « 3 » factice).
     private var compteARebours by mutableStateOf<Int?>(null)
     private var compteAReboursJob: Job? = null
+    // D42.30 : fenêtre verrouillage 3A — le job du compte à rebours reste
+    // ACTIF pendant lockThreeA : un 2e tap y annule le lancement (sinon la
+    // fenêtre montrait « PRÊT » et un re-tap provoquait un DOUBLE
+    // enregistrement, la 1re référence Recording étant écrasée).
+    private var verrouillageEnCours = false
     // D42.30 : confirmation transitoire après Finalize réussi.
     private var priseValideeMsg by mutableStateOf<Int?>(null)
     private var guides: List<SceneGuide> = emptyList()
@@ -320,14 +325,15 @@ class CameraGuideActivity : VitrineActivity() {
     }
 
     private fun updateStatus() {
+        val lancement = compteARebours != null || verrouillageEnCours
         val guideRes = when {
-            compteARebours != null -> R.string.camera_countdown_status
+            lancement -> R.string.camera_countdown_status
             recording != null -> R.string.camera_recording
             decision != ConsentGate.Decision.ALLOW -> R.string.camera_blocked
             else -> R.string.camera_guide
         }
         val boutonRes = when {
-            compteARebours != null -> R.string.camera_countdown_cancel
+            lancement -> R.string.camera_countdown_cancel
             recording != null -> R.string.camera_stop
             else -> R.string.camera_record
         }
@@ -357,7 +363,8 @@ class CameraGuideActivity : VitrineActivity() {
             compteAReboursJob?.cancel()
             compteAReboursJob = null
             compteARebours = null
-            Log.i(TAG_E2E, "compte à rebours ANNULÉ par l'utilisateur")
+            verrouillageEnCours = false
+            Log.i(TAG_E2E, "lancement ANNULÉ par l'utilisateur (décompte ou verrouillage 3A)")
             updateStatus()
             return
         }
@@ -409,35 +416,49 @@ class CameraGuideActivity : VitrineActivity() {
                 delay(1000)
             }
             compteARebours = null
+            // D42.30 : le job reste ACTIF pendant le verrouillage 3A — le
+            // 2e tap annule aussi dans CETTE fenêtre (bouton « Annuler le
+            // décompte ») : VideoCapture.start() n'est atteint QUE si le job
+            // va au bout. Plus JAMAIS de double enregistrement.
+            verrouillageEnCours = true
             updateStatus()
             launchLockedRecording()
-        }
-    }
-
-    /** Verrou 3A (AE/AWB ponderes centre) applique juste avant la prise, puis record. */
-    private fun launchLockedRecording() {
-        lifecycleScope.launch {
-            runCatching {
-                val binder = boundBinder
-                val camera = boundCamera
-                val provider = boundProvider
-                if (binder != null && camera != null && provider != null) {
-                    binder.lockThreeA(provider, camera)
-                    Log.i(TAG_E2E, "verrou 3A appliqué")
-                } else {
-                    Log.i(
-                        TAG_E2E,
-                        "verrou 3A sauté : caméra non liée " +
-                            "(binder=${binder != null} camera=${camera != null} " +
-                            "provider=${provider != null})",
-                    )
-                }
-            }
+            verrouillageEnCours = false
             startRecording()
         }
     }
 
+    /**
+     * Verrou 3A (AE/AWB ponderes centre) applique juste avant la prise.
+     * D42.30 : SUSPEND, appelé DANS le job du compte à rebours (plus de
+     * launch interne fire-and-forget) pour que l'annulation couvre cette
+     * fenêtre. runCatching avale la CancellationException — on la RELANCE
+     * toujours, sinon un tap d'annulation pendant le verrouillage
+     * laisserait startRecording() s'exécuter : défaut interdit.
+     */
+    private suspend fun launchLockedRecording() {
+        runCatching {
+            val binder = boundBinder
+            val camera = boundCamera
+            val provider = boundProvider
+            if (binder != null && camera != null && provider != null) {
+                binder.lockThreeA(provider, camera)
+                Log.i(TAG_E2E, "verrou 3A appliqué")
+            } else {
+                Log.i(
+                    TAG_E2E,
+                    "verrou 3A sauté : caméra non liée " +
+                        "(binder=${binder != null} camera=${camera != null} " +
+                        "provider=${provider != null})",
+                )
+            }
+        }.onFailure {
+            if (it is kotlinx.coroutines.CancellationException) throw it
+        }
+    }
+
     private fun startRecording() {
+        verrouillageEnCours = false
         val cases = useCases ?: run { showPermissionDialog(); return }
         // D42.27 (§8/5.7) : contrôle PRÉVENTIF d'espace disque — refus PROPRE
         // AVANT de faire jouer la scène à l'utilisateur (le Finalize F53 reste
@@ -464,7 +485,19 @@ class CameraGuideActivity : VitrineActivity() {
         val options = FileOutputOptions.Builder(file).build()
         val pending = cases.recorder.prepareRecording(this, options)
         Log.i(TAG_E2E, "startRecording : start() sur ${file.name}")
-        recording = pending.start(ContextCompat.getMainExecutor(this)) { event -> onVideoEvent(event, file) }
+        // D42.30 : un échec de start() (SecurityException si permission
+        // révoquée entre-temps, recorder invalide…) ne doit laisser NI fichier
+        // vide NI état incohérent — sortie propre, prise rejouable.
+        recording = try {
+            pending.start(ContextCompat.getMainExecutor(this)) { event -> onVideoEvent(event, file) }
+        } catch (t: Throwable) {
+            runCatching { file.delete() }
+            Log.e(TAG_E2E, "startRecording : ÉCHEC démarrage (${t.javaClass.simpleName}: ${t.message})")
+            updateStatus()
+            dernierTexteGuide = 0
+            findViewById<TextView>(R.id.camera_guide_text).setText(R.string.camera_take_failed)
+            return
+        }
         Log.i(TAG_E2E, "startRecording : ENREGISTREMENT ACTIF -> ${file.absolutePath}")
         overlayRecording = true
         // D42.30 : en tournage guidé, le HUD de PRISE reste affiché pendant

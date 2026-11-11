@@ -124,14 +124,26 @@ private fun BoxScope.PriseTopHud(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            // D42.30 : titre en nœud SÉPARÉ « Filme ta prise » (le harnais
+            // camerap attend ce libellé EXACT après « OK, je commence ») ;
+            // le badge de prise et l'état du flux sont leurs propres nœuds.
             Text(
-                stringResource(R.string.e6_title) + " · PRISE ${priseIdx + 1}/$total",
+                stringResource(R.string.e6_title),
                 color = Color.White,
                 style = MaterialTheme.typography.titleMedium,
             )
+            Text(
+                "PRISE ${priseIdx + 1}/$total",
+                color = Color(0xCCFFFFFF),
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier
+                    .background(Color(0x33FFFFFF), RoundedCornerShape(6.dp))
+                    .padding(horizontal = 8.dp, vertical = 2.dp),
+            )
+            Spacer(Modifier.weight(1f))
             EtatFlux(streaming)
         }
         if (sectorLabel.isNotBlank() || formatLabel.isNotBlank()) {

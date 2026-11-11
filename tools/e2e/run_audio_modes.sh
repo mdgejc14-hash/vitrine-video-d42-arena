@@ -353,7 +353,7 @@ valeur_pour() { # libellé (FR, design produit) -> valeur valide
   l=$(echo "$1" | tr 'A-Z' 'a-z')
   case "$l" in
     *commerce*|*boutique*)            echo "BoutiqueAwa" ;;
-    *whatsapp*|*num*ro*|*t*l*phone*)  echo "+22997000000" ;;
+    *whatsapp*|*num*ro*|*t*l*phone*)  echo "+2290197000000" ;;
     *prix*|*montant*)                 echo "15000" ;;
     *monnaie*)                        echo "FCFA" ;;   # si non préremplie (requis chez le mode, run 42764463666 : 4/6)
     *quartier*|*ville*|*adresse*)     echo "Akpakpa" ;;

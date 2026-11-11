@@ -377,9 +377,10 @@ jobs:
   # ---------------------------------------------------------------------------
 
   # ---------------------------------------------------------------------------
-  # D42.14 — Preuve des 4 LANGUES (P5) : chaque langue est sélectionnée dans
+  # D42.14 — Preuve des LANGUES (P5) : chaque langue est sélectionnée dans
   # l'application, puis les écrans sont vérifiés dans CETTE langue jusqu'au
-  # catalogue. Les libellés attendus sont ceux des ressources values-<langue>.
+  # catalogue. D42.30 : FR/EN uniquement (le FR est couvert par la suite
+  # principale run_p0/p1/camerap ; ce job prouve l'EN).
   # ---------------------------------------------------------------------------
   android-e2e-langues:
     runs-on: ubuntu-latest
@@ -387,7 +388,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        langue: [en, es, ja]
+        langue: [en] # D42.30 : FR/EN uniquement (ES/JA retirés du produit)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4

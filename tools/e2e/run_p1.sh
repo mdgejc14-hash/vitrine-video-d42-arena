@@ -363,6 +363,17 @@ if [ "$brief_ok" = "1" ]; then
 
   # c) Données INVALIDES : prix alphabétique — la validation doit refuser
   idx_prix=$(grep "^E2E CHAMP " "$OUT/champs.txt" | grep -i "prix" | awk '{print $3}' | head -1)
+  # D42.30 : le brief est plus haut (slot d'erreur réservé par champ + champ
+  # pays du numéro international) — le Prix peut être sous le pli au listage
+  # (retour arrière → écran en haut). Faire défiler puis RELISTER.
+  if [ -z "$idx_prix" ]; then
+    for essai_scroll in 1 2 3; do
+      swipe_v 73 43 300 >/dev/null 2>&1; sleep 1
+      $UI fields > "$OUT/champs.txt" 2>&1 || true
+      idx_prix=$(grep "^E2E CHAMP " "$OUT/champs.txt" | grep -i "prix" | awk '{print $3}' | head -1)
+      [ -n "$idx_prix" ] && break
+    done
+  fi
   if [ -n "$idx_prix" ]; then
     remplir_champ "$idx_prix" "abc"
     if atteindre_continuer; then
@@ -400,7 +411,7 @@ if [ "$brief_ok" = "1" ]; then
     l=$(echo "$1" | tr 'A-Z' 'a-z')
     case "$l" in
       *commerce*|*boutique*)            echo "BoutiqueAwa" ;;
-      *whatsapp*|*num*ro*|*t*l*phone*)  echo "+22997000000" ;;
+      *whatsapp*|*num*ro*|*t*l*phone*)  echo "+2290197000000" ;;
       *prix*|*montant*)                 echo "15000" ;;
       *monnaie*)                        echo "" ;;   # déjà préremplie (FCFA)
       *quartier*|*ville*|*adresse*)     echo "Akpakpa" ;;

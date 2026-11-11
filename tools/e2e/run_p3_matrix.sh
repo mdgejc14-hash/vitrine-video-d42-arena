@@ -16,7 +16,7 @@ APK="${2:-app/build/outputs/apk/debug/app-debug.apk}"
 case "$MODE" in musique|voix|mix) ;; *) echo "mode inconnu : $MODE"; exit 2 ;; esac
 
 ECHEC=0
-for L in fr en es ja; do
+for L in fr en; do # D42.30 : FR/EN uniquement
   echo "===== P3 $MODE / $L ====="
   if ! bash tools/e2e/run_audio_modes.sh p3 "$L" "$MODE" "$APK"; then
     echo "===== P3 $MODE / $L : le banc s'est terminé en échec (voir artefacts) ====="

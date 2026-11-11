@@ -2,7 +2,7 @@ name: android-e2e-p3-modes
 
 # D42.28 (P3) — parcours commercial × langues × modes audio.
 # workflow_dispatch (coût maîtrisé : ~75 min/mode, 3 jobs parallèles).
-# Chaque job teste SON mode audio sur les 4 langues (fr/en/es/ja),
+# Chaque job teste SON mode audio sur les langues du produit (D42.30 : fr/en),
 # parcours complet avec export + preuves acoustiques du MP4.
 # Ne partage PAS le groupe de concurrence du lab principal.
 
@@ -54,7 +54,7 @@ jobs:
       - name: ffmpeg (preuves acoustiques + injection voix)
         run: timeout 240 bash -c 'sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg' >/dev/null 2>&1 || echo "ffmpeg indisponible — le mode ne pourra pas être prouvé"
 
-      - name: 'P3 : mode MUSIQUE SEULE × 4 langues'
+      - name: 'P3 : mode MUSIQUE SEULE × FR/EN'
         env:
           # D42.28-16 : BGM titulaire téléchargé via le compte sonde (REST)
           # pour injection en cache (musique/mix) — session démo = pas de
@@ -113,7 +113,7 @@ jobs:
       - name: ffmpeg (preuves acoustiques + injection voix)
         run: timeout 240 bash -c 'sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg' >/dev/null 2>&1 || echo "ffmpeg indisponible — le mode ne pourra pas être prouvé"
 
-      - name: 'P3 : mode VOIX SEULE × 4 langues'
+      - name: 'P3 : mode VOIX SEULE × FR/EN'
         env:
           # D42.28-16 : BGM titulaire téléchargé via le compte sonde (REST)
           # pour injection en cache (musique/mix) — session démo = pas de
@@ -172,7 +172,7 @@ jobs:
       - name: ffmpeg (preuves acoustiques + injection voix)
         run: timeout 240 bash -c 'sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg' >/dev/null 2>&1 || echo "ffmpeg indisponible — le mode ne pourra pas être prouvé"
 
-      - name: 'P3 : mode VOIX + MUSIQUE × 4 langues'
+      - name: 'P3 : mode VOIX + MUSIQUE × FR/EN'
         env:
           # D42.28-16 : BGM titulaire téléchargé via le compte sonde (REST)
           # pour injection en cache (musique/mix) — session démo = pas de

@@ -123,3 +123,58 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   Vérifications harnars faites : « Tourner » toléré (|| true, CAM_REC réel
   présent, CAM_STOP conservé), signatures PriseGuideScreen/GuidedShootingOverlay
   conformes, clés FR=EN sur les 7 modules (10/10 par module).
+- **17/11 (D42.30-05/06)** : fix compile TelephoneValidator
+  (String.lowercase(Locale) — `lowercase(langue)` refusé, e: 72:87) puis
+  **OOM :app:packageDebug → heap Gradle 1280m → 2048m** (tout le reste était
+  vert). Récupération sandbox intermédiaire (snapshot .git antérieur à D42.30,
+  arbre D42.28) : remote re-add + fetch + vérif que l'arbre local ne portait
+  rien d'unique + reset --hard origin/main = 5082856 — aucune perte.
+- **17/11 (5082856 : PREMIER VERT COMPLET android-ci)** : ktlint + detekt +
+  tests JVM (I18nKeyCoverage 2 langues, GabaritL10nTest EN, 60 combinaisons,
+  TelephoneValidator) + compile tous modules + packaging APK → SUCCESS.
+  **e2e-lab 5082856 : 12 jobs SUCCESS** — suite principale (run_p0 base/
+  font130/rot90, petit écran), auth 10/10, offline, deeplink, security,
+  gabarits, backend-http, harness-selftest, **langues (en)**, et surtout
+  **camerap : 59 PASS / 0 FAIL / 3 BLOCKED** (permissions refusées propres,
+  bascule avant/retour prouvée, prise AVANT enregistrée — 0→1 rush, app
+  vivante, zéro crash). Les 3 BLOCKED = `wait --text "Filme ta prise" --exact`
+  : le titre HUD était devenu « Filme ta prise · PRISE 1/3 » (suffixe) →
+  détection impossible, navigation réelle OK. langues (es)/(ja) FAILURE
+  attendues : matrices workflow non restreintes au moment du push.
+- **17/11 (e2e-lab 5082856 complet : 13 SUCCESS / 2 FAIL attendus / 1 annulé)** :
+  auth, camerap (59 PASS/0 FAIL/3 BLOCKED), suite principale, offline-export,
+  drafts, langues (en), offline, deeplink, security, gabarits, backend-http,
+  harness-selftest SUCCESS. langues es/ja FAIL attendus (matrices, corrigées).
+  **p1 ANNULÉ à 90 min (timeout job) — analyse complète de l'artefact** :
+  (a) `P1_brief_valide` FAIL : bouton « Continuer » écrasé à **1 px de haut**
+  (dump 22b : bounds [455,2071][625,2072]) — **adjustResize + imePadding =
+  INSET APPLIQUÉ DEUX FOIS** (fenêtre redimensionnée PUIS padding clavier) →
+  tap sans effet, navigation jamais faite (dump 23 == dump 22b) ;
+  (b) `P1_brief_invalide_refuse` BLOCKED « champ Prix introuvable » : au
+  re-listage après retour arrière, le Prix est sous le pli (slots d'erreur
+  +20dp/champ + champ pays → brief plus haut) ; le remplissage valide l'a
+  bien rempli (5/5 champs) — seule la détection du test invalide a raté ;
+  (c) tout le reste en cascade (camera/prises/rushs/export) = conséquence de
+  (a). **Correctifs** : adjustResize SUPPRIMÉ du manifest (imePadding seul —
+  pattern Compose avec decorFits=true ; leçon consignée : JAMAIS les deux) ;
+  run_p1.sh fait défiler + relister si Prix absent du listage.
+  **Vérification JVM libphonenumber (jar Maven Central 8.13.50)** :
+  +2290197000000/016…/012… VALIDES, +33612345678 VALIDE FR, et
+  **+22997000000 (ancien 8 chiffres) reste VALIDE** (transition ARCEP dans
+  les métadonnées Google) → le p1 en cours passait le brief malgré l'ancien
+  numéro ; exemple contextuel BJ = **+229 01 95 12 34 56** (nouveau format).
+  Harnais migrés vers +2290197000000 (7 occurrences, 4 scripts) pour que les
+  PREUVES montrent le format actuel.
+- **17/11 (D42.30-07, commit final du lot)** :
+  (1) **machine à états tournage** : trou comblé dans la fenêtre verrouillage
+  3A (le job du décompte se terminait AVANT lockThreeA → écran PRÊT → un
+  re-tap pouvait déclencher un 2e startRecording pendant que le 1er tournait).
+  `launchLockedRecording()` devient suspend DANS le job du décompte → le 2e
+  tap annule pendant décompte OU verrouillage ; CancellationException RELANCÉE
+  (runCatching l'avalait) ; `start()` blindé try/catch (échec = fichier
+  supprimé + sortie propre) ; updateStatus : état « lancement » couvre les
+  deux fenêtres. (2) **titre HUD séparé** : « Filme ta prise » redevient un
+  nœud EXACT (+ badge « PRISE 1/3 » séparé) → fix camerap 3 BLOCKED et
+  compatibilité run_audio_modes. (3) **matrices FR/EN** : android-e2e-lab
+  langue [en] (FR couvert par la suite principale), run_p3_matrix fr/en,
+  intitulés p3-modes, commentaires virtual-render 60 rendus.

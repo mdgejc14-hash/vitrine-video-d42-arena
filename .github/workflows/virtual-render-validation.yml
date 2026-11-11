@@ -370,12 +370,12 @@ jobs:
           if-no-files-found: warn
 
   # ---------------------------------------------------------------------------
-  # PHASE 5 — matrice 30 gabarits × 4 langues = 120 MP4 réels
+  # PHASE 5 — matrice 30 gabarits × langues (D42.30 : FR/EN = 60 MP4 réels)
   #          1 émulateur par langue, 30 rendus séquentiels (§4.2 : organisation
   #          explicitement autorisée, coût maîtrisé, couverture complète).
   # ---------------------------------------------------------------------------
   # ---------------------------------------------------------------------------
-  # PHASE 5 — MATRICE 120 : 30 gabarits × 4 langues, profil VALIDATION 540x960.
+  # PHASE 5 — MATRICE 60 : 30 gabarits × FR/EN, profil VALIDATION 540x960.
   #
   # Coût mesuré avant découpage : 758 s par rendu de 35 s en 1080x1920 sur
   # émulateur KVM (encodeur et GL logiciels). 30 rendus dans UN job = 381 min,
@@ -631,7 +631,7 @@ jobs:
 
   # ---------------------------------------------------------------------------
   # PHASE 5b — 12 RENDUS DE RÉFÉRENCE EN QUALITÉ DE PRODUCTION (1080x1920, 30 FPS)
-  #   Couverture documentée : 6 secteurs × 2, 4 langues × 3, T1/T2/T3/T4/T5,
+  #   Couverture documentée : 6 secteurs × 2, langues FR/EN × 3, T1/T2/T3/T4/T5,
   #   dont le T4 (cartes commerciales, 17 scènes) et le japonais (CJK).
   #   Ces rendus ne sont PAS fusionnés avec les 120 de validation : la règle de
   #   classification de D42 interdit de confondre 540x960 et 1080x1920.
