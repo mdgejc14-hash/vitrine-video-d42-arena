@@ -98,17 +98,41 @@ voix notchée).
 - **Publication (R-3)** : release **441446648** (tag `d42.29-rc14` → 5736355,
   prerelease), asset 734861325 en ligne. Le tag doit exister avant le POST /releases
   (leçon 666).
-- **E2E sur l'APK signée** : release-official-e2e 42992690177 (déclenché par le push
-  du tag) — résultat : section 8.
-- **Non-régression HEAD final (a6519b5)** : android-ci 42992432920 SUCCESS ;
-  android-e2e-lab 42992432909 — résultat : section 8.
+- **E2E sur l'APK signée (R-3) : release-official-e2e 42992690177 SUCCESS** —
+  e2e-official **37 PASS / 0 FAIL** (parcours complet : export 8 378 937 octets,
+  notification FGS, export poursuivi 45 s écran éteint, feuille de partage, journal
+  CONFIRMED, zéro FATAL EXCEPTION — **les 4 FAIL de la RC13 sont éteints**, ils
+  dérivaient du défaut MUXING_TIMEOUT corrigé) ; auth-officiel-playstore **10/10**
+  (A1 vrai flux Credential Manager déclenché, annulation propre, repli intact,
+  resoumission, parcours continué) ; porte dex PASS (1× clé Firebase réelle, 0×
+  factice) ; porte apksigner PASS (cert officiel).
+- **Non-régression (R-4)** : android-ci 42992432920 SUCCESS et android-e2e-lab
+  **42992432909 : 15/15 jobs SUCCESS** sur a6519b5 (langues, auth, offline,
+  offline-export, deeplink, camera, drafts, backend, sécurité) ; re-validations sur
+  b522290 : android-ci 42998293963, e2e-lab 42998294237.
 
 ## 6. P4 — Réserve offline
 
-Pilote offline (mode musique, titulaires, fr) : réseau coupé pendant le rendu, musique
-servie depuis le cache, DB avant/après, retour réseau au Dashboard (flushPending =
-flushTelemetry + replayQuota/claim/WelcomeGrant + syncEntitlements), verdicts
-OFFX_journal_confirmed / OFFX_debit_unique / OFFX_telemetry_sync. Résultat : section 8.
+Pilote offline (42994891267, musique/titulaires, **4 langues**) : réseau coupé AVANT le
+rendu (preuve dumpsys : `Active default network: 100` → `none`), musique servie depuis
+le cache, DB avant/après, retour réseau puis Dashboard (flushPending = flushTelemetry +
+replayQuota/claim/WelcomeGrant + syncEntitlements).
+
+**Résultats 4/4 langues** :
+- **OFFX_journal_confirme PASS** — journal export CONFIRMED hors connexion ;
+- **OFFX_debit_unique PASS** — welcomeCreditsLeft 4 (5 − 1, aucun double débit) ;
+- **musique audible offline** — RMS(2-6 s) −17,64 dB, identique à l'online ;
+- **OFFX_telemetry_sync PARTIAL** — l'événement `export_confirmed_bgm` est durablement
+  file (ok=1) mais uploaded=0 à T+40 s : le flush est déclenché par le Dashboard
+  ~10 s après le rétablissement `svc`, AVANT la réassociation complète du réseau ;
+  la tentative POST unique échoue alors silencieusement (flushTelemetry ne journalisait
+  rien). La file étant durable et rejouée à chaque affichage du dashboard, l'événement
+  n'est pas perdu — mais la preuve à 40 s ne pouvait pas être PASS.
+
+**Correctif d'observabilité (b522290)** : sonde produit `D42-SYNC` (flushPending
+déclenché ; flushTelemetry : nb d'événements, code HTTP) + harnais durci : attente
+d'une connectivité RÉELLE (dumpsys, max 60 s) avant de déclencher le flush, double
+déclenchement dashboard, logcat app non filtré. Re-run : 42998315636.
 
 ## 7. Incidents et conduite
 
@@ -121,20 +145,27 @@ OFFX_journal_confirmed / OFFX_debit_unique / OFFX_telemetry_sync. Résultat : se
 - **666** POST /releases : créer le tag AVANT (git push) sinon Validation Failed.
 - Annulation propre du mix v7 (42990111673) qui tournait sur l'ancien harnais.
 
-## 8. Résultats des runs en attente au bouclage du présent rapport
+## 8. Résultats consolidés des runs finaux
 
-- release-official-e2e **42992690177** (APK RC14 signée) : ⏳
-- android-e2e-lab **42992432909** (HEAD a6519b5) : ⏳
-- pilote offline P4 **42994891267** : ⏳
+| Run | Verdict |
+|-----|---------|
+| release-official-e2e 42992690177 (APK RC14 signée) | **SUCCESS** — e2e-official 37/0, auth-officiel-playstore 10/10, portes dex+apksigner PASS |
+| android-ci 42992432920 (a6519b5) | SUCCESS |
+| android-e2e-lab 42992432909 (a6519b5) | **SUCCESS 15/15 jobs** |
+| pilote offline P4 42994891267 (a6519b5) | SUCCESS — journal PASS, débit PASS, musique offline = online ; télémétrie PARTIAL (fenêtre reconnect) |
+| re-run offline P4 42998315636 (b522290, sonde D42-SYNC) | section 9 |
+| android-ci 42998293963 / e2e-lab 42998294237 (b522290) | section 9 |
 
-(Compléter ici les verdicts ; la 02_MATRICE.md porte les mêmes cellules.)
+## 9. Re-run offline sonde D42-SYNC (b522290)
 
-## 9. Ce qui reste au fondateur (physique, hors périmètre agent)
+(À compléter avec le verdict de 42998315636 et les non-régressions b522290.)
+
+## 10. Ce qui reste au fondateur (physique, hors périmètre agent)
 
 - Test du compte Google personnel sur l'APK signée (acceptation physique finale).
 - Option : relever le cap B2 (0 FCFA dans la console).
 
-## 10. Résultats consolidés
+## 11. Résultats consolidés
 
 - Défaut produit majeur corrigé et prouvé : l'export musical ne finalisait JAMAIS
   (latent depuis l'origine) — 439c56d.

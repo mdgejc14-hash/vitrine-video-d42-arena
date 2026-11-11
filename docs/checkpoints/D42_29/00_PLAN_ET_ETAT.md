@@ -216,3 +216,25 @@ variante hors connexion.
   (shops+titulaires+musique) à dispatcher sur 439c56d dès android-ci vert →
   si worker SUCCESS + AudioChecks PASS + RMS 2-6 s > −28 dB = **PREUVE P2
   COMPLÈTE (export musical audible, borné, finalisé)**.
+- **11/11 (D42.29-06→08, e308a94 + a6519b5) : harnais étage 4 réellement opérable** —
+  compteurs `grep -c || true`, regex RMS ancrée, reliquat cache 51 o ignoré, mesure_rms
+  blindée (pipefail), concurrence par audio_mode (3 modes en parallèle).
+- **11/11 — PILOTS FINAUX 3 MODES : 12/12 SUCCESS (42992443312 / 42992447010 /
+  42992451479, fr/en/es/ja)** : musique RMS 2-6 s −17,64 dB ; voix notch 440 Hz chute
+  8,05 dB ; mix = voix dominante + musique PROUVÉE par soustraction échantillon par
+  échantillon (mix − voix sur 35 s : RMS −49,85 dBFS = niveau ducké du contrat).
+- **11/11 — RC14 LIVRÉE** : build 42990176193 (tag d42.29-build-rc14, 5736355) ;
+  signée localement (cert 758077eb…33e192) sha256 a4efd275…f80e78 ; release 441446648
+  (tag d42.29-rc14) asset 734861325.
+- **11/11 — release-official-e2e 42992690177 SUCCESS sur l'APK signée** :
+  e2e-official **37/0** (les 4 FAIL RC13 éteints — MUXING_TIMEOUT corrigé),
+  auth-officiel-playstore **10/10**, portes dex/apksigner PASS. android-e2e-lab
+  42992432909 : **15/15 jobs**. android-ci 42992432920 SUCCESS.
+- **11/11 — P4 offline (42994891267, 4 langues)** : coupure PROUVÉE (dumpsys 100→none),
+  export offline 4/4 avec musique (−17,64 dB = online), journal CONFIRMED, débit unique
+  5→4 ; OFFX_telemetry_sync PARTIAL (uploaded=0 à T+40 s) — diagnostic : flush déclenché
+  avant la réassociation réseau, sans log produit pour l'observer.
+- **11/11 (D42.29-09, b522290) : sonde D42-SYNC** (flushPending/flushTelemetry
+  journalisés) + harnais durci (attente connectivité réelle, double déclenchement,
+  logcat app). Re-run offline 42998315636 + non-régressions b522290 (android-ci
+  42998293963, e2e-lab 42998294237) : verdicts à reporter dans 03_RAPPORT.md §9.

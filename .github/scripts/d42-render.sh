@@ -245,23 +245,29 @@ if [ "$OFFLINE" = "1" ]; then
   # POST trop tot echoue silencieusement et laisse la file durable en attente).
   echo "--- attente connectivite apres retablissement (max 60 s) ---"
   for _i in $(seq 1 30); do
-    _actif=$(adb shell dumpsys connectivity 2>/dev/null | grep -m1 "Active default network" | tr -d '\r')
+    _actif="$(adb shell dumpsys connectivity 2>/dev/null | grep -m1 'Active default network' | tr -d '\r' || true)"
     echo "${_actif:-Active default network: ?}"
-    case "$_actif" in *none*|*"?"*|*"Active default network: 0"*) sleep 2 ;; *) break ;; esac
+    case "$_actif" in ""|*none*|*"?"*) sleep 2 ;; *) break ;; esac
   done
   # le dashboard déclenche BackendSync.flushPending (télémétrie + quotas +
   # droits) au retour du réseau — comportement produit, aucun contournement.
+  # NB bug 667 : DashboardActivity vit dans le module feature-dashboard —
+  # le composant est $PKG_APP/video.vitrine.feature.dashboard.DashboardActivity
+  # ($PKG_APP/.DashboardActivity n'existe pas : am start échouait en silence
+  # et le repli MainActivity n'a JAMAIS déclenché de flush).
   adb root >/dev/null 2>&1 || true
   sleep 2
-  adb shell am start -n "$PKG_APP/.DashboardActivity" >/dev/null 2>&1 || \
+  adb shell am start -n "$PKG_APP/video.vitrine.feature.dashboard.DashboardActivity" >/dev/null 2>&1 || \
+    adb shell am start -a video.vitrine.action.VIEW_DASHBOARD >/dev/null 2>&1 || \
     adb shell am start -n "$PKG_APP/.MainActivity" >/dev/null 2>&1 || true
   sleep 20
   # seconde tentative (cold start / course avec le repeuplement reseau)
-  adb shell am start -n "$PKG_APP/.DashboardActivity" >/dev/null 2>&1 || true
+  adb shell am start -n "$PKG_APP/video.vitrine.feature.dashboard.DashboardActivity" >/dev/null 2>&1 || true
   sleep 45
-  _PID=$(adb shell pidof "$PKG_APP" 2>/dev/null | tr -d '\r')
-  adb logcat -d | grep -iE "BackendSync|flush|telemetry|quota" > "${SORTIE}/logcat_sync.txt" 2>&1 || true
-  [ -n "$_PID" ] && adb logcat -d --pid="$_PID" > "${SORTIE}/app_sync.txt" 2>&1 || true
+  # captures tolérantes (bug 667b : pidof exit 1 si process mort -> pipefail)
+  adb logcat -d > "${SORTIE}/logcat_complet.txt" 2>/dev/null || true
+  grep -iE "BackendSync|flush|telemetry|quota" "${SORTIE}/logcat_complet.txt" > "${SORTIE}/logcat_sync.txt" 2>/dev/null || true
+  grep -E "D42-SYNC" "${SORTIE}/logcat_complet.txt" > "${SORTIE}/app_sync.txt" 2>/dev/null || true
   mkdir -p "${SORTIE}/db_apres"
   adb exec-out run-as "$PKG_APP" tar -cf - databases 2>/dev/null | tar -xf - -C "${SORTIE}/db_apres" 2>/dev/null || true
   # verdicts offline (journal CONFIRMED, débit UNIQUE, télémétrie synchronisée)
