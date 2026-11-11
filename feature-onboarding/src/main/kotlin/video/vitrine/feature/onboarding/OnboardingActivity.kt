@@ -69,21 +69,40 @@ class OnboardingActivity : VitrineActivity() {
                 var credits by rememberSaveable {
                     mutableIntStateOf(if (isDemo) DEMO_CREDITS else CREDITS_INCONNUS)
                 }
-                var creditsEchec by rememberSaveable { mutableStateOf(false) }
+                // D42.30 : statut typé (attente/ok/solde_zero/horsligne/refuse)
+                // + dernier refus serveur (statut HTTP + code) — fin du
+                // « connexion perdue » affiché à tort pour tout échec.
+                var statutCredits by rememberSaveable {
+                    mutableStateOf(if (isDemo) "ok" else "attente")
+                }
+                var refusCredits by rememberSaveable { mutableStateOf(0) }
+                var codeRefusCredits by rememberSaveable { mutableStateOf("") }
                 var demarrageLance by remember { mutableStateOf(false) }
 
                 val sector = sectorCode?.let { code ->
                     Sector.entries.firstOrNull { it.code == code }
                 }
 
-                if (refStepDone && !isDemo && credits == CREDITS_INCONNUS && !demarrageLance) {
+                if (refStepDone && !isDemo && statutCredits == "attente" && !demarrageLance) {
                     // D42.9 : un seul demarrage, meme si la composition est
                     // reevaluee plusieurs fois (avant : un appel par reclic).
                     demarrageLance = true
                     LaunchedEffect(Unit) {
-                        val etat = demarrageServeur(uid, token, refCode, repository)
-                        credits = etat?.creditsTotal ?: CREDITS_INCONNUS
-                        creditsEchec = etat == null
+                        when (val etat = demarrageServeur(uid, token, refCode, repository)) {
+                            is EtatCredits.Confirme -> {
+                                credits = etat.credits
+                                statutCredits = if (etat.credits > 0) "ok" else "solde_zero"
+                            }
+                            is EtatCredits.HorsLigne -> {
+                                credits = etat.credits
+                                statutCredits = "horsligne"
+                            }
+                            is EtatCredits.Refuse -> {
+                                refusCredits = etat.statut
+                                codeRefusCredits = etat.code
+                                statutCredits = "refuse"
+                            }
+                        }
                     }
                 }
 
@@ -102,8 +121,9 @@ class OnboardingActivity : VitrineActivity() {
                     }
                     else -> WelcomeScreen(
                         credits = credits,
-                        enAttente = credits == CREDITS_INCONNUS && !creditsEchec,
-                        echec = creditsEchec,
+                        statut = statutCredits,
+                        refusStatut = refusCredits,
+                        refusCode = codeRefusCredits,
                         onContinue = {
                             finishWith(sector, credits.takeIf { it > 0 }, refCode)
                         }
@@ -114,31 +134,80 @@ class OnboardingActivity : VitrineActivity() {
     }
 
     /**
-     * Demarrage serveur du compte (D41) : bootstrap -> claim -> grant.
-     * Retourne l'etat de generosite, ou null si le serveur n'a pas repondu
-     * (reseau absent, 401, delai depasse).
+     * D42.30 — état typé du démarrage serveur des crédits (taxonomie exacte,
+     * fin du tout-« connexion perdue » du retour terrain RC14).
+     */
+    private sealed class EtatCredits {
+        data class Confirme(val credits: Int) : EtatCredits()
+        data class HorsLigne(val credits: Int) : EtatCredits()
+        data class Refuse(val statut: Int, val code: String) : EtatCredits()
+    }
+
+    /**
+     * Démarrage serveur du compte (D41 → D42.30) : enchaînement CONTRÔLÉ —
+     * 1) vérification du jeton + bootstrap du profil (le résultat est EXIGÉ :
+     * avant, l'échec était ignoré et le grant était tenté sur un profil
+     * inexistant → message « connexion » mensonger) ;
+     * 2) claim du parrainage UNIQUEMENT si un code est présent (facultatif) ;
+     * 3) welcome-grant typé (Accorde / HorsLigne / Refuse) ;
+     * 4) miroir local + confirmation du solde serveur (me/entitlements).
      */
     private suspend fun demarrageServeur(
         uid: String,
         token: String?,
         refCode: String?,
         repository: WelcomeRepository,
-    ): WelcomeRepository.GrantState? {
+    ): EtatCredits {
         val sync = video.vitrine.data.api.BackendSync
-        runCatching { sync.bootstrap(BuildConfig.API_BASE_URL, token ?: "") }
-            .onFailure { android.util.Log.w("VV-ONB", "bootstrap en echec", it) }
+        // 1) bootstrap : sans réponse = réseau/délai ; statut non-2xx = refus
+        // serveur — dans les DEUX cas on ne tente PAS le grant (mission D42.30).
+        val boot = runCatching {
+            sync.bootstrapDetaille(BuildConfig.API_BASE_URL, token ?: "")
+        }.getOrNull()
+        if (boot == null) {
+            android.util.Log.w("VV-ONB", "bootstrap sans réponse (réseau/délai) — rattrapage au retour réseau")
+            return EtatCredits.HorsLigne(soldeLocalAffichable())
+        }
+        if (boot.status !in 200..299) {
+            android.util.Log.w("VV-ONB", "bootstrap refusé : HTTP ${boot.status} ${boot.body.take(120)}")
+            return EtatCredits.Refuse(boot.status, codeErreurServeur(boot.body))
+        }
+        // 2) parrainage facultatif — jamais bloquant pour les crédits
         if (!token.isNullOrBlank() && !refCode.isNullOrBlank()) {
             val claimed = runCatching {
                 sync.claimReferral(this, BuildConfig.API_BASE_URL, token, refCode)
             }.getOrDefault(false)
             if (claimed) sync.recordReferralClaimed(this, uid, refCode)
         }
-        val etat = runCatching { repository.requestGrant(token ?: "") }.getOrNull()
-        if (etat != null && !etat.offline) {
-            sync.persistWelcomeGrant(this, uid, etat.creditsTotal)
+        // 3) welcome-grant typé
+        return when (val grant = repository.demanderGrant(token ?: "")) {
+            is WelcomeRepository.ResultatGrant.Accorde -> {
+                // 4) miroir local + confirmation du solde serveur (best effort)
+                sync.persistWelcomeGrant(this, uid, grant.creditsTotal)
+                runCatching {
+                    sync.syncEntitlements(
+                        video.vitrine.data.local.VitrineLocalDatabase.get(this),
+                        BuildConfig.API_BASE_URL,
+                        token ?: "",
+                        uid
+                    )
+                }
+                EtatCredits.Confirme(grant.creditsTotal)
+            }
+            is WelcomeRepository.ResultatGrant.HorsLigne ->
+                EtatCredits.HorsLigne(grant.creditsAffiches)
+            is WelcomeRepository.ResultatGrant.Refuse ->
+                EtatCredits.Refuse(grant.statut, grant.code)
         }
-        return etat
     }
+
+    /** Solde affichable hors-ligne : le seed local honnête de la politique
+     *  crédit (la valeur réelle est TOUJOURS décidée serveur et confirmée au
+     *  retour réseau — jamais fabriquée par le client). */
+    private fun soldeLocalAffichable(): Int = video.vitrine.core.guard.CreditPolicy.WELCOME_TOTAL
+
+    private fun codeErreurServeur(corps: String): String =
+        Regex("\"error\"\\s*:\\s*\"([a-z_]+)\"").find(corps)?.groupValues?.get(1) ?: ""
 
     private fun saveSession(uid: String, sector: Sector) {
         getSharedPreferences(SESSION_PREFS, MODE_PRIVATE)

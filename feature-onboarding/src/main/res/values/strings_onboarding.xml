@@ -16,7 +16,16 @@
     <string name="welcome_title">Bienvenue</string>
     <string name="welcome_credits">Nous t\'offrons %1$d crédits. Bon tournage !</string>
     <string name="welcome_credits_pending">On prépare tes crédits de bienvenue…</string>
+    <!-- welcome_error conservé pour l'historique ; D42.30 : la taxonomie
+         exacte ci-dessous remplace le tout-« connexion perdue » (retour terrain). -->
     <string name="welcome_error">Ton compte est créé, mais nous n\'avons pas pu récupérer tes crédits. Ils seront ajoutés dès que la connexion reviendra.</string>
+    <string name="welcome_offline">Pas de connexion pour confirmer tes crédits. Tu peux continuer — ils seront attribués automatiquement au retour du réseau (vérifié à chaque ouverture de l\'app).</string>
+    <string name="welcome_credits_zero">Bienvenue ! Ce téléphone a déjà utilisé ses crédits de bienvenue. Ton solde actuel : %1$d.</string>
+    <string name="welcome_err_session">Session expirée. Tes vidéos restent sauvegardées — rouvre l\'application et reconnecte-toi pour récupérer tes crédits.</string>
+    <string name="welcome_err_inactive">Ton compte n\'est pas encore activé sur nos serveurs. Réessaie dans quelques minutes — rien n\'est perdu.</string>
+    <string name="welcome_err_profil">Ton profil n\'a pas pu être créé sur nos serveurs. Réessaie dans quelques minutes.</string>
+    <string name="welcome_err_serveur">Nos serveurs ont un souci passager. Réessaie dans quelques minutes — tes crédits ne sont pas perdus.</string>
+    <string name="welcome_err_autre">Attribution indisponible (erreur %1$d). Réessaie dans quelques minutes.</string>
     <string name="lang_change_later">Tu pourras changer ce choix plus tard</string>
     <string name="refcode_title">Ton code parrain</string>
     <string name="refcode_subtitle">Tu peux passer cette étape.</string>

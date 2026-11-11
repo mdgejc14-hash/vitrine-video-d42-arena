@@ -38,6 +38,17 @@ object BackendSync {
         return reply != null && reply.status in 200..299
     }
 
+    /**
+     * D42.30 (retour terrain) : réponse BRUTE du bootstrap — le parcours
+     * d'inscription doit distinguer réseau perdu (null), 401 (jeton), 403
+     * (compte inactif), 404/5xx (serveur) au lieu de tout fusionner en
+     * « connexion perdue ». bootstrap() reste le résumé booléen historique.
+     */
+    suspend fun bootstrapDetaille(baseUrl: String, token: String): ApiClient.Reply? {
+        if (token.isBlank()) return null
+        return runCatching { ApiClient(baseUrl).post("/api/v1/me/bootstrap", token, "{}") }.getOrNull()
+    }
+
     /** ISO-8601 UTC sans java.time (minSdk 24, pas de desugaring). */
     private fun isoNow(): String {
         val format = java.text.SimpleDateFormat(

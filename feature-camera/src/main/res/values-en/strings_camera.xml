@@ -24,4 +24,11 @@
     <string name="camera_flip">Switch camera</string>
     <string name="camera_bind_failed">Camera unavailable. Close other camera apps and try again.</string>
     <string name="camera_storage_low">Not enough storage. Free up space to record your video.</string>
+    <!-- D42.30 : real stream states, countdown, take confirmation -->
+    <string name="camera_stream_ready">Camera ready</string>
+    <string name="camera_stream_starting">Starting camera…</string>
+    <string name="camera_rec_badge">REC</string>
+    <string name="camera_take_validated">✓ Take %1$d saved</string>
+    <string name="camera_countdown_status">Get ready… recording starts in a moment</string>
+    <string name="camera_countdown_cancel">Cancel countdown</string>
 </resources>

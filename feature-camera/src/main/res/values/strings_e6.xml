@@ -11,4 +11,5 @@
     <string name="e6_next">Suivant</string>
     <string name="e6_countdown">Décompte 3-2-1</string>
     <string name="e6_about">Environ %d secondes</string>
+    <string name="e6_parole_n">Ta prise de parole · %1$d repère(s)</string>
 </resources>

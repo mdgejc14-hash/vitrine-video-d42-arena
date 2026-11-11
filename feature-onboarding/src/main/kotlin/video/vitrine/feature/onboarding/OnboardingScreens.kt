@@ -186,12 +186,19 @@ private fun EtapeBadge(etape: Int, total: Int) {
  * Le client lisait donc un solde FAUX, sans savoir s'il devait attendre. Il est
  * toujours possible de continuer : l'absence de reponse serveur ne bloque pas
  * l'acces a l'application, et les credits sont credites des le retour du reseau.
+ *
+ * D42.30 (retour terrain) : taxonomie EXACTE — « hors ligne » (rattrapage
+ * automatique honnete) n'est plus confondu avec « refuse par le serveur »
+ * (401 session / 403 compte inactif / 404 profil / 5xx serveur). Le message
+ * historique « Ils seront ajoutes des que la connexion reviendra » ne s'affiche
+ * plus JAMAIS pour un refus serveur.
  */
 @Composable
 fun WelcomeScreen(
     credits: Int,
-    enAttente: Boolean,
-    echec: Boolean,
+    statut: String,
+    refusStatut: Int,
+    refusCode: String,
     onContinue: () -> Unit,
 ) {
     Column(
@@ -199,8 +206,8 @@ fun WelcomeScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(stringResource(R.string.welcome_title), style = MaterialTheme.typography.headlineSmall)
-        when {
-            enAttente -> {
+        when (statut) {
+            "attente" -> {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -209,14 +216,33 @@ fun WelcomeScreen(
                     Text(stringResource(R.string.welcome_credits_pending))
                 }
             }
-            echec || credits <= 0 -> Text(stringResource(R.string.welcome_error))
-            else -> Text(stringResource(R.string.welcome_credits, credits))
+            "ok" -> Text(
+                if (credits > 0) stringResource(R.string.welcome_credits, credits)
+                else stringResource(R.string.welcome_credits_zero)
+            )
+            "horsligne" -> Text(stringResource(R.string.welcome_offline))
+            "refuse" -> Text(messageRefus(refusStatut, refusCode))
+            else -> Text(stringResource(R.string.welcome_credits_pending))
         }
         // Jamais bloquant : le client entre dans l'application dans tous les cas.
         Button(onClick = onContinue, modifier = Modifier.fillMaxWidth()) {
             Text(stringResource(R.string.action_continue))
         }
     }
+}
+
+/** Message EXACT par cause de refus (mission D42.30 : jamais « connexion
+ *  perdue » quand le serveur a répondu non). */
+@Composable
+private fun messageRefus(statut: Int, code: String): String = when {
+    statut == 401 -> stringResource(R.string.welcome_err_session)
+    statut == 403 || code == "account_inactive" ->
+        stringResource(R.string.welcome_err_inactive)
+    statut == 404 || code == "profile_not_initialized" ->
+        stringResource(R.string.welcome_err_profil)
+    statut >= 500 || code == "database_unavailable" ->
+        stringResource(R.string.welcome_err_serveur)
+    else -> stringResource(R.string.welcome_err_autre, statut)
 }
 
 @Preview(showBackground = true)

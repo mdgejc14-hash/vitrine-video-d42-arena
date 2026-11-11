@@ -63,8 +63,10 @@ fun rememberSceneGuides(script: String, durationS: Int): List<SceneGuide> =
     remember(script, durationS) { buildSceneGuides(script, durationS) }
 
 /**
- * Overlay de tournage guide : cadre 9:16 + silhouette, compteur de scenes,
- * jauge temporelle, instruction francaise, badge visages / porte R4.
+ * Overlay de tournage guide (mode generique, sans gabarit a prises) :
+ * cadre 9:16 + silhouette, compteur de scenes, jauge temporelle, instruction,
+ * badge visages / porte R4. D42.30 : compte a rebours veritable, badge REC et
+ * etat du flux (STREAMING) affiches comme sur le HUD de prise.
  * Composable pur : capturable sous Robolectric sans materiel camera.
  */
 @Composable
@@ -75,13 +77,34 @@ fun GuidedShootingOverlay(
     faceCount: Int,
     gateAllowed: Boolean,
     recording: Boolean,
+    countdown: Int? = null,
+    streaming: Boolean? = null,
     modifier: Modifier = Modifier,
 ) {
     val scene = scenes.getOrNull(currentIdx)
     Box(modifier = modifier.fillMaxSize()) {
         FramingBox()
-        TopHud(scene, scenes.size, progress)
+        TopHud(scene, scenes.size, progress, streaming)
         BottomHud(scene, faceCount, gateAllowed, recording)
+        if (countdown != null) CompteurGeant(countdown)
+    }
+}
+
+/** D42.30 : compte a rebours 3-2-1 veritable, chiffre geant au centre. */
+@Composable
+private fun BoxScope.CompteurGeant(valeur: Int) {
+    Box(
+        modifier = Modifier
+            .align(Alignment.Center)
+            .background(Color(0x99000000), RoundedCornerShape(70.dp))
+            .padding(horizontal = 34.dp, vertical = 10.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            valeur.toString(),
+            color = Color.White,
+            style = MaterialTheme.typography.displayLarge,
+        )
     }
 }
 
@@ -115,7 +138,7 @@ private fun BoxScope.FramingBox() {
 }
 
 @Composable
-private fun BoxScope.TopHud(scene: SceneGuide?, total: Int, progress: Float) {
+private fun BoxScope.TopHud(scene: SceneGuide?, total: Int, progress: Float, streaming: Boolean?) {
     Column(
         modifier = Modifier
             .align(Alignment.TopCenter)
@@ -133,11 +156,21 @@ private fun BoxScope.TopHud(scene: SceneGuide?, total: Int, progress: Float) {
                 color = Color.White,
                 style = MaterialTheme.typography.titleMedium,
             )
-            Text(
-                String.format("%.1f s", scene?.durationS ?: 0.0),
-                color = Color(0xFFF95C0F),
-                style = MaterialTheme.typography.titleMedium,
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (streaming == true) {
+                    Text(
+                        stringResource(R.string.camera_stream_ready),
+                        color = Color(0xFF7BD88F),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(end = 8.dp),
+                    )
+                }
+                Text(
+                    String.format("%.1f s", scene?.durationS ?: 0.0),
+                    color = Color(0xFFF95C0F),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
         }
         LinearProgressIndicator(
             progress = progress.coerceIn(0f, 1f),

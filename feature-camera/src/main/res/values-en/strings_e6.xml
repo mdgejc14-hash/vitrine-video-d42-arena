@@ -11,4 +11,5 @@
     <string name="e6_next">Next</string>
     <string name="e6_countdown">3-2-1 countdown</string>
     <string name="e6_about">About %d seconds</string>
+    <string name="e6_parole_n">Your voice-over · %1$d cue(s)</string>
 </resources>

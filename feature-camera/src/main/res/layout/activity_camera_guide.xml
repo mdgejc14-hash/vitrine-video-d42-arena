@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  D42.30 — écran de tournage reconçu (retour terrain RC14) :
+  - le PreviewView est la SEULE zone de cadrage (le flux CameraX y est lié par
+    setSurfaceProvider dans CameraGuideActivity.bindCamera — avant, il n'était
+    JAMAIS branché : écran noir garanti sur téléphone réel) ;
+  - l'overlay Compose (camera_overlay) est un HUD INFORMATIF : compteur de prise,
+    état du flux, compte à rebours, badge REC, instruction — AUCUNE commande
+    dupliquée (avant : cercle « Tourner » Compose + boutons XML superposés) ;
+  - la barre du bas porte les commandes UNIQUES : Refaire / Enregistrer /
+    Suivant (+ bascule caméra compacte au-dessus) — IDs stables pour le harnais
+    E2E (camera_record_button, camera_flip_button conservés) ;
+  - leçons D42.16 (A4) : hauteurs explicites, texte borné (maxLines=2), la
+    rangée de boutons reste ancrée au bas.
+-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -13,34 +27,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- D42.16 (défaut A4, runs 42278038365/42281822052) : le bouton était le
-         DERNIER élément de la barre et se retrouvait ROGNÉ à 40 px au bas de la
-         fenêtre (le texte de guide, localisé en 4 langues, le repoussait hors
-         écran). L'action critique passe EN PREMIER, avec une hauteur explicite :
-         aucune langue ni taille de police ne peut plus la faire sortir. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="12dp">
 
-        <!-- D42.27 (5.4) : bascule avant/arrière. Placé AU-DESSUS de l'action
-             critique : camera_record_button (56 dp) reste en position sûre,
-             le bouton de bascule (48 dp) est le premier enfant donc jamais
-             rogné non plus (cf. A4 : seul le DERNIER élément était rognable). -->
+        <!-- Bascule avant/arrière : compacte, AU-DESSUS de la rangée critique
+             (leçon A4 : seul le dernier élément est rognable — hauteurs bornées). -->
         <Button
             android:id="@+id/camera_flip_button"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="@string/camera_flip" />
+            android:layout_height="40dp"
+            android:layout_marginBottom="6dp"
+            android:text="@string/camera_flip"
+            android:textSize="12sp" />
 
-        <Button
-            android:id="@+id/camera_record_button"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="@string/camera_record" />
-
+        <!-- Ligne d'état (guide / compte à rebours / erreurs) : bornée, au-dessus
+             des boutons pour ne jamais les pousser hors écran. -->
         <TextView
             android:id="@+id/camera_guide_text"
             android:layout_width="match_parent"
@@ -50,6 +58,45 @@
             android:background="#CC000000"
             android:padding="8dp"
             android:text="@string/camera_guide"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textSize="13sp" />
+
+        <!-- Rangée de commandes UNIQUE : Refaire | ENREGISTRER (principal) | Suivant.
+             En mode générique (sans gabarit), Refaire/Suivant sont masqués. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/camera_redo_button"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:text="@string/e6_redo"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/camera_record_button"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1.5"
+                android:text="@string/camera_record"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/camera_next_button"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:text="@string/e6_next"
+                android:textSize="13sp" />
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>

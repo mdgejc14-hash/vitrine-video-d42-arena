@@ -22,9 +22,12 @@ import video.vitrine.core.designsystem.VitrineTheme
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.camera.video.FileOutputOptions
 import androidx.camera.video.Recording
 import androidx.core.content.ContextCompat
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -60,6 +63,15 @@ class CameraGuideActivity : VitrineActivity() {
     private var overlayFaces by mutableStateOf(0)
     private var overlayRecording by mutableStateOf(false)
     private var gateAllowed by mutableStateOf(true)
+    // D42.30 : état RÉEL du flux (PreviewView.previewStreamState observé) —
+    // distingue « Caméra prête » (STREAMING) de « Démarrage… » (IDLE).
+    private var fluxStreamState by mutableStateOf<Boolean?>(null)
+    // D42.30 : compte à rebours 3-2-1 VÉRITABLE — le recorder ne démarre
+    // qu'à la fin du décompte (avant : démarrage immédiat, cercle « 3 » factice).
+    private var compteARebours by mutableStateOf<Int?>(null)
+    private var compteAReboursJob: Job? = null
+    // D42.30 : confirmation transitoire après Finalize réussi.
+    private var priseValideeMsg by mutableStateOf<Int?>(null)
     private var guides: List<SceneGuide> = emptyList()
     private var prises by mutableStateOf<List<PriseGuide>>(emptyList())
     private var priseIdx by mutableStateOf(0)
@@ -120,8 +132,17 @@ class CameraGuideActivity : VitrineActivity() {
                 if (raw != null) {
                     prises = runCatching { GabaritJson.parsePrises(raw) }.getOrDefault(emptyList())
                     guideSummary = runCatching { GabaritJson.parse(raw) }.getOrNull()
+                    // D42.30 : Refaire/Suivant n'existent QUE pour un gabarit à
+                    // prises — jamais en mode générique (commandes uniques).
+                    findViewById<Button>(R.id.camera_redo_button).visibility =
+                        if (prises.isNotEmpty()) android.view.View.VISIBLE else android.view.View.GONE
+                    findViewById<Button>(R.id.camera_next_button).visibility =
+                        if (prises.isNotEmpty()) android.view.View.VISIBLE else android.view.View.GONE
                 }
             }
+        } else {
+            findViewById<Button>(R.id.camera_redo_button).visibility = android.view.View.GONE
+            findViewById<Button>(R.id.camera_next_button).visibility = android.view.View.GONE
         }
         guides = buildSceneGuides(
             intent.getStringExtra("script").orEmpty(),
@@ -135,9 +156,12 @@ class CameraGuideActivity : VitrineActivity() {
                         priseIdx = priseIdx,
                         sectorLabel = guideSummary?.secteurLibelle.orEmpty(),
                         formatLabel = guideSummary?.nomFormatAffiche.orEmpty(),
-                        onRedo = { redoCurrentPrise() },
-                        onRecord = { onRecord() },
-                        onNext = { skipPrise() },
+                        streaming = fluxStreamState,
+                        recording = overlayRecording,
+                        countdown = compteARebours,
+                        priseValidee = priseValideeMsg,
+                        faceCount = overlayFaces,
+                        gateAllowed = gateAllowed,
                     )
                 } else {
                     GuidedShootingOverlay(
@@ -147,11 +171,39 @@ class CameraGuideActivity : VitrineActivity() {
                         faceCount = overlayFaces,
                         gateAllowed = gateAllowed,
                         recording = overlayRecording,
+                        countdown = compteARebours,
+                        streaming = fluxStreamState,
                     )
                 }
             }
         }
+        // D42.30 : état RÉEL du flux caméra observé UNE fois — STREAMING prouvé
+        // (jamais plus de cadre noir présenté comme prévisualisation).
+        val previewView = findViewById<PreviewView>(R.id.camera_preview)
+        previewView.previewStreamState.observe(this) { etat ->
+            val streamingNow = etat == PreviewView.StreamState.STREAMING
+            if (fluxStreamState != streamingNow) {
+                fluxStreamState = streamingNow
+                Log.i(
+                    TAG_E2E,
+                    if (streamingNow) {
+                        "PREVIEW STREAMING : le flux caméra est actif (frames réelles)"
+                    } else {
+                        "PREVIEW IDLE : flux caméra non encore actif"
+                    }
+                )
+            }
+        }
         findViewById<Button>(R.id.camera_record_button).setOnClickListener { onRecord() }
+        // D42.30 : commandes UNIQUES dans la barre XML (fini la duplication
+        // Compose « Tourner » / XML) — Refaire et Suivant sont masqués hors
+        // gabarit et neutralisés pendant une prise.
+        findViewById<Button>(R.id.camera_redo_button).setOnClickListener {
+            if (recording == null) redoCurrentPrise()
+        }
+        findViewById<Button>(R.id.camera_next_button).setOnClickListener {
+            if (recording == null) skipPrise()
+        }
         // D42.27 (5.4) : bascule caméra avant/arrière — re-bind complet via
         // bindCamera() (unbindAll + bindToLifecycle remplacent la liaison).
         // Ignoré pendant un enregistrement : jamais de flip à chaud.
@@ -188,6 +240,14 @@ class CameraGuideActivity : VitrineActivity() {
         val cases = binder.buildUseCases(spec)
         useCases = cases
         boundBinder = binder
+        // D42.30 — CORRECTION P0 (retour terrain RC14 : écran noir malgré
+        // permission accordée) : le Preview était binder à CameraX SANS jamais
+        // recevoir de surface — le PreviewView restait noir. Branchement
+        // officiel CameraX (developer.android.com/media/camera/camerax/preview)
+        // AVANT le bind : le flux démarre dès que la session est active.
+        val previewView = findViewById<PreviewView>(R.id.camera_preview)
+        cases.preview.setSurfaceProvider(previewView.surfaceProvider)
+        Log.i(TAG_E2E, "setSurfaceProvider appliqué : le PreviewView recevra le flux")
         val future = ProcessCameraProvider.getInstance(this)
         future.addListener({
             // D42.27 (5.8) : caméra occupée/indisponible → message clair,
@@ -242,11 +302,16 @@ class CameraGuideActivity : VitrineActivity() {
 
     private fun updateStatus() {
         val guideRes = when {
+            compteARebours != null -> R.string.camera_countdown_status
             recording != null -> R.string.camera_recording
             decision != ConsentGate.Decision.ALLOW -> R.string.camera_blocked
             else -> R.string.camera_guide
         }
-        val boutonRes = if (recording != null) R.string.camera_stop else R.string.camera_record
+        val boutonRes = when {
+            compteARebours != null -> R.string.camera_countdown_cancel
+            recording != null -> R.string.camera_stop
+            else -> R.string.camera_record
+        }
         // D42.16 (défaut A3) : setText sur un texte IDENTIQUE invalide quand
         // même le layout. À 30 appels/s (comptage visage par frame avant le
         // dédoublonnage), la thread UI saturait. On ne touche la vue QUE si le
@@ -267,6 +332,16 @@ class CameraGuideActivity : VitrineActivity() {
             "onRecord finalisation=$priseEnCoursDeFinalisation enregistrement=${recording != null} decision=$decision",
         )
         if (priseEnCoursDeFinalisation) return          // D41 : attente du fichier finalise
+        // D42.30 : second tap pendant le décompte = ANNULATION (aucun
+        // enregistrement démarré) — le recorder ne démarre JAMAIS avant la fin.
+        if (compteAReboursJob?.isActive == true) {
+            compteAReboursJob?.cancel()
+            compteAReboursJob = null
+            compteARebours = null
+            Log.i(TAG_E2E, "compte à rebours ANNULÉ par l'utilisateur")
+            updateStatus()
+            return
+        }
         if (recording != null) {
             stopRecording()
             return
@@ -290,13 +365,34 @@ class CameraGuideActivity : VitrineActivity() {
                     minorConsent = true
                     envoyerConsentementsServeur(1)
                     onFaces(1)
-                    startRecording()
+                    lancerCompteARebours()
                 }
                 .setNegativeButton(R.string.camera_consent_ko) { dialog, _ -> dialog.dismiss() }
                 .show()
             return
         }
-        launchLockedRecording()
+        lancerCompteARebours()
+    }
+
+    /**
+     * D42.30 — compte à rebours 3-2-1 VÉRITABLE : 3 numéros affichés (1 s
+     * chacun) PUIS lancement du recorder (verrou 3A puis enregistrement).
+     * Avant : l'enregistrement démarrait immédiatement au tap et l'écran
+     * affichait un cercle « 3 » statique décoratif (simulation constatée sur
+     * téléphone réel). Annulable par un second tap (onRecord).
+     */
+    private fun lancerCompteARebours() {
+        compteAReboursJob = lifecycleScope.launch {
+            for (numero in 3 downTo 1) {
+                compteARebours = numero
+                Log.i(TAG_E2E, "compte à rebours : $numero")
+                updateStatus()
+                delay(1000)
+            }
+            compteARebours = null
+            updateStatus()
+            launchLockedRecording()
+        }
     }
 
     /** Verrou 3A (AE/AWB ponderes centre) applique juste avant la prise, puis record. */
@@ -352,11 +448,14 @@ class CameraGuideActivity : VitrineActivity() {
         recording = pending.start(ContextCompat.getMainExecutor(this)) { event -> onVideoEvent(event, file) }
         Log.i(TAG_E2E, "startRecording : ENREGISTREMENT ACTIF -> ${file.absolutePath}")
         overlayRecording = true
-        if (guideFlowActive) guideMode = false    // overlay generique = indicateur REC
+        // D42.30 : en tournage guidé, le HUD de PRISE reste affiché pendant
+        // l'enregistrement (badge REC) — FINI le basculement vers l'overlay
+        // générique à 30 scènes artificielles qui faisait « simulation ».
+        // L'horloge de scènes ne vit QUE dans le mode générique (sans gabarit).
         overlayIdx = 0
         overlayProgress = 0f
         sceneStartMs = System.currentTimeMillis()
-        handler.postDelayed(ticker, TICK_MS)
+        if (!guideFlowActive) handler.postDelayed(ticker, TICK_MS)
         updateStatus()
     }
 
@@ -393,6 +492,10 @@ class CameraGuideActivity : VitrineActivity() {
             // distinct, stocke dans un slot ALIGNE sur son index ("" = sautee).
             setSlot(priseIdx, file.absolutePath)
             lastRecordedForIdx = priseIdx
+            // D42.30 : preuve VISIBLE que la scène vient d'être réellement
+            // enregistrée (Finalize réussi) — confirmation transitoire à l'écran.
+            priseValideeMsg = priseIdx + 1
+            handler.postDelayed({ priseValideeMsg = null }, 2500)
             // D42.27 (§7) : persistance du brouillon à CHAQUE prise validée —
             // une fermeture de l'app (ou un redémarrage du téléphone) juste
             // après une scène ne perd NI la prise, NI la position.

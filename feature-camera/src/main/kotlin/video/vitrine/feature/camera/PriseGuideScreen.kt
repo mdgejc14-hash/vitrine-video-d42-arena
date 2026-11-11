@@ -1,43 +1,71 @@
 package video.vitrine.feature.camera
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import video.vitrine.core.designsystem.BleuNuit
 import video.vitrine.core.designsystem.BleuVoile
-import video.vitrine.core.designsystem.GrisLiserai
 import video.vitrine.core.designsystem.OrangeStore
-import video.vitrine.core.designsystem.OrangeVoile
 import video.vitrine.core.model.PriseGuide
 
 /**
- * Ecran E6 (maquettes E6_*_prise_*) : guide de prise niveau PRISE (et non scene),
- * pilote par le gabarit JSON. La zone visee est transparente : le flux CameraX
- * du layout sous-jacent reste visible derriere badges et grille (appareil reel).
+ * D42.30 — HUD de tournage niveau PRISE, reconçu d'après le retour terrain RC14.
+ *
+ * AVANT (défauts constatés sur téléphone réel) : PriseViewfinder() était une
+ * MAQUETTE — cadre + silhouette + cercle « 3 » statique présentés comme un
+ * viseur (noir derrière, le PreviewView n'étant jamais branché) — et les
+ * commandes Compose (Refaire/Tourner/Suivant) dupliquaient la barre XML.
+ *
+ * APRÈS : le HUD est purement INFORMATIF et TRANSPARENT — la vraie prévisuali-
+ * sation CameraX (PreviewView du layout) est visible derrière. Il porte :
+ *  - le compteur PRISE X/Y (cohérent avec le gabarit réellement sélectionné) ;
+ *  - l'état RÉEL du flux (STREAMING = « Caméra prête », sinon « Démarrage… ») ;
+ *  - le compte à rebours 3-2-1 VÉRITABLE (le recorder démarre après lui) ;
+ *  - le badge REC quand le recorder est actif ;
+ *  - l'instruction de cadrage + la prise de parole (repliable) ;
+ *  - la confirmation « ✓ Prise N enregistrée » après Finalize réussi.
+ * AUCUNE commande ici : la rangée Refaire/Enregistrer/Suivant vit dans la
+ * barre XML unique (ids stables pour le harnais E2E).
  */
 @Composable
 fun PriseGuideScreen(
@@ -45,200 +73,249 @@ fun PriseGuideScreen(
     priseIdx: Int,
     sectorLabel: String,
     formatLabel: String,
-    onRedo: () -> Unit,
-    onRecord: () -> Unit,
-    onNext: () -> Unit,
-    modifier: Modifier = Modifier
+    streaming: Boolean?,
+    recording: Boolean,
+    countdown: Int?,
+    priseValidee: Int?,
+    faceCount: Int,
+    gateAllowed: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     val prise = prises.getOrNull(priseIdx) ?: return
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            // D42.16 (A5, run 42292290440) : la barre d'action classique (bouton
-            // « Verrouiller et enregistrer » + texte de guide) recouvre le bas de
-            // cette colonne défilante — « Refaire / Tourner / Suivant » restaient
-            // sous le pli, derrière la barre, inaccessibles au doigt comme au
-            // harnais (tap au centre de bornes hors écran = code 0 trompeur).
-            // Réserve de défilement de 180 dp : les commandes remontent au-dessus
-            // de la barre sur écran standard, petit écran et paysage. Aucun bouton
-            // supprimé : le cercle « Tourner » et le bouton classique partagent
-            // le même onRecord() gardé contre la double capture.
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 180.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        PriseHeader(prise, priseIdx, prises.size, sectorLabel, formatLabel)
-        PriseViewfinder()
-        PriseInstructionCard(prise)
-        if (prise.segments.isNotEmpty()) PriseParoleCard(prise)
-        PriseControls(onRedo, onRecord, onNext)
+    Box(modifier = modifier.fillMaxSize()) {
+        CoinsCadrage()
+        PriseTopHud(priseIdx, prises.size, sectorLabel, formatLabel, streaming)
+        if (recording) BadgeRec()
+        BadgeVisages(faceCount, gateAllowed)
+        PriseInstructionBottom(prise, bottomPadding = 196.dp)
+        if (countdown != null) CompteARebours(countdown)
+        if (priseValidee != null) ConfirmationPrise(priseValidee)
     }
 }
 
+/** Quatre coins de cadrage discrets — le flux caméra reste visible (mission §2.A :
+ *  une silhouette ou un cadre NE doit JAMAIS se présenter comme la prévisualisation). */
 @Composable
-private fun PriseHeader(
-    prise: PriseGuide,
+private fun BoxScope.CoinsCadrage() {
+    val coin = @Composable { mod: Modifier ->
+        Box(modifier = mod.size(34.dp).border(3.dp, Color(0x99F95C0F), RoundedCornerShape(6.dp)))
+    }
+    coin(Modifier.align(Alignment.TopStart).padding(top = 150.dp, start = 26.dp))
+    coin(Modifier.align(Alignment.TopEnd).padding(top = 150.dp, end = 26.dp))
+    coin(Modifier.align(Alignment.CenterStart).padding(bottom = 212.dp, start = 26.dp))
+    coin(Modifier.align(Alignment.CenterEnd).padding(bottom = 212.dp, end = 26.dp))
+}
+
+@Composable
+private fun BoxScope.PriseTopHud(
     priseIdx: Int,
     total: Int,
     sectorLabel: String,
-    formatLabel: String
+    formatLabel: String,
+    streaming: Boolean?,
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+    Column(
+        modifier = Modifier
+            .align(Alignment.TopCenter)
+            .fillMaxWidth()
+            .background(Color(0xB3000000))
+            .padding(horizontal = 14.dp, vertical = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Column {
-            Text(stringResource(R.string.e6_title), style = MaterialTheme.typography.headlineSmall)
-            Text(
-                sectorLabel + " · " + formatLabel,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-        Box(
-            modifier = Modifier
-                .background(BleuVoile, RoundedCornerShape(8.dp))
-                .padding(horizontal = 12.dp, vertical = 6.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                "PRISE ${priseIdx + 1}/$total",
-                color = BleuNuit,
-                style = MaterialTheme.typography.titleSmall
+                stringResource(R.string.e6_title) + " · PRISE ${priseIdx + 1}/$total",
+                color = Color.White,
+                style = MaterialTheme.typography.titleMedium,
+            )
+            EtatFlux(streaming)
+        }
+        if (sectorLabel.isNotBlank() || formatLabel.isNotBlank()) {
+            Text(
+                listOf(sectorLabel, formatLabel).filter { it.isNotBlank() }.joinToString(" · "),
+                color = Color(0xCCFFFFFF),
+                style = MaterialTheme.typography.bodySmall,
             )
         }
     }
-    Text(prise.label, style = MaterialTheme.typography.titleLarge, color = BleuNuit)
+}
+
+/** Chip d'état du flux : « Caméra prête » (STREAMING) vs « Démarrage… » (IDLE). */
+@Composable
+private fun EtatFlux(streaming: Boolean?) {
+    val (libelle, fond) = when (streaming) {
+        true -> stringResource(R.string.camera_stream_ready) to Color(0xFF2E7D32)
+        else -> stringResource(R.string.camera_stream_starting) to Color(0xFF8D6E00)
+    }
+    Box(
+        modifier = Modifier
+            .background(fond, RoundedCornerShape(10.dp))
+            .padding(horizontal = 10.dp, vertical = 4.dp)
+    ) {
+        Text(libelle, color = Color.White, style = MaterialTheme.typography.labelMedium)
+    }
+}
+
+/** Badge REC pulsé — lié à l'état RÉEL du recorder (recording != null). */
+@Composable
+private fun BoxScope.BadgeRec() {
+    val transition = rememberInfiniteTransition(label = "rec")
+    val opacite by transition.animateFloat(
+        initialValue = 1f,
+        targetValue = 0.25f,
+        animationSpec = infiniteRepeatable(tween(650), RepeatMode.Reverse),
+        label = "rec-opacite",
+    )
+    Row(
+        modifier = Modifier
+            .align(Alignment.TopEnd)
+            .padding(top = 92.dp, end = 16.dp)
+            .background(Color(0xCC000000), RoundedCornerShape(10.dp))
+            .padding(horizontal = 10.dp, vertical = 5.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            modifier = Modifier
+                .size(12.dp)
+                .alpha(opacite)
+                .background(Color(0xFFFF3B30), CircleShape)
+        )
+        Spacer(Modifier.width(7.dp))
+        Text(
+            stringResource(R.string.camera_rec_badge),
+            color = Color.White,
+            style = MaterialTheme.typography.titleSmall,
+        )
+    }
+}
+
+@Composable
+private fun BoxScope.BadgeVisages(faceCount: Int, gateAllowed: Boolean) {
     Text(
-        stringResource(R.string.e6_about, prise.targetS),
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant
+        stringResource(
+            if (gateAllowed) R.string.camera_faces_ok else R.string.camera_faces_ko,
+            faceCount
+        ),
+        color = if (gateAllowed) Color(0xFF7BD88F) else Color(0xFFFF6B6B),
+        style = MaterialTheme.typography.labelMedium,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .align(Alignment.TopCenter)
+            .padding(top = 92.dp)
+            .background(Color(0x99000000), RoundedCornerShape(8.dp))
+            .padding(horizontal = 10.dp, vertical = 3.dp),
     )
 }
 
+/** Carte d'instruction ancrée au-dessus de la barre de commandes (zone claire). */
 @Composable
-private fun PriseViewfinder() {
-    Box(
+private fun BoxScope.PriseInstructionBottom(prise: PriseGuide, bottomPadding: Dp) {
+    var replie by remember { mutableStateOf(true) }
+    Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(9f / 16f)
-            .border(1.dp, GrisLiserai, RoundedCornerShape(12.dp))
+            .align(Alignment.BottomCenter)
+            .padding(start = 12.dp, end = 12.dp, bottom = bottomPadding)
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color(0xF2FFFFFF)),
     ) {
-        Box(
+        Column(
             modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(8.dp)
-                .background(BleuNuit, RoundedCornerShape(8.dp))
-                .padding(horizontal = 10.dp, vertical = 6.dp)
-        ) { Text("9:16 · HD", color = Color.White, style = MaterialTheme.typography.labelSmall) }
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(8.dp)
-                .background(Color.White, RoundedCornerShape(8.dp))
-                .padding(horizontal = 10.dp, vertical = 6.dp)
-        ) { Text(stringResource(R.string.e6_countdown), color = BleuNuit, style = MaterialTheme.typography.labelSmall) }
-        Box(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .size(72.dp)
-                .background(BleuNuit, CircleShape)
-                .border(3.dp, Color.White, CircleShape),
-            contentAlignment = Alignment.Center
-        ) { Text("3", color = Color.White, style = MaterialTheme.typography.headlineMedium) }
-    }
-}
-
-@Composable
-private fun PriseInstructionCard(prise: PriseGuide) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(stringResource(R.string.e6_to_film), color = OrangeStore, style = MaterialTheme.typography.labelLarge)
+                .padding(horizontal = 14.dp, vertical = 10.dp)
+                .heightIn(max = 230.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+        ) {
+            Text(
+                stringResource(R.string.e6_to_film),
+                color = OrangeStore,
+                style = MaterialTheme.typography.labelLarge,
+            )
+            Text(
+                prise.label,
+                style = MaterialTheme.typography.titleMedium,
+                color = BleuNuit,
+            )
             Text(prise.cameraInstruction, style = MaterialTheme.typography.bodyMedium)
-        }
-    }
-}
-
-@Composable
-private fun PriseParoleCard(prise: PriseGuide) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Box(
-                modifier = Modifier
-                    .background(BleuVoile, RoundedCornerShape(8.dp))
-                    .padding(horizontal = 12.dp, vertical = 6.dp)
-            ) {
+            Text(
+                stringResource(R.string.e6_about, prise.targetS),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            if (prise.segments.isNotEmpty()) {
                 Text(
-                    "PAROLE 1/${prise.segments.size}",
+                    stringResource(R.string.e6_parole_n, prise.segments.size) +
+                        if (replie) "  ▾" else "  ▴",
                     color = BleuNuit,
-                    style = MaterialTheme.typography.labelLarge
-                )
-            }
-            prise.segments.forEach { seg ->
-                Text(stringResource(R.string.e6_show), color = OrangeStore, style = MaterialTheme.typography.labelLarge)
-                Text(seg.show, style = MaterialTheme.typography.bodyMedium)
-                Text(
-                    stringResource(R.string.e6_tell),
-                    color = OrangeStore,
-                    style = MaterialTheme.typography.labelLarge
-                )
-                Text(seg.tell, style = MaterialTheme.typography.bodyMedium)
-                Box(
+                    style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(OrangeVoile, RoundedCornerShape(8.dp))
-                        .padding(12.dp)
-                ) {
-                    Column {
-                        Text(
-                            stringResource(R.string.e6_example),
-                            color = OrangeStore,
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                        Text("« " + seg.example + " »", color = BleuNuit, style = MaterialTheme.typography.titleSmall)
+                        .clickable { replie = !replie }
+                        .padding(top = 4.dp),
+                )
+                AnimatedVisibility(visible = !replie) {
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        prise.segments.forEach { seg ->
+                            Text(
+                                stringResource(R.string.e6_show) + " : " + seg.show,
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                            Text(
+                                stringResource(R.string.e6_tell) + " : " + seg.tell,
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                            Text(
+                                "« " + seg.example + " »",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = BleuNuit,
+                                modifier = Modifier
+                                    .background(BleuVoile, RoundedCornerShape(6.dp))
+                                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                            )
+                        }
                     }
                 }
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .background(BleuVoile, RoundedCornerShape(8.dp))
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Text(
-                        "≈ " + seg.advisedS.toString().replace(".", ",") + " s",
-                        color = BleuNuit,
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                }
             }
-            Text(
-                stringResource(R.string.e6_time_hint),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
         }
     }
 }
 
+/** Compte à rebours 3-2-1 VÉRITABLE : affiché pendant le décompte, le recorder
+ *  ne démarre qu'à sa fin (CameraGuideActivity.lancerCompteARebours). */
 @Composable
-private fun PriseControls(onRedo: () -> Unit, onRecord: () -> Unit, onNext: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically
+private fun BoxScope.CompteARebours(valeur: Int) {
+    Box(
+        modifier = Modifier
+            .align(Alignment.Center)
+            .size(140.dp)
+            .background(Color(0x99000000), CircleShape),
+        contentAlignment = Alignment.Center,
     ) {
-        OutlinedButton(onClick = onRedo, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.e6_redo)) }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(stringResource(R.string.e6_record), color = OrangeStore, style = MaterialTheme.typography.labelLarge)
-            Box(
-                modifier = Modifier
-                    .size(72.dp)
-                    .clickable(onClick = onRecord)
-                    .border(4.dp, OrangeStore, CircleShape)
-                    .padding(8.dp)
-                    .background(OrangeStore, CircleShape)
-            )
-        }
-        Button(onClick = onNext, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.e6_next)) }
+        Text(
+            valeur.toString(),
+            color = Color.White,
+            fontSize = 84.sp,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+/** Confirmation transitoire après Finalize réussi — preuve visible de la prise. */
+@Composable
+private fun BoxScope.ConfirmationPrise(numero: Int) {
+    Box(
+        modifier = Modifier
+            .align(Alignment.Center)
+            .background(Color(0xCC2E7D32), RoundedCornerShape(14.dp))
+            .padding(horizontal = 22.dp, vertical = 12.dp),
+    ) {
+        Text(
+            stringResource(R.string.camera_take_validated, numero),
+            color = Color.White,
+            style = MaterialTheme.typography.titleMedium,
+        )
     }
 }

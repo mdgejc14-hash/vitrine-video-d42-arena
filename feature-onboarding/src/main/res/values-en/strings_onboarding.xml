@@ -15,7 +15,16 @@
     <string name="welcome_title">Welcome</string>
     <string name="welcome_credits">We\'ve given you %1$d credits. Happy filming!</string>
     <string name="welcome_credits_pending">Getting your welcome credits ready…</string>
+    <!-- welcome_error kept for history; D42.30: the exact taxonomy below
+         replaces the catch-all "connection lost" message (field feedback). -->
     <string name="welcome_error">Your account is created, but we couldn\'t fetch your credits. They\'ll be added as soon as the connection is back.</string>
+    <string name="welcome_offline">No connection to confirm your credits right now. You can continue — they\'ll be granted automatically when the network returns (checked every time the app opens).</string>
+    <string name="welcome_credits_zero">Welcome! This phone has already used its welcome credits. Your current balance: %1$d.</string>
+    <string name="welcome_err_session">Session expired. Your videos stay saved — reopen the app and sign in again to get your credits.</string>
+    <string name="welcome_err_inactive">Your account isn\'t activated on our servers yet. Try again in a few minutes — nothing is lost.</string>
+    <string name="welcome_err_profil">Your profile couldn\'t be created on our servers. Try again in a few minutes.</string>
+    <string name="welcome_err_serveur">Our servers are having a temporary issue. Try again in a few minutes — your credits are not lost.</string>
+    <string name="welcome_err_autre">Grant unavailable (error %1$d). Try again in a few minutes.</string>
     <string name="lang_change_later">You can change this choice later</string>
     <string name="refcode_title">Your referral code</string>
     <string name="refcode_subtitle">You can skip this step.</string>
