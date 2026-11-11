@@ -131,3 +131,32 @@ variante hors connexion.
   run_smoke=0 [APK prouvé lab 16/16 à 0ac2aa9, le pilot valide le harnais]).
   En parallèle : android-ci + e2e-lab ae5e5b0 (non-régression, compile les
   changements Kotlin).
+- **11/11 ~07:15 UTC — PILOT v1 : RÉSULTATS MAJEURS (42975000342, failure)** :
+  1. **Décodeur PROUVÉ sur appareil** : `D42-BGM : BGM DÉCODÉE : 3 360 764 éch.
+     44100 Hz 2 can. en 4056 ms — RMS −16,6 dB, crête −1,8 dB` (titulaire
+     shops_small_business, identique à la mesure locale ffmpeg −16,62 dB).
+  2. **Le MP4 produit contient la musique** : cache-export-1.mp4 (6 027 288 o),
+     vidéo 34,989 s / 525 frames (15 fps, profil validation), audio 38,044 s /
+     1640 trames AAC, **RMS global −17,07 dB, fenêtre 2-6 s −17,64 dB,
+     décodage ffmpeg sans erreur** → chaîne audio complète
+     (décodeur → mixeur → encodeur AAC → muxer) PROUVÉE. Gain solo confirmé.
+  3. **Le worker a pourtant déclaré FAILED/CLOUD** : calage vidéo en fin de
+     rendu (Surface unknown buffer, 60 slots non peuplés à la libération) ;
+     tentatives de repli 1-2 mortes en ~30 ms ; runCatching onError avalait
+     l'ExportException SANS trace (même anti-pattern que le bug BgmDecoder).
+  4. **2e DÉFAUT PRODUIT CRITIQUE découvert** : piste audio 38,044 s pour une
+     vidéo de 34,989 s — feedPcm muxait TOUT le titulaire (silence en queue
+     après la fin de composition). AudioChecks (tolérance 250 ms) aurait
+     rejeté l'export → CLOUD_MODAL. **Tout export musical réel aurait échoué
+     au vérificateur, y compris sur appareil physique.**
+- **11/11 (D42.29-02, 7e4ebfa)** : ExportWorker — exceptions Transformer
+  journalisées (code getErrorCodeName + message + cause + trace) + trace par
+  tentative (stratégie VerifierPolicy, géométrie, sortie partielle). Pilot v2
+  dispatché sur ce commit pour l'IDENTITÉ de l'exception.
+- **11/11 (D42.29-03, f7d20fe)** : **FIX PRODUIT du bornage** — feedPcm borne
+  l'alimentation musique/SFX à la durée de composition (maxFrames, décalage
+  musicStartUs pris en compte, enveloppe et borne partagent la même durée
+  effective). Test JVM de non-régression ajouté (45 s de musique / composition
+  33 s → trames muxées ≤ cap) ; test F60 mis à jour (queue exactement à la
+  fin, atténuée — l'ancienne attente amplitude 0 supposait le défaut).
+  Pilot v3 dispatché sur f7d20fe pour valider le correctif.
