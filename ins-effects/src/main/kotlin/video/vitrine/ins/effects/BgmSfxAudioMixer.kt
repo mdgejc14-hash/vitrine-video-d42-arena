@@ -74,6 +74,9 @@ class BgmSfxAudioMixer(
     private var musicSourceId: Int = C.INDEX_UNSET
     private var musicPcm: ShortArray? = null          // stereo, cadence de sortie
     private var musicFedFrames: Long = 0L
+    /** D42.29 : démarrage de la source musique sur l'horloge du mixeur — sert
+     *  à borner l'alimentation à la fin RÉELLE de composition. */
+    private var musicStartUs: Long = 0L
 
     private data class SfxFeed(val sourceId: Int, val pcm: ShortArray, val atUs: Long)
     private val sfxFeeds = mutableListOf<SfxFeed>()
@@ -222,6 +225,7 @@ class BgmSfxAudioMixer(
         voicePositionUs = 0L
         musicSourceId = C.INDEX_UNSET
         musicFedFrames = 0L
+        musicStartUs = 0L
         musicRegistered = false
         sfxFeeds.clear()
         fedBySource.clear()
@@ -246,6 +250,7 @@ class BgmSfxAudioMixer(
             val id = delegate.addSource(outputPcmFormat(), voiceStartTimeUs)
             musicSourceId = id
             musicPcm = adapted
+            musicStartUs = voiceStartTimeUs
             delegate.setSourceVolume(id, MixPlan.musicBaseGainDb(musicBaseGainDb))
         }
         runSafe {
@@ -309,12 +314,34 @@ class BgmSfxAudioMixer(
         runSafe {
             val channels = outputChannels
             val music = musicPcm
+            // D42.29 (DÉFAUT PRODUIT CRITIQUE, pilot 42975000342) : l'alimentation
+            // musique/SFX est désormais BORNÉE à la durée de composition. Avant,
+            // feedPcm vidait tout le fichier (titulaire 38,1 s pour 35 s de
+            // composition) : l'enveloppe mettait bien le gain à 0 après la fin,
+            // mais les échantillons SILENCIEUX restaient muxés — piste audio 3 s
+            // plus longue que la vidéo, rejetée par AudioChecks du vérificateur
+            // (tolérance 250 ms) → repli CLOUD_MODAL. Tout export musical réel
+            // échouait donc au vérificateur, y compris sur appareil physique
+            // (mesure ffprobe : audio 38,044 s / vidéo 34,989 s).
+            val rate = if (outputFormat.sampleRate > 0) outputFormat.sampleRate else 48000
+            val musiqueEffectiveUs = if (compositionDurationUs > 0L) {
+                (compositionDurationUs - (musicStartUs - mixerStartTimeUs)).coerceAtLeast(0L)
+            } else {
+                0L
+            }
+            val capMusique = if (musiqueEffectiveUs > 0L) {
+                musiqueEffectiveUs * rate / 1_000_000L
+            } else {
+                Long.MAX_VALUE
+            }
             if (music != null && musicSourceId != C.INDEX_UNSET && guard > 0) {
                 // D41 (F60) : fade-in/fade-out contrat AudioChain (0,45 s / 0,75 s)
                 // appliques a l'alimentation musique — avant, la BGM demarrait au
                 // volume cible et se faisait couper net a la fin de composition.
-                val rate = if (outputFormat.sampleRate > 0) outputFormat.sampleRate else 48000
-                guard = feedPcm(musicSourceId, music, musicFedFrames, guard, channels, musicEnvelope(rate)) { fed ->
+                guard = feedPcm(
+                    musicSourceId, music, musicFedFrames, guard, channels,
+                    musicEnvelope(rate, musiqueEffectiveUs), maxFrames = capMusique
+                ) { fed ->
                     musicFedFrames = fed
                 }
             }
@@ -331,12 +358,21 @@ class BgmSfxAudioMixer(
             while (iterator.hasNext() && sfxGuard > 0) {
                 val feed = iterator.next()
                 if (voicePositionUs < feed.atUs && !full) continue
+                // D42.29 : le SFX ne depasse pas non plus la fin de composition.
+                val capSfx = if (compositionDurationUs > 0L) {
+                    ((compositionDurationUs - feed.atUs).coerceAtLeast(0L)) * rate / 1_000_000L
+                } else {
+                    Long.MAX_VALUE
+                }
                 var fedFrames = fedBySource[feed.sourceId] ?: 0L
-                sfxGuard = feedPcm(feed.sourceId, feed.pcm, fedFrames, sfxGuard, channels, null) { fed ->
+                sfxGuard = feedPcm(
+                    feed.sourceId, feed.pcm, fedFrames, sfxGuard, channels, null,
+                    maxFrames = capSfx
+                ) { fed ->
                     fedFrames = fed
                     fedBySource[feed.sourceId] = fed
                 }
-                if (fedFrames * channels >= feed.pcm.size) {
+                if (fedFrames >= minOf((feed.pcm.size / channels).toLong(), capSfx)) {
                     delegate.removeSource(feed.sourceId)
                     iterator.remove()
                 }
@@ -346,10 +382,10 @@ class BgmSfxAudioMixer(
 
     /** Enveloppe musique : rampe d'entree (AudioChain.MUSIC_FADE_IN_S) puis rampe
      *  de sortie avant la fin de composition (MUSIC_FADE_OUT_S). null si sans objet. */
-    private fun musicEnvelope(sampleRate: Int): ((Long) -> Float)? {
+    private fun musicEnvelope(sampleRate: Int, endUs: Long = compositionDurationUs): ((Long) -> Float)? {
         val fadeInFrames = (AudioChain.MUSIC_FADE_IN_S * sampleRate).toLong()
-        val endFrames = if (compositionDurationUs > 0L) {
-            compositionDurationUs * sampleRate / 1_000_000L
+        val endFrames = if (endUs > 0L) {
+            endUs * sampleRate / 1_000_000L
         } else {
             0L
         }
@@ -372,7 +408,9 @@ class BgmSfxAudioMixer(
     private val fedBySource = mutableMapOf<Int, Long>()
 
     /** Pousse le PCM par blocs ; retourne le garde restant. Position maj via callback.
-     *  [envelope] : gain par frame (fade musique, D41 F60), null = copie brute. */
+     *  [envelope] : gain par frame (fade musique, D41 F60), null = copie brute.
+     *  [maxFrames] : D42.29 — borne stricte d'alimentation (fin de composition) :
+     *  les échantillons au-delà ne sont plus muxés, même silencieux. */
     private fun feedPcm(
         sourceId: Int,
         pcm: ShortArray,
@@ -380,12 +418,13 @@ class BgmSfxAudioMixer(
         guard: Int,
         channels: Int,
         envelope: ((Long) -> Float)?,
+        maxFrames: Long = Long.MAX_VALUE,
         onFed: (Long) -> Unit
     ): Int {
         var remainingGuard = guard
         var fed = fedFrames
         val bytesPerFrame = channels * 2
-        val totalFrames = pcm.size / channels
+        val totalFrames = minOf((pcm.size / channels).toLong(), maxFrames)
         while (fed < totalFrames && remainingGuard > 0) {
             val frames = minOf(
                 (SCRATCH_BYTES / bytesPerFrame).toLong(),

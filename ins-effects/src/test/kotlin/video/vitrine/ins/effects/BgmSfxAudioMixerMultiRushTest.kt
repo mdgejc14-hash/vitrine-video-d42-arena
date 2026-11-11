@@ -32,6 +32,7 @@ class BgmSfxAudioMixerMultiRushTest {
         val liveSources = mutableListOf<Int>()
         val volumesBySource = mutableMapOf<Int, MutableList<Float>>()
         val maxAbsBySource = mutableMapOf<Int, MutableList<Int>>()
+        val framesBySource = mutableMapOf<Int, Long>()
         private var nextId = 0
         var configured = false
         var finDemandeeUs: Long = C.TIME_UNSET
@@ -65,6 +66,9 @@ class BgmSfxAudioMixerMultiRushTest {
 
         override fun queueInput(sourceId: Int, sourceBuffer: ByteBuffer) {
             var maxAbs = 0
+            // D42.29 : trames stéréo réellement muxées par source (borne de fin).
+            framesBySource[sourceId] = (framesBySource[sourceId] ?: 0L) +
+                sourceBuffer.remaining() / 4
             // Le scratch du mixeur est en ordre NATIF (little-endian sur CI) :
             // une lecture big-endian par defaut produisait des amplitudes fausses
             // (0x8000 lus sur des valeurs minuscules) — faux negatif du test F60.
@@ -87,6 +91,7 @@ class BgmSfxAudioMixerMultiRushTest {
             liveSources.clear()
             volumesBySource.clear()
             maxAbsBySource.clear()
+            framesBySource.clear()
             finDemandeeUs = C.TIME_UNSET
         }
     }
@@ -216,10 +221,41 @@ class BgmSfxAudioMixerMultiRushTest {
         assertTrue("musique jamais fed", amplitudes.size >= 10)
         val milieu = amplitudes[amplitudes.size / 3]
         assertTrue("corps de la musique effacé à tort : $milieu", milieu > 4000)
-        assertEquals(
-            "queue de musique non silencieuse : ${amplitudes.takeLast(3)}",
-            0,
-            amplitudes.last()
+        // D42.29 : l'alimentation est BORNÉE à la fin de composition — le
+        // dernier bloc muxé s'arrête exactement à la fin (plus de queue
+        // silencieuse au-delà), le fade-out l'amène près de zéro.
+        assertTrue(
+            "queue de musique non atténuée : ${amplitudes.takeLast(3)}",
+            amplitudes.last() < milieu / 8
+        )
+    }
+
+    @Test
+    fun `musique plus longue que la composition - alimentation bornee (D42 29)`() {
+        // Pilot 42975000342 (musique/titulaires, 540x960) : le titulaire de
+        // 38,1 s était muxé ENTIÈREMENT pour une composition de 35 s — 3 s de
+        // silence en queue de piste audio (mesure ffprobe : audio 38,044 s /
+        // vidéo 34,989 s), rejetées par AudioChecks du vérificateur (tolérance
+        // 250 ms) → repli CLOUD_MODAL. Tout export musical réel aurait été
+        // rejeté, y compris sur appareil physique. L'alimentation est désormais
+        // bornée : plus AUCUN échantillon muxé au-delà de la composition.
+        val fake = FakeMixer()
+        val musique = BgmDecoder.Pcm(ShortArray(48000 * 45) { 8000 }, 48000, 1)
+        val mixer = BgmSfxAudioMixer(fake, musique, emptyList(), compositionDurationUs = 33_000_000L)
+        mixer.configure(format, 1000, 0L)
+        val voix = mixer.addSource(format, 0L)
+        repeat(10) { mixer.queueInput(voix, voiceBuffer(20000)) }
+        mixer.setEndTimeUs(33_000_000L)         // drain complet du reliquat
+        val framesMusique = fake.framesBySource[2] ?: 0L
+        val cap = 33_000_000L * 48000 / 1_000_000L
+        assertTrue("musique jamais alimentée", framesMusique > 0)
+        assertTrue(
+            "musique muxée au-delà de la composition : $framesMusique trames > cap $cap",
+            framesMusique <= cap
+        )
+        assertTrue(
+            "musique amputée avant la fin de composition : $framesMusique trames sur $cap",
+            framesMusique >= cap - 48000
         )
     }
 
