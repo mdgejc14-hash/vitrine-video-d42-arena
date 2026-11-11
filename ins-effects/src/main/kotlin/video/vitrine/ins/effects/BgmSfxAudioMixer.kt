@@ -82,6 +82,11 @@ class BgmSfxAudioMixer(
     private val scratch: ByteBuffer =
         ByteBuffer.allocateDirect(SCRATCH_BYTES).order(ByteOrder.nativeOrder())
 
+    /** D42.29 (P2) : compteurs de diagnostic du mix (jamais de décision produit). */
+    private var voixSommeCarres = 0.0
+    private var voixEchantillons = 0L
+    private var sfxCountTotal = 0
+
     /** Fabrique : musique decodee + cues SFX prepares AVANT le rendu (ExportWorker). */
     class Factory(
         private val music: BgmDecoder.Pcm?,
@@ -122,6 +127,27 @@ class BgmSfxAudioMixer(
             sfxFeeds.forEach { delegate.removeSource(it.sourceId) }
             sfxFeeds.clear()
         }
+        // D42.29 (P2, étage 2) : compteurs de mix — le banc distingue « la
+        // musique a été alimentée N trames » (chaîne saine) d'un rendu sans
+        // musique, SANS dépendre de l'analyse du MP4 final (qui peut être
+        // inachevé si le rendu vidéo cale — panne GPU ≠ absence de musique).
+        runCatching {
+            val rate = if (outputFormat.sampleRate > 0) outputFormat.sampleRate else 48000
+            // rmsOf rend une RMS NORMALISÉE 0..1 (MixPlan.rmsPcm16) : pas de
+            // seconde division par 32768 ici.
+            val rmsVoix = if (voixEchantillons > 0 && voixSommeCarres > 0.0)
+                String.format(
+                    java.util.Locale.US, "%.1f",
+                    20 * kotlin.math.log10(kotlin.math.sqrt(voixSommeCarres / voixEchantillons))
+                ) + " dB"
+            else "n/a"
+            android.util.Log.i(
+                TAG,
+                "fin de mix : musique ${musicFedFrames} trames (${musicFedFrames * 1000L / rate} ms), " +
+                    "voix ${voicePositionUs / 1000} ms (RMS $rmsVoix), ${sfxCountTotal} cues SFX, " +
+                    "duck final ${"%.2f".format(java.util.Locale.US, duckEnvelope)}, dégradé=$degraded"
+            )
+        }
         delegate.setEndTimeUs(endTimeUs)
     }
 
@@ -161,6 +187,14 @@ class BgmSfxAudioMixer(
         runSafe {
             val rms = rmsOf(sourceBuffer)
             val dtMs = bytesToMs(avant)
+            // D42.29 : accumulation pour le compteur de fin de mix (RMS voix).
+            runCatching {
+                val n = (dtMs * outputFormat.sampleRate / 1000.0).toInt() * maxOf(1, outputFormat.channelCount)
+                if (n > 0) {
+                    voixEchantillons += n
+                    voixSommeCarres += rms.toDouble() * rms.toDouble() * n
+                }
+            }
             val target = MixPlan.duckTargetGain(rms, duckDepthDb)
             duckEnvelope = MixPlan.approachGain(duckEnvelope, target, dtMs)
             if (musicSourceId != C.INDEX_UNSET) {
@@ -193,6 +227,9 @@ class BgmSfxAudioMixer(
         fedBySource.clear()
         duckEnvelope = 1.0f
         endTimeUs = C.TIME_UNSET
+        voixSommeCarres = 0.0
+        voixEchantillons = 0L
+        sfxCountTotal = 0
     }
 
     // ------------------------------------------------------------------ interne
@@ -217,6 +254,7 @@ class BgmSfxAudioMixer(
                 val id = delegate.addSource(outputPcmFormat(), mixerStartTimeUs + cue.atUs)
                 delegate.setSourceVolume(id, MixPlan.sfxGain())
                 sfxFeeds += SfxFeed(id, adapted, cue.atUs)
+                sfxCountTotal++
             }
         }
     }
@@ -425,6 +463,7 @@ class BgmSfxAudioMixer(
     }
 
     private companion object {
+        const val TAG = "D42-MIX"
         const val SCRATCH_BYTES = 2048 * 2 * 2          // 2048 frames stereo 16 bits
         const val FEED_GUARD = 8
         const val FULL_DRAIN_GUARD = 4096

@@ -1,11 +1,19 @@
 # Fixtures de rushs D42 — commandes exactes
 
-Deux jeux, **jamais mélangés** :
+Quatre jeux, **jamais mélangés** :
 
-| Dossier | Cadence | Usage | Taille |
-|---|---|---|---|
-| `rushes/` | 30 im/s | profil **production** (12 rendus 1080×1920) | 3 × 12 s, 720×1280 |
-| `rushes15/` | 15 im/s | profil **validation** (120 rendus 540×960) | 3 × 12 s, 720×1280 |
+| Dossier | Cadence | Audio | Usage | Taille |
+|---|---|---|---|---|
+| `rushes/` | 30 im/s | sinus AAC 48 kHz | profil **production** — modes voix/mix | 3 × 12 s, 720×1280 |
+| `rushes15/` | 15 im/s | sinus AAC 48 kHz | profil **validation** — modes voix/mix | 3 × 12 s, 720×1280 |
+| `rushes_muets/` | 30 im/s | **aucun** | profil **production** — mode musique (gain solo) | 3 × 12 s, 720×1280 |
+| `rushes_muets15/` | 15 im/s | **aucun** | profil **validation** — mode musique (gain solo) | 3 × 12 s, 720×1280 |
+
+D42.29 : le mode MUSIQUE exige des rushs MUETS — c'est la condition produit du
+gain solo (ExportWorker `baseSilencieuse` : rushs sans audio + BGM planifiée →
+musique à 0 dB). Les jeux muets sont générés par les MÊMES commandes que les
+jeux sonores, sans l'entrée `sine` (voir ci-dessous), même habillage visuel
+(markées « RUSH n MUET » pour les distinguer sur une planche contact).
 
 Même durée (12 s), même orientation (720×1280 portrait), même codec (H.264
 High, yuv420p, AAC LC 48 kHz mono). Seule la cadence diffère, parce que le coût

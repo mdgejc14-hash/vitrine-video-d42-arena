@@ -62,6 +62,18 @@ on:
         description: "1 = smoke obligatoire ; 0 = APK app déjà prouvé par un smoke vert"
         required: false
         default: "1"
+      audio_mode:
+        description: "D42.29 : mode audio — mix | musique (rushs muets, gain solo) | voix (cache BGM vide)"
+        required: false
+        default: "mix"
+      bgm_source:
+        description: "D42.29 : BGM — fixtures (assets -39 dB) | titulaires (pistes de production ~-16 dB)"
+        required: false
+        default: "fixtures"
+      offline:
+        description: "D42.29 : 1 = réseau coupé pendant le rendu (preuve hors connexion P4)"
+        required: false
+        default: "0"
   push:
     # D42.14 : re-validation des rendus PAR PUSH. Mesuré : le PAT du laboratoire
     # n'a pas la portée Actions (workflow_dispatch -> 403 « Resource not
@@ -477,6 +489,10 @@ jobs:
 
       - name: Rendu du lot (profil validation 540x960)
         uses: ReactiveCircus/android-emulator-runner@c9c93e6ba9c4194322e114c40970d5983d9a07cc # v2.38.0
+        env:
+          # D42.29 : requis pour bgm_source=titulaires (téléchargement des pistes
+          # de production via le compte sonde, côté runner).
+          FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
         with:
           api-level: ${{ github.event.inputs.api_level || '34' }}
           target: google_apis
@@ -491,13 +507,19 @@ jobs:
           # D42.3 — le 3e argument est le FILTRE de gabarit, jamais le lot.
           # Le lot passe par les arguments 9 et 10, transmis a l'instrumentation
           # sous d42_shard / d42_shards.
+          # D42.29 — args 11-13 : mode audio, source BGM, variante hors connexion.
+          # Timeout par rendu 2700 s : avec la BGM réellement mixée (fix
+          # D42.28-26), le rendu mesuré est ~3x plus lent qu'en SFX seuls.
           script: >-
             bash .github/scripts/d42-render.sh matrix ${{ matrix.lang }}
             "${{ github.event.inputs.templates || 'all' }}"
-            "renders-${{ matrix.lang }}-${{ matrix.shard }}" 1800
+            "renders-${{ matrix.lang }}-${{ matrix.shard }}" 2700
             "${{ github.event.inputs.badge || 'none' }}" validation
             "${{ github.event.inputs.limite || '0' }}"
             "${{ matrix.shard }}" "${{ github.event.inputs.shards || '8' }}"
+            "${{ github.event.inputs.audio_mode || 'mix' }}"
+            "${{ github.event.inputs.bgm_source || 'fixtures' }}"
+            "${{ github.event.inputs.offline || '0' }}"
 
       - name: Manifeste SHA-256 du lot (aucune preuve supprimée silencieusement)
         if: always()

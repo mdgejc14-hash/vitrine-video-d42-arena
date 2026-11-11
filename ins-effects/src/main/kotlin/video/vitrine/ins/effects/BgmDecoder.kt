@@ -19,6 +19,8 @@ import java.nio.ByteOrder
  */
 object BgmDecoder {
 
+    private const val TAG = "D42-BGM"
+
     /** PCM decode : echantillons 16 bits + cadence + canaux (avant adaptation mixeur). */
     data class Pcm(val samples: ShortArray, val sampleRate: Int, val channels: Int) {
         val frameCount: Int get() = if (channels > 0) samples.size / channels else 0
@@ -26,15 +28,38 @@ object BgmDecoder {
 
     private const val TIMEOUT_US = 10_000L
 
-    fun decodeMusic(file: File): Pcm? = runCatching {
-        if (!file.isFile || file.length() <= 0L) return null
+    fun decodeMusic(file: File): Pcm? {
+        // D42.29 (P2, étage 1) : ce décodeur a été la cause racine du défaut
+        // post-RC13 (start sans configure -> IllegalStateException avalée SANS
+        // aucune trace). Toute issue — succès comme échec — est désormais
+        // journalisée : le banc distingue « musique décodée à X dB » (chaîne
+        // audio saine) de « décodage en échec » (défaut produit) sans attendre
+        // l'analyse du MP4 final.
+        val debut = System.currentTimeMillis()
+        android.util.Log.i(
+            TAG,
+            "décodage BGM : ${file.name} (${file.length()} octets)"
+        )
+        return runCatching {
+        if (!file.isFile || file.length() <= 0L) {
+            android.util.Log.w(TAG, "BGM NON décodée : fichier absent ou vide (${file.absolutePath})")
+            return null
+        }
         val extractor = MediaExtractor()
         try {
             extractor.setDataSource(file.absolutePath)
-            val trackIndex = selectAudioTrack(extractor) ?: return null
+            val trackIndex = selectAudioTrack(extractor)
+            if (trackIndex == null) {
+                android.util.Log.w(TAG, "BGM NON décodée : aucune piste audio dans ${file.name}")
+                return null
+            }
             extractor.selectTrack(trackIndex)
             val format = extractor.getTrackFormat(trackIndex)
-            val mime = format.getString(MediaFormat.KEY_MIME) ?: return null
+            val mime = format.getString(MediaFormat.KEY_MIME)
+            if (mime == null) {
+                android.util.Log.w(TAG, "BGM NON décodée : MIME absent dans ${file.name}")
+                return null
+            }
             val sampleRate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE)
             val channels = format.getInteger(MediaFormat.KEY_CHANNEL_COUNT)
             val codec = MediaCodec.createDecoderByType(mime)
@@ -54,12 +79,48 @@ object BgmDecoder {
                 runCatching { codec.stop() }
                 codec.release()
             }
-            if (out.isEmpty()) return null
-            Pcm(out.toShortArray(), sampleRate, channels)
+            if (out.isEmpty()) {
+                android.util.Log.w(TAG, "BGM NON décodée : drain sans aucun PCM (${file.name})")
+                return null
+            }
+            val echantillons = out.toShortArray()
+            android.util.Log.i(
+                TAG,
+                "BGM DÉCODÉE : ${echantillons.size} éch. ${sampleRate} Hz ${channels} can. " +
+                    "en ${System.currentTimeMillis() - debut} ms — RMS ${rmsDb(echantillons)} dB, " +
+                    "crête ${peakDb(echantillons)} dB"
+            )
+            Pcm(echantillons, sampleRate, channels)
         } finally {
             extractor.release()
         }
-    }.getOrNull()
+        }.onFailure {
+            android.util.Log.w(
+                TAG,
+                "BGM NON décodée (exception, ${file.name}) : " +
+                    "${it.javaClass.simpleName}: ${it.message}"
+            )
+        }.getOrNull()
+    }
+
+    /** RMS dBFS du PCM 16 bits (diagnostic banc D42.29 — aucune décision produit). */
+    private fun rmsDb(samples: ShortArray): String {
+        var somme = 0.0
+        for (s in samples) {
+            val v = s.toDouble()
+            somme += v * v
+        }
+        if (samples.isEmpty()) return "n/a"
+        val rms = kotlin.math.sqrt(somme / samples.size)
+        return if (rms < 1.0) "-inf" else String.format(java.util.Locale.US, "%.1f", 20 * kotlin.math.log10(rms / 32768.0))
+    }
+
+    /** Crête dBFS du PCM 16 bits (diagnostic banc D42.29). */
+    private fun peakDb(samples: ShortArray): String {
+        var max = 1
+        for (s in samples) max = maxOf(max, kotlin.math.abs(s.toInt()))
+        return String.format(java.util.Locale.US, "%.1f", 20 * kotlin.math.log10(max / 32768.0))
+    }
 
     private fun selectAudioTrack(extractor: MediaExtractor): Int? {
         for (i in 0 until extractor.trackCount) {

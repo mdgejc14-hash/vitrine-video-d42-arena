@@ -62,6 +62,17 @@ class ProductionRenderInstrumentedTest {
     // D42-P1 : plafond de rendus par job (0 = pas de plafond). Sert a MESURER
     // le cout reel d'un rendu avant d'engager la matrice complete.
     private val limite = (args.getString("d42_limite") ?: "0").toInt()
+    // D42.29 (P2/P3) : mode audio à prouver.
+    //   mix    = rushs AVEC piste audio + BGM en cache (voix + musique, ducking) ;
+    //   musique = rushs MUETS + BGM en cache (gain solo 0 dB, base silencieuse) ;
+    //   voix   = rushs AVEC piste audio + cache BGM VIDE (pass-through voix seule).
+    private val audioMode = (args.getString("d42_audio_mode") ?: "mix").lowercase()
+    // D42.29 : source du BGM. "fixtures" = assets d42/bgm (silencieuses, -39 dB :
+    // historique de diagnostic) ; "titulaires" = pistes de PRODUCTION
+    // musique_t1_<secteur> poussées dans files/bgm par le banc avant
+    // l'instrumentation (~ -16 dB RMS — la preuve d'audibilité n'a de sens que
+    // sur les vraies pistes).
+    private val bgmSource = (args.getString("d42_bgm_source") ?: "fixtures").lowercase()
 
     private val outDir: File by lazy {
         File(target.getExternalFilesDir(null), "d42/$lang").apply { mkdirs() }
@@ -130,8 +141,20 @@ class ProductionRenderInstrumentedTest {
         // domine par un cout FIXE par image (≈ 217 ms mesure) : la cadence des
         // sources divise donc le temps sans toucher a la composition. Les
         // rushs de PRODUCTION (30 im/s) restent servis au profil production.
-        val source = if (profil == "validation") "d42/rushes15" else "d42/rushes"
+        // D42.29 : le mode MUSIQUE utilise les rushs MUETS (video seule) —
+        // c'est la condition produit du gain solo (ExportWorker
+        // baseSilencieuse : rushs sans audio + BGM planifiée).
+        val source = when {
+            audioMode == "musique" ->
+                if (profil == "validation") "d42/rushes_muets15" else "d42/rushes_muets"
+            else ->
+                if (profil == "validation") "d42/rushes15" else "d42/rushes"
+        }
         val rushesDir = File(target.filesDir, "d42/rushes").apply { mkdirs() }
+        // D42.29 : purger les rush résiduels d'un rendu précédent — le mode
+        // musique exige des rushs MUETS, un résidu audio ferait basculer le
+        // worker en mode mix sans que le banc ne le voie.
+        rushesDir.listFiles()?.forEach { it.delete() }
         assets.list(source).orEmpty().forEach { nom ->
             val dest = File(rushesDir, nom)
             assets.open("$source/$nom").use { entree ->
@@ -140,19 +163,57 @@ class ProductionRenderInstrumentedTest {
         }
         // BGM : BgmStore lit filesDir/bgm/<categorie>.m4a (chemin de production).
         val bgmDir = File(target.filesDir, "bgm").apply { mkdirs() }
-        assets.list("d42/bgm").orEmpty().forEach { nom ->
-            val secteur = nom.removePrefix("bgm_").removeSuffix(".m4a")
-            val octets = assets.open("d42/bgm/$nom").use { it.readBytes() }
-            File(bgmDir, "bgm_$secteur.m4a").writeBytes(octets)
+        when {
+            audioMode == "voix" -> {
+                // Mode VOIX : AUCUNE musique en cache — le produit doit rendre
+                // en pass-through voix seule (robustesse, repli honnête).
+                val supprimes = bgmDir.listFiles()?.onEach { it.delete() }?.size ?: 0
+                Log.i(TAG, "mode voix : cache BGM vidé ($supprimes fichier(s) supprimé(s))")
+            }
+            bgmSource == "titulaires" -> {
+                // Les pistes de production sont déjà poussées par le banc
+                // (adb push + run-as cp) : on ne copie PAS les fixtures par-
+                // dessus. Vérification immédiate — un job rouge vaut mieux
+                // qu'une preuve silencieusement amoindrie.
+                val titulaires = bgmDir.listFiles()?.filter { it.name.startsWith("musique_t1_") }.orEmpty()
+                assertTrue(
+                    "bgm_source=titulaires mais ${titulaires.size} piste(s) musique_t1_* dans files/bgm",
+                    titulaires.isNotEmpty(),
+                )
+                Log.i(TAG, "BGM titulaires en cache : ${titulaires.joinToString { "${it.name}(${it.length()}o)" }}")
+            }
+            else -> {
+                assets.list("d42/bgm").orEmpty().forEach { nom ->
+                    val secteur = nom.removePrefix("bgm_").removeSuffix(".m4a")
+                    val octets = assets.open("d42/bgm/$nom").use { it.readBytes() }
+                    File(bgmDir, "bgm_$secteur.m4a").writeBytes(octets)
+                }
+            }
         }
         assertTrue("fixtures rushs absentes", rushesDir.listFiles()?.size ?: 0 >= 3)
-        assertTrue("fixtures BGM absentes", bgmDir.listFiles()?.size ?: 0 >= 6)
+        if (audioMode != "voix") {
+            assertTrue("fixtures BGM absentes", bgmDir.listFiles()?.size ?: 0 >= 1)
+        } else {
+            assertTrue("cache BGM non vide en mode voix", bgmDir.listFiles()?.isEmpty() == true)
+        }
     }
 
     /** Cache BGM sous le nom EXACT attendu par le gabarit (categorie_audio). */
     private fun preparerBgm(categorie: String?, secteur: String) {
         if (categorie.isNullOrBlank()) return
         val bgmDir = File(target.filesDir, "bgm").apply { mkdirs() }
+        if (audioMode == "voix") return
+        if (bgmSource == "titulaires") {
+            // Le banc a poussé musique_t1_<secteur>.<m4a|mp3> : le gabarit doit
+            // trouver SA catégorie — sinon la preuve porterait sur un repli.
+            val m4a = File(bgmDir, "$categorie.m4a")
+            val mp3 = File(bgmDir, "$categorie.mp3")
+            assertTrue(
+                "titulaire $categorie absent du cache (ni .m4a ni .mp3)",
+                m4a.isFile || mp3.isFile,
+            )
+            return
+        }
         val source = File(bgmDir, "bgm_$secteur.m4a")
         if (!source.isFile) return
         val cible = File(bgmDir, "$categorie.m4a")
@@ -548,6 +609,8 @@ class ProductionRenderInstrumentedTest {
                         .put("langue", r.langue)
                         .put("badge", r.badge)
                         .put("profil", profil)
+                        .put("mode_audio", audioMode)
+                        .put("bgm_source", bgmSource)
                         .put("mots_beat_sheet", r.motsBeatSheet)
                         .put("plans_beat_sheet", r.plansBeatSheet)
                         .put("ok", r.ok)
@@ -567,6 +630,8 @@ class ProductionRenderInstrumentedTest {
                 appendLine("langue=$lang")
                 appendLine("badge=$badge")
                 appendLine("profil=$profil")
+                appendLine("mode_audio=$audioMode")
+                appendLine("bgm_source=$bgmSource")
                 appendLine(
                     "geometrie=" + if (profil == "validation") {
                         "${dimensionValidation.first}x${dimensionValidation.second}"
