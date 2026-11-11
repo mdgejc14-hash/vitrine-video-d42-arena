@@ -155,19 +155,21 @@ visible_ou_defilant() { # texte|id, valeur, [max_gestes]
 }
 
 # --- S03 sélection de langue ---------------------------------------------------
+# D42.30 : FR/EN UNIQUEMENT (décision fondatrice). L'ancien S03b attendait la
+# carte 日本語 — FAIL ×5 au lab 09d3e74 alors que l'app est CORRECTE : le
+# harnais vérifiait une exigence retirée du produit. Désormais S03b PROUVE le
+# retrait : aucune carte Español/日本語 ne doit exister.
 if $UI wait --text "Français" --timeout 30 >/dev/null 2>&1; then
-  record PASS S03_ecran_langue "Français / English / Español / 日本語"
+  record PASS S03_ecran_langue "Français / English (FR/EN uniquement — D42.30)"
   shot 02_langue; dump 02_langue
-  visible_ou_defilant text "日本語" 4; rc=$?
-  case $rc in
-    0) record PASS S03b_langue_jp_visible "carte 日本語 visible sans défiler" ;;
-    2) record PASS S03b_langue_jp_visible "carte 日本語 atteinte APRÈS DÉFILEMENT (écran défilant)" ;;
-    *) record FAIL S03b_langue_jp_visible "carte 日本語 introuvable même après défilement" ;;
-  esac
+  if $UI wait --text "Español" --timeout 3 >/dev/null 2>&1 \
+     || $UI wait --text "日本語" --timeout 3 >/dev/null 2>&1; then
+    record FAIL S03b_es_ja_absents "carte Español/日本語 encore présente (retrait D42.30 non appliqué)"
+  else
+    record PASS S03b_es_ja_absents "aucune carte Español/日本語 — parcours FR/EN uniquement"
+  fi
   case "$LANGUE" in
     en) LIBELLE="English" ;;
-    es) LIBELLE="Español" ;;
-    ja) LIBELLE="日本語" ;;
     *)  LIBELLE="Français" ;;
   esac
   if $UI tap --text "$LIBELLE" --timeout 12 >/dev/null 2>&1; then

@@ -43,6 +43,23 @@ retirés du produit). Carrousel initial conservé.
 - `ProductionRenderInstrumentedTest` : échantillons fr/en uniquement,
   gabarits de référence fr/en.
 
+## D42.30-12 : fermeture de la dernière trace active (17/11, ca0ed30)
+
+- **run_p0.sh S03** attendait encore la carte 日本語 — FAIL ×5 au lab
+  09d3e74 (base/font130/rot90 + petit écran) alors que l'app est CORRECTE :
+  exigence retirée du produit mais toujours vérifiée par le harnais.
+  S03b devient `S03b_es_ja_absents` : PASS si AUCUNE carte Español/日本語
+  n'existe (le retrait est désormais PROUVÉ, pas juste subi) ; S03c sans
+  branches es/ja (LANGUE ∈ {fr, en}).
+- **Asset l10n actif purgé** : `data/src/main/assets/i18n/gabarit_l10n_v1.json`
+  9 716 → 4 948 octets (entrées es/ja retirées — la langue de session est
+  fr/en depuis VitrineLocale, ces entrées étaient mortes dans l'APK) ;
+  couverture EN 53/53 + badges 3/3 vérifiée au parsing. Version 4 langues
+  archivée : `content/archive_i18n/gabarit_l10n_v1_4langues.json`.
+- Aucun test JVM ne dépendait des entrées es/ja (« ja » = repli uniquement,
+  GabaritL10nTest l.100-113). android-ci SUCCESS sur 401ce39 (le commit
+  D42.30-11 contenant ces changements de doc est validé par la même chaîne).
+
 ## Preuves
 
 - e2e-lab 5082856 : **langues (en) SUCCESS** (sélection English → écrans

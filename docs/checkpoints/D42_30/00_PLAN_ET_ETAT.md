@@ -228,6 +228,12 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   isole le défaut en une étape — ici le défaut était dans le HARNAIS, pas
   dans l'app ; le message d'erreur affiché à l'écran était la preuve depuis
   le premier dump.
+- **17/11 (D42.30-12 = ca0ed30, local — push après le lab 401ce39)** :
+  retrait es/ja du parcours actif FERMÉ : run_p0.sh S03 attendait encore
+  日本語 (FAIL ×5 au lab 09d3e74 — exigence retirée) → S03b_es_ja_absents
+  prouve désormais l'ABSENCE des cartes es/ja ; asset l10n actif purgé
+  (9 716 → 4 948 o, EN 53/53) + version 4 langues archivée dans
+  content/archive_i18n/. Journal + 06_LANGUES_FR_EN.md à jour.
 - **17/11 (lab 05ca482, runs 43100433919 + artefacts : android-ci SUCCESS,
   camerap 62/0/0 REPRODUCTIBLE, RCA des « échecs » p1/offline-export — 4
   défauts HARNAIS/INFRA, ZÉRO défaut app)** :

@@ -5,288 +5,176 @@
   "badges": {
     "stock_limite": {
       "fr": "STOCK LIMITÉ",
-      "en": "LIMITED STOCK",
-      "es": "STOCK LIMITADO",
-      "ja": "在庫限定"
+      "en": "LIMITED STOCK"
     },
     "places_limitees": {
       "fr": "PLACES LIMITÉES",
-      "en": "LIMITED SEATS",
-      "es": "PLAZAS LIMITADAS",
-      "ja": "席数限定"
+      "en": "LIMITED SEATS"
     },
     "qualite_garantie": {
       "fr": "QUALITÉ GARANTIE",
-      "en": "QUALITY GUARANTEED",
-      "es": "CALIDAD GARANTIZADA",
-      "ja": "品質保証"
+      "en": "QUALITY GUARANTEED"
     }
   },
   "textes": {
     "À DÉCOUVRIR": {
-      "en": "DISCOVER",
-      "es": "DESCUBRE",
-      "ja": "見てみよう"
+      "en": "DISCOVER"
     },
     "{prix} {devise}": {
-      "en": "{prix} {devise}",
-      "es": "{prix} {devise}",
-      "ja": "{prix} {devise}"
+      "en": "{prix} {devise}"
     },
     "{nom_offre}": {
-      "en": "{nom_offre}",
-      "es": "{nom_offre}",
-      "ja": "{nom_offre}"
+      "en": "{nom_offre}"
     },
     "CONTACTEZ-NOUS": {
-      "en": "CONTACT US",
-      "es": "CONTÁCTENOS",
-      "ja": "お問い合わせ"
+      "en": "CONTACT US"
     },
     "{nom_commerce} · {quartier_ville} · {whatsapp}": {
-      "en": "{nom_commerce} · {quartier_ville} · {whatsapp}",
-      "es": "{nom_commerce} · {quartier_ville} · {whatsapp}",
-      "ja": "{nom_commerce} · {quartier_ville} · {whatsapp}"
+      "en": "{nom_commerce} · {quartier_ville} · {whatsapp}"
     },
     "DE PRÈS": {
-      "en": "CLOSE UP",
-      "es": "DE CERCA",
-      "ja": "アップで"
+      "en": "CLOSE UP"
     },
     "DE FACE": {
-      "en": "FRONT VIEW",
-      "es": "DE FRENTE",
-      "ja": "正面から"
+      "en": "FRONT VIEW"
     },
     "LE TRAVAIL EN COURS": {
-      "en": "WORK IN PROGRESS",
-      "es": "EL TRABAJO EN CURSO",
-      "ja": "作業の様子"
+      "en": "WORK IN PROGRESS"
     },
     "LE RÉSULTAT": {
-      "en": "THE RESULT",
-      "es": "EL RESULTADO",
-      "ja": "仕上がり"
+      "en": "THE RESULT"
     },
     "LE SOIN ET LE RÉSULTAT": {
-      "en": "THE CARE AND THE RESULT",
-      "es": "EL CUIDADO Y EL RESULTADO",
-      "ja": "施術と仕上がり"
+      "en": "THE CARE AND THE RESULT"
     },
     "LE PRODUIT EN USAGE": {
-      "en": "THE PRODUCT IN USE",
-      "es": "EL PRODUCTO EN USO",
-      "ja": "使用中の商品"
+      "en": "THE PRODUCT IN USE"
     },
     "AU DÉBUT": {
-      "en": "AT THE START",
-      "es": "AL PRINCIPIO",
-      "ja": "はじめに"
+      "en": "AT THE START"
     },
     "LE CLIENT RACONTE": {
-      "en": "THE CLIENT SPEAKS",
-      "es": "EL CLIENTE CUENTA",
-      "ja": "お客様の声"
+      "en": "THE CLIENT SPEAKS"
     },
     "Offre jusqu’au {fin_promo}": {
-      "en": "Offer until {fin_promo}",
-      "es": "Oferta hasta el {fin_promo}",
-      "ja": "{fin_promo}までのご提供"
+      "en": "Offer until {fin_promo}"
     },
     "À LA CUISSON": {
-      "en": "DURING COOKING",
-      "es": "EN LA COCCIÓN",
-      "ja": "調理中"
+      "en": "DURING COOKING"
     },
     "DE CÔTÉ": {
-      "en": "SIDE VIEW",
-      "es": "DE LADO",
-      "ja": "横から"
+      "en": "SIDE VIEW"
     },
     "Demandez si c’est disponible": {
-      "en": "Ask if it is available",
-      "es": "Pregunta si está disponible",
-      "ja": "在庫はお問い合わせください"
+      "en": "Ask if it is available"
     },
     "LE PLAT TERMINÉ": {
-      "en": "THE FINISHED DISH",
-      "es": "EL PLATO TERMINADO",
-      "ja": "できあがり"
+      "en": "THE FINISHED DISH"
     },
     "TAILLES ET COULEURS": {
-      "en": "SIZES AND COLOURS",
-      "es": "TALLAS Y COLORES",
-      "ja": "サイズとカラー"
+      "en": "SIZES AND COLOURS"
     },
     "À RETENIR": {
-      "en": "KEY POINTS",
-      "es": "A RECORDAR",
-      "ja": "ポイント"
+      "en": "KEY POINTS"
     },
     "-{pourcentage}%": {
-      "en": "-{pourcentage}%",
-      "es": "-{pourcentage}%",
-      "ja": "-{pourcentage}%"
+      "en": "-{pourcentage}%"
     },
     "Prix sur demande": {
-      "en": "Price on request",
-      "es": "Precio a consultar",
-      "ja": "価格はお問い合わせください"
+      "en": "Price on request"
     },
     "{citation_client}": {
-      "en": "{citation_client}",
-      "es": "{citation_client}",
-      "ja": "{citation_client}"
+      "en": "{citation_client}"
     },
     "{prenom_client} · {quartier_ville}": {
-      "en": "{prenom_client} · {quartier_ville}",
-      "es": "{prenom_client} · {quartier_ville}",
-      "ja": "{prenom_client} · {quartier_ville}"
+      "en": "{prenom_client} · {quartier_ville}"
     },
     "INFORMATIONS": {
-      "en": "INFORMATION",
-      "es": "INFORMACIÓN",
-      "ja": "お知らせ"
+      "en": "INFORMATION"
     },
     "{ancien_prix} {devise}": {
-      "en": "{ancien_prix} {devise}",
-      "es": "{ancien_prix} {devise}",
-      "ja": "{ancien_prix} {devise}"
+      "en": "{ancien_prix} {devise}"
     },
     "LES INGRÉDIENTS": {
-      "en": "THE INGREDIENTS",
-      "es": "LOS INGREDIENTES",
-      "ja": "材料"
+      "en": "THE INGREDIENTS"
     },
     "Un prix spécial sur {nom_offre} !": {
-      "en": "A special price on {nom_offre}!",
-      "es": "¡Un precio especial en {nom_offre}!",
-      "ja": "{nom_offre}が特別価格！"
+      "en": "A special price on {nom_offre}!"
     },
     "Écoutons {prenom_client} parler de son expérience.": {
-      "en": "Let us hear {prenom_client} talk about the experience.",
-      "es": "Escuchemos a {prenom_client} hablar de su experiencia.",
-      "ja": "{prenom_client}さんに体験を聞きました。"
+      "en": "Let us hear {prenom_client} talk about the experience."
     },
     "ON DRESSE LE PLAT": {
-      "en": "PLATING THE DISH",
-      "es": "EMPLATANDO",
-      "ja": "盛り付け"
+      "en": "PLATING THE DISH"
     },
     "Prix spécial sur {nom_offre} !": {
-      "en": "Special price on {nom_offre}!",
-      "es": "¡Precio especial en {nom_offre}!",
-      "ja": "{nom_offre}が特別価格！"
+      "en": "Special price on {nom_offre}!"
     },
     "CARBURANT": {
-      "en": "FUEL",
-      "es": "COMBUSTIBLE",
-      "ja": "燃料"
+      "en": "FUEL"
     },
     "Des ingrédients au plat terminé.": {
-      "en": "From ingredients to the finished dish.",
-      "es": "De los ingredientes al plato.",
-      "ja": "材料から完成まで。"
+      "en": "From ingredients to the finished dish."
     },
     "Découvre {nom_offre}, pièce par pièce.": {
-      "en": "Discover {nom_offre}, piece by piece.",
-      "es": "Descubre {nom_offre}, pieza por pieza.",
-      "ja": "{nom_offre}を一つずつご紹介します。"
+      "en": "Discover {nom_offre}, piece by piece."
     },
     "KILOMÈTRES": {
-      "en": "KILOMETRES",
-      "es": "KILÓMETROS",
-      "ja": "キロメートル"
+      "en": "KILOMETRES"
     },
     "Les nouveautés sont arrivées chez {nom_commerce} !": {
-      "en": "New arrivals at {nom_commerce}!",
-      "es": "¡Las novedades han llegado a {nom_commerce}!",
-      "ja": "{nom_commerce}に新作が入りました！"
+      "en": "New arrivals at {nom_commerce}!"
     },
     "Regardez le résultat de la coiffure.": {
-      "en": "See the hairstyle result.",
-      "es": "Mira el resultado del peinado.",
-      "ja": "ヘアスタイルの仕上がりをご覧ください。"
+      "en": "See the hairstyle result."
     },
     "Un nouveau bien à découvrir !": {
-      "en": "A new property to discover!",
-      "es": "¡Un nuevo inmueble por descubrir!",
-      "ja": "新しい物件のご紹介です！"
+      "en": "A new property to discover!"
     },
     "Un nouveau plat chez {nom_commerce} !": {
-      "en": "A new dish at {nom_commerce}!",
-      "es": "¡Un nuevo plato en {nom_commerce}!",
-      "ja": "{nom_commerce}に新メニュー！"
+      "en": "A new dish at {nom_commerce}!"
     },
     "Un nouveau produit est arrivé !": {
-      "en": "A new product has arrived!",
-      "es": "¡Ha llegado un nuevo producto!",
-      "ja": "新商品が入荷しました！"
+      "en": "A new product has arrived!"
     },
     "Un nouveau soin chez {nom_commerce} !": {
-      "en": "A new treatment at {nom_commerce}!",
-      "es": "¡Un nuevo tratamiento en {nom_commerce}!",
-      "ja": "{nom_commerce}に新しい施術！"
+      "en": "A new treatment at {nom_commerce}!"
     },
     "Voici comment utiliser {nom_offre}.": {
-      "en": "Here is how to use {nom_offre}.",
-      "es": "Así se usa {nom_offre}.",
-      "ja": "{nom_offre}の使い方です。"
+      "en": "Here is how to use {nom_offre}."
     },
     "Voici la tenue avant, puis après.": {
-      "en": "Here is the outfit: before, then after.",
-      "es": "Aquí el conjunto: antes y después.",
-      "ja": "コーディネートのビフォーアフターです。"
+      "en": "Here is the outfit: before, then after."
     },
     "Voici le chantier au début et à la fin.": {
-      "en": "The site, before and after.",
-      "es": "Aquí la obra al principio y al final.",
-      "ja": "工事の最初と最後をご覧ください。"
+      "en": "The site, before and after."
     },
     "Voici le nouveau travail de {nom_commerce}.": {
-      "en": "Here is the new work of {nom_commerce}.",
-      "es": "Aquí el nuevo trabajo de {nom_commerce}.",
-      "ja": "{nom_commerce}の新しい作品です。"
+      "en": "Here is the new work of {nom_commerce}."
     },
     "Voici le plat {nom_offre}.": {
-      "en": "Here is the dish {nom_offre}.",
-      "es": "Aquí el plato {nom_offre}.",
-      "ja": "料理「{nom_offre}」です。"
+      "en": "Here is the dish {nom_offre}."
     },
     "Voici le résultat du soin {nom_offre}.": {
-      "en": "Here is the result of the {nom_offre} treatment.",
-      "es": "Aquí el resultado del tratamiento {nom_offre}.",
-      "ja": "施術「{nom_offre}」の仕上がりです。"
+      "en": "Here is the result of the {nom_offre} treatment."
     },
     "Voici le travail {nom_offre}.": {
-      "en": "Here is the work: {nom_offre}.",
-      "es": "Aquí el trabajo {nom_offre}.",
-      "ja": "「{nom_offre}」の施工です。"
+      "en": "Here is the work: {nom_offre}."
     },
     "Voici {nom_offre} de face, de côté et de près.": {
-      "en": "Here is {nom_offre} from the front, the side and up close.",
-      "es": "Aquí {nom_offre} de frente, de lado y de cerca.",
-      "ja": "「{nom_offre}」を正面・横・アップでご覧ください。"
+      "en": "Here is {nom_offre} from the front, the side and up close."
     },
     "Écoutons {prenom_client} parler de son achat.": {
-      "en": "Let us hear {prenom_client} talk about the purchase.",
-      "es": "Escuchemos a {prenom_client} hablar de su compra.",
-      "ja": "{prenom_client}さんに購入の感想を聞きました。"
+      "en": "Let us hear {prenom_client} talk about the purchase."
     },
     "Écoutons {prenom_client} raconter son repas.": {
-      "en": "Let us hear {prenom_client} talk about the meal.",
-      "es": "Escuchemos a {prenom_client} hablar de su comida.",
-      "ja": "{prenom_client}さんに食事の感想を聞きました。"
+      "en": "Let us hear {prenom_client} talk about the meal."
     },
     "Le bien, avant et après.": {
-      "en": "The property, before and after.",
-      "es": "El inmueble, antes y después.",
-      "ja": "物件の準備の前後をご覧ください。"
+      "en": "The property, before and after."
     },
     "Le produit, avant et après.": {
-      "en": "The product, before and after.",
-      "es": "El producto, antes y después.",
-      "ja": "ご紹介の前と後をご覧ください。"
+      "en": "The product, before and after."
     }
   }
 }
