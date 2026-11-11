@@ -330,6 +330,10 @@ while IFS= read -r mp4; do
   nom=$(basename "$mp4")
   octets=$(stat -c%s "$mp4")
   duree=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$mp4" 2>/dev/null || echo "?")
+  if [ "${duree:-?}" = "?" ]; then
+    echo "  ($nom ignoré : conteneur illisible par ffprobe — ${octets} octets, pas un MP4 de rendu)"
+    continue
+  fi
   pistes=$(ffprobe -v error -select_streams a -show_entries stream=codec_type -of csv=p=0 "$mp4" 2>/dev/null | grep -c audio || true)
   ffmpeg -v error -i "$mp4" -f null - > "${mp4}.decode" 2>&1 || true
   decode_err=$(grep -cE "Invalid data found|Error while decoding|error:" "${mp4}.decode" 2>/dev/null || true)
@@ -341,7 +345,7 @@ while IFS= read -r mp4; do
       ffmpeg -hide_banner -ss "$ss" -t "$t" -i "$mp4" -map 0:a -af "$filtre,astats=measure_overall=RMS_level:measure_perchannel=none" -f null - 2>&1
     else
       ffmpeg -hide_banner -ss "$ss" -t "$t" -i "$mp4" -map 0:a -af "astats=measure_overall=RMS_level:measure_perchannel=none" -f null - 2>&1
-    fi | grep "RMS level dB" | head -1 | sed -nE "s/.*RMS level dB:[[:space:]]*([-+]?[0-9]+\.?[0-9]*).*/\\1/p"
+    fi | grep "RMS level dB" | head -1 | sed -nE "s/.*RMS level dB:[[:space:]]*([-+]?[0-9]+\.?[0-9]*).*/\\1/p" || true
   }
   rms_global=$(mesure_rms 0 9999)
   rms_intro=$(mesure_rms 0 2)

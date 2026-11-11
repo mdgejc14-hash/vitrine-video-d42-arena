@@ -94,7 +94,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: d42-${{ github.ref }}
+  group: d42-${{ github.ref }}-${{ github.event.inputs.audio_mode || 'mix' }}
   cancel-in-progress: false
 
 env:
