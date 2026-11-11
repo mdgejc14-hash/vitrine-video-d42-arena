@@ -228,6 +228,16 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   isole le défaut en une étape — ici le défaut était dans le HARNAIS, pas
   dans l'app ; le message d'erreur affiché à l'écran était la preuve depuis
   le premier dump.
+- **17/11 (lab 09d3e74, run 43082333578 : CAMERAP 62 PASS / 0 FAIL / 0 BLOCKED
+  — la cascade caméra est LIBÉRÉE)** : le fix harnais D42.30-09 fait passer
+  brief_valide ×3 → guide ×3 → refus permission (F52 jusque dans les réglages
+  système) → prise1 avec PREUVE FICHIER (3 rush MP4 réels, ~700 Ko chacun) →
+  Refaire (slot courant seul, prises intactes) → reprise → guide terminé →
+  conservation → bascules AVANT/ARRIÈRE (re-bind prouvé par logs) → prise
+  depuis la caméra avant → zéro crash (artefact 13888175723, détail au
+  checkpoint 02). android-ci 43082333344 FAILURE : « : » illégal dans un nom
+  de test JVM (TelephoneValidatorTest l.70) → fix 0de99a6 prêt, poussé à la
+  fin du lab. Restent p1/offline-export (en cours au moment de l'écriture).
 - **17/11 (fin du lab 8c9f514, run 43065939431 : completed/cancelled)** :
   13 jobs SUCCESS (e2e, langues en, deeplink, offline, auth, drafts,
   camerap-job, **offline-export SUCCESS — preuve export hors-ligne**,

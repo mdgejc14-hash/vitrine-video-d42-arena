@@ -89,6 +89,39 @@ fondateur. Les preuves caméra D42.30 seront produites par :
    `BLOCKED_DEVICE_TEST` explicite — **jamais** une preuve émulateur présentée
    comme physique.
 
+## PREUVES CAMERAP 09d3e74 (run lab 43082333578, artefact 13888175723) — 62 PASS / 0 FAIL / 0 BLOCKED
+
+Banc caméra résiliente COMPLET sur émulateur (caméra émulée VirtualScene,
+PAS FixtureFrameSource). Contre 45 PASS / 3 FAIL / 12 BLOCKED en 8c9f514 :
+le déblocage du brief (D42.30-09, harnais) a libéré TOUTE la cascade.
+
+- **Brief ×3 (CPA/CPB/CPC_brief_valide) PASS** : « brief accepté → écran
+  "Avant de commencer" (contrôle d'effet) » — le bouton Continuer épinglé
+  est actionné, la validation téléphone accepte la forme nationale.
+- **Entrée guide ×3 PASS** : « OK, je commence » actionné → guide atteint.
+- **CPA_refus_systeme PASS** : permission refusée → dialogue produit (F52),
+  « AUTORISER » ouvre les réglages système (preuve focus + dump), retour
+  sans crash — comportement vérifié jusque dans les réglages Android.
+- **CPB_prise1 PASS** : 1 rush ENREGISTRÉ — preuve FICHIER
+  (B04_rushs_finaux.txt : rush-*.mp4, tailles réelles 734 339 / 729 812 /
+  677 523 octets, horodatés) — pas seulement un libellé d'écran.
+- **CPB_refaire_semantique PASS** : « Refaire » n'efface que le slot COURANT ;
+  les prises précédentes restent INTACTES (sémantique L382-386 vérifiée).
+- **CPB_reprise PASS** : prise re-filmée après Refaire (2 rush en fichiers).
+- **CPB_guide_termine PASS** : 3 rush en fichiers, écran suivant atteint.
+- **CPB_conservation PASS** : prises conservées jusqu'à l'écran post-guide.
+- **CPC_bascule_avant/retour PASS** : bascules AVANT/ARRIÈRE prouvées par les
+  logs (flip ×1, re-bind AVANT ×1 — fichiers flip_avant_count.txt /
+  bind_avant_count.txt) : la liaison CameraX→PreviewView est RE-cablée à
+  chaque bascule (setSurfaceProvider ré-appliqué).
+- **CPC_prise_avant PASS** : prise enregistrée DEPUIS la caméra AVANT
+  (0 → 1 rush pendant la lentille avant).
+- **Zéro crash** sur les 3 phases (crash_a/b/c.txt vides de FATAL).
+
+Restent hors émulateur (étape 8, matériel fondateur) : STREAMING réel sur
+capteur physique, countdown annulé au doigt, MP4 décodés depuis le capteur
+réel → `BLOCKED_DEVICE_TEST` si le téléphone n'est pas disponible au scellage.
+
 ## État
 
 - **android-ci SUCCESS sur 5082856** (D42.30-06) : ktlint + detekt + tests JVM +
