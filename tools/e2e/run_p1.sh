@@ -371,7 +371,11 @@ if [ "$brief_ok" = "1" ]; then
   if [ -z "$idx_prix" ]; then
     for essai_scroll in 1 2 3; do
       swipe_v 73 43 300 >/dev/null 2>&1; sleep 1
-      $UI fields > "$OUT/champs.txt" 2>&1 || true
+      # D42.30-11 : $UI fields produit des lignes « E2E FIELD » (sans libellé)
+      # que le grep « ^E2E CHAMP » ne matche JAMAIS — d'où le BLOCKED
+      # « champ Prix introuvable » (runs 09d3e74/05ca482). Le scanner à
+      # utiliser est $UI champs (lignes « E2E CHAMP … |libellé| »).
+      $UI champs > "$OUT/champs.txt" 2>&1 || true
       idx_prix=$(grep "^E2E CHAMP " "$OUT/champs.txt" | grep -i "prix" | awk '{print $3}' | head -1)
       [ -n "$idx_prix" ] && break
     done
@@ -562,11 +566,20 @@ prise() { # numéro
   sleep 6
   shot "25_prise_${n}_enregistrement"
   $UI tap --text "Arrêter et continuer" --exact --timeout 10 >/dev/null 2>&1 || return 3
-  # 4) la reprise en main est prouvée par le retour de « Tourner »/« Verrouiller »
+  # 4) la reprise en main est prouvée par le retour de « Tourner »/« Verrouiller ».
+  #    D42.30-11 (RCA 05ca482) : après la DERNIÈRE prise d'un gabarit (T4/T5
+  #    mode = 2 prises — marqueurs VV_E2E : Finalize hasError=false puis
+  #    onActivityResult req=14 result=-1 135 ms plus tard), l'app va
+  #    LÉGITIMEMENT à l'aperçu : c'est une issue VALIDE, pas un échec.
   sleep 5
   if $UI wait --text "Tourner" --exact --timeout 25 >/dev/null 2>&1 \
      || $UI wait --text "Verrouiller et enregistrer" --exact --timeout 10 >/dev/null 2>&1 \
      || $UI wait --text "Refaire" --exact --timeout 10 >/dev/null 2>&1; then
+    return 0
+  fi
+  if $UI wait --text "Aperçu de ta vidéo" --timeout 10 >/dev/null 2>&1 \
+     || $UI wait --text "Créer ma vidéo" --timeout 10 >/dev/null 2>&1; then
+    echo "E2E prise $n : DERNIÈRE prise du gabarit — guide terminé, aperçu atteint (comportement app correct)"
     return 0
   fi
   return 4
@@ -804,11 +817,16 @@ else
 fi
 
 # --- stabilité -----------------------------------------------------------------
-if adb logcat -d -b crash | grep -q "FATAL EXCEPTION"; then
+# D42.30-11 (RCA 05ca482) : les collisions « UiAutomationService already
+# registered » font CRASHER le processus `uiautomator dump` lui-même
+# (com.android.commands.uiautomator) — ces FATAL ne sont PAS des crashs de
+# l'app. On ne compte que les FATAL du processus video.vitrine.app.
+if adb logcat -d -b crash | grep -A 3 "FATAL EXCEPTION" | grep -q "Process: $PKG"; then
   adb logcat -d -b crash > "$OUT/crash.log"
-  record FAIL P1_aucun_crash "FATAL EXCEPTION (crash.log)"
+  record FAIL P1_aucun_crash "FATAL EXCEPTION du processus $PKG (crash.log)"
 else
-  record PASS P1_aucun_crash "aucune FATAL EXCEPTION"
+  adb logcat -d -b crash > "$OUT/crash_app_vide_ou_etranger.log" 2>/dev/null || true
+  record PASS P1_aucun_crash "aucune FATAL EXCEPTION du processus $PKG"
 fi
 adb logcat -d > "$OUT/logcat.txt" 2>/dev/null
 adb shell dumpsys meminfo "$PKG" 2>/dev/null | head -12 > "$OUT/meminfo.txt"

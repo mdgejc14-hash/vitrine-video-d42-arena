@@ -139,7 +139,12 @@ jobs:
   # ---------------------------------------------------------------------------
   android-e2e-p1:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    # D42.30-11 : 120 min — l'export avec BGM réelle est ~3x plus lent sur
+    # l'émulateur swiftshader (>75 min d'attente constatées au run 05ca482,
+    # verrou 3A + export en cours) : 90 min coupait le banc AVANT le verdict
+    # (cancelled en 5082856, 8c9f514, 09d3e74, 05ca482 — le « hang » était
+    # l'export qui tournait, cf. marqueurs VV_E2E Finalize hasError=false x2).
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4

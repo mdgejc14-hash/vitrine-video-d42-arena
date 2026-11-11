@@ -70,8 +70,14 @@ retablir_reseau() {
   i=0
   while [ ! -f "$MARQUEUR_COUPE" ]; do
     i=$((i+1))
-    if adb shell uiautomator dump /sdcard/offexp_probe.xml >/dev/null 2>&1 \
-       && adb exec-out cat /sdcard/offexp_probe.xml 2>/dev/null | grep -q "Ma vidéo"; then
+    # D42.30-11 (RCA 05ca482) : ce surveillant tournait `uiautomator dump`
+    # toutes les 3 s EN PARALLÈLE des dumps du parcours P1 → collisions
+    # « UiAutomationService already registered » → le service d'automatisation
+    # se vérole, des dumps du PARCOURS crashe(en)t à leur tour → harnais
+    # aveuglé (faux FAIL P1_prise_2, attente export de 75 min même finie,
+    # faux FATAL). Détection du brief SANS UiAutomation : l'activité au
+    # sommet de la pile (dumpsys activity top) — aucun conflit possible.
+    if adb shell dumpsys activity top 2>/dev/null | tr -d '\r' | grep -q "video.vitrine.feature.brief.BriefActivity"; then
       # injection de TOUTES les catégories téléchargées (la bonne sera trouvée
       # par localFile quelle que soit la carte secteur choisie)
       injectes=0

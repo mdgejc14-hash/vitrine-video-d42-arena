@@ -228,6 +228,45 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   isole le défaut en une étape — ici le défaut était dans le HARNAIS, pas
   dans l'app ; le message d'erreur affiché à l'écran était la preuve depuis
   le premier dump.
+- **17/11 (lab 05ca482, runs 43100433919 + artefacts : android-ci SUCCESS,
+  camerap 62/0/0 REPRODUCTIBLE, RCA des « échecs » p1/offline-export — 4
+  défauts HARNAIS/INFRA, ZÉRO défaut app)** :
+  Verdicts offline-export (job SUCCESS car `true` final) : PASS=30 FAIL=3
+  BLOCKED=2 — P1_prise_2 FAIL, P1_export_termine FAIL (75 min),
+  P1_aucun_crash FAIL (FATAL). Job p1 : cancelled (timeout 90 min), même
+  profil. **L'app est INNOCENTE, preuves à l'appui :**
+  - marqueurs VV_E2E (artefact e2e-p1 13896963032) : `PREVIEW STREAMING`
+    (frames réelles), compte à rebours 3-2-1, verrou 3A, **prise 1 ET prise 2
+    enregistrées + Finalize hasError=false ×2** (772 930 et 750 186 octets),
+    guide terminé proprement (onActivity req=14 result=-1) → l'aperçu.
+  - le « FATAL EXCEPTION » (crash.log artefact 13896818708) = crash du
+    processus **`uiautomator dump` lui-même** (« UiAutomationService already
+    registered », PIDs 2530/2588/2628/…) — PAS de video.vitrine.app.
+  **Chaînes causales :**
+  1. *offline-export aveuglé* : le surveillant du wrapper faisait
+     `uiautomator dump` toutes les 3 s EN PARALLÈLE des dumps du parcours →
+     collisions « already registered » → des dumps du parcours crashe(en)t →
+     fausses détections (prise_2 « ratée » alors que le rush est finalisé),
+     attente d'export qui ne voit jamais la fin, crash.log pollué.
+  2. *p1 coupé avant le verdict* : l'export avec BGM est ~3x plus lent sur
+     swiftshader (>75 min) et le timeout job était à 90 min (4 cancellations
+     consécutives : 5082856, 8c9f514, 09d3e74, 05ca482 — le « hang »
+     mystérieux était l'export en cours).
+  3. *P1_prise_2 « FAIL »* : le gabarit T4/T5 du secteur mode a **2 prises**
+     — après la DERNIÈRE prise l'app va légitimement à l'aperçu ; le harnais
+     exigeait le retour au guidage.
+  4. *P1_brief_invalide BLOCKED « champ Prix introuvable »* : la boucle de
+     secours listait via `$UI fields` (lignes « E2E FIELD ») que le grep
+     `^E2E CHAMP` ne peut pas matcher.
+  **Corrections (D42.30-11, harnais uniquement — l'app n'est pas touchée) :**
+  surveillant du wrapper → détection du brief par `dumpsys activity top`
+  (BriefActivity au sommet, ZÉRO UiAutomation) ; timeout p1 90 → 120 min ;
+  la fonction `prise()` accepte l'aperçu comme issue valide après la
+  dernière prise ; crash compté uniquement pour `Process: video.vitrine.app` ;
+  `$UI fields` → `$UI champs` dans la boucle de secours du prix.
+  Leçon : avant d'accuser un parcours, lire les marqueurs de l'APP (VV_E2E)
+  et le buffer crash AVEC le nom du processus — un FATAL n'est pas
+  nécessairement celui qu'on croit.
 - **17/11 (lab 09d3e74, run 43082333578 : CAMERAP 62 PASS / 0 FAIL / 0 BLOCKED
   — la cascade caméra est LIBÉRÉE)** : le fix harnais D42.30-09 fait passer
   brief_valide ×3 → guide ×3 → refus permission (F52 jusque dans les réglages
