@@ -260,6 +260,46 @@ class BgmSfxAudioMixerMultiRushTest {
     }
 
     @Test
+    fun `fin de mix sans setEndTimeUs - la source musique est retiree (D42 29)`() {
+        // D42.29-05, cause racine des MUXING_TIMEOUT (pilots v1/v2/v3, P3
+        // v13/v14, banc A) : Media3 n'appelle JAMAIS setEndTimeUs sur le
+        // mixeur sans trimming — la fin du mix dépend donc du retrait de
+        // TOUTES les sources (contrat DefaultAudioMixer.isEnded : sources
+        // vides). Le test ci-dessus masquait le défaut en appelant
+        // setEndTimeUs lui-même ; celui-ci suit le flux RÉEL Media3 :
+        // queueInput voix → drain par getOutput → removeSource(voix).
+        // Source voix=1, musique=2, SFX=3 (ordre réel des addSource).
+        val fake = FakeMixer()
+        val musique = BgmDecoder.Pcm(ShortArray(48000 * 45) { 8000 }, 48000, 1)
+        val sfx = BgmSfxAudioMixer.SfxCue(1_000_000L, BgmDecoder.Pcm(ShortArray(4800) { 12000 }, 48000, 1))
+        val mixer = BgmSfxAudioMixer(fake, musique, listOf(sfx), compositionDurationUs = 33_000_000L)
+        mixer.configure(format, 1000, 0L)
+        val voix = mixer.addSource(format, 0L)
+        // La voix couvre la composition (base silencieuse D42.21) : 33 s
+        // par blocs de 10 ms, comme le renderer Media3.
+        repeat(3300) { mixer.queueInput(voix, voiceBuffer(4000)) }
+        // Phase de drain : le Transformer tire getOutput() jusqu'à isEnded().
+        repeat(400) { mixer.getOutput() }
+        val cap = 33_000_000L * 48000 / 1_000_000L
+        val framesMusique = fake.framesBySource[2] ?: 0L
+        assertTrue("musique jamais alimentée", framesMusique > 0L)
+        assertTrue("musique muxée au-delà de la borne : $framesMusique > $cap", framesMusique <= cap)
+        assertTrue(
+            "la source musique n'est pas retirée à la borne — isEnded() resterait faux, " +
+                "l'export ne finaliserait jamais (MUXING_TIMEOUT)",
+            2 !in fake.liveSources
+        )
+        assertTrue("le SFX n'est pas retiré une fois alimenté", 3 !in fake.liveSources)
+        // Fin du flux Media3 : retrait de SA source voix → le délégué n'a
+        // plus aucune source, isEnded() peut passer à vrai, l'export finalise.
+        mixer.removeSource(voix)
+        assertTrue(
+            "des sources subsistent après la fin complète du mix : ${fake.liveSources}",
+            fake.liveSources.isEmpty()
+        )
+    }
+
+    @Test
     fun `reset rearme l enregistrement musique (contrat AudioMixer)`() {
         val fake = FakeMixer()
         val mixer = newMixer(fake)

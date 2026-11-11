@@ -361,6 +361,21 @@ class BgmSfxAudioMixer(
         ) { fed ->
             musicFedFrames = fed
         }
+        // D42.29-05 (DÉFAUT PRODUIT — cause racine des échecs v1/v2/v3, P3
+        // v13/v14 et banc A) : l'alimentation terminée → RETRAIT de la source
+        // musique. DefaultAudioMixer.isEnded() exige que TOUTES les sources
+        // soient retirées (sources.size() == 0) — et Media3 n'appelle JAMAIS
+        // setEndTimeUs sans trimming — donc sans ce retrait l'audio ne
+        // signale jamais sa fin : le Transformer ne finalise pas, plus aucun
+        // échantillon n'est muxé, le watchdog tue l'export (ERROR_CODE_
+        // MUXING_TIMEOUT « no output sample written in the last 25000 ms »).
+        // Le retrait préserve le matériel déjà en file (contrat Media3 : la
+        // sortie draine jusqu'à la position atteinte par la source retirée).
+        val totalMusique = minOf((music.size / channels).toLong(), capMusique)
+        if (musicFedFrames >= totalMusique) {
+            delegate.removeSource(musicSourceId)
+            musicSourceId = C.INDEX_UNSET
+        }
     }
 
     /**
