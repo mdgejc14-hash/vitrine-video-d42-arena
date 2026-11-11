@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,19 +41,33 @@ fun ReadyCheckScreen(
     onOk: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // D42.30 (défaut n°5) : bouton « OK, je commence » ÉPINGLÉ hors du
+    // scroll — toujours visible, au-dessus du clavier et de la barre de
+    // navigation (même correction que le bouton Continuer du brief).
     Column(
         modifier = modifier
             .fillMaxSize()
+            .navigationBarsPadding()
             .imePadding()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        ReadyHeader()
-        ReadyVideoCard(sectorLabel, formatLabel, prisesCount, infos)
-        ReadyClearCard()
-        ReadyConfirmBox()
-        Button(onClick = onOk, modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            ReadyHeader()
+            ReadyVideoCard(sectorLabel, formatLabel, prisesCount, infos)
+            ReadyClearCard()
+            ReadyConfirmBox()
+        }
+        Button(
+            onClick = onOk,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 10.dp)
+        ) {
             Text(stringResource(R.string.e4b_ok), modifier = Modifier.padding(vertical = 6.dp))
         }
     }

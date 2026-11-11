@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -74,45 +75,65 @@ fun GabaritBriefScreen(
     val requiredIds = brief.fields.filter { it.required }.map { it.id }
     val filled = requiredIds.count { (values[it] ?: "").isNotBlank() }
     val invalid = brief.fields.any { fieldError(it, values[it.id] ?: "") != null }
+    // D42.30 (défaut terrain n°5 « boutons hors écran » + preuves p1/camerap
+    // runs 5082856/67f6421) : bouton Continuer ÉPINGLÉ hors du scroll —
+    // TOUJOURS visible sans défiler, au-dessus du clavier (imePadding) et de
+    // la barre de navigation (navigationBarsPadding). Avant : bouton en fin
+    // de scroll collé au bord de fenêtre, texte à 1 px de haut dans la zone
+    // de gestes système → taps perdus. Le formulaire défile SOUS le bouton.
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .navigationBarsPadding()
             .imePadding()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        BriefHeader(brief, filled, requiredIds.size)
-        brief.sections.forEach { section ->
-            BriefSectionBlock(
-                section = section,
-                brief = brief,
-                open = !section.optional || optionsOpen,
-                values = values,
-                checks = checks,
-                onToggle = { optionsOpen = !optionsOpen },
-                onValue = { id, v ->
-                    values = values + (id to v)
-                    // D42.27 (§7) : persistance de la saisie (étape BRIEF).
-                    onValuesChange(values)
-                },
-                onCheck = { id, c -> checks = checks + (id to c) },
-                choice = { id -> choiceByField[id] },
-                onChoice = { id, c -> choiceByField = choiceByField + (id to c) }
-            )
-        }
-        Button(
-            onClick = {
-                onSubmit(
-                    values + checks.mapValues { (id, checked) ->
-                        if (!checked) "false" else (choiceByField[id] ?: "true")
-                    }
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            BriefHeader(brief, filled, requiredIds.size)
+            brief.sections.forEach { section ->
+                BriefSectionBlock(
+                    section = section,
+                    brief = brief,
+                    open = !section.optional || optionsOpen,
+                    values = values,
+                    checks = checks,
+                    onToggle = { optionsOpen = !optionsOpen },
+                    onValue = { id, v ->
+                        values = values + (id to v)
+                        // D42.27 (§7) : persistance de la saisie (étape BRIEF).
+                        onValuesChange(values)
+                    },
+                    onCheck = { id, c -> checks = checks + (id to c) },
+                    choice = { id -> choiceByField[id] },
+                    onChoice = { id, c -> choiceByField = choiceByField + (id to c) }
                 )
-            },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = filled == requiredIds.size && !invalid
-        ) { Text(stringResource(R.string.brief_g_continue)) }
+            }
+        }
+        val reponse = values + checks.mapValues { (id, checked) ->
+            if (!checked) "false" else (choiceByField[id] ?: "true")
+        }
+        PiedContinuer(
+            enabled = filled == requiredIds.size && !invalid,
+            onContinue = { onSubmit(reponse) },
+        )
     }
+}
+
+/** D42.30 : bouton Continuer ÉPINGLÉ (pied fixe hors scroll, cf. GabaritBriefScreen). */
+@Composable
+private fun PiedContinuer(enabled: Boolean, onContinue: () -> Unit) {
+    Button(
+        onClick = onContinue,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 10.dp),
+        enabled = enabled
+    ) { Text(stringResource(R.string.brief_g_continue)) }
 }
 
 @Composable

@@ -165,7 +165,26 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   numéro ; exemple contextuel BJ = **+229 01 95 12 34 56** (nouveau format).
   Harnais migrés vers +2290197000000 (7 occurrences, 4 scripts) pour que les
   PREUVES montrent le format actuel.
-- **17/11 (D42.30-07, commit final du lot)** :
+- **17/11 (67f6421 : android-ci SUCCESS ; lab en cours → diagnostic FINAL du bouton)** :
+  camerap SUCCESS (job) mais **CPA/CPB_brief_valide FAIL** (4 taps Continuer
+  sans effet) — analyse de l'artefact : la théorie « double inset » était
+  INCOMPLÈTE. Vérité terrain (dump CPA_brief_bas) : fenêtre 1080×2072, le
+  bouton Continuer clippé au bord bas ([44,2032][1036,2072] = 40 px visibles,
+  TEXTE à [455,2071][625,2072] = **1 px de haut**, dans la zone de gestes
+  système) — MÊME position qu'en 5082856 : le scroll s'arrête quand le texte
+  devient partiellement visible (1 px suffit au détecteur) et le tap atterrit
+  au bord absolu de l'écran → avalé. Cause profonde : le bouton était DANS le
+  scroll, en dernier élément — sa position de fin de défilement dépend du
+  contenu ; +120 px de contenu (slots d'erreur + champ pays) ont déplacé le
+  point d'arrêt du harnais dans la zone mortelle.
+  **Fix produit (défaut fondateur n°5 « boutons hors écran »)** : bouton
+  Continuer **ÉPINGLÉ hors du scroll** (pied fixe : navigationBarsPadding +
+  imePadding, formulaire défile en weight(1f) SOUS le bouton) — TOUJOURS
+  visible sans défiler. Même correction pour « OK, je commence »
+  (ReadyCheckScreen). Extraction PiedContinuer (fun 84→78 lignes).
+  Leçon consignée : (1) jamais de CTA dans la zone de défilement en fin de
+  liste ; (2) la théorie doit être validée par le dump AVANT le fix.
+- **17/11 (D42.30-08, prêt à pousser à la fin du lab)** :
   (1) **machine à états tournage** : trou comblé dans la fenêtre verrouillage
   3A (le job du décompte se terminait AVANT lockThreeA → écran PRÊT → un
   re-tap pouvait déclencher un 2e startRecording pendant que le 1er tournait).
