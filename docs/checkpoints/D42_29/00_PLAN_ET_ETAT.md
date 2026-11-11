@@ -160,3 +160,59 @@ variante hors connexion.
   33 s → trames muxées ≤ cap) ; test F60 mis à jour (queue exactement à la
   fin, atténuée — l'ancienne attente amplitude 0 supposait le défaut).
   Pilot v3 dispatché sur f7d20fe pour valider le correctif.
+- **11/11 (D42.29-04, a87eef8) : CI remis au vert sur le fix bornage** :
+  - android-ci f7d20fe (42978298959) FAILURE : detekt (drainFeeds complexité
+    17, doWorkInner 89 lignes, 2 lignes > 140) + VRAIE régression détectée :
+    MixBenchAudioTest « ducking » (retourDb −13,99). Cause : artefact du banc
+    — le délégué CAPTIVE avale un débit illimité, avec la borne posée toute
+    la musique est poussée pendant la 1re phase de parole → la remontée entre
+    les phrases devient inobservable. Reproduit et vérifié en JVM isolée
+    (kotlinc + stubs media3, /tmp/repro) : avec borne FAIL / sans borne PASS,
+    profondeur −14,00 dans les deux cas. Correctif : compositionDurationUs=0L
+    dans CE banc (les volumes commandés ne dépendent pas de la borne).
+  - Refactor : drainFeeds → drainFeeds+musiqueEffectiveUs+outputRate+
+    drainMusique+drainSfx (comportement identique au bit près en repro) ;
+    doWorkInner allégé (preparerBaseSilencieuse extraite) ; detekt-cli 1.23.8
+    local (config du repo) : 0 code smells. **android-ci a87eef8 (42980864065)
+    : SUCCESS.**
+- **11/11 — PILOTS v2 (42977738361) ET v3 (42978298681) : FAILURE — diagnostic
+  complet obtenu (le logging D42.29-02 a fonctionné)** :
+  - Build OK (le champ mixerStartTimeUs compile). Rendu « lot 1/8 » FAILED.
+  - v3 : les 3 tentatives (540x960 / 360x640 portrait / encodeur logiciel)
+    échouent IDENTIQUEMENT : `ERROR_CODE_MUXING_TIMEOUT — Abort: no output
+    sample written in the last 25000 milliseconds`.
+  - **MP4 partiel (ffprobe) : audio 34,956 s ≤ vidéo 34,989 s → LE BORNAGE
+    f7d20fe EST OPÉRANT sur appareil** (v1 : audio 38,044 s). Les deux pistes
+    sont complètes (525 frames = 35 s à 15 fps) ; l'AAC s'arrête 43 ms avant
+    sa fin → EOS audio jamais émis.
+  - Logcat teardown : thread GL bloqué DANS dequeueBuffer (« freeAllBuffers: 1
+    buffers were freed while being dequeued », « unpopulated slots [7..63] »,
+    4 buffers AAC « discarded ») — le GL est VICTIME : la finalisation
+    n'arrive jamais.
+- **11/11 — CAUSE RACINE IDENTIFIÉE (défaut produit, pas swiftshader)** :
+  `setEndTimeUs` n'est JAMAIS appelé par Media3 (jamais appelé sans trimming ;
+  0 log « fin de mix » dans les pilots) ; or DefaultAudioMixer.isEnded()
+  exige `sources.size() == 0` (source lue sur androidx/media 1.11.1) et la
+  source musique n'était JAMAIS retirée (drainMusique ne faisait aucun
+  removeSource ; seul setEndTimeUs — jamais appelé — le faisait). → l'audio ne
+  signale jamais sa fin → le Transformer ne finalise pas → plus aucun
+  échantillon muxé → watchdog MUXING_TIMEOUT.
+  **Réinterprétation de l'historique** : les runs verts 41811176998
+  (validations fr/en/es/ja « success », 7 MP4 en 745 s) ont 0 ligne
+  D42-MIX/D42-BGM dans leur logcat → rendus SANS graphe audio (BGM fixtures
+  jamais injecté). TOUT rendu au mixeur actif (P3 v13/v14 « aucune fin
+  d'export en 75 min », banc A, pilots v1/v2/v3) a calé. La « limite
+  instrumentale swiftshader » de D42.28 était CE défaut produit.
+- **11/11 (D42.29-05, 439c56d) : FIX PRODUIT — retrait de la source musique à
+  la fin de l'alimentation** (drainMusique : removeSource quand musicFedFrames
+  ≥ min(taille, capMusique) ; le contrat Media3 préserve le matériel en file).
+  Test JVM « fin de mix sans setEndTimeUs » (flux Media3 réel, celui du
+  bornage masquait le défaut en appelant setEndTimeUs). Repro isolée : musique
+  alimentée exactement au cap (1 584 000 trames), toutes sources retirées.
+  Nota : SFX théoriquement non alimentés si programmés après la fin de la
+  source voix en mode mix (non observé — documenté).
+- **Pilots discriminants v4 (shops+fixtures) / v5 (restaurants+titulaires)
+  dépêchés sur a87eef8 (pré-fix, contrôles attendus en échec)** ; pilot v6
+  (shops+titulaires+musique) à dispatcher sur 439c56d dès android-ci vert →
+  si worker SUCCESS + AudioChecks PASS + RMS 2-6 s > −28 dB = **PREUVE P2
+  COMPLÈTE (export musical audible, borné, finalisé)**.
