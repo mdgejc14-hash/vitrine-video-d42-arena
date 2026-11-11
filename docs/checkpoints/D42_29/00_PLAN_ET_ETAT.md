@@ -97,3 +97,37 @@ variante hors connexion.
 - **11/11 (reprise)** : recon complète (sandbox récupéré, PAT testés,
   keystore vérifié, 8cb9a7d ancêtre, config Firebase inchangée, lab 16/16 à
   0ac2aa9, aucune perte de fond). Plan posé.
+- **11/11 (D42.29-00, 5418937)** : checkpoint poussé.
+- **11/11 (D42.29-01, ae5e5b0)** : instrumentation implémentée et poussée :
+  - **Étage 1** BgmDecoder (D42-BGM) : échantillons/cadence/durée/RMS/crête
+    du PCM décodé + exception journalisée (la racine du bug post-RC13 était
+    précisément une exception avalée) ;
+  - **Étage 2** BgmSfxAudioMixer (D42-MIX) : trames musique alimentées, RMS
+    voix (échelle normalisée 0..1 — double division corrigée avant commit),
+    cues SFX, duck final, dégradé ;
+  - **Étage 3** d42-render.sh : symptômes vidéo comptés (Forcing EOS,
+    Surface unknown buffer) ;
+  - **Étage 4** : ffprobe + décodage intégral + fenêtres RMS (global, 0-2 s,
+    2-6 s post-fade-in, fin 3 s, voix 5-8 s, voix notchée 440 Hz) ;
+  - **Modes** : d42_audio_mode mix|musique|voix — rushs MUETS générés et
+    committés (rushes_muets, rushes_muets15, mêmes specs que les sonores,
+    vidéo seule) ; voix = cache BGM vidé avant rendu ;
+  - **Titulaires** : d42_bgm_source=titulaires — 6 pistes de production
+    (mesuré localement : musique_t1_shops_small_business.m4a = 38,1 s,
+    RMS −16,62 dB, intro 2 s −26,9 dB ; fixtures à −39 dB écartées pour la
+    preuve d'audibilité) ;
+  - **Offline** : offline=1 — coupure svc avant instrumentation, preuves
+    dumpsys, DB avant/après retour réseau, relance Dashboard (flushPending),
+    verdicts journal/solde unique/télémétrie ;
+  - workflow : entrées audio_mode/bgm_source/offline + secret
+    FIREBASE_WEB_API_KEY + timeout rendu 2700 s.
+  - Mesures préparatoires : SFX T1 scène-dépendants (whoosh en scène 1) ;
+    contrat mix = musique −20 dB sous voix + ducking −14 dB → le critère
+    P3 historique « intro > −28 dB » est INADAPTÉ au mix : la preuve mix
+    sera différentielle (notch 440 Hz + fenêtres) et prononcée à l'analyse
+    des mesures, seuils documentés.
+- **11/11 06:48 UTC** : PILOT dispatché — run **42975000342** (d42-virtual-render,
+  musique/titulaires/FR, shops_small_business_T1, validation 540×960,
+  run_smoke=0 [APK prouvé lab 16/16 à 0ac2aa9, le pilot valide le harnais]).
+  En parallèle : android-ci + e2e-lab ae5e5b0 (non-régression, compile les
+  changements Kotlin).
