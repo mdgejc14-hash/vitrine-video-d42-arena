@@ -330,10 +330,10 @@ while IFS= read -r mp4; do
   nom=$(basename "$mp4")
   octets=$(stat -c%s "$mp4")
   duree=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$mp4" 2>/dev/null || echo "?")
-  pistes=$(ffprobe -v error -select_streams a -show_entries stream=codec_type -of csv=p=0 "$mp4" 2>/dev/null | grep -c audio || echo 0)
+  pistes=$(ffprobe -v error -select_streams a -show_entries stream=codec_type -of csv=p=0 "$mp4" 2>/dev/null | grep -c audio || true)
   ffmpeg -v error -i "$mp4" -f null - > "${mp4}.decode" 2>&1 || true
-  decode_err=$(grep -cE "Invalid data found|Error while decoding|error:" "${mp4}.decode" 2>/dev/null || echo 0)
-  rm_silence=$(grep -cE "non monotonically increasing dts" "${mp4}.decode" 2>/dev/null || echo 0)
+  decode_err=$(grep -cE "Invalid data found|Error while decoding|error:" "${mp4}.decode" 2>/dev/null || true)
+  rm_silence=$(grep -cE "non monotonically increasing dts" "${mp4}.decode" 2>/dev/null || true)
   [ "$rm_silence" -gt 0 ] && echo "  ($nom : $rm_silence avertissements DTS du muxer null — connus, non bloquants)"
   mesure_rms() { # fenêtre [début, durée] + filtre optionnel
     local ss="$1" t="$2" filtre="${3:-}"
@@ -341,7 +341,7 @@ while IFS= read -r mp4; do
       ffmpeg -hide_banner -ss "$ss" -t "$t" -i "$mp4" -map 0:a -af "$filtre,astats=measure_overall=RMS_level:measure_perchannel=none" -f null - 2>&1
     else
       ffmpeg -hide_banner -ss "$ss" -t "$t" -i "$mp4" -map 0:a -af "astats=measure_overall=RMS_level:measure_perchannel=none" -f null - 2>&1
-    fi | grep "RMS level dB" | head -1 | grep -oE "\-?[0-9]+\.?[0-9]*" | head -1
+    fi | grep "RMS level dB" | head -1 | sed -nE "s/.*RMS level dB:[[:space:]]*([-+]?[0-9]+\.?[0-9]*).*/\\1/p"
   }
   rms_global=$(mesure_rms 0 9999)
   rms_intro=$(mesure_rms 0 2)
