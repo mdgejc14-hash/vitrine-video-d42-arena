@@ -116,7 +116,7 @@ valeur_pour() {
   l=$(echo "$1" | tr 'A-Z' 'a-z')
   case "$l" in
     *commerce*|*boutique*)            echo "BoutiqueAwa" ;;
-    *whatsapp*|*num*ro*|*t*l*phone*)  echo "+2290197000000" ;;
+    *whatsapp*|*num*ro*|*t*l*phone*)  echo "0197000000" ;;
     *prix*|*montant*)                 echo "15000" ;;
     *monnaie*)                        echo "" ;;
     *quartier*|*ville*|*adresse*)     echo "Akpakpa" ;;
@@ -134,7 +134,10 @@ remplir_champ() {
   cx=$(( (x1 + x2) / 2 )); cy=$(( (y1 + y2) / 2 ))
   adb shell input tap "$cx" "$cy" >/dev/null 2>&1; sleep 1
   adb shell input keyevent KEYCODE_MOVE_END >/dev/null 2>&1
-  for _ in 1 2 3 4 5 6 7 8; do adb shell input keyevent KEYCODE_DEL >/dev/null 2>&1; done
+  # D42.30-09 : 8 DEL n'effaçaient pas « +2290197000000 » (14 car.) — les
+  # re-remplissages concaténaient (run 8c9f514 : valeur invalide → Continuer
+  # désactivé). 24 DEL couvre 14 car. + marge.
+  for _ in $(seq 1 24); do adb shell input keyevent KEYCODE_DEL >/dev/null 2>&1; done
   adb shell input text "$val" >/dev/null 2>&1; sleep 1
   fermer_clavier
   return 0
@@ -338,8 +341,13 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
     adb shell uiautomator dump /sdcard/d.xml >/dev/null 2>&1
     adb exec-out cat /sdcard/d.xml > "$OUT/verif_contenu.xml" 2>/dev/null
     att=""
-    grep -q "+229" "$OUT/verif_contenu.xml" 2>/dev/null || att="$att whatsapp"
-    grep -q "15000" "$OUT/verif_contenu.xml" 2>/dev/null || att="$att prix"
+    # D42.30-09 : le champ WhatsApp affiche la forme NATIONALE (« 01 97 00 00 00 »)
+    # et le prix est reformaté « 15 000 » — les greps « +229 »/« 15000 » ne
+    # matchaient JAMAIS (run 8c9f514) → re-remplissages en boucle → salissure
+    # du champ. Preuve sur dump NORMALISÉ (espaces et insécables ôtés).
+    att_norm=$(sed 's/\xc2\xa0//g; s/ //g' "$OUT/verif_contenu.xml" 2>/dev/null || echo "")
+    echo "$att_norm" | grep -q "0197000000" || att="$att whatsapp"
+    echo "$att_norm" | grep -q "15000" || att="$att prix"
     grep -q "RobeWax" "$OUT/verif_contenu.xml" 2>/dev/null || att="$att nom_offre"
     grep -q "BoutiqueAwa" "$OUT/verif_contenu.xml" 2>/dev/null || att="$att commerce"
     grep -q "Akpakpa" "$OUT/verif_contenu.xml" 2>/dev/null || att="$att quartier"
@@ -355,8 +363,8 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
       etat=$(echo "$l" | awk '{print $8}')
       libelle=$(echo "$l" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
       case "$libelle" in
-        *whatsapp*)   [ -z "$(grep -o '+229' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { remplir_champ "$idx" "+2290197000000" "$OUT/champs.txt" || true; } ;;
-        *Prix*|*prix*) [ -z "$(grep -o '15000' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { remplir_champ "$idx" "15000" "$OUT/champs.txt" || true; } ;;
+        *whatsapp*)   echo "$att_norm" | grep -q "0197000000" || { remplir_champ "$idx" "0197000000" "$OUT/champs.txt" || true; } ;;
+        *Prix*|*prix*) echo "$att_norm" | grep -q "15000" || { remplir_champ "$idx" "15000" "$OUT/champs.txt" || true; } ;;
       esac
     done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
     # redescendre pour les champs du bas si nécessaire
@@ -377,7 +385,8 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
   adb shell rm -f /sdcard/d.xml >/dev/null 2>&1
   adb shell uiautomator dump /sdcard/d.xml >/dev/null 2>&1
   adb exec-out cat /sdcard/d.xml > "$OUT/verif_contenu_final.xml" 2>/dev/null
-  echo "E2E preuve contenu final : +229=$(grep -c '+229' "$OUT/verif_contenu_final.xml" 2>/dev/null || echo 0) 15000=$(grep -c '15000' "$OUT/verif_contenu_final.xml" 2>/dev/null || echo 0) RobeWax=$(grep -c 'RobeWax' "$OUT/verif_contenu_final.xml" 2>/dev/null || echo 0)"
+  fin_norm=$(sed 's/\xc2\xa0//g; s/ //g' "$OUT/verif_contenu_final.xml" 2>/dev/null || echo "")
+  echo "E2E preuve contenu final : tel=$(echo "$fin_norm" | grep -c '0197000000') prix=$(echo "$fin_norm" | grep -c '15000') RobeWax=$(grep -c 'RobeWax' "$OUT/verif_contenu_final.xml" 2>/dev/null)"
   local trouve=0 _
   for _ in 1 2 3 4 5 6; do
     if $UI wait --text "Continuer" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
@@ -385,10 +394,26 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
     sleep 1
   done
   shot "${P}_brief_bas"; dump "${P}_brief_bas"
+  # D42.30-09 : diagnostic différencié — un Continuer DÉSACTIVÉ par un champ
+  # invalide est l'application qui fait SON travail (bouton grisé), pas un
+  # défaut de tap. On le nomme au lieu de « 4 essais sans effet ». Le message
+  # d'erreur vit SOUS le champ (section haute du formulaire) : s'il n'est dans
+  # aucun dump, on remonte exprès avant de conclure.
+  if ! grep -lq "n.est pas valide" "$OUT"/*.xml 2>/dev/null; then
+    swipe_v 26 73 400 >/dev/null 2>&1; sleep 1
+    swipe_v 30 70 400 >/dev/null 2>&1; sleep 1
+    dump "${P}_brief_haut_diag"
+  fi
+  if grep -lq "n.est pas valide" "$OUT"/*.xml 2>/dev/null; then
+    champ_err=$(grep -h -o '[^"]*n.est pas valide[^"]*' "$OUT"/*.xml 2>/dev/null | head -1 | cut -c1-120)
+    record FAIL "${P}_brief_valide" "champ INVALIDE — Continuer correctement DÉSACTIVÉ : « $champ_err » (voir dumps)"
+    record BLOCKED "${P}_guide" "brief non validable (champ invalide)"
+    return 1
+  fi
   if tap_effet "Continuer" "Avant de commencer" 25; then
     record PASS "${P}_brief_valide" "brief accepté → écran « Avant de commencer » (contrôle d'effet)"
   else
-    record FAIL "${P}_brief_valide" "brief non validé : 4 essais + taporange sans effet (champ invalide ? voir ${P}_brief_bas)"
+    record FAIL "${P}_brief_valide" "brief non validé : 4 essais + taporange sans effet (voir ${P}_brief_bas)"
   fi
   if tap_effet "OK, je commence" "Filme ta prise" 40; then
     record PASS "${P}_entree_guide" "« OK, je commence » actionné — guide atteint (contrôle d'effet)"

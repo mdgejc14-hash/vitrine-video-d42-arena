@@ -105,7 +105,7 @@ valeur_pour() {
   l=$(echo "$1" | tr 'A-Z' 'a-z')
   case "$l" in
     *commerce*|*boutique*)            echo "BoutiqueAwa" ;;
-    *whatsapp*|*num*ro*|*t*l*phone*)  echo "+2290197000000" ;;
+    *whatsapp*|*num*ro*|*t*l*phone*)  echo "0197000000" ;;
     *prix*|*montant*)                 echo "15000" ;;
     *monnaie*)                        echo "" ;;
     *quartier*|*ville*|*adresse*)     echo "Akpakpa" ;;
@@ -123,7 +123,8 @@ remplir_champ() {
   cx=$(( (x1 + x2) / 2 )); cy=$(( (y1 + y2) / 2 ))
   adb shell input tap "$cx" "$cy" >/dev/null 2>&1; sleep 1
   adb shell input keyevent KEYCODE_MOVE_END >/dev/null 2>&1
-  for _ in 1 2 3 4 5 6 7 8; do adb shell input keyevent KEYCODE_DEL >/dev/null 2>&1; done
+  # D42.30-09 : 24 DEL (8 n'effaçaient pas 14 caractères → concaténations).
+  for _ in $(seq 1 24); do adb shell input keyevent KEYCODE_DEL >/dev/null 2>&1; done
   adb shell input text "$val" >/dev/null 2>&1; sleep 1
   fermer_clavier
   return 0
@@ -276,7 +277,7 @@ fi
 fermer_clavier
 s1_a=""; s1_b=""
 assurer_champ_rempli "commerce" "BoutiqueAwa" && s1_a="commerce"
-assurer_champ_rempli "whatsapp" "+2290197000000" && s1_b="whatsapp"
+assurer_champ_rempli "whatsapp" "0197000000" && s1_b="whatsapp"
 s1_remplis=0
 [ -n "$s1_a" ] && s1_remplis=$((s1_remplis+1))
 [ -n "$s1_b" ] && s1_remplis=$((s1_remplis+1))
@@ -375,7 +376,7 @@ done
 # 42619096543). Preuve au re-scan pour chacun.
 s2_manquants=""
 assurer_champ_rempli "commerce" "BoutiqueAwa" || s2_manquants="$s2_manquants commerce"
-assurer_champ_rempli "whatsapp" "+2290197000000" || s2_manquants="$s2_manquants whatsapp"
+assurer_champ_rempli "whatsapp" "0197000000" || s2_manquants="$s2_manquants whatsapp"
 assurer_champ_rempli "vêtement" "RobeWax" || s2_manquants="$s2_manquants offre"
 assurer_champ_rempli "Prix" "15000" || s2_manquants="$s2_manquants prix"
 assurer_champ_rempli "Quartier" "Akpakpa" || s2_manquants="$s2_manquants quartier"

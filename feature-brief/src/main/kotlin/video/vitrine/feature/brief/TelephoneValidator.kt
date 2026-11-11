@@ -31,11 +31,29 @@ object TelephoneValidator {
     }.getOrDefault(false)
 
     /** Normalise une saisie (nationale ou internationale) pour un pays choisi.
-     *  Retourne l'E.164 si valide pour CE pays, sinon null. */
-    fun versE164(saisie: String, region: String): String? = runCatching {
-        val num = util.parse(saisie, region)
-        if (util.isValidNumberForRegion(num, region)) util.format(num, PhoneNumberUtil.PhoneNumberFormat.E164) else null
-    }.getOrNull()
+     *  Retourne l'E.164 si valide pour CE pays, sinon null.
+     *  D42.30-09 (RCA run 8c9f514) : tolère l'indicatif collé SANS « + »
+     *  (« 2290197000000 » pour le Bénin) — un clavier peut perdre le « + »
+     *  (première frappe d'une session vierge, constaté aussi côté harnais).
+     *  L'essai DIRECT prime (un fixe « 2290… » reste interprété tel quel) ;
+     *  seul un échec direct déclenche le re-essai sans indicatif. */
+    fun versE164(saisie: String, region: String): String? {
+        fun e164(texte: String): String? = runCatching {
+            val num = util.parse(texte, region)
+            if (util.isValidNumberForRegion(num, region)) {
+                util.format(num, PhoneNumberUtil.PhoneNumberFormat.E164)
+            } else null
+        }.getOrNull()
+        val brut = saisie.trim()
+        e164(brut)?.let { return it }
+        if (!brut.startsWith("+")) {
+            val indicatifColle = indicatif(region).drop(1) // « 229 »
+            if (indicatifColle.isNotEmpty() && brut.startsWith(indicatifColle)) {
+                e164(brut.removePrefix(indicatifColle))?.let { return it }
+            }
+        }
+        return null
+    }
 
     /**
      * Détecte le pays d'un numéro COLLÉ au format international complet

@@ -343,7 +343,8 @@ remplir_champ() { # index, texte — coordonnées relues à chaque champ (P1 ép
   cx=$(( (x1 + x2) / 2 )); cy=$(( (y1 + y2) / 2 ))
   adb shell input tap "$cx" "$cy" >/dev/null 2>&1; sleep 1
   adb shell input keyevent KEYCODE_MOVE_END >/dev/null 2>&1
-  for _ in 1 2 3 4 5 6 7 8; do adb shell input keyevent KEYCODE_DEL >/dev/null 2>&1; done
+  # D42.30-09 : 24 DEL (8 n'effaçaient pas 14 caractères → concaténations).
+  for _ in $(seq 1 24); do adb shell input keyevent KEYCODE_DEL >/dev/null 2>&1; done
   adb shell input text "$val" >/dev/null 2>&1; sleep 1
   fermer_clavier
   return 0
@@ -353,7 +354,7 @@ valeur_pour() { # libellé (FR, design produit) -> valeur valide
   l=$(echo "$1" | tr 'A-Z' 'a-z')
   case "$l" in
     *commerce*|*boutique*)            echo "BoutiqueAwa" ;;
-    *whatsapp*|*num*ro*|*t*l*phone*)  echo "+2290197000000" ;;
+    *whatsapp*|*num*ro*|*t*l*phone*)  echo "0197000000" ;;
     *prix*|*montant*)                 echo "15000" ;;
     *monnaie*)                        echo "FCFA" ;;   # si non préremplie (requis chez le mode, run 42764463666 : 4/6)
     *quartier*|*ville*|*adresse*)     echo "Akpakpa" ;;

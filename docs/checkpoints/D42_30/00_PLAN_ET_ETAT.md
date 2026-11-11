@@ -184,7 +184,56 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   (ReadyCheckScreen). Extraction PiedContinuer (fun 84→78 lignes).
   Leçon consignée : (1) jamais de CTA dans la zone de défilement en fin de
   liste ; (2) la théorie doit être validée par le dump AVANT le fix.
-- **17/11 (D42.30-08, prêt à pousser à la fin du lab)** :
+- **17/11 (lab 8c9f514 : android-ci SUCCESS, 13 jobs verts, camerap 45 PASS /
+  3 FAIL / 12 BLOCKED — RCA FINALE D42.30-09, le brief élucidé)** :
+  Run 43065939431. Le fix « bouton épinglé » (8c9f514) n'a PAS fait passer
+  brief_valide : `CPA/CPB/CPC_brief_valide` FAIL identiques. Analyse croisée
+  camerap vs drafts (artefacts 13878098720 / 13876408574) — **le drafts, sur
+  le MÊME APK, remplit le champ whatsapp ET valide le brief avec le bouton
+  Continuer** (S2_brief_valide PASS) : l'app n'est PAS en cause.
+  Vérité terrain :
+  - dumps : les 4 champs visibles remplis (RobeWax, 15 000, FCFA, Akpakpa) ;
+    `verif_contenu.xml` affiche « **Ce numéro n'est pas valide pour le pays
+    choisi** » → le champ whatsapp contient une valeur INVALIDE ;
+  - bouton Continuer [44,2059][1036,2072] « 13 px » + texte [0,0][0,0] :
+    GÉOMÉTRIE IDENTIQUE dans le drafts qui PASSE → artefact uiautomator, le
+    tap fonctionne ; `clickable/enabled` non fiables sur boutons Compose ;
+  - JVM (libphonenumber 8.13.50 testée en local) : `+2290197000000`,
+    `0197000000`, `01 97 00 00 00`, `2290197000000` (indicatif collé) tous
+    VALIDE → la validation app est saine.
+  **Chaîne causale du FAIL** : le harnais camerap exigeait « +229 » dans le
+  dump — or le champ affiche la forme NATIONALE « 01 97 00 00 00 » et le prix
+  est reformaté « 15 000 » → preuve JAMAIS satisfaite → re-remplissages en
+  boucle → `remplir_champ` n'efface que 8 caractères (DEL×8 < 14) →
+  **concaténation invalide** dans le champ → `invalid=true` → bouton Continuer
+  DÉSACTIVÉ (comportement correct de l'app) → 4 taps sans effet → FAIL.
+  (Le « + » isolé peut aussi se perdre à la 1re frappe d'une session vierge —
+  consigné depuis D42.26-18f.)
+  **Corrections (D42.30-09)** :
+  - harnais (4 bancs : camerap, p1, drafts, audio_modes) : whatsapp tapé en
+    forme NATIONALE `0197000000` (celle du hint, insensible à la perte du
+    « + ») ; DEL×24 (effacement complet) ; preuves sur dump NORMALISÉ
+    (espaces ôtées : « 0197000000 » couvre national ET E.164, « 15000 »
+    couvre « 15 000 ») ; diagnostic différencié — si un dump porte
+    « n'est pas valide », le FAIL nomme le champ (Continuer correctement
+    désactivé) au lieu de « 4 essais sans effet » (avec remontée exprès du
+    formulaire pour capter le message hors écran).
+  - app : `TelephoneValidator.versE164` tolère l'indicatif collé SANS « + »
+    (« 2290197000000 » → +2290197000000 ; essai direct prioritaire, re-essai
+    sans indicatif seulement après échec — un fixe « 2290… » n'est pas
+    dénaturé). Nouveau test JVM `TelephoneValidatorTest` (7 cas : national
+    10 chiffres, collage international, indicatif collé, ancien format 8
+    chiffres, invalides, exemple généré, France).
+  Leçon : comparer un banc qui ÉCHOUE avec un banc qui PASSE sur le même APK
+  isole le défaut en une étape — ici le défaut était dans le HARNAIS, pas
+  dans l'app ; le message d'erreur affiché à l'écran était la preuve depuis
+  le premier dump.
+- **17/11 (fin du lab 8c9f514, run 43065939431 : completed/cancelled)** :
+  13 jobs SUCCESS (e2e, langues en, deeplink, offline, auth, drafts,
+  camerap-job, **offline-export SUCCESS — preuve export hors-ligne**,
+  backend-http, security, selftest, gabarits-audit, auth-local) ;
+  p1 CANCELLED au timeout 90 min (bloqué au brief — cause harnais ci-dessus).
+- **17/11 (D42.30-08, poussé)** :
   (1) **machine à états tournage** : trou comblé dans la fenêtre verrouillage
   3A (le job du décompte se terminait AVANT lockThreeA → écran PRÊT → un
   re-tap pouvait déclencher un 2e startRecording pendant que le 1er tournait).

@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application>
-        <!-- D42.30 : PAS d'adjustResize — les insets clavier sont gérés par
-             imePadding() dans les écrans Compose (Brief/ReadyCheck). Combiner
-             adjustResize + imePadding applique l'inset DEUX FOIS : preuve p1
-             run 5082856, bouton Continuer écrasé à 1 px de haut clavier ouvert
-             (dump 22b) → tap sans effet, parcours bloqué. imePadding SEUL :
-             le formulaire remonte au-dessus du clavier, une seule fois. -->
+        <!-- D42.30-09 : adjustResize REMIS (P1-D d'origine, 10a12e1). Le retrait
+             (67f6421, théorie « double inset ») est INVALIDÉ par la RCA du run
+             8c9f514 : le « bouton 1 px » de 5082856 venait du CTA DANS le scroll
+             (fin de contenu coupée par la fenêtre réduite), pas d'un double
+             inset. Depuis que « Continuer » est ÉPINGLÉ hors scroll, sans
+             adjustResize les insets IME ne sont pas propagés : le pied restait
+             à y=2059 SOUS le clavier ouvert (preuve 8c9f514, dump CPA_brief_bas :
+             champ Akpakpa focused, bouton invisible pendant la frappe). Avec
+             adjustResize : la fenêtre se réduit, le pied épinglé reste TOUJOURS
+             au-dessus du clavier ; imePadding() devient no-op (inset consommé
+             par le resize) — aucun double application. -->
         <activity
             android:name=".BriefActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 </manifest>
