@@ -243,10 +243,18 @@ class MixBenchAudioTest {
     fun `ducking - profondeur et relachement commandes sur le vrai mixeur`() {
         val capture = CapturingMixer()
         val duree = 8
+        // D42.29 : compositionDurationUs = 0L ici. Ce banc mesure les VOLUMES
+        // COMMANDÉS au délégué (profondeur de ducking, remontée entre les
+        // phrases) — la borne de fin d'alimentation (défaut corrigé au même
+        // commit, cf. BgmSfxAudioMixerMultiRushTest « alimentation bornée »)
+        // n'y est pas l'objet. Avec une durée posée, le délégué CAPTIVE de ce
+        // banc (débit illimité, documenté ci-dessous) avalerait toute la
+        // musique bornée pendant la première phase de parole : la remontée
+        // deviendrait inobservable — un artefact du banc, pas du mixeur.
         val mixer = BgmSfxAudioMixer(
             capture, musiqueCalibree(duree + 10),
             listOf(BgmSfxAudioMixer.SfxCue(1_000_000L, sfxImpact())),
-            duckDepthDb = -14.0, compositionDurationUs = duree * 1_000_000L
+            duckDepthDb = -14.0, compositionDurationUs = 0L
         )
         mixer.configure(fmt, 1000, 0L)
         val voix = voixAvecPauses(duree)

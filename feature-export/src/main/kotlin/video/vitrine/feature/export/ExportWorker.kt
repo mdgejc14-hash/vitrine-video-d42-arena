@@ -172,39 +172,21 @@ class ExportWorker(
         // Audit D40 (B3) : duree attendue = beat sheet (composition) ou duree
         // REELLE du rush (retriever) — plus l'heuristique taille/1000.
         val expectedMs = expectedDurationMs(input, sheet)
-        // D42.21 — défaut D42.18 corrigé à la racine : quand une musique est
-        // planifiée mais qu'AUCUN rush ne porte de piste audio (voix
-        // facultative — le commerçant peut ne pas parler), on ajoute une
-        // séquence audio parallèle (WAV silencieux) pour que le graphe audio
-        // du Transformer existe : le mixeur BGM/SFX y superpose la musique en
-        // gain solo (0 dB). Sans cela, l'export sortait MUET bien que visuellement
-        // réussi (BGM jamais EditedMediaItem, graphe audio jamais créé).
-        val rushes = inputData.getStringArray(KEY_CLIENT_RUSHES)
-        val rushAudioPresente = rushesAudioPresente(rushes)
-        // "Audio planifié" = BGM OU SFX transmis par l'appelant (même critère que
-        // audioMixerFactory ci-dessous : mixer non null).
-        val mixerFactoryPrevu = inputData.getString(KEY_BGM_PATH) != null ||
-            !inputData.getString(KEY_SFX_EVENTS).isNullOrBlank()
-        val baseSilencieuse = mixerFactoryPrevu && !rushAudioPresente && expectedMs > 0L
-        val fichierBaseSilence = if (baseSilencieuse) ecrireWavSilencieux(expectedMs) else null
-        if (baseSilencieuse) {
-            android.util.Log.i(
-                TAG_VERIF,
-                "D42.21 : rushs sans audio + BGM planifiée — base silencieuse ${expectedMs}ms, musique en gain solo"
-            )
-        }
+        // D42.21 — défaut D42.18 corrigé à la racine : rushs sans audio +
+        // musique planifiée → base silencieuse (détail dans preparerBaseSilencieuse).
+        val baseSilence = preparerBaseSilencieuse(expectedMs)
         // Audit D40 (A4) : BGM duckee + SFX du gabarit mixees au rendu.
         // Audit D41 (F59/F60) : profondeur de ducking du GABARIT + duree de
         // composition transmises au mixeur (fade-out musique avant la fin).
         // D42.21 : gain solo (0 dB) quand la musique porte seule la vidéo.
-        val mixerFactory = audioMixerFactory(expectedMs, musicSolo = baseSilencieuse)
+        val mixerFactory = audioMixerFactory(expectedMs, musicSolo = baseSilence != null)
 
         try {
         while (attempt < MAX_ATTEMPTS) {
             val tentative = preparerTentative(
                 sheet, geometry, exportClass, attempt,
-                baseAudioUri = fichierBaseSilence?.let { android.net.Uri.fromFile(it) },
-                baseAudioDureeMs = if (fichierBaseSilence != null) expectedMs else 0L
+                baseAudioUri = baseSilence?.let { android.net.Uri.fromFile(it.fichier) },
+                baseAudioDureeMs = baseSilence?.dureeMs ?: 0L
             )
             val output = File(context.cacheDir, "export-$attempt.mp4")
             // D42.29 (P2) : traçabilité par tentative (stratégie de repli
@@ -270,8 +252,36 @@ class ExportWorker(
         return Result.failure()
         } finally {
             // D42.21 : le WAV silencieux est un artefact de cache, jamais conservé.
-            runCatching { fichierBaseSilence?.delete() }
+            runCatching { baseSilence?.fichier?.delete() }
         }
+    }
+
+    /** Base audio silencieuse D42.21 (fichier de cache + durée). */
+    private data class BaseSilencieuse(val fichier: File, val dureeMs: Long)
+
+    /**
+     * D42.21 — défaut D42.18 corrigé à la racine : quand une musique est
+     * planifiée mais qu'AUCUN rush ne porte de piste audio (voix facultative —
+     * le commerçant peut ne pas parler), on ajoute une séquence audio parallèle
+     * (WAV silencieux) pour que le graphe audio du Transformer existe : le
+     * mixeur BGM/SFX y superpose la musique en gain solo (0 dB). Sans cela,
+     * l'export sortait MUET bien que visuellement réussi (BGM jamais
+     * EditedMediaItem, graphe audio jamais créé).
+     */
+    private fun preparerBaseSilencieuse(expectedMs: Long): BaseSilencieuse? {
+        val rushes = inputData.getStringArray(KEY_CLIENT_RUSHES)
+        val rushAudioPresente = rushesAudioPresente(rushes)
+        // "Audio planifié" = BGM OU SFX transmis par l'appelant (même critère que
+        // audioMixerFactory : mixer non null).
+        val mixerFactoryPrevu = inputData.getString(KEY_BGM_PATH) != null ||
+            !inputData.getString(KEY_SFX_EVENTS).isNullOrBlank()
+        if (!(mixerFactoryPrevu && !rushAudioPresente && expectedMs > 0L)) return null
+        val fichier = ecrireWavSilencieux(expectedMs)
+        android.util.Log.i(
+            TAG_VERIF,
+            "D42.21 : rushs sans audio + BGM planifiée — base silencieuse ${expectedMs}ms, musique en gain solo"
+        )
+        return fichier?.let { BaseSilencieuse(it, expectedMs) }
     }
 
     /**
@@ -625,8 +635,9 @@ class ExportWorker(
                     // journalisée. Aucun changement de comportement.
                     android.util.Log.e(
                         TAG_EXPORT,
-                        "Transformer onError (item) : code=${androidx.media3.transformer.ExportException.getErrorCodeName(exception.errorCode)}" +
-                            "msg=${exception.message}" +
+                        "Transformer onError (item) : " +
+                            "code=${androidx.media3.transformer.ExportException.getErrorCodeName(exception.errorCode)}" +
+                            " msg=${exception.message}" +
                             " cause=${exception.cause?.javaClass?.simpleName}: ${exception.cause?.message}",
                         exception
                     )
@@ -660,8 +671,9 @@ class ExportWorker(
                     // pas journalisée. Aucun changement de comportement.
                     android.util.Log.e(
                         TAG_EXPORT,
-                        "Transformer onError (composition) : code=${androidx.media3.transformer.ExportException.getErrorCodeName(exception.errorCode)}" +
-                            "msg=${exception.message}" +
+                        "Transformer onError (composition) : " +
+                            "code=${androidx.media3.transformer.ExportException.getErrorCodeName(exception.errorCode)}" +
+                            " msg=${exception.message}" +
                             " cause=${exception.cause?.javaClass?.simpleName}: ${exception.cause?.message}",
                         exception
                     )

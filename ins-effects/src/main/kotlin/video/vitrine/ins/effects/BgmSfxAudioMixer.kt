@@ -310,72 +310,96 @@ class BgmSfxAudioMixer(
 
     /** Alimentation bornee musique + SFX ; [full] = drain complet (fin de rendu). */
     private fun drainFeeds(full: Boolean) {
-        var guard = if (full) FULL_DRAIN_GUARD else FEED_GUARD
         runSafe {
-            val channels = outputChannels
-            val music = musicPcm
-            // D42.29 (DÉFAUT PRODUIT CRITIQUE, pilot 42975000342) : l'alimentation
-            // musique/SFX est désormais BORNÉE à la durée de composition. Avant,
-            // feedPcm vidait tout le fichier (titulaire 38,1 s pour 35 s de
-            // composition) : l'enveloppe mettait bien le gain à 0 après la fin,
-            // mais les échantillons SILENCIEUX restaient muxés — piste audio 3 s
-            // plus longue que la vidéo, rejetée par AudioChecks du vérificateur
-            // (tolérance 250 ms) → repli CLOUD_MODAL. Tout export musical réel
-            // échouait donc au vérificateur, y compris sur appareil physique
-            // (mesure ffprobe : audio 38,044 s / vidéo 34,989 s).
-            val rate = if (outputFormat.sampleRate > 0) outputFormat.sampleRate else 48000
-            val musiqueEffectiveUs = if (compositionDurationUs > 0L) {
-                (compositionDurationUs - (musicStartUs - mixerStartTimeUs)).coerceAtLeast(0L)
-            } else {
-                0L
-            }
-            val capMusique = if (musiqueEffectiveUs > 0L) {
-                musiqueEffectiveUs * rate / 1_000_000L
+            drainMusique(full)
+            drainSfx(full)
+        }
+    }
+
+    /**
+     * Durée effective d'audibilité de la musique : la composition borne
+     * l'alimentation (D42.29), en tenant compte du décalage entre le début
+     * mixeur et le début musique ([musicStartUs]).
+     */
+    private fun musiqueEffectiveUs(): Long =
+        if (compositionDurationUs > 0L) {
+            (compositionDurationUs - (musicStartUs - mixerStartTimeUs)).coerceAtLeast(0L)
+        } else {
+            0L
+        }
+
+    /** Taux de sortie réel (le format peut ne pas être encore configuré). */
+    private fun outputRate(): Int =
+        if (outputFormat.sampleRate > 0) outputFormat.sampleRate else 48000
+
+    /**
+     * Alimente la musique, BORNÉE à la durée effective.
+     *
+     * D42.29 (DÉFAUT PRODUIT CRITIQUE, pilot 42975000342) : avant, feedPcm
+     * vidait tout le fichier (titulaire 38,1 s pour 35 s de composition) :
+     * l'enveloppe mettait bien le gain à 0 après la fin, mais les échantillons
+     * SILENCIEUX restaient muxés — piste audio 3 s plus longue que la vidéo,
+     * rejetée par AudioChecks du vérificateur (tolérance 250 ms) → repli
+     * CLOUD_MODAL. Tout export musical réel échouait donc au vérificateur,
+     * y compris sur appareil physique (mesure ffprobe : audio 38,044 s /
+     * vidéo 34,989 s).
+     */
+    private fun drainMusique(full: Boolean) {
+        val music = musicPcm
+        var guard = if (full) FULL_DRAIN_GUARD else FEED_GUARD
+        if (music == null || musicSourceId == C.INDEX_UNSET || guard <= 0) return
+        // D41 (F60) : fade-in/fade-out contrat AudioChain (0,45 s / 0,75 s)
+        // appliques a l'alimentation musique — avant, la BGM demarrait au
+        // volume cible et se faisait couper net a la fin de composition.
+        val channels = outputChannels
+        val rate = outputRate()
+        val effUs = musiqueEffectiveUs()
+        val capMusique = if (effUs > 0L) effUs * rate / 1_000_000L else Long.MAX_VALUE
+        guard = feedPcm(
+            musicSourceId, music, musicFedFrames, guard, channels,
+            musicEnvelope(rate, effUs), maxFrames = capMusique
+        ) { fed ->
+            musicFedFrames = fed
+        }
+    }
+
+    /**
+     * Alimente les SFX à leur date, BORNÉS à la fin de composition (D42.29).
+     *
+     * D42.6 : budget PROPRE aux SFX. Avant, la boucle SFX partageait le
+     * garde consomme par la musique : une BGM plus longue que la
+     * composition (45 s dans le banc, 33 s de rendu) ne s'epuise jamais,
+     * absorbait les FEED_GUARD blocs a chaque appel et laissait
+     * `guard == 0` a l'entree de la boucle. Les 9 SFX n'etaient donc
+     * jamais alimentes a leur date. Mesure sur le MP4 rendu
+     * immo_auto_T4_en : 15 reperes planifies, seuls les 4 derniers
+     * audibles (la musique est videe en fin de composition).
+     */
+    private fun drainSfx(full: Boolean) {
+        val channels = outputChannels
+        val rate = outputRate()
+        val iterator = sfxFeeds.iterator()
+        var sfxGuard = if (full) FULL_DRAIN_GUARD else FEED_GUARD
+        while (iterator.hasNext() && sfxGuard > 0) {
+            val feed = iterator.next()
+            if (voicePositionUs < feed.atUs && !full) continue
+            // D42.29 : le SFX ne depasse pas non plus la fin de composition.
+            val capSfx = if (compositionDurationUs > 0L) {
+                ((compositionDurationUs - feed.atUs).coerceAtLeast(0L)) * rate / 1_000_000L
             } else {
                 Long.MAX_VALUE
             }
-            if (music != null && musicSourceId != C.INDEX_UNSET && guard > 0) {
-                // D41 (F60) : fade-in/fade-out contrat AudioChain (0,45 s / 0,75 s)
-                // appliques a l'alimentation musique — avant, la BGM demarrait au
-                // volume cible et se faisait couper net a la fin de composition.
-                guard = feedPcm(
-                    musicSourceId, music, musicFedFrames, guard, channels,
-                    musicEnvelope(rate, musiqueEffectiveUs), maxFrames = capMusique
-                ) { fed ->
-                    musicFedFrames = fed
-                }
+            var fedFrames = fedBySource[feed.sourceId] ?: 0L
+            sfxGuard = feedPcm(
+                feed.sourceId, feed.pcm, fedFrames, sfxGuard, channels, null,
+                maxFrames = capSfx
+            ) { fed ->
+                fedFrames = fed
+                fedBySource[feed.sourceId] = fed
             }
-            // D42.6 : budget PROPRE aux SFX. Avant, la boucle SFX partageait le
-            // garde consomme par la musique : une BGM plus longue que la
-            // composition (45 s dans le banc, 33 s de rendu) ne s'epuise jamais,
-            // absorbait les FEED_GUARD blocs a chaque appel et laissait
-            // `guard == 0` a l'entree de la boucle. Les 9 SFX n'etaient donc
-            // jamais alimentes a leur date. Mesure sur le MP4 rendu
-            // immo_auto_T4_en : 15 reperes planifies, seuls les 4 derniers
-            // audibles (la musique est videe en fin de composition).
-            val iterator = sfxFeeds.iterator()
-            var sfxGuard = if (full) FULL_DRAIN_GUARD else FEED_GUARD
-            while (iterator.hasNext() && sfxGuard > 0) {
-                val feed = iterator.next()
-                if (voicePositionUs < feed.atUs && !full) continue
-                // D42.29 : le SFX ne depasse pas non plus la fin de composition.
-                val capSfx = if (compositionDurationUs > 0L) {
-                    ((compositionDurationUs - feed.atUs).coerceAtLeast(0L)) * rate / 1_000_000L
-                } else {
-                    Long.MAX_VALUE
-                }
-                var fedFrames = fedBySource[feed.sourceId] ?: 0L
-                sfxGuard = feedPcm(
-                    feed.sourceId, feed.pcm, fedFrames, sfxGuard, channels, null,
-                    maxFrames = capSfx
-                ) { fed ->
-                    fedFrames = fed
-                    fedBySource[feed.sourceId] = fed
-                }
-                if (fedFrames >= minOf((feed.pcm.size / channels).toLong(), capSfx)) {
-                    delegate.removeSource(feed.sourceId)
-                    iterator.remove()
-                }
+            if (fedFrames >= minOf((feed.pcm.size / channels).toLong(), capSfx)) {
+                delegate.removeSource(feed.sourceId)
+                iterator.remove()
             }
         }
     }
