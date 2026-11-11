@@ -67,7 +67,7 @@ class TelephoneValidatorTest {
     }
 
     @Test
-    fun `autre pays : indicatif et detection`() {
+    fun `autre pays indicatif et detection`() {
         assertEquals("+33", TelephoneValidator.indicatif("FR"))
         val (region, forme) = TelephoneValidator.depuisInternational("+33612345678")!!
         assertEquals("FR", region)
