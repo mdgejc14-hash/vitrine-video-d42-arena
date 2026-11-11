@@ -1,6 +1,7 @@
 package video.vitrine.data.api
 
 import android.content.Context
+import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
 import video.vitrine.core.model.billing.DeviceFingerprint
@@ -135,6 +136,7 @@ object BackendSync {
      * (D41 F30) + droits synchronises.
      */
     suspend fun flushPending(context: Context, db: VitrineLocalDatabase, baseUrl: String, token: String?, uid: String?) {
+        Log.i("D42-SYNC", "flushPending declenche (retour reseau / dashboard)")
         flushTelemetry(db, baseUrl)
         val jwt = token?.takeIf { it.count { c -> c == '.' } == 2 }
         if (jwt != null) {
@@ -217,7 +219,9 @@ object BackendSync {
             )
         }
         val body = JSONObject().put("events", events).toString()
+        Log.i("D42-SYNC", "flush telemetry : ${rows.size} evenement(s) en attente, POST $baseUrl/api/v1/telemetry")
         val reply = runCatching { ApiClient(baseUrl).post("/api/v1/telemetry", null, body) }.getOrNull()
+        Log.i("D42-SYNC", "flush telemetry : HTTP ${reply?.status ?: "reseau indisponible"}")
         if (reply != null && reply.status in 200..299) {
             runCatching { db.telemetry().markUploaded(rows.map { it.id }) }
         }
