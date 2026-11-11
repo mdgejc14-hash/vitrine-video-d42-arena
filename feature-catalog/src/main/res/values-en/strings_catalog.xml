@@ -8,5 +8,6 @@
     <string name="skin_flash_promo">Flash Promo &amp; Discount</string>
     <string name="skin_customer_review">Customer Testimonial &amp; Review</string>
     <string name="catalog_sector_focus">Templates tailored to your business: %1$s</string>
+    <string name="catalog_change_sector">Change sector</string>
     <string name="catalog_skins_unavailable">The styles catalog is temporarily unavailable. The 30 universal formats remain available.</string>
 </resources>

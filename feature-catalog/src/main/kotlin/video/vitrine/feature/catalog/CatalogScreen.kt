@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -42,6 +43,7 @@ import video.vitrine.core.model.CatalogManifest
 import video.vitrine.core.model.Sector
 import video.vitrine.core.model.GabaritSummary
 import video.vitrine.core.model.Skin
+import video.vitrine.core.model.sectorFromGabaritCode
 
 /** Ecran catalogue (JSON ecrans 3.7, id=catalog) : grille lazy 180 skins + filtre secteurs. */
 @Composable
@@ -54,6 +56,9 @@ fun CatalogScreen(
     onGabaritClick: (GabaritSummary) -> Unit = {},
 ) {
     var sector by remember { mutableStateOf(initialSector ?: Sector.TOUS) }
+    // D42.30 : filtres secteur REPLIÉS quand un secteur est déjà choisi
+    // (moins de bruit visuel) ; « Changer de secteur » les déplie.
+    var filtresOuverts by remember { mutableStateOf(initialSector == null) }
     Column(modifier = Modifier.fillMaxSize()) {
         if (offline) {
             Text(
@@ -70,7 +75,26 @@ fun CatalogScreen(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             VitrineLogoHeader()
-            Text(stringResource(R.string.catalog_title), style = MaterialTheme.typography.titleLarge)
+            // D42.30 : le titre et l'action « Changer de secteur » partagent la
+            // même ligne (retour terrain : secteur affiché + action discrète).
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    stringResource(R.string.catalog_title),
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.weight(1f),
+                )
+                Text(
+                    stringResource(R.string.catalog_change_sector),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .clickable { filtresOuverts = !filtresOuverts }
+                        .padding(6.dp),
+                )
+            }
             if (sector != Sector.TOUS) {
                 Text(
                     stringResource(R.string.catalog_sector_focus, sectorLabel(sector)),
@@ -78,7 +102,9 @@ fun CatalogScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            SectorRow(sector) { sector = it }
+            if (filtresOuverts) {
+                SectorRow(sector) { sector = it }
+            }
         }
         if (gabarits.isNotEmpty()) {
             GabaritLayout(
@@ -114,10 +140,22 @@ private fun GabaritLayout(
     ) {
         gabarits.forEach { g ->
             Card(onClick = { onGabaritClick(g) }, modifier = Modifier.fillMaxWidth()) {
-                Column(
-                    modifier = Modifier.padding(14.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    // D42.30 : vignette sectorielle dessinée (cadrage caméra,
+                    // pellicule = nombre réel de scènes, badge durée) — plus de
+                    // carte 100 % texte.
+                    VignetteSecteur(
+                        secteur = sectorFromGabaritCode(g.secteur) ?: Sector.TOUS,
+                        dureeS = g.dureeTotaleS,
+                        scenes = g.nombreScenes,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                    )
+                    Column(
+                        modifier = Modifier.padding(horizontal = 14.dp).padding(bottom = 14.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
                     Text(g.nomFormatAffiche, style = MaterialTheme.typography.titleMedium)
                     val meta = buildString {
                         if (showSector) append(g.secteurLibelle).append(" · ")
@@ -131,6 +169,7 @@ private fun GabaritLayout(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Text(g.phraseCourte, style = MaterialTheme.typography.bodyMedium)
+                    }
                 }
             }
         }
@@ -214,7 +253,15 @@ private fun SkinCard(skin: Skin, showSector: Boolean, compact: Boolean = false, 
                     modifier = Modifier.fillMaxSize()
                 )
             } else {
-                Text("…", color = Color.Gray)
+                // D42.30 : repli dessiné de marque (jamais un « … » gris) —
+                // vignette sectorielle + libellé, honnête hors-ligne.
+                VignetteSecteurAvecLibelle(
+                    secteur = skin.sector,
+                    libelle = SkinDisplayName.label(skin),
+                    dureeS = null,
+                    scenes = null,
+                    modifier = Modifier.padding(10.dp),
+                )
             }
         }
         Text(SkinDisplayName.label(skin), style = MaterialTheme.typography.bodyMedium)

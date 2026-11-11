@@ -27,7 +27,8 @@ import org.json.JSONObject
 object GabaritL10n {
 
     const val LANGUE_SOURCE = "fr"
-    val LANGUES = listOf("fr", "en", "es", "ja")
+    /** D42.30 : FR/EN uniquement (décision fondatrice). */
+    val LANGUES = listOf("fr", "en")
 
     /** Donnees chargees depuis assets/i18n/gabarit_l10n_v1.json. */
     class Donnees(

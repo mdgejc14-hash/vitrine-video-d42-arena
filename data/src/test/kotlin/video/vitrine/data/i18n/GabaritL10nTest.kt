@@ -65,7 +65,7 @@ class GabaritL10nTest {
     }
 
     @Test
-    fun lesQuatreLanguesSontCompletes() {
+    fun lesDeuxLanguesSontCompletes() { // D42.30 : FR/EN uniquement
         val donnees = dictionnaire()
         GabaritL10n.LANGUES.filter { it != GabaritL10n.LANGUE_SOURCE }.forEach { langue ->
             assertEquals("textes manquants en $langue", emptyList<String>(), donnees.manquantes(langue))
@@ -80,17 +80,22 @@ class GabaritL10nTest {
     }
 
     @Test
-    fun leJaponaisEstReellementDuJaponais() {
+    fun lAnglaisEstReellementDeLanglais() {
+        // D42.30 : ES/JA retirés du produit — la couverture vivante est EN.
         val donnees = dictionnaire()
-        val badge = donnees.badge("stock_limite", "ja")
-        assertEquals("在庫限定", badge)
-        val accroche = donnees.resolve("À DÉCOUVRIR", "ja")
+        val badge = donnees.badge("stock_limite", "en")
+        assertEquals("LIMITED STOCK", badge)
+        val accroche = donnees.resolve("À DÉCOUVRIR", "en")
         assertNotEqualsFrancais(accroche)
-        // Kanji / hiragana / katakana presents dans la couverture japonaise.
-        val japonais = donnees.textes.values.mapNotNull { it["ja"] }.joinToString(" ")
-        assertTrue("aucun kanji", japonais.any { it.code in 0x4E00..0x9FFF })
-        assertTrue("aucun hiragana", japonais.any { it.code in 0x3040..0x309F })
-        assertTrue("aucun katakana", japonais.any { it.code in 0x30A0..0x30FF })
+        // Des mots anglais reels sont presents dans la couverture (pas du
+        // francais recopie) : au moins une traduction contient un mot usuel.
+        val anglais = donnees.textes.values.mapNotNull { it["en"] }.joinToString(" ")
+        assertTrue(
+            "couverture EN vide ou identique au francais",
+            anglais.length > 100 && anglais.split(" ").any {
+                it.lowercase() in setOf("your", "video", "with", "discover", "offer")
+            },
+        )
     }
 
     private fun assertNotEqualsFrancais(valeur: String) {
@@ -204,16 +209,17 @@ class GabaritL10nTest {
     // -------------------------------------------------------------------- i18n
 
     @Test
-    fun leRenduJaponaisRemplaceLeFrancaisSansPerdreLesVariables() {
+    fun leRenduAnglaisRemplaceLeFrancaisSansPerdreLesVariables() {
+        // D42.30 : ES/JA retirés — la preuve de substitution vit en EN.
         val raw = gabarit("restaurants_maquis_T1")
         val donnees = dictionnaire()
-        val valeurs = mapOf("prix" to "5000", "devise" to "FCFA", "nom_commerce" to "シャンタル食堂")
-        val ja = GabaritBeatSheet.build(
+        val valeurs = mapOf("prix" to "5000", "devise" to "FCFA", "nom_commerce" to "Chantal Kitchen")
+        val en = GabaritBeatSheet.build(
             raw, valeurs,
-            localiser = { donnees.resolve(it, "ja") },
-            badgeTexte = donnees.badge("places_limitees", "ja")
+            localiser = { donnees.resolve(it, "en") },
+            badgeTexte = donnees.badge("places_limitees", "en")
         )!!
-        val textes = mots(ja.beatSheetJson).map { it.getString(0) }
+        val textes = mots(en.beatSheetJson).map { it.getString(0) }
         // D42.3 : le prix est desormais groupe (« 5000 » -> « 5 000 »). L'intention
         // du test est inchangee — le prix ET sa devise sont substitues — seule la
         // forme attendue suit la convention de formatage de l'application.
@@ -222,7 +228,7 @@ class GabaritL10nTest {
             textes.any { it.contains("5 000") && it.contains("FCFA") },
         )
         assertFalse("texte francais residuel", textes.contains("À DÉCOUVRIR"))
-        assertTrue("badge japonais absent", textes.any { it.contains("席数限定") })
+        assertTrue("badge anglais absent", textes.any { it.contains("LIMITED SEATS") })
         // Aucun texte ne doit rester sous forme de variable brute.
         assertTrue(
             "variables non substituees: ${textes.filter { it.contains('{') }}",
@@ -230,19 +236,4 @@ class GabaritL10nTest {
         )
     }
 
-    @Test
-    fun leJaponaisEstSegmenteEnCartonsLisibles() {
-        val raw = gabarit("restaurants_maquis_T1")
-        val donnees = dictionnaire()
-        val ja = GabaritBeatSheet.build(
-            raw,
-            mapOf("nom_commerce" to "シャンタル食堂", "nom_offre" to "本日の特別メニュー"),
-            localiser = { donnees.resolve(it, "ja") }
-        )!!
-        val longs = mots(ja.beatSheetJson).map { it.getString(0) }
-            .filter { it.none { c -> c == ' ' } }
-            .filter { it.any { c -> c.code in 0x3040..0x9FFF } }
-        assertTrue("aucun texte japonais", longs.isNotEmpty())
-        assertTrue("segment trop long: ${longs.filter { it.length > 7 }}", longs.all { it.length <= 7 })
-    }
 }

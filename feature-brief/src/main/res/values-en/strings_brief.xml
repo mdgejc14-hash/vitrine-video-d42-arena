@@ -15,7 +15,6 @@
     <string name="brief_g_my_video">My video</string>
     <string name="brief_g_step_badge">%1$d / %2$d</string>
     <string name="brief_err_number">Enter a number, without letters (e.g. 15000).</string>
-    <string name="brief_err_phone">International format expected: +229 97 00 00 00.</string>
     <!-- D42.30: international WhatsApp (libphonenumber, BJ 10 digits since 2024-11-30) -->
     <string name="brief_err_phone">This number isn\'t valid for the selected country. Check the digits.</string>
     <string name="brief_phone_placeholder">WhatsApp number</string>

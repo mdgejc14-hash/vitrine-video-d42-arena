@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Laboratoire D42.14 — preuve des 4 LANGUES (P5).
+# Laboratoire D42.14 — preuve des LANGUES (P5). D42.30 : FR/EN uniquement (ES/JA retirés).
 #
 # Ce script ne teste PAS tout le parcours (c'est P0/P1) : il prouve qu'après
 # sélection d'une langue, l'application affiche réellement les écrans dans cette
 # langue, jusqu'au catalogue inclus. Les libellés attendus sont lus depuis les
 # ressources `values-<langue>` du dépôt : aucune valeur inventée.
 #
-# Usage : run_langue.sh <tag> <fr|en|es|ja> [apk]
+# Usage : run_langue.sh <tag> <fr|en> [apk]
 set -uo pipefail
 
 TAG="${1:-langue}"
@@ -37,15 +37,7 @@ case "$LANGUE" in
       S2="Film your products, we guide you";                       S3="A video ready to post in 30 seconds"
       SUIVANT="Next"; DEMARRER="Get started"; SECTEUR="Your main business"
       CONTINUER="Continue"; SANS_CODE="I don't have a code"; CATALOGUE="Pick a video template" ;;
-  es) CARTE="Español";   ATTENDU_AUTH="Continuar con Google";       S1="Filma. Vende. Listo."
-      S2="Filma tus productos, te guiamos";                        S3="Un vídeo listo para publicar en 30 segundos"
-      SUIVANT="Siguiente"; DEMARRER="Empezar"; SECTEUR="Tu actividad principal"
-      CONTINUER="Continuar"; SANS_CODE="No tengo código"; CATALOGUE="Elige una plantilla de vídeo" ;;
-  ja) CARTE="日本語";     ATTENDU_AUTH="Googleで続ける";             S1="撮って、売る。それだけ。"
-      S2="商品を撮るだけ、あとはご案内します";                       S3="30秒で公開できる動画に"
-      SUIVANT="次へ"; DEMARRER="はじめる"; SECTEUR="あなたの業種"
-      CONTINUER="次へ"; SANS_CODE="コードを持っていません"; CATALOGUE="動画テンプレートを選択" ;;
-  *) echo "langue inconnue : $LANGUE"; exit 2 ;;
+  *) echo "langue non supportee (D42.30 : FR/EN uniquement) : $LANGUE"; exit 2 ;;
 esac
 
 echo "=========== LANGUE $LANGUE ($TAG) ==========="

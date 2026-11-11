@@ -7,9 +7,10 @@ import org.junit.Test
 
 /**
  * Audit D41 — COUVERTURE i18n 100 % (anti-regression) : chaque module qui porte
- * des chaines doit exposer EXACTEMENT le meme ensemble de cles en FR (defaut),
- * EN, ES et JA. Une cle ajoutee sans ses 3 traductions casse la promesse
- * « 4 langues reelles » (exigence mission D41 : chrome complet FR/EN/ES/JA).
+ * des chaines doit exposer EXACTEMENT le meme ensemble de cles en FR (defaut)
+ * et EN. Une cle ajoutee sans sa traduction casse la promesse « 2 langues
+ * reelles » (D42.30 : FR/EN uniquement — ES/JA retires du produit, archives
+ * dans content/archive_i18n/).
  *
  * Test JVM pur (lecture des fichiers res du repo — pas de Robolectric).
  */
@@ -25,7 +26,7 @@ class I18nKeyCoverageTest {
         "feature-onboarding"
     )
 
-    private val locales = listOf("values", "values-en", "values-es", "values-ja")
+    private val locales = listOf("values", "values-en")
 
     private val motifCle = Regex("<string\\s+name=\"([^\"]+)\"")
 
@@ -38,7 +39,7 @@ class I18nKeyCoverageTest {
     }
 
     @Test
-    fun `toutes les cles sont traduites dans les 4 langues`() {
+    fun `toutes les cles sont traduites dans les 2 langues`() {
         var total = 0
         modules.forEach { module ->
             val base = File("../$module/src/main/res")

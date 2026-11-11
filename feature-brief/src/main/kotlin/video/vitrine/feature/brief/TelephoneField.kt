@@ -78,128 +78,178 @@ fun TelephoneField(
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            OutlinedButton(
-                onClick = { dialoguePays = true },
-                modifier = Modifier.width(132.dp)
-            ) {
-                Text(
-                    TelephoneValidator.drapeau(pays) + " " + TelephoneValidator.indicatif(pays),
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
-            OutlinedTextField(
-                value = national,
-                onValueChange = { brut ->
-                    val propre = brut.replace(Regex("[-.()]"), " ").trim()
-                    // collage international complet : +229 01 97… → pays détecté
-                    if (propre.startsWith("+")) {
-                        TelephoneValidator.depuisInternational(propre)?.let { (region, forme) ->
-                            pays = region
-                            publier(forme, region)
-                            return@OutlinedTextField
-                        }
+        LignePaysEtNumero(
+            pays = pays,
+            national = national,
+            onOuvrirPays = { dialoguePays = true },
+            onSaisie = { brut ->
+                val propre = brut.replace(Regex("[-.()]"), " ").trim()
+                // collage international complet : +229 01 97… → pays détecté
+                if (propre.startsWith("+")) {
+                    TelephoneValidator.depuisInternational(propre)?.let { (region, forme) ->
+                        pays = region
+                        publier(forme, region)
+                        return@LignePaysEtNumero
                     }
-                    publier(propre, pays)
-                },
-                modifier = Modifier.weight(1f),
-                singleLine = true,
-                placeholder = { Text(stringResource(R.string.brief_phone_placeholder)) },
-                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                    keyboardType = KeyboardType.Phone
-                ),
-                isError = national.isNotBlank() && !TelephoneValidator.estValide(
-                    TelephoneValidator.versE164(national, pays) ?: national
-                )
+                }
+                publier(propre, pays)
+            },
+        )
+        AidesTelephone(pays = pays, national = national)
+    }
+
+    if (dialoguePays) {
+        DialogueChoixPays(
+            recherche = paysRecherche,
+            onRecherche = { paysRecherche = it },
+            langue = langue,
+            onChoix = { region ->
+                pays = region
+                dialoguePays = false
+                publier(national, region)
+            },
+            onFermer = { dialoguePays = false },
+        )
+    }
+}
+
+/** Bouton pays (drapeau + indicatif) + champ de saisie nationale. */
+@Composable
+private fun LignePaysEtNumero(
+    pays: String,
+    national: String,
+    onOuvrirPays: () -> Unit,
+    onSaisie: (String) -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        OutlinedButton(
+            onClick = onOuvrirPays,
+            modifier = Modifier.width(132.dp)
+        ) {
+            Text(
+                TelephoneValidator.drapeau(pays) + " " + TelephoneValidator.indicatif(pays),
+                style = MaterialTheme.typography.titleMedium
             )
         }
-        // Aide contextuelle honnête : exemple VALIDE pour le pays choisi
-        // (généré par libphonenumber — plus jamais d'exemple codé en dur).
-        TelephoneValidator.exemplePays(pays)?.let { exemple ->
-            Text(
-                stringResource(R.string.brief_phone_example, exemple),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+        OutlinedTextField(
+            value = national,
+            onValueChange = onSaisie,
+            modifier = Modifier.weight(1f),
+            singleLine = true,
+            placeholder = { Text(stringResource(R.string.brief_phone_placeholder)) },
+            keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                keyboardType = KeyboardType.Phone
+            ),
+            isError = national.isNotBlank() && !TelephoneValidator.estValide(
+                TelephoneValidator.versE164(national, pays) ?: national
             )
-        }
-        // E.164 confirmé (format stocké, servi au montage et à la carte de fin)
-        TelephoneValidator.versE164(national, pays)?.let { e164 ->
-            Text(
-                stringResource(R.string.brief_phone_saved, e164),
-                style = MaterialTheme.typography.bodySmall,
-                color = OrangeStore
-            )
-        } ?: Text(
-            stringResource(R.string.brief_phone_national_hint),
+        )
+    }
+}
+
+/** Aide contextuelle : exemple VALIDE du pays + E.164 confirmé (ou consigne). */
+@Composable
+private fun AidesTelephone(pays: String, national: String) {
+    // Exemple généré par libphonenumber — plus jamais d'exemple codé en dur.
+    TelephoneValidator.exemplePays(pays)?.let { exemple ->
+        Text(
+            stringResource(R.string.brief_phone_example, exemple),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
+    // E.164 confirmé (format stocké, servi au montage et à la carte de fin)
+    TelephoneValidator.versE164(national, pays)?.let { e164 ->
+        Text(
+            stringResource(R.string.brief_phone_saved, e164),
+            style = MaterialTheme.typography.bodySmall,
+            color = OrangeStore
+        )
+    } ?: Text(
+        stringResource(R.string.brief_phone_national_hint),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+}
 
-    if (dialoguePays) {
-        androidx.compose.ui.window.Dialog(onDismissRequest = { dialoguePays = false }) {
-            Column(
+/** Dialog de sélection de pays : recherche par nom, indicatif ou code. */
+@Composable
+private fun DialogueChoixPays(
+    recherche: String,
+    langue: String,
+    onRecherche: (String) -> Unit,
+    onChoix: (String) -> Unit,
+    onFermer: () -> Unit,
+) {
+    androidx.compose.ui.window.Dialog(onDismissRequest = onFermer) {
+        Column(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
+                .padding(14.dp)
+        ) {
+            Text(
+                stringResource(R.string.brief_phone_pick_country),
+                style = MaterialTheme.typography.titleMedium,
+                color = BleuNuit,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            OutlinedTextField(
+                value = recherche,
+                onValueChange = onRecherche,
+                singleLine = true,
+                placeholder = { Text(stringResource(R.string.brief_phone_search)) },
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
-                    .padding(14.dp)
-            ) {
-                Text(
-                    stringResource(R.string.brief_phone_pick_country),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = BleuNuit,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                OutlinedTextField(
-                    value = paysRecherche,
-                    onValueChange = { paysRecherche = it },
-                    singleLine = true,
-                    placeholder = { Text(stringResource(R.string.brief_phone_search)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp)
-                )
-                val filtre = paysRecherche.trim().lowercase()
-                val liste = TelephoneValidator.paysTriés(langue).filter { region ->
-                    filtre.isBlank() ||
-                        TelephoneValidator.nomPays(region, langue).lowercase().contains(filtre) ||
-                        TelephoneValidator.indicatif(region).contains(filtre) ||
-                        region.lowercase() == filtre
-                }
-                LazyColumn(modifier = Modifier.height(340.dp)) {
-                    items(liste) { region ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    pays = region
-                                    dialoguePays = false
-                                    publier(national, region)
-                                }
-                                .padding(vertical = 10.dp, horizontal = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                TelephoneValidator.drapeau(region),
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(end = 10.dp)
-                            )
-                            Text(
-                                TelephoneValidator.nomPays(region, langue),
-                                modifier = Modifier.weight(1f),
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Text(
-                                TelephoneValidator.indicatif(region),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
+            val liste = filtrerPays(recherche, langue)
+            LazyColumn(modifier = Modifier.height(340.dp)) {
+                items(liste) { region ->
+                    LignePays(region, langue, onChoix)
                 }
             }
         }
+    }
+}
+
+/** Filtrage recherchable : nom (insensible à la casse), indicatif, code. */
+private fun filtrerPays(recherche: String, langue: String): List<String> {
+    val filtre = recherche.trim().lowercase()
+    if (filtre.isBlank()) return TelephoneValidator.paysTriés(langue)
+    return TelephoneValidator.paysTriés(langue).filter { region ->
+        TelephoneValidator.nomPays(region, langue).lowercase().contains(filtre) ||
+            TelephoneValidator.indicatif(region).contains(filtre) ||
+            region.lowercase() == filtre
+    }
+}
+
+/** Une ligne du sélecteur : drapeau, nom, indicatif. */
+@Composable
+private fun LignePays(region: String, langue: String, onChoix: (String) -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onChoix(region) }
+            .padding(vertical = 10.dp, horizontal = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            TelephoneValidator.drapeau(region),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(end = 10.dp)
+        )
+        Text(
+            TelephoneValidator.nomPays(region, langue),
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Text(
+            TelephoneValidator.indicatif(region),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }

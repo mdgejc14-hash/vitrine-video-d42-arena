@@ -32,11 +32,10 @@ class GabaritCombinaisonsL10nTest {
     private fun gabaritFiles(): List<File> =
         repertoireAssets().walkTopDown().filter { it.extension == "json" }.toList().sortedBy { it.path }
 
+    // D42.30 : FR/EN uniquement (ES/JA retirés du produit).
     private val echantillons = mapOf(
         "fr" to "Offre exceptionnelle",
-        "en" to "Exceptional offer",
-        "es" to "Oferta excepcional",
-        "ja" to "特別オファー"
+        "en" to "Exceptional offer"
     )
 
     /** Valeurs de brief par langue, construites sur les CHAMPS REELS du gabarit. */
@@ -46,7 +45,8 @@ class GabaritCombinaisonsL10nTest {
         return brief.fields.associate { champ ->
             champ.id to when {
                 champ.type == "nombre" -> "5000"
-                champ.type == "telephone" || champ.validation == "format_international" -> "+22997000000"
+                // D42.30 : Bénin 10 chiffres/01 depuis le 30/11/2024.
+                champ.type == "telephone" || champ.validation == "format_international" -> "+2290197000000"
                 champ.choices.isNotEmpty() -> champ.choices.first()
                 else -> texte
             }
@@ -59,7 +59,7 @@ class GabaritCombinaisonsL10nTest {
     }
 
     @Test
-    fun `120 combinaisons gabarit x langue construisent un beat sheet conforme`() {
+    fun `60 combinaisons gabarit x langue construisent un beat sheet conforme`() {
         var combinaisons = 0
         gabaritFiles().forEach { fichier ->
             val raw = fichier.readText()
@@ -70,7 +70,7 @@ class GabaritCombinaisonsL10nTest {
                 combinaisons += 1
             }
         }
-        assertEquals(120, combinaisons)
+        assertEquals(60, combinaisons)
     }
 
     private fun verifierDocument(doc: GabaritBeatSheet.Document, contexte: String) {

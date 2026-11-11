@@ -269,42 +269,67 @@ private fun BriefFieldInput(
                 onValue = { onValue(field.id, it) }
             )
         } else {
-            val saisieIci = stringResource(R.string.brief_g_type_here)
-            OutlinedTextField(
+            ChampTexteSimple(
+                field = field,
                 value = value,
-                onValueChange = { onValue(field.id, it) },
-                placeholder = { Text(field.example.ifBlank { saisieIci }) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = field.type != "texte_long",
-                isError = fieldError(field, value) != null,
-                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                    keyboardType = androidx.compose.ui.text.input.KeyboardType.Text
-                )
+                enErreur = fieldError(field, value) != null,
+                onValue = onValue,
             )
         }
-        // D42.30 : emplacement d'erreur RÉSERVÉ (hauteur fixe) — l'apparition ou
-        // la disparition du message ne déplace PLUS aucun élément du formulaire.
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(20.dp)
-        ) {
-            fieldError(field, value)?.let { erreur ->
-                Text(
-                    stringResource(erreur),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-        }
-        if (field.type != "telephone") {
+        ZoneErreurEtAide(field, value)
+    }
+}
+
+/**
+ * D42.30 : emplacement d'erreur RÉSERVÉ (hauteur fixe) — l'apparition ou la
+ * disparition du message ne déplace PLUS aucun élément du formulaire. L'aide
+ * du champ suit (masquée pour téléphone : aides contextuelles dédiées).
+ */
+@Composable
+private fun ZoneErreurEtAide(field: BriefField, value: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(20.dp)
+    ) {
+        fieldError(field, value)?.let { erreur ->
             Text(
-                field.help,
+                stringResource(erreur),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.error
             )
         }
     }
+    if (field.type != "telephone") {
+        Text(
+            field.help,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+
+/** Champ texte / texte_long standard (tout sauf téléphone et nombre). */
+@Composable
+private fun ChampTexteSimple(
+    field: BriefField,
+    value: String,
+    enErreur: Boolean,
+    onValue: (String, String) -> Unit,
+) {
+    val saisieIci = stringResource(R.string.brief_g_type_here)
+    OutlinedTextField(
+        value = value,
+        onValueChange = { onValue(field.id, it) },
+        placeholder = { Text(field.example.ifBlank { saisieIci }) },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = field.type != "texte_long",
+        isError = enErreur,
+        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text
+        )
+    )
 }
 
 @Composable

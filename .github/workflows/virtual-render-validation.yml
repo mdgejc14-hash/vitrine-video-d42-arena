@@ -43,7 +43,7 @@ on:
         required: false
         default: "[1,2,3,4,5,6,7,8]"
       langs_lot:
-        description: "Langues des lots : all | fr | en | es | ja"
+        description: "Langues des lots : all | fr | en"
         required: false
         default: "all"
       limite:
@@ -417,7 +417,8 @@ jobs:
       # palier gratuit est de 20 jobs concurrents.
       max-parallel: 8
       matrix:
-        lang: ${{ fromJSON(github.event_name == 'push' && '["fr","en","es","ja"]' || github.event.inputs.langs_lot == 'fr' && '["fr"]' || github.event.inputs.langs_lot == 'en' && '["en"]' || github.event.inputs.langs_lot == 'es' && '["es"]' || github.event.inputs.langs_lot == 'ja' && '["ja"]' || '["fr","en","es","ja"]') }}
+        # D42.30 : FR/EN uniquement (décision fondatrice — ES/JA retirés du produit).
+        lang: ${{ fromJSON(github.event_name == 'push' && '["fr","en"]' || github.event.inputs.langs_lot == 'fr' && '["fr"]' || github.event.inputs.langs_lot == 'en' && '["en"]' || '["fr","en"]') }}
         # Liste explicite : `range()` n'est pas une fonction documentée des
         # expressions GitHub, on ne parie pas dessus.
         shard: ${{ fromJSON(github.event_name == 'push' && '[1,2,3,4,5,6,7,8]' || github.event.inputs.shards_json || '[1,2,3,4,5,6,7,8]') }}
@@ -650,7 +651,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        lang: [fr, en, es, ja]
+        lang: [fr, en] # D42.30 : FR/EN uniquement
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:

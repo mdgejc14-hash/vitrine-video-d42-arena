@@ -38,7 +38,7 @@ import video.vitrine.feature.export.ExportWorker
  *
  * Arguments d'instrumentation :
  *   d42_mode       = smoke | matrix
- *   d42_lang       = fr | en | es | ja
+ *   d42_lang       = fr | en   (D42.30 : ES/JA retirés du produit)
  *   d42_templates  = all | T1,T2 (CSV)
  *   d42_badge      = none | stock_limite | places_limitees | qualite_garantie
  *   d42_timeout_s  = délai max par rendu (défaut 900)
@@ -95,8 +95,6 @@ class ProductionRenderInstrumentedTest {
         // QUELLES dans les frames extraites du MP4.
         "fr" to Echantillon("Chez D42 Test", "OFFRE D42 DIAGNOSTIC", "COTONOU", "FCFA", "25000"),
         "en" to Echantillon("Chantal's Kitchen", "Daily special", "Akpakpa", "FCFA", "5000"),
-        "es" to Echantillon("Cocina de Chantal", "Menú del día", "Akpakpa", "FCFA", "5000"),
-        "ja" to Echantillon("シャンタル食堂", "本日の特別メニュー", "アキャクパ", "FCFA", "5000"),
     )
 
     private fun echantillon(): Echantillon = echantillons[lang] ?: echantillons.getValue("fr")
@@ -552,9 +550,7 @@ class ProductionRenderInstrumentedTest {
 
     private fun reference(): Set<String> = when (lang) {
         "fr" -> setOf("restaurants_maquis_T1", "vetements_mode_T3", "batiment_travaux_T2")
-        "ja" -> setOf("restaurants_maquis_T4", "vetements_mode_T5", "batiment_travaux_T3")
         "en" -> setOf("coiffure_beaute_T4", "immo_auto_T4", "shops_small_business_T4")
-        "es" -> setOf("coiffure_beaute_T2", "immo_auto_T1", "shops_small_business_T1")
         else -> emptySet()
     }
 

@@ -36,10 +36,9 @@ fun LanguageScreen(onPick: (String) -> Unit) {
     ) {
         VitrineLogoHeader()
         Text(stringResource(R.string.lang_title), style = MaterialTheme.typography.headlineSmall)
+        // D42.30 : FR/EN uniquement (décision fondatrice D42.30).
         LanguageCard("🇫🇷", "Français") { onPick("fr") }
         LanguageCard("🇬🇧", "English") { onPick("en") }
-        LanguageCard("🇪🇸", "Español") { onPick("es") }
-        LanguageCard("🇯🇵", "日本語") { onPick("ja") }
         Text(
             stringResource(R.string.lang_change_later),
             style = MaterialTheme.typography.bodySmall,

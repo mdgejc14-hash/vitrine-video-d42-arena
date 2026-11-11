@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # D42.28 (P3) — PARCOURS COMMERCIAL × LANGUES × MODES AUDIO.
 #
-#   tools/e2e/run_audio_modes.sh <tag> <fr|en|es|ja> <musique|voix|mix> [apk]
+#   tools/e2e/run_audio_modes.sh <tag> <fr|en> <musique|voix|mix> [apk]   (D42.30 : FR/EN)
 #
-# Objectif : prouver, pour chaque langue (fr/en/es/ja) et chaque variante
+# Objectif : prouver, pour chaque langue (D42.30 : fr/en uniquement) et chaque variante
 # audio (musique seule / voix seule / voix + musique), que le parcours
 # commercial COMPLET — langue → session locale → carrousel → activité →
 # parrainage → catalogue → brief → guide de tournage → prises → aperçu →
@@ -86,33 +86,7 @@ case "$LANGUE" in
       E7="Preview of your video"; E7_CREATE="Create my video"
       EXP_START="Start local export"; EXP_RUNNING="Local export running"
       EXP_DONE="Video ready! Share it with your customers."; EXP_SHARE="Share the video" ;;
-  es) CARTE="Español"; AUTH="Continuar con Google"; S1="Filma. Vende. Listo."
-      S2="Filma tus productos, te guiamos"; S3="Un vídeo listo para publicar en 30 segundos"
-      SUIVANT="Siguiente"; DEMARRER="Empezar"; SECTEUR="Tu actividad principal"
-      CONTINUER="Continuar"; CONTINUER_BRIEF="Continuar"; SANS_CODE="No tengo código"; CATALOGUE="Elige una plantilla de vídeo"
-      BRIEF="Mi video"; E4B="Antes de comenzar"; E4B_OK="OK, comienzo"
-      E6="Filma tu toma"; E6_REC="Grabar"; CAM_REC="Bloquear y grabar"; CAM_STOP="Terminar y continuar"
-      R4="Acuerdo del cliente"; R4_OK="Sí, acuerdo confirmado"
-      SECTEUR_CARTE="Tiendas"
-      SECTEUR_MODE="Ropa y Moda"; SECTEUR_COIFFURE="Peluquería y Belleza"; SECTEUR_RESTAURATION="Restaurantes y Comedores"
-      SECTEUR_BTP="Construcción y Obras"; SECTEUR_IMMO="Venta de Coches"; SECTEUR_COMMERCE="Tiendas y Comercio"
-      E7="Vista previa de tu vídeo"; E7_CREATE="Crear mi vídeo"
-      EXP_START="Iniciar exportación local"; EXP_RUNNING="Exportación local en curso"
-      EXP_DONE="¡Vídeo listo! Compártelo con tus clientes."; EXP_SHARE="Compartir el vídeo" ;;
-  ja) CARTE="日本語"; AUTH="Googleで続ける"; S1="撮って、売る。それだけ。"
-      S2="商品を撮るだけ、あとはご案内します"; S3="30秒で公開できる動画に"
-      SUIVANT="次へ"; DEMARRER="はじめる"; SECTEUR="あなたの業種"
-      CONTINUER="次へ"; CONTINUER_BRIEF="続行"; SANS_CODE="コードを持っていません"; CATALOGUE="動画テンプレートを選択"
-      BRIEF="マイ動画"; E4B="始める前に"; E4B_OK="OK、開始"
-      E6="撮影しよう"; E6_REC="録画"; CAM_REC="ロックして録画"; CAM_STOP="停止して続行"
-      R4="顧客の同意"; R4_OK="はい、同意を確認"
-      SECTEUR_CARTE="店舗"
-      SECTEUR_MODE="服とファッション"; SECTEUR_COIFFURE="美容とヘア"; SECTEUR_RESTAURATION="食堂とレストラン"
-      SECTEUR_BTP="建築と工事"; SECTEUR_IMMO="車と不動産販売"; SECTEUR_COMMERCE="店舗と小売"
-      E7="動画のプレビュー"; E7_CREATE="動画を作成"
-      EXP_START="ローカル書き出し開始"; EXP_RUNNING="ローカル書き出し中"
-      EXP_DONE="動画が完成しました！お客様に共有しましょう。"; EXP_SHARE="動画を共有" ;;
-  *) echo "langue inconnue : $LANGUE (fr|en|es|ja)"; exit 2 ;;
+  *) echo "langue non supportee : $LANGUE (D42.30 : fr|en uniquement)"; exit 2 ;;
 esac
 case "$MODE" in musique|voix|mix) ;; *) echo "mode inconnu : $MODE (musique|voix|mix)"; exit 2 ;; esac
 

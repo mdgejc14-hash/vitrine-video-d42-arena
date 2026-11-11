@@ -172,8 +172,6 @@ class DashboardActivity : VitrineActivity() {
             accountEmail = intent.getStringExtra("email") ?: "—",
             languageLabel = when (VitrineLocale.saved(this)) {
                 "en" -> "English"
-                "es" -> "Español"
-                "ja" -> "日本語"
                 else -> "Français"
             },
             referralCode = gaugeUi?.code ?: intent.getStringExtra("code") ?: "—",
@@ -193,8 +191,9 @@ class DashboardActivity : VitrineActivity() {
     }
 
     private fun montrerDialogLangue() {
-        val codes = arrayOf("fr", "en", "es", "ja")
-        val libelles = arrayOf("Français", "English", "Español", "日本語")
+        // D42.30 : FR/EN uniquement.
+        val codes = arrayOf("fr", "en")
+        val libelles = arrayOf("Français", "English")
         val actuel = codes.indexOf(VitrineLocale.saved(this) ?: "fr").coerceAtLeast(0)
         AlertDialog.Builder(this)
             .setTitle(R.string.set_lang_dialog_title)

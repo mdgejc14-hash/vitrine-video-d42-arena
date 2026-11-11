@@ -82,3 +82,44 @@ fonctionnement (analyse d'impact systématique avant non-régression).
 - **17/11 (reprise)** : reset sandbox récupéré (663) ; état GitHub vérifié (99b210b,
   CI verts, aucun run en cours) ; audit terrain complet établi (tableau ci-dessus,
   causes racines constatées au code sur le commit RC14) ; checkpoint D42.30 créé.
+- **17/11 (D42.30-01)** : checkpoint 5be204b poussé (audit 9 défauts, ce plan).
+- **17/11 (D42.30-02 = dd5ca28)** : P0 caméra (setSurfaceProvider/STREAMING,
+  countdown réel, commandes uniques, badge REC) + P0 crédits (enchaînement
+  contrôlé bootstrap→claim→grant, taxonomie welcome) codés et poussés —
+  **sans compile locale (impossible : JDK 11 seul, pas de SDK)** → android-ci
+  43025089617 ÉCHEC : detekt onCreate 98/80 + complexité 18/15 ; AAPT
+  materialButtonOutlinedStyle ×3 (attr Material absent du module).
+  Leçon consignée : CI est le compilateur du sandbox.
+- **17/11 (D42.30-03 = 10a12e1)** : correctifs CI (onCreate scindé 98→~20 lignes
+  en 7 fonctions privées ; styles XML locaux) + P1-E WhatsApp international
+  complet (libphonenumber 8.13.50, TelephoneField/TelephoneValidator, migration
+  60 JSON +229 01…, versionCode 2 → re-seed Room F48) + P1-D prix
+  (adjustResize, imePadding, ChampPrix brut-à-la-frappe, erreur à hauteur
+  réservée) + P1-F ReadyCheck (header repliable < 340dp, bandeau neutre,
+  imePadding). android-ci 43026595710 ÉCHEC sur 3 points : (a) detekt
+  TelephoneField 137/80 + 19/15 ; (b) values-en/strings_brief.xml :
+  brief_err_phone EN DOUBLÉ (ancienne ligne non supprimée) ; (c)
+  I18nKeyCoverageTest : les 7 nouvelles clés brief_phone_* n'existaient qu'en
+  FR/EN (ES/JA retirés du périmètre mais dossiers encore présents).
+  POSITIF : feature-camera detekt + AAPT PASSÉS (correctifs caméra validés) ;
+  data:compileDebugKotlin PASSÉ.
+- **17/11 (D42.30-04, en cours)** : (1) doublon brief_err_phone EN supprimé ;
+  (2) TelephoneField refactoré (137→66 lignes, 5 composants privés) ;
+  (3) BriefFieldInput 85→58 (extraction ChampTexteSimple + ZoneErreurEtAide) ;
+  (4) P1-C catalogue : VignetteCatalogue.kt (vignettes sectorielles DESSINÉES —
+  viseur caméra, pastille lecture, pellicule = nombre réel de scènes, badge
+  durée, icônes métier par secteur, palette 6 secteurs ; zéro dépendance,
+  marche hors-ligne) branchée dans GabaritLayout + repli SkinCard (fini le
+  « … » gris) + « Changer de secteur » discret (filtres repliés si secteur
+  déjà choisi) ; (5) P1-G FR/EN : VitrineLocale.SUPPORTED=[fr,en] + purge des
+  choix es/ja hérités, sélecteur 2 cartes, dialog dashboard 2 langues,
+  GabaritL10n.LANGUES restreintes, 16 dossiers values-es/values-ja ARCHIVÉS
+  dans content/archive_i18n/ (plus aucune locale fantôme), matrices de rendu
+  virtual-render-validation [fr,en], harnais run_langue.sh/run_audio_modes.sh
+  restreints, tests convertis (l'AnglaisEstReellementDeLanglais,
+  leRenduAnglais…, 60 combinaisons, I18nKeyCoverage 2 langues,
+  ProductionRenderInstrumentedTest fr/en) ; échantillon téléphone de test
+  passé au format BJ 10 chiffres (+2290197000000). 02_CAMÉRA_RÉELLE.md REMPLI.
+  Vérifications harnars faites : « Tourner » toléré (|| true, CAM_REC réel
+  présent, CAM_STOP conservé), signatures PriseGuideScreen/GuidedShootingOverlay
+  conformes, clés FR=EN sur les 7 modules (10/10 par module).

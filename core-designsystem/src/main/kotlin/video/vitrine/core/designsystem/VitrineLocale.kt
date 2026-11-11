@@ -10,8 +10,12 @@ object VitrineLocale {
     private const val PREFS = "vv_locale"
     private const val KEY = "lang"
 
-    /** Codes supportes : francais, anglais, espagnol, japonais. */
-    val SUPPORTED = listOf("fr", "en", "es", "ja")
+    /**
+     * D42.30 : FR/EN UNIQUEMENT (décision fondatrice — l'espagnol et le
+     * japonais sont retirés du produit ; les traductions restantes sont
+     * archivées dans content/archive_i18n/).
+     */
+    val SUPPORTED = listOf("fr", "en")
 
     fun saved(context: Context): String? =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(KEY, null)
@@ -25,7 +29,9 @@ object VitrineLocale {
 
     /** Contexte re-localise : chaque activite l'applique dans attachBaseContext. */
     fun wrap(context: Context): Context {
-        val code = saved(context) ?: return context
+        // D42.30 : un choix « es »/« ja » hérité d'une version antérieure est
+        // ignoré (retour au contexte système) — jamais une locale fantôme.
+        val code = saved(context)?.takeIf { it in SUPPORTED } ?: return context
         val locale = Locale(code)
         Locale.setDefault(locale)
         val configuration = Configuration(context.resources.configuration)
