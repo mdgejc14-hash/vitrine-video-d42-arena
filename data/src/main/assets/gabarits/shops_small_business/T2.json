@@ -81,14 +81,14 @@
       "label": "votre numéro WhatsApp",
       "type": "telephone",
       "obligatoire": true,
-      "exemple": "+229 97 00 00 00",
+      "exemple": "+229 01 97 00 00 00",
       "source": "saisie_video",
       "scenes": [
         15
       ],
       "validation": "format_international",
       "groupe_ui": "commerce_contact",
-      "aide_simple": "Écrivez le numéro sur lequel les clients peuvent vous écrire, avec le + et le code du pays."
+      "aide_simple": "Choisissez votre pays, puis écrivez le numéro sur lequel les clients peuvent vous écrire."
     },
     {
       "id": "badge_engagement_actif",

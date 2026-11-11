@@ -8,6 +8,7 @@ android {
     testOptions { unitTests.isIncludeAndroidResources = true }
 }
 dependencies {
+    implementation(libs.libphonenumber)
     implementation(project(":core-designsystem"))
     implementation(project(":core-model"))
     implementation(project(":data"))

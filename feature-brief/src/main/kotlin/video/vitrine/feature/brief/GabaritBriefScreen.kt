@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import video.vitrine.core.designsystem.BleuNuit
@@ -75,6 +77,7 @@ fun GabaritBriefScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .imePadding()
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -165,9 +168,11 @@ internal fun fieldError(field: BriefField, value: String): Int? {
     if (field.type == "nombre" && !value.all { it.isDigit() || it.isWhitespace() }) {
         return R.string.brief_err_number
     }
-    if (field.validation == "format_international") {
-        val cleaned = value.filter { !it.isWhitespace() }
-        if (!cleaned.startsWith("+") || cleaned.count { it.isDigit() } < 8) {
+    if (field.validation == "format_international" || field.type == "telephone") {
+        // D42.30 : règles RÉELLES par pays (libphonenumber) — fin du « + puis
+        // 8 chiffres » qui acceptait des numéros invalides et refusait des
+        // numéros valides. La valeur est valide si elle est un E.164 complet.
+        if (!TelephoneValidator.estValide(value)) {
             return R.string.brief_err_phone
         }
     }
@@ -245,34 +250,60 @@ private fun BriefFieldInput(
         }
     } else {
         Text(field.label + if (field.required) " *" else "", style = MaterialTheme.typography.titleSmall, color = BleuNuit)
-        val saisieIci = stringResource(R.string.brief_g_type_here)
-        OutlinedTextField(
-            value = value,
-            onValueChange = { onValue(field.id, it) },
-            placeholder = { Text(field.example.ifBlank { saisieIci }) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = field.type != "texte_long",
-            isError = fieldError(field, value) != null,
-            keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                keyboardType = when (field.type) {
-                    "nombre" -> androidx.compose.ui.text.input.KeyboardType.Number
-                    "telephone" -> androidx.compose.ui.text.input.KeyboardType.Phone
-                    else -> androidx.compose.ui.text.input.KeyboardType.Text
-                }
+        if (field.type == "telephone") {
+            // D42.30 : WhatsApp international — sélecteur de pays recherchable,
+            // saisie nationale, collage E.164, validation libphonenumber.
+            TelephoneField(
+                initialE164 = value,
+                onValue = { onValue(field.id, it) }
             )
-        )
-        fieldError(field, value)?.let { erreur ->
-            Text(
-                stringResource(erreur),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error
+        } else if (field.type == "nombre") {
+            // D42.30 (retour terrain : le prix « secouait » pendant la saisie) :
+            // valeur BRUTE pendant l'édition (le curseur ne saute JAMAIS),
+            // formatage visuel par groupes SEULEMENT à la sortie du champ,
+            // suffixe FCFA, emplacement d'erreur RÉSERVÉ (plus de saut de layout).
+            ChampPrix(
+                valeur = value,
+                exemple = field.example,
+                enErreur = fieldError(field, value) != null,
+                onValue = { onValue(field.id, it) }
+            )
+        } else {
+            val saisieIci = stringResource(R.string.brief_g_type_here)
+            OutlinedTextField(
+                value = value,
+                onValueChange = { onValue(field.id, it) },
+                placeholder = { Text(field.example.ifBlank { saisieIci }) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = field.type != "texte_long",
+                isError = fieldError(field, value) != null,
+                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                    keyboardType = androidx.compose.ui.text.input.KeyboardType.Text
+                )
             )
         }
-        Text(
-            field.help,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        // D42.30 : emplacement d'erreur RÉSERVÉ (hauteur fixe) — l'apparition ou
+        // la disparition du message ne déplace PLUS aucun élément du formulaire.
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(20.dp)
+        ) {
+            fieldError(field, value)?.let { erreur ->
+                Text(
+                    stringResource(erreur),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+        if (field.type != "telephone") {
+            Text(
+                field.help,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }
 
@@ -306,4 +337,48 @@ private fun choiceLabel(option: String): String = when (option) {
     "places_limitees" -> stringResource(R.string.brief_badge_places_limitees)
     "qualite_garantie" -> stringResource(R.string.brief_badge_qualite_garantie)
     else -> option
+}
+
+
+/**
+ * D42.30 — champ PRIX stable (retour terrain RC14 : « le formulaire tremble
+ * pendant la saisie »).
+ * - pendant l'édition : valeur brute (chiffres) — AUCUN reformatage à la
+ *   frappe, le curseur ne bouge jamais ;
+ * - à la sortie du champ : affichage groupé (1 500) — visuel seulement, la
+ *   valeur stockée reste la valeur brute ;
+ * - suffixe FCFA (monnaie par défaut du marché) ;
+ * - erreur à hauteur réservée par l'appelant (plus de saut de layout).
+ */
+@Composable
+private fun ChampPrix(
+    valeur: String,
+    exemple: String,
+    enErreur: Boolean,
+    onValue: (String) -> Unit
+) {
+    var focusActif by remember { mutableStateOf(false) }
+    val saisieIci = stringResource(R.string.brief_g_type_here)
+    val affichage = if (focusActif) {
+        valeur
+    } else {
+        valeur.filter { it.isDigit() }.reversed().chunked(3).joinToString(" ").reversed()
+    }
+    OutlinedTextField(
+        value = affichage,
+        onValueChange = { brut ->
+            val chiffres = brut.filter { it.isDigit() }.take(9)
+            onValue(chiffres)
+        },
+        placeholder = { Text(exemple.ifBlank { saisieIci }) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .onFocusChanged { focusActif = it.isFocused },
+        singleLine = true,
+        isError = enErreur,
+        suffix = { Text("FCFA", style = MaterialTheme.typography.bodySmall) },
+        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+            keyboardType = androidx.compose.ui.text.input.KeyboardType.Number
+        )
+    )
 }

@@ -15,7 +15,14 @@
     <string name="brief_g_my_video">Ma vidéo</string>
     <string name="brief_g_step_badge">%1$d / %2$d</string>
     <string name="brief_err_number">Saisis un nombre, sans lettres (ex. 15000).</string>
-    <string name="brief_err_phone">Format international attendu : +229 97 00 00 00.</string>
+    <!-- D42.30 : WhatsApp international (libphonenumber, BJ 10 chiffres depuis 30/11/2024) -->
+    <string name="brief_err_phone">Ce numéro n\'est pas valide pour le pays choisi. Vérifie les chiffres.</string>
+    <string name="brief_phone_placeholder">Numéro WhatsApp</string>
+    <string name="brief_phone_example">Exemple %1$s</string>
+    <string name="brief_phone_saved">Enregistré : %1$s</string>
+    <string name="brief_phone_national_hint">Saisis le numéro sans le « + » — l\'indicatif du pays choisi est ajouté automatiquement.</string>
+    <string name="brief_phone_pick_country">Choisis ton pays</string>
+    <string name="brief_phone_search">Rechercher un pays…</string>
     <string name="brief_g_type_here">Saisis ici…</string>
     <string name="brief_badge_stock_limite">Stock limité</string>
     <string name="brief_badge_places_limitees">Places limitées</string>

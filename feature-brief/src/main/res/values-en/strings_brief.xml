@@ -16,6 +16,14 @@
     <string name="brief_g_step_badge">%1$d / %2$d</string>
     <string name="brief_err_number">Enter a number, without letters (e.g. 15000).</string>
     <string name="brief_err_phone">International format expected: +229 97 00 00 00.</string>
+    <!-- D42.30: international WhatsApp (libphonenumber, BJ 10 digits since 2024-11-30) -->
+    <string name="brief_err_phone">This number isn\'t valid for the selected country. Check the digits.</string>
+    <string name="brief_phone_placeholder">WhatsApp number</string>
+    <string name="brief_phone_example">Example %1$s</string>
+    <string name="brief_phone_saved">Saved: %1$s</string>
+    <string name="brief_phone_national_hint">Type the number without the “+” — the selected country code is added automatically.</string>
+    <string name="brief_phone_pick_country">Pick your country</string>
+    <string name="brief_phone_search">Search a country…</string>
     <string name="brief_g_type_here">Type here…</string>
     <string name="brief_badge_stock_limite">Limited stock</string>
     <string name="brief_badge_places_limitees">Limited spots</string>

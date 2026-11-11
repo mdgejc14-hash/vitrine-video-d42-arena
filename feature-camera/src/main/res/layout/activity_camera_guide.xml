@@ -40,11 +40,12 @@
              (leçon A4 : seul le dernier élément est rognable — hauteurs bornées). -->
         <Button
             android:id="@+id/camera_flip_button"
-            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginBottom="6dp"
+            android:backgroundTint="#331B2A4A"
             android:text="@string/camera_flip"
+            android:textColor="#FFFFFF"
             android:textSize="12sp" />
 
         <!-- Ligne d'état (guide / compte à rebours / erreurs) : bornée, au-dessus
@@ -71,11 +72,12 @@
 
             <Button
                 android:id="@+id/camera_redo_button"
-                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="0dp"
                 android:layout_height="52dp"
                 android:layout_weight="1"
+                android:backgroundTint="#33FFFFFF"
                 android:text="@string/e6_redo"
+                android:textColor="#FFFFFF"
                 android:textSize="13sp" />
 
             <Button
@@ -91,11 +93,12 @@
 
             <Button
                 android:id="@+id/camera_next_button"
-                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="0dp"
                 android:layout_height="52dp"
                 android:layout_weight="1"
+                android:backgroundTint="#33FFFFFF"
                 android:text="@string/e6_next"
+                android:textColor="#FFFFFF"
                 android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>

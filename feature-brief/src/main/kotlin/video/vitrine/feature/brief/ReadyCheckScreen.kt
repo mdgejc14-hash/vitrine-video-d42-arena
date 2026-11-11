@@ -1,15 +1,15 @@
 package video.vitrine.feature.brief
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -43,6 +43,7 @@ fun ReadyCheckScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .imePadding()
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -59,26 +60,49 @@ fun ReadyCheckScreen(
 
 @Composable
 private fun ReadyHeader() {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+    // D42.30 (retour terrain : le badge « VÉRIFICATION » se coupait et se
+    // superposait aux titres) : largeur mesurée — sur petit écran le badge
+    // passe sur sa PROPRE ligne, jamais par-dessus le titre.
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        val compacte = maxWidth < 340.dp
+        if (compacte) {
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(stringResource(R.string.e4b_title), style = MaterialTheme.typography.headlineSmall)
+                Text(
+                    stringResource(R.string.e4b_sub),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                BadgeVerification()
+            }
+        } else {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(stringResource(R.string.e4b_title), style = MaterialTheme.typography.headlineSmall)
+                    Text(
+                        stringResource(R.string.e4b_sub),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                BadgeVerification()
+            }
+        }
+    }
+}
+
+@Composable
+private fun BadgeVerification() {
+    Box(
+        modifier = Modifier
+            .background(BleuVoile, RoundedCornerShape(8.dp))
+            .padding(horizontal = 12.dp, vertical = 6.dp)
     ) {
-        Column {
-            Text(stringResource(R.string.e4b_title), style = MaterialTheme.typography.headlineSmall)
-            Text(
-                stringResource(R.string.e4b_sub),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-        Box(
-            modifier = Modifier
-                .background(BleuVoile, RoundedCornerShape(8.dp))
-                .padding(horizontal = 12.dp, vertical = 6.dp)
-        ) {
-            Text(stringResource(R.string.e4b_badge), color = BleuNuit, style = MaterialTheme.typography.titleSmall)
-        }
+        Text(stringResource(R.string.e4b_badge), color = BleuNuit, style = MaterialTheme.typography.titleSmall)
     }
 }
 
@@ -126,22 +150,26 @@ private fun ReadyClearCard() {
     }
 }
 
+/**
+ * D42.30 (retour terrain) : ce bloc ressemblait à une case à cocher ACTIVE
+ * alors qu'il n'est pas un contrôle — c'est un bandeau d'information NEUTRE
+ * (bord discret, pas de carré rempli façon checkbox, pas de couleur d'action).
+ */
 @Composable
 private fun ReadyConfirmBox() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, OrangeStore, RoundedCornerShape(10.dp))
+            .background(BleuVoile, RoundedCornerShape(10.dp))
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .size(24.dp)
-                .background(OrangeStore, RoundedCornerShape(6.dp)),
-            contentAlignment = Alignment.Center
-        ) { Text("✓", color = androidx.compose.ui.graphics.Color.White) }
-        Text(stringResource(R.string.e4b_check), style = MaterialTheme.typography.titleSmall, color = BleuNuit)
+        Text(
+            stringResource(R.string.e4b_check),
+            style = MaterialTheme.typography.titleSmall,
+            color = BleuNuit,
+            modifier = Modifier.weight(1f)
+        )
     }
 }

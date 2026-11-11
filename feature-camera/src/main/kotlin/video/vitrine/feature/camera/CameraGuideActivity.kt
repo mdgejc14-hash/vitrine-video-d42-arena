@@ -114,40 +114,64 @@ class CameraGuideActivity : VitrineActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera_guide)
         executor = Executors.newSingleThreadExecutor()
+        restaurerBrouillon()
         val gabaritId = intent.getStringExtra("gabarit_id")
-        // D42.27 (§7) : REPRISE de tournage — slots restaurés depuis le brouillon
-        // (seuls les fichiers ENCORE EXISTANTS sont restaurés : un chemin disparu
-        // ne bloque jamais la reprise). Les rushs vivent dans filesDir/rushes,
-        // déjà persistants (D41/F50) : aucune copie, juste l'index du projet.
+        if (gabaritId != null) chargerGabarit(gabaritId) else masquerBoutonsGabarit()
+        guides = buildSceneGuides(
+            intent.getStringExtra("script").orEmpty(),
+            intent.getIntExtra("duration_s", 30),
+        )
+        installerOverlayCompose()
+        observerFluxCamera()
+        brancherCommandes()
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            bindCamera()
+        } else {
+            requestPermissions(arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO), 1)
+        }
+    }
+
+    /** D42.27 (§7) : reprise de tournage — slots restaurés du brouillon (uniquement
+     *  les fichiers ENCORE EXISTANTS : un chemin disparu ne bloque jamais). */
+    private fun restaurerBrouillon() {
         intent.getStringArrayExtra("restore_prise_files")?.forEach { chemin ->
             if (chemin.isNotBlank() && File(chemin).exists()) priseFiles.add(chemin)
         }
         val restoreIdx = intent.getIntExtra("restore_prise_idx", -1)
         if (restoreIdx in 0..99) priseIdx = restoreIdx
-        if (gabaritId != null) {
-            guideMode = true
-            val repo = GabaritRepository(this, VitrineLocalDatabase.get(this).gabarits())
-            lifecycleScope.launch {
-                val raw = runCatching { repo.rawJson(gabaritId) }.getOrNull()
-                if (raw != null) {
-                    prises = runCatching { GabaritJson.parsePrises(raw) }.getOrDefault(emptyList())
-                    guideSummary = runCatching { GabaritJson.parse(raw) }.getOrNull()
-                    // D42.30 : Refaire/Suivant n'existent QUE pour un gabarit à
-                    // prises — jamais en mode générique (commandes uniques).
-                    findViewById<Button>(R.id.camera_redo_button).visibility =
-                        if (prises.isNotEmpty()) android.view.View.VISIBLE else android.view.View.GONE
-                    findViewById<Button>(R.id.camera_next_button).visibility =
-                        if (prises.isNotEmpty()) android.view.View.VISIBLE else android.view.View.GONE
-                }
+    }
+
+    /** Charge prises + résumé du gabarit ; D42.30 : Refaire/Suivant n'existent
+     *  QUE pour un gabarit à prises (commandes uniques, jamais en générique). */
+    private fun chargerGabarit(gabaritId: String) {
+        guideMode = true
+        val repo = GabaritRepository(this, VitrineLocalDatabase.get(this).gabarits())
+        lifecycleScope.launch {
+            val raw = runCatching { repo.rawJson(gabaritId) }.getOrNull()
+            if (raw != null) {
+                prises = runCatching { GabaritJson.parsePrises(raw) }.getOrDefault(emptyList())
+                guideSummary = runCatching { GabaritJson.parse(raw) }.getOrNull()
+                majVisibiliteBoutonsGabarit()
             }
-        } else {
-            findViewById<Button>(R.id.camera_redo_button).visibility = android.view.View.GONE
-            findViewById<Button>(R.id.camera_next_button).visibility = android.view.View.GONE
         }
-        guides = buildSceneGuides(
-            intent.getStringExtra("script").orEmpty(),
-            intent.getIntExtra("duration_s", 30),
-        )
+    }
+
+    private fun masquerBoutonsGabarit() {
+        findViewById<Button>(R.id.camera_redo_button).visibility = android.view.View.GONE
+        findViewById<Button>(R.id.camera_next_button).visibility = android.view.View.GONE
+    }
+
+    private fun majVisibiliteBoutonsGabarit() {
+        findViewById<Button>(R.id.camera_redo_button).visibility =
+            if (prises.isNotEmpty()) android.view.View.VISIBLE else android.view.View.GONE
+        findViewById<Button>(R.id.camera_next_button).visibility =
+            if (prises.isNotEmpty()) android.view.View.VISIBLE else android.view.View.GONE
+    }
+
+    /** HUD Compose informatif (D42.30 : plus AUCUNE commande dupliquée). */
+    private fun installerOverlayCompose() {
         findViewById<ComposeView>(R.id.camera_overlay).setContent {
             VitrineTheme {
                 if (guideMode && prises.isNotEmpty()) {
@@ -177,8 +201,11 @@ class CameraGuideActivity : VitrineActivity() {
                 }
             }
         }
-        // D42.30 : état RÉEL du flux caméra observé UNE fois — STREAMING prouvé
-        // (jamais plus de cadre noir présenté comme prévisualisation).
+    }
+
+    /** D42.30 : état RÉEL du flux caméra observé UNE fois — STREAMING prouvé
+     *  (jamais plus de cadre noir présenté comme prévisualisation). */
+    private fun observerFluxCamera() {
         val previewView = findViewById<PreviewView>(R.id.camera_preview)
         previewView.previewStreamState.observe(this) { etat ->
             val streamingNow = etat == PreviewView.StreamState.STREAMING
@@ -194,32 +221,24 @@ class CameraGuideActivity : VitrineActivity() {
                 )
             }
         }
+    }
+
+    /** Commandes UNIQUES (barre XML) — Refaire/Suivant neutralisés pendant
+     *  une prise ; bascule avant/arrière jamais à chaud. */
+    private fun brancherCommandes() {
         findViewById<Button>(R.id.camera_record_button).setOnClickListener { onRecord() }
-        // D42.30 : commandes UNIQUES dans la barre XML (fini la duplication
-        // Compose « Tourner » / XML) — Refaire et Suivant sont masqués hors
-        // gabarit et neutralisés pendant une prise.
         findViewById<Button>(R.id.camera_redo_button).setOnClickListener {
             if (recording == null) redoCurrentPrise()
         }
         findViewById<Button>(R.id.camera_next_button).setOnClickListener {
             if (recording == null) skipPrise()
         }
-        // D42.27 (5.4) : bascule caméra avant/arrière — re-bind complet via
-        // bindCamera() (unbindAll + bindToLifecycle remplacent la liaison).
-        // Ignoré pendant un enregistrement : jamais de flip à chaud.
         findViewById<Button>(R.id.camera_flip_button).setOnClickListener {
             if (recording == null) {
                 lensFront = !lensFront
                 Log.i(TAG_E2E, "bascule caméra : " + if (lensFront) "AVANT" else "ARRIÈRE")
                 bindCamera()
             }
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
-            PackageManager.PERMISSION_GRANTED
-        ) {
-            bindCamera()
-        } else {
-            requestPermissions(arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO), 1)
         }
     }
 

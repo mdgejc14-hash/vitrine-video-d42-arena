@@ -1,5 +1,6 @@
 # Catalogue epingle (contrat V7-FINAL 3.2, registres verifies 22/10/2026). Aucune version ailleurs.
 [versions]
+libphonenumber = "8.13.50"          # D42.30 : règles pays réelles — Bénin 10 chiffres (01) depuis le 30/11/2024 (fix v8.13.50)
 agp = "9.4.1"
 kotlin = "2.4.21"
 camerax = "1.6.2"          # echeance Extensions 01/11/2026 : <= 1.5 interdit
@@ -29,6 +30,7 @@ firebaseAuth = "25.0.0"
 coroutines = "1.10.2"
 
 [libraries]
+libphonenumber = { module = "com.googlecode.libphonenumber:libphonenumber", version.ref = "libphonenumber" }
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
