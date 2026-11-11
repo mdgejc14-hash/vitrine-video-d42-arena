@@ -207,11 +207,24 @@ class ExportWorker(
                 baseAudioDureeMs = if (fichierBaseSilence != null) expectedMs else 0L
             )
             val output = File(context.cacheDir, "export-$attempt.mp4")
+            // D42.29 (P2) : traçabilité par tentative (stratégie de repli
+            // VerifierPolicy, taille de sortie partielle au moment du verdict).
+            android.util.Log.i(
+                TAG_EXPORT,
+                "tentative $attempt/${MAX_ATTEMPTS - 1} stratégie=" +
+                    "${video.vitrine.ins.effects.VerifierPolicy.fallbackFor(attempt)} " +
+                    "géométrie=${tentative.geometry.width}x${tentative.geometry.height} sortie=${output.absolutePath}"
+            )
             val exported = runAttempt(
                 tentative, input, rotation, output, mixerFactory
             )
 
             if (!exported) {
+                android.util.Log.w(
+                    TAG_EXPORT,
+                    "tentative $attempt échouée (Transformer) — sortie partielle " +
+                        "${output.length()} octets, repli=${video.vitrine.ins.effects.VerifierPolicy.fallbackFor(attempt)}"
+                )
                 val failure = exportFailureResult(attempt)
                 if (failure != null) return failure
                 attempt++
@@ -605,6 +618,18 @@ class ExportWorker(
                     result: ExportResult,
                     exception: ExportException
                 ) {
+                    // D42.29 (P2) : cette exception était AVALÉE sans trace — le
+                    // banc ne pouvait pas distinguer un échec de décodage/rendu
+                    // vidéo (limite swiftshader) d'un défaut pipeline produit.
+                    // Même discipline que le fix BgmDecoder : toute issue est
+                    // journalisée. Aucun changement de comportement.
+                    android.util.Log.e(
+                        TAG_EXPORT,
+                        "Transformer onError (item) : code=${androidx.media3.transformer.ExportException.getErrorCodeName(exception.errorCode)}" +
+                            "msg=${exception.message}" +
+                            " cause=${exception.cause?.javaClass?.simpleName}: ${exception.cause?.message}",
+                        exception
+                    )
                     if (cont.isActive) cont.resume(false)
                 }
             })
@@ -631,6 +656,15 @@ class ExportWorker(
                     result: ExportResult,
                     exception: ExportException
                 ) {
+                    // D42.29 (P2) : idem runExport(item) — l'exception n'était
+                    // pas journalisée. Aucun changement de comportement.
+                    android.util.Log.e(
+                        TAG_EXPORT,
+                        "Transformer onError (composition) : code=${androidx.media3.transformer.ExportException.getErrorCodeName(exception.errorCode)}" +
+                            "msg=${exception.message}" +
+                            " cause=${exception.cause?.javaClass?.simpleName}: ${exception.cause?.message}",
+                        exception
+                    )
                     if (cont.isActive) cont.resume(false)
                 }
             })
