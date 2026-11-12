@@ -158,6 +158,76 @@ remplir_les_vides() {
 }
 nombre_de_vides() { lister_champs; grep -c " vide |" "$OUT/champs.txt" 2>/dev/null || echo 0; }
 
+# tap par COORDONNÉES depuis le dump (v3) : les taps ui.py échouaient quand
+# la cible était hors écran (cartes du catalogue après les scrolls de capture,
+# « Changer de secteur » sous le pli, « OK, je commence » en bas). On cherche
+# le texte dans le dump (insensible à la casse), on tape son centre ; sinon on
+# défile (haut puis bas) et on recommence. Retour 0 si tap émis.
+tap_coord_text() { # motif...
+  local motif essai bounds
+  for motif in "$@"; do
+    for essai in 1 2 3 4; do
+      dump_courant "_tap_cherche"
+      bounds=$(python3 - "$OUT/_tap_cherche.xml" "$motif" <<'PYEOF2'
+import sys, re, xml.etree.ElementTree as ET
+path, motif = sys.argv[1], sys.argv[2]
+want = motif.lower()
+try:
+    root = ET.parse(path).getroot()
+except Exception:
+    sys.exit(0)
+for node in root.iter('node'):
+    t = (node.get('text') or '') + ' ' + (node.get('content-desc') or '')
+    if want and want in t.lower():
+        b = node.get('bounds') or ''
+        m = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', b)
+        if m:
+            x1, y1, x2, y2 = map(int, m.groups())
+            if x2 > x1 and y2 > y1 and y2 > 0:
+                print((x1 + x2) // 2, (y1 + y2) // 2)
+                break
+PYEOF2
+)
+      if [ -n "$bounds" ]; then
+        # shellcheck disable=SC2086
+        adb shell input tap $bounds >/dev/null 2>&1
+        return 0
+      fi
+      swipe_v 30 70 350 >/dev/null 2>&1; sleep 1
+    done
+    for essai in 1 2 3 4; do
+      dump_courant "_tap_cherche"
+      bounds=$(python3 - "$OUT/_tap_cherche.xml" "$motif" <<'PYEOF2'
+import sys, re, xml.etree.ElementTree as ET
+path, motif = sys.argv[1], sys.argv[2]
+want = motif.lower()
+try:
+    root = ET.parse(path).getroot()
+except Exception:
+    sys.exit(0)
+for node in root.iter('node'):
+    t = (node.get('text') or '') + ' ' + (node.get('content-desc') or '')
+    if want and want in t.lower():
+        b = node.get('bounds') or ''
+        m = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', b)
+        if m:
+            x1, y1, x2, y2 = map(int, m.groups())
+            if x2 > x1 and y2 > y1 and y2 > 0:
+                print((x1 + x2) // 2, (y1 + y2) // 2)
+                break
+PYEOF2
+)
+      if [ -n "$bounds" ]; then
+        # shellcheck disable=SC2086
+        adb shell input tap $bounds >/dev/null 2>&1
+        return 0
+      fi
+      swipe_v 70 30 350 >/dev/null 2>&1; sleep 1
+    done
+  done
+  return 1
+}
+
 # ----------------------------------------------------------------- labels ---
 case "$LANGUE" in
   fr) CARTE="Français"; ATTENDU_AUTH="Continuer avec Google"; S1="Filme. Vends. C'est tout."
@@ -172,7 +242,7 @@ case "$LANGUE" in
       PARTAGER="Partager la vidéo"; ESPACE="Voir mon espace"
       AUTORISER="AUTORISER"; ACCES="Accès caméra nécessaire"; PLUS_TARD="PLUS TARD"
       ERREUR_TEL="n.est pas valide"; ERREUR_PRIX="Saisis un nombre"
-      GABARITS_CANDIDATS="Nouvel arrivage Nouveautés Avant / Après Présentation Promo Témoignage"
+      GABARITS_CANDIDATS="Nouvel arrivage Nouveautés New Arrivals Avant Après Before Présentation Quick Promo Promotion Témoignage Customer Un"
       SECT1="Vêtements"; SECT2="Coiffure"; SECT3="Restauration"; SECT4="Bâtiment"; SECT5="Voitures"; SECT6="Boutique" ;;
   en) CARTE="English"; ATTENDU_AUTH="Continue with Google"; S1="Shoot. Sell. Done."
       S2="Film your products, we guide you"; S3="A video ready to post in 30 seconds"
@@ -186,7 +256,7 @@ case "$LANGUE" in
       PARTAGER="Share the video"; ESPACE="View my space"
       AUTORISER="ALLOW"; ACCES="Camera access required"; PLUS_TARD="LATER"
       ERREUR_TEL="isn.t valid"; ERREUR_PRIX="Enter a number"
-      GABARITS_CANDIDATS="New Arrivals Fresh Stock Before / After Quick Product Flash Promo Customer Testimonial"
+      GABARITS_CANDIDATS="New Arrivals Nouvel arrivage Nouveautés Avant Après Before Présentation Quick Promo Promotion Témoignage Customer Un"
       SECT1="Clothing"; SECT2="Hair"; SECT3="Restaurants"; SECT4="Building"; SECT5="Cars"; SECT6="Shops" ;;
   *) echo "langue non supportée : $LANGUE (FR/EN uniquement)"; exit 2 ;;
 esac
@@ -313,10 +383,10 @@ if [ "$okcat" = "1" ]; then
       case "$s" in
         1) S="$SECT1";; 2) S="$SECT2";; 3) S="$SECT3";; 4) S="$SECT4";; 5) S="$SECT5";; 6) S="$SECT6";;
       esac
-      if ! taper "$CHANGE_SECTEUR"; then gap "bouton « $CHANGE_SECTEUR » introuvable (itération $s)"; break; fi
+      if ! tap_coord_text "$CHANGE_SECTEUR"; then gap "bouton « $CHANGE_SECTEUR » introuvable (itération $s)"; break; fi
       sleep 2
       galshot "secteur_change_${s}" "Sélecteur de secteur (itération $s)" "secteurs" "changement"
-      if taper "$S"; then
+      if tap_coord_text "$S"; then
         sleep 2
         if attendre "$CATALOGUE"; then
           galshot "catalogue_secteur${s}" "Catalogue — secteur « $S » (haut)" "catalogue" "secteur $s"
@@ -333,29 +403,32 @@ if [ "$okcat" = "1" ]; then
           gap "catalogue du secteur « $S » non atteint"
         fi
       else
-        gap "secteur « $S » introuvable au sélecteur"
-        adb shell input keyevent 4 >/dev/null 2>&1; sleep 1
-        attendre "$CATALOGUE" || true
+        gap "secteur « $S » introuvable au sélecteur (itération $s, PAS de BACK — v3)"
+        sleep 2
+        tap_coord_text "$CHANGE_SECTEUR" || true
       fi
     done
-    taper "$CHANGE_SECTEUR"; sleep 2; taper "$SECT6"; sleep 2
+    tap_coord_text "$CHANGE_SECTEUR" || true; sleep 2
+    tap_coord_text "$SECT6" || true; sleep 2
     attendre "$CATALOGUE" || true
   fi
 else
   gap "catalogue non atteint"
 fi
 
-# 09_brief — sélection du gabarit (retour en HAUT d'abord !)
-haut_de_page
+# 09_brief — sélection du gabarit (v3 : tap par coordonnées + recherche par
+# défilement ; vérification par la PRÉSENCE DE CHAMPS, indépendante de la
+# langue — les titres de cartes ne sont pas localisés, cf. audit)
 GABARIT_OK=0
 for g in $GABARITS_CANDIDATS; do
-  if taper "$g"; then
-    WT=15
-    if attendre "Décrivez votre publicité" "Describe your ad" "Numéro WhatsApp" "WhatsApp number"; then
-      GABARIT_OK=1; break
-    fi
-    WT=20
-    haut_de_page
+  if tap_coord_text "$g"; then
+    sleep 3
+    lister_champs
+    if grep -q "^E2E CHAMP " "$OUT/champs.txt" 2>/dev/null; then GABARIT_OK=1; break; fi
+    # peut-être un écran intermédiaire : tenter Continuer
+    tap_coord_text "$CONTINUER" || true; sleep 2
+    lister_champs
+    if grep -q "^E2E CHAMP " "$OUT/champs.txt" 2>/dev/null; then GABARIT_OK=1; break; fi
   fi
 done
 if [ "$GABARIT_OK" = "1" ]; then
@@ -444,12 +517,8 @@ for tentative in 1 2 3; do
     fermer_clavier
   done
   fermer_clavier
-  # révéler Continuer puis l'actionner
-  for _ in 1 2 3 4 5 6 7 8; do
-    if $UI wait --text "$CONTINUER" --exact --timeout 3 >/dev/null 2>&1; then break; fi
-    swipe_v 73 26 250; sleep 1
-  done
-  taper "$CONTINUER" exact
+  # révéler Continuer puis l'actionner (v3 : recherche par défilement)
+  tap_coord_text "$CONTINUER" || taper "$CONTINUER" exact
   WT=25
   if attendre "$AVANT"; then
     galshot "verification" "Écran de vérification (avant de commencer)" "verification" "récapitulatif"
@@ -468,7 +537,7 @@ fi
 # =====================================================================
 # 12_camera + 13_prises
 # =====================================================================
-taper "$OK_COMMENCE" exact
+tap_coord_text "$OK_COMMENCE" || taper "$OK_COMMENCE" exact
 sleep 2
 if [ "$PROFIL" = "base" ]; then
   # dialogue système de permission (l'app demande à l'arrivée du guide)
@@ -565,11 +634,7 @@ else
   gap "écran d'aperçu E7 non atteint"
 fi
 WT=20
-for _ in 1 2 3 4 5 6; do
-  if $UI wait --text "$CREER" --exact --timeout 3 >/dev/null 2>&1; then break; fi
-  swipe_v 73 26 250; sleep 1
-done
-taper "$CREER" exact
+tap_coord_text "$CREER" || taper "$CREER" exact
 
 # =====================================================================
 # 16_export
@@ -578,7 +643,7 @@ export_lance=0
 WT=40
 if attendre "$EXPORT_START" "$EXPORT_RUNNING" "$EXPORT_PREP"; then
   galshot "export_pret" "Écran d'export (E8) — avant lancement" "export" "prêt"
-  if taper "$EXPORT_START" exact; then
+  if tap_coord_text "$EXPORT_START" || taper "$EXPORT_START" exact; then
     export_lance=1
     sleep 3
     WT=25
@@ -606,14 +671,14 @@ if [ "$export_lance" = "1" ]; then
   if attendre "$DONE"; then
     WT=20
     galshot "export_termine" "« $DONE » — export terminé" "export" "terminé"
-    if taper "$PARTAGER" exact; then
+    if tap_coord_text "$PARTAGER" || taper "$PARTAGER" exact; then
       sleep 3
       galshot "partage_feuille" "Feuille de partage Android (cible système)" "partage" "feuille ouverte"
       adb shell input keyevent 4 >/dev/null 2>&1; sleep 2
     else
       gap "bouton « $PARTAGER » introuvable"
     fi
-    if taper "$ESPACE" exact; then
+    if tap_coord_text "$ESPACE" || taper "$ESPACE" exact; then
       sleep 3
       galshot "dashboard" "Mon espace — tableau de bord" "historique" "connecté-local"
       galshot "profil_dashboard" "Tableau de bord — en-tête et cartes" "profil" "vue complète"
