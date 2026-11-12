@@ -157,6 +157,16 @@ remplir_les_vides() {
   done < <(grep "^E2E CHAMP " "$OUT/champs.txt" 2>/dev/null)
 }
 nombre_de_vides() { lister_champs; grep -c " vide |" "$OUT/champs.txt" 2>/dev/null || echo 0; }
+# v8 : remplir par LIBELLÉ (re-liste les champs à CHAQUE appel — les indices
+# d'une liste précédente sont périmés dès que la page/clavier change ; run v7
+# offline : le numéro de téléphone avait fini dans le champ Prix).
+remplir_par_label() { # motif_libelle valeur
+  lister_champs
+  local i
+  i=$(idx_de "$1")
+  [ -n "$i" ] || return 1
+  remplir_verifie "$i" "$2"
+}
 
 # tap par COORDONNÉES depuis le dump (v3) : les taps ui.py échouaient quand
 # la cible était hors écran (cartes du catalogue après les scrolls de capture,
@@ -537,7 +547,7 @@ lister_champs
 I_WA=$(idx_de "whatsapp")
 I_PX=$(idx_de "prix|price")
 if [ -n "$I_WA" ]; then
-  remplir_verifie "$I_WA" "0197000000"
+  remplir_par_label "whatsapp" "0197000000"
   galshot "brief_whatsapp_clavier" "Champ WhatsApp — clavier ouvert" "formulaires" "clavier ouvert"
 fi
 # remplir tous les autres champs vides, un par un, avec vérification
@@ -560,18 +570,17 @@ if [ -n "$I_PX" ]; then
 fi
 galshot "brief_rempli" "Formulaire de brief — rempli (valeurs fictives)" "brief" "rempli"
 
-# états d'erreur volontaires (l'application refuse à juste titre)
-if [ -n "$I_WA" ]; then
-  remplir_verifie "$I_WA" "019700000"
+# états d'erreur volontaires (l'application refuse à juste titre) — par
+# libellé, sur la page COURANTE du brief
+if remplir_par_label "whatsapp" "019700000"; then
   sleep 1
   galshot "brief_erreur_whatsapp" "Erreur de validation du numéro (9 chiffres)" "formulaires" "erreur"
-  remplir_verifie "$I_WA" "0197000000"
+  remplir_par_label "whatsapp" "0197000000"
 fi
-if [ -n "$I_PX" ]; then
-  remplir_verifie "$I_PX" "abc"
+if remplir_par_label "prix|price" "abc"; then
   sleep 1
   galshot "brief_erreur_prix" "Erreur de validation du prix (alphabétique)" "formulaires" "erreur"
-  remplir_verifie "$I_PX" "15000"
+  remplir_par_label "prix|price" "15000"
 fi
 fermer_clavier
 galshot "brief_final" "Formulaire de brief — état final avant validation" "brief" "prêt"
@@ -607,10 +616,10 @@ for tentative in 1 2 3 4 5 6 7 8; do
     grep -q "$ERREUR_PRIX" "$OUT/_verif_brief.xml" 2>/dev/null && probleme="${probleme} prix"
     [ -z "$probleme" ] || echo "GALERIE réparation ($tentative.$_) : erreur affichée → ${probleme}"
     if printf '%s' "$probleme" | grep -q tel; then
-      lister_champs; i=$(idx_de "whatsapp"); [ -n "$i" ] && remplir_verifie "$i" "0197000000" || true
+      remplir_par_label "whatsapp" "0197000000" || true
     fi
     if printf '%s' "$probleme" | grep -q prix; then
-      lister_champs; i=$(idx_de "prix|price"); [ -n "$i" ] && remplir_verifie "$i" "15000" || true
+      remplir_par_label "prix|price" "15000" || true
     fi
     v=$(nombre_de_vides); v=${v:-0}
     if [ "$v" -gt 0 ]; then
@@ -621,8 +630,10 @@ for tentative in 1 2 3 4 5 6 7 8; do
     fermer_clavier
   done
   fermer_clavier
-  # révéler Continuer puis l'actionner (v3 : recherche par défilement)
-  tap_coord_text "$CONTINUER" || taper "$CONTINUER" exact
+  # révéler Continuer puis l'actionner — v8 : le bouton Compose expose parfois
+  # des bornes DÉGÉNÉRÉES [0,0][0,0] (dump offline v7) que le tap par
+  # coordonnées refuse : repli sur ui.py (point_de_clic « bas_large »).
+  tap_coord_text "$CONTINUER" || taper "$CONTINUER" exact || true
   WT=14
   if attendre "$AVANT"; then
     WT=20
@@ -811,6 +822,7 @@ if attendre "$EXPORT_START" "$EXPORT_RUNNING" "$EXPORT_PREP"; then
       galshot "export_en_cours" "Export local en cours" "export" "en cours"
     fi
     WT=20
+    adb shell dumpsys notification 2>/dev/null | grep -c "vv_export" > "$OUT/notif_verif.txt" || true
     adb shell cmd statusbar expand-notifications >/dev/null 2>&1; sleep 2
     galshot "export_notification" "Tiroir de notifications — export (FGS)" "export" "notification"
     adb shell cmd statusbar collapse >/dev/null 2>&1; sleep 1
@@ -874,6 +886,31 @@ elif [ "$export_lance" = "1" ]; then
   fi
 else
   gap "export jamais lancé : pas d'attente longue"
+fi
+
+# =====================================================================
+# 19_profil / 05_credits — dashboard, parrainage, réglages, paywall via
+# action intents (écrans RÉELS de DashboardActivity — aucune dépendance à
+# la fin d'export ; captured pour tous les profils non-variantes)
+# =====================================================================
+if [ "$PROFIL" != "font130" ] && [ "$PROFIL" != "petit" ]; then
+  adb shell am start -a video.vitrine.action.VIEW_DASHBOARD >/dev/null 2>&1
+  sleep 4
+  galshot "dashboard" "Mon espace — tableau de bord (vue intents)" "profil" "connecté-local"
+  swipe_v 70 35 300 >/dev/null 2>&1; sleep 1
+  galshot "dashboard_bas" "Tableau de bord — bas de page" "profil" "défilé"
+  haut_de_page
+  adb shell am start -a video.vitrine.action.VIEW_DASHBOARD --es view referral >/dev/null 2>&1
+  sleep 4
+  galshot "dashboard_parrainage" "Parrainage — jauge et code (vue intents)" "parrainage" "depuis dashboard"
+  adb shell am start -a video.vitrine.action.VIEW_DASHBOARD --es view settings >/dev/null 2>&1
+  sleep 4
+  galshot "profil_reglages" "Réglages / profil (vue intents)" "profil" "ouvert"
+  adb shell am start -a video.vitrine.action.VIEW_PAYWALL >/dev/null 2>&1
+  sleep 4
+  galshot "paywall" "Crédits / formules — paywall (vue intents)" "credits" "offre"
+  swipe_v 70 35 300 >/dev/null 2>&1; sleep 1
+  galshot "paywall_bas" "Paywall — bas (formules)" "credits" "défilé"
 fi
 
 # 20_hors_connexion — le profil offline a déroulé TOUT le parcours déconnecté
