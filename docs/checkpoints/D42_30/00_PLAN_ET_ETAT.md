@@ -228,6 +228,31 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   isole le défaut en une étape — ici le défaut était dans le HARNAIS, pas
   dans l'app ; le message d'erreur affiché à l'écran était la preuve depuis
   le premier dump.
+- **17/11 (D42.30-11 VALIDÉ : lab 43115322040 sur 401ce39, 14 jobs SUCCESS)** :
+  camerap 62/0/0 (3e preuve) ; **p1 PASS=33 FAIL=1 BLOCKED=1** — P1_prise_2 ✔,
+  P1_aucun_crash ✔, P1_brief_invalide ✔ (les 3 correctifs D42.30-11 font
+  leurs preuves) ; P1_export_termine ✗ (fenêtre 75 min) + P1_partage en
+  cascade. **offline-export régresse : P1_brief_valide ✗ → 7 BLOCKED en
+  cascade** — RCA artefacts (draft Room + dumps) :
+  - **P1_export_termine est un FAUX échec de fenêtre** : l'export A ABOUTI —
+    export-0.mp4 5 084 798 octets, h264 1920×1080, 35,04 s (ffprobe),
+    P1_mp4_extrait PASS. L'export avec BGM dure ≥75 min sur swiftshader
+    (run SANS aucune collision UiAutomation cette fois). Fenêtre 75 → 95 min.
+  - **P1_brief_valide ✗ = saisie harnais corrompue** : le draft final (base
+    Room de l'artefact) montre `devise:""` (le FCFA par défaut a été EFFACÉ)
+    et `whatsapp:"019700000"` (un chiffre perdu) — les DEL×24 de
+    remplir_champ sur un tap décalé (géométrie clavier/adjustResize) et/ou
+    une frappe `input text` incomplète. Le harnais ne vérifiait JAMAIS le
+    contenu saisi (listing vide/rempli only). L'app est saine (p1 : même
+    parcours, brief_valide PASS, Monnaie=FCFA).
+  - **Correctifs D42.30-13 (harnais)** : `valeur_pour` Monnaie → « FCFA »
+    (remplir au lieu de supposer le préremplissage) ; `saisir_et_verifier()`
+    = remplir puis VÉRIFIER la valeur dans le dump (comparaison sans
+    espaces : « 15000 » affiché « 15 000 »), retry avec coordonnées
+    fraîches si absente ; fenêtre export 95 min ; timeouts p1/offline-export
+    135 min.
+  - Leçon : un FAIL harnais peut être une SAISIE harnais corrompue —
+    vérifier le draft (source de vérité de l'app) avant d'accuser l'écran.
 - **17/11 (D42.30-12 = ca0ed30, local — push après le lab 401ce39)** :
   retrait es/ja du parcours actif FERMÉ : run_p0.sh S03 attendait encore
   日本語 (FAIL ×5 au lab 09d3e74 — exigence retirée) → S03b_es_ja_absents

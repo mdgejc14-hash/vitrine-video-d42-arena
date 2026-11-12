@@ -268,6 +268,31 @@ fermer_clavier() {
   fi
 }
 
+saisir_et_verifier() { # index, valeur — remplit puis VÉRIFIE le contenu (D42.30-13)
+  # RCA lab 401ce39 : le draft final montrait devise="" (FCFA effacé) et
+  # whatsapp amputé d'un chiffre — les DEL×24 de remplir_champ sur un tap
+  # maladroit (géométrie clavier/adjustResize) ou une frappe `input text`
+  # incomplète corrompaient le formulaire SANS que le harnais le voie (le
+  # listing ne connaît que vide/rempli). On vérifie désormais que la valeur
+  # est réellement affichée (comparaison SANS ESPACES : « 15000 » s'affiche
+  # « 15 000 », « 0197000000 » peut s'afficher groupé), sinon on RETAPE avec
+  # des coordonnées fraîches.
+  local idx="$1" val="$2" attendu essai
+  attendu=$(printf '%s' "$val" | tr -d ' \u00a0')
+  for essai in 1 2; do
+    $UI champs > "$OUT/champs.txt" 2>&1 || true
+    remplir_champ "$idx" "$val" "$OUT/champs.txt" || true
+    sleep 1
+    dump _saisie_$idx >/dev/null 2>&1
+    if [ -s "$OUT/_saisie_$idx.xml" ] \
+       && tr -d ' \u00a0' < "$OUT/_saisie_$idx.xml" | grep -qF "$attendu"; then
+      return 0
+    fi
+    echo "E2E saisie non confirmée (essai $essai, champ #$idx) : « $val » absent du dump — re-saisie"
+  done
+  return 1
+}
+
 remplir_champ() { # index, texte, [fichier de coordonnées]
   # On relit les coordonnées à chaque champ : le clavier modifie la géométrie de
   # l'écran, donc les positions mémorisées mentent.
@@ -419,7 +444,7 @@ if [ "$brief_ok" = "1" ]; then
       *commerce*|*boutique*)            echo "BoutiqueAwa" ;;
       *whatsapp*|*num*ro*|*t*l*phone*)  echo "0197000000" ;;
       *prix*|*montant*)                 echo "15000" ;;
-      *monnaie*)                        echo "" ;;   # déjà préremplie (FCFA)
+      *monnaie*)                        echo "FCFA" ;;   # D42.30-13 : ne plus SUPPOSER le préremplissage — si le champ est listé vide (draft restauré vide, effacement accidentel), on le remplit avec la valeur valide
       *quartier*|*ville*|*adresse*)     echo "Akpakpa" ;;
       *nom*|*v*tement*|*produit*|*plat*|*travail*|*article*) echo "RobeWax" ;;
       *)                                echo "Essai" ;;
@@ -440,7 +465,7 @@ if [ "$brief_ok" = "1" ]; then
       progresse=1
       if [ -z "$val" ]; then echo "E2E champ laissé prérempli : [$libelle]"; continue; fi
       echo "E2E remplissage [$libelle] <- $val"
-      remplir_champ "$idx" "$val" "$OUT/champs.txt" && remplis=$((remplis+1))
+      saisir_et_verifier "$idx" "$val" && remplis=$((remplis+1))
       break
     done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
     if [ "$progresse" = "0" ]; then
@@ -474,7 +499,7 @@ if [ "$brief_ok" = "1" ]; then
       [ -n "$val" ] || continue
       restant=$((restant+1))
       echo "E2E complément [$libelle] <- $val"
-      remplir_champ "$idx" "$val" "$OUT/champs.txt" && remplis=$((remplis+1))
+      saisir_et_verifier "$idx" "$val" && remplis=$((remplis+1))
       break
     done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
     # On ne s'arrête jamais avant la passe 2 : à la passe 1 (haut du
@@ -779,11 +804,15 @@ fi
 # configure du BgmDecoder), l export dépasse 40 min sur l émulateur
 # (lab 42811778574 : cutoff job à 12:58:19, verdict interne attendu
 # 12:58:48) ; le job workflow est passé à timeout-minutes: 110.
-if $UI wait --text "Vidéo prête ! Partage-la avec tes clients." --exact --timeout 4500 >/dev/null 2>&1; then
+# D42.30-13 (lab 401ce39) : l export avec BGM a dépassé 75 min SUR UN RUN
+# PROPRE (aucune collision UiAutomation) — et il a ABOUTI : export-0.mp4
+# 5 084 798 octets, h264 1920x1080, 35,04 s, P1_mp4_extrait PASS. La fenêtre
+# passe à 95 min (5700 s) ; timeout job p1 135 min.
+if $UI wait --text "Vidéo prête ! Partage-la avec tes clients." --exact --timeout 5700 >/dev/null 2>&1; then
   record PASS P1_export_termine "« Vidéo prête ! » affiché"
   shot 29_export_termine; dump 29_export_termine
 else
-  record FAIL P1_export_termine "aucune fin d'export en 75 min"; shot 29_export_timeout; dump 29_export_timeout
+  record FAIL P1_export_termine "aucune fin d'export en 95 min"; shot 29_export_timeout; dump 29_export_timeout
 fi
 
 # --- S26 fichier MP4 (uniquement si l'APK est débuggable) ----------------------
