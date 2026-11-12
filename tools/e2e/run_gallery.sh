@@ -228,6 +228,52 @@ PYEOF2
   return 1
 }
 
+swipe_h() { # de droite à gauche pour révéler les chips suivants
+  adb shell input swipe $(( EFF_W * 8 / 10 )) $(( EFF_H * $1 / 100 ))     $(( EFF_W * 2 / 10 )) $(( EFF_H * $1 / 100 )) "${2:-250}" >/dev/null 2>&1
+}
+# cherche UN PARMI les motifs (texte+content-desc, casse ignorée) dans le dump
+# courant et renvoie "x y" ; sinon code retour 1
+coord_parmi() { # fichier motif1 motif2...
+  local f="$1"; shift
+  python3 - "$f" "$@" <<'PYEOF2'
+import sys, re, xml.etree.ElementTree as ET
+path = sys.argv[1]; motifs = sys.argv[2:]
+try:
+    root = ET.parse(path).getroot()
+except Exception:
+    sys.exit(1)
+nodes = list(root.iter('node'))
+for motif in motifs:                     # premier motif trouvé = priorité
+    want = motif.lower()
+    for node in nodes:
+        t = (node.get('text') or '') + ' ' + (node.get('content-desc') or '')
+        if want and want in t.lower():
+            b = node.get('bounds') or ''
+            m = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', b)
+            if m:
+                x1, y1, x2, y2 = map(int, m.groups())
+                if x2 > x1 and y2 > y1 and y2 > 0:
+                    print((x1 + x2) // 2, (y1 + y2) // 2)
+                    sys.exit(0)
+sys.exit(1)
+PYEOF2
+}
+# sélection de gabarit v5 : UNE passe de motifs par écran (plus de candidats
+# un par un avec swipes à l'aveugle) ; grille parcourue verticalement.
+choisir_gabarit() { # motifs...
+  local ecran bounds
+  for ecran in 1 2 3 4 5 6; do
+    dump_courant "_gabarit_cherche"
+    if bounds=$(coord_parmi "$OUT/_gabarit_cherche.xml" "$@"); then
+      # shellcheck disable=SC2086
+      adb shell input tap $bounds >/dev/null 2>&1
+      return 0
+    fi
+    swipe_v 70 30 350 >/dev/null 2>&1; sleep 1
+  done
+  return 1
+}
+
 # ----------------------------------------------------------------- labels ---
 case "$LANGUE" in
   fr) CARTE="Français"; ATTENDU_AUTH="Continuer avec Google"; S1="Filme. Vends. C'est tout."
@@ -379,17 +425,36 @@ if [ "$okcat" = "1" ]; then
     if [ -s "$prec" ] && cmp -s "$OUT/_cat_cour.xml" "$prec" 2>/dev/null; then break; fi
   done
   if [ "$PROFIL" = "base" ] && [ "$LANGUE" = "fr" ]; then
+    # v5 : « Changer de secteur » est un toggle INLINE (D42.30) qui déplie
+    # des chips horizontaux ; on VÉRIFIE le dépliage (« Tous les métiers »),
+    # on défile horizontalement si besoin, puis on tape le chip.
     for s in 1 2 3 4 5 6; do
       case "$s" in
         1) S="$SECT1";; 2) S="$SECT2";; 3) S="$SECT3";; 4) S="$SECT4";; 5) S="$SECT5";; 6) S="$SECT6";;
       esac
-      if ! tap_coord_text "$CHANGE_SECTEUR"; then gap "bouton « $CHANGE_SECTEUR » introuvable (itération $s)"; break; fi
-      sleep 2
-      galshot "secteur_change_${s}" "Sélecteur de secteur (itération $s)" "secteurs" "changement"
-      if tap_coord_text "$S"; then
+      # déplier (si déjà déplié, le toggle replie : on vérifie après chaque tap)
+      ouvre=0
+      for t in 1 2 3; do
+        tap_coord_text "$CHANGE_SECTEUR" || { gap "bouton « $CHANGE_SECTEUR » introuvable (itération $s)"; break 2; }
         sleep 2
-        if attendre "$CATALOGUE"; then
-          galshot "catalogue_secteur${s}" "Catalogue — secteur « $S » (haut)" "catalogue" "secteur $s"
+        dump_courant "secteur_iter${s}"
+        if coord_parmi "$OUT/secteur_iter${s}.xml" "Tous les métiers" "tous les" "All"; then ouvre=1; break; fi
+      done
+      if [ "$ouvre" = "1" ]; then
+        galshot "secteur_change_${s}" "Catalogue — filtres secteur dépliés (itération $s)" "secteurs" "changement"
+        # chip cible (avec défilement horizontal des chips si nécessaire)
+        trouve=0
+        for h in 1 2 3; do
+          dump_courant "secteur_iter${s}"
+          if bounds=$(coord_parmi "$OUT/secteur_iter${s}.xml" "$S"); then
+            # shellcheck disable=SC2086
+            adb shell input tap $bounds >/dev/null 2>&1; trouve=1; break
+          fi
+          swipe_h 14 300; sleep 1
+        done
+        sleep 2
+        if [ "$trouve" = "1" ]; then
+          galshot "catalogue_secteur${s}" "Catalogue — secteur « $S » (en-tête de focus)" "catalogue" "secteur $s"
           k=0; prec2=""
           while [ "$k" -lt 5 ]; do
             dump_courant "_cs_prec"
@@ -400,44 +465,48 @@ if [ "$okcat" = "1" ]; then
             if [ -s "$prec2" ] && cmp -s "$OUT/_cs_cour.xml" "$prec2" 2>/dev/null; then break; fi
           done
         else
-          gap "catalogue du secteur « $S » non atteint"
+          gap "chip secteur « $S » introuvable (itération $s) — dump secteur_iter${s}.xml"
         fi
       else
-        gap "secteur « $S » introuvable au sélecteur (itération $s, PAS de BACK — v3)"
-        sleep 2
-        tap_coord_text "$CHANGE_SECTEUR" || true
+        gap "chips de secteur jamais dépliées (itération $s) — dump secteur_iter${s}.xml"
       fi
     done
-    tap_coord_text "$CHANGE_SECTEUR" || true; sleep 2
-    tap_coord_text "$SECT6" || true; sleep 2
+    # retour au secteur Commerce pour la suite du parcours
+    for t in 1 2 3; do
+      tap_coord_text "$CHANGE_SECTEUR" || break; sleep 2
+      dump_courant "_retour_sect"
+      if bounds=$(coord_parmi "$OUT/_retour_sect.xml" "$SECT6"); then
+        # shellcheck disable=SC2086
+        adb shell input tap $bounds >/dev/null 2>&1; break
+      fi
+      swipe_h 14 300; sleep 1
+    done
+    sleep 2
+    haut_de_page
     attendre "$CATALOGUE" || true
   fi
 else
   gap "catalogue non atteint"
 fi
 
-# 09_brief — sélection du gabarit (v3 : tap par coordonnées + recherche par
-# défilement ; vérification par la PRÉSENCE DE CHAMPS, indépendante de la
-# langue — les titres de cartes ne sont pas localisés, cf. audit)
+# 09_brief — sélection du gabarit (v5 : UNE passe de motifs par écran, skins
+# différents selon le secteur ; vérification par la PRÉSENCE DE CHAMPS)
+haut_de_page
 GABARIT_OK=0
-for g in $GABARITS_CANDIDATS; do
-  if tap_coord_text "$g"; then
-    sleep 3
-    lister_champs
-    if grep -q "^E2E CHAMP " "$OUT/champs.txt" 2>/dev/null; then GABARIT_OK=1; break; fi
-    # peut-être un écran intermédiaire : tenter Continuer
-    tap_coord_text "$CONTINUER" || true; sleep 2
-    lister_champs
-    if grep -q "^E2E CHAMP " "$OUT/champs.txt" 2>/dev/null; then GABARIT_OK=1; break; fi
-  fi
-done
+if choisir_gabarit $GABARITS_CANDIDATS; then
+  sleep 3
+  lister_champs
+  if grep -q "^E2E CHAMP " "$OUT/champs.txt" 2>/dev/null; then GABARIT_OK=1; fi
+fi
 if [ "$GABARIT_OK" = "1" ]; then
   galshot "brief_vide" "Formulaire de brief — vide (Continuer désactivé)" "brief" "vide"
 else
-  gap "aucun gabarit ouvert (écran brief jamais atteint)"
+  gap "aucun gabarit ouvert (écran brief jamais atteint) — dump _gabarit_cherche.xml"
+  cp "$OUT/_gabarit_cherche.xml" "$OUT/gabarit_echec.xml" 2>/dev/null || true
 fi
 
-# 10_formulaires — remplissage vérifié + clavier + erreurs
+# 10_formulaires — remplissage vérifié + clavier + erreurs (seulement si brief ouvert)
+if [ "$GABARIT_OK" = "1" ]; then
 lister_champs
 I_WA=$(idx_de "whatsapp")
 I_PX=$(idx_de "prix|price")
@@ -480,10 +549,15 @@ if [ -n "$I_PX" ]; then
 fi
 fermer_clavier
 galshot "brief_final" "Formulaire de brief — état final avant validation" "brief" "prêt"
+fi   # fin GABARIT_OK (section formulaires)
 
 # ---- variantes : parcours réduit (font130 / petit) — arrêt ici -----------
 if [ "$PROFIL" = "font130" ] || [ "$PROFIL" = "petit" ]; then
-  galshot "variante_resume" "Variante $PROFIL — état final capturé" "brief" "variante $PROFIL"
+  if [ "$GABARIT_OK" = "1" ]; then
+    galshot "variante_resume" "Variante $PROFIL — brief rempli (état final)" "brief" "variante $PROFIL"
+  else
+    galshot "variante_resume" "Variante $PROFIL — catalogue (gabarit non ouvert, cf. gaps)" "catalogue" "variante $PROFIL"
+  fi
   adb shell wm size reset >/dev/null 2>&1 || true
   adb shell settings put system font_scale 1.0 >/dev/null 2>&1 || true
   adb logcat -d > "$OUT/logcat_gallery.txt" 2>/dev/null || true
@@ -494,6 +568,7 @@ fi
 # =====================================================================
 # 11_verification — réparation puis validation du brief
 # =====================================================================
+if [ "$GABARIT_OK" = "1" ]; then
 for tentative in 1 2 3; do
   # boucle de réparation : erreurs affichées ou champs vides → re-saisir
   for _ in 1 2 3; do
@@ -533,6 +608,7 @@ done
 if ! attendre "$AVANT"; then
   gap "écran de vérification jamais atteint (brief non validable après réparations)"
 fi
+fi   # fin GABARIT_OK (section vérification)
 
 # =====================================================================
 # 12_camera + 13_prises
