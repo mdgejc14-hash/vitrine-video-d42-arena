@@ -240,6 +240,26 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   FCFA) sont validés par la même occasion (brief_valide PASS dans les DEUX
   bancs). Non-régression audio déclenchée : p3-modes (musique voix mix) —
   le fix touche le chemin audio du Worker.
+- **17/11 (D42.30-15 = p3-modes analysé : 5 correctifs harnais, app INNOCENTE)** :
+  p3-modes 43148299573 (b279bca) : jobs SUCCESS mais verdicts internes —
+  voix 26/2, mix 25/3, musique fr 13/4/7 (cascade) + en 24/3. RCA (artefacts
+  13915245374/13915250319/13914680734 + mesures ffmpeg locales) :
+  - **P3_mp4_decode FAIL ×6 = filtre incohérent** : ffmpeg émet « non
+    monotonically increasing dts » (BÉNIN, déjà filtré par le banc OFFX
+    l.161-174) mais le p3 comptait TOUT stderr. Aligné sur OFFX.
+  - **P3_mode_musique/mix « intro quasi muette » = attente contraire au
+    produit** : le mixeur applique un fade-in (contrat AudioChain D41 F60) ;
+    mesuré sur le MP4 musique : t=0 -54 dB, t=2 -26 dB, t=5 -17,6 dB,
+    GLOBAL -17,6 dB (= exactement le PASS OFFX). La musique EST là. Le
+    standard p3 devient OFFX : RMS global > -28 + preuve STRUCTURELLE
+    « D42-BGM : décodage BGM » au logcat. Intro conservée en diagnostic.
+  - **P3_prise_2 rc=4 ×6 = même attente obsolète que P1** (aperçu après la
+    dernière prise d'un gabarit 2 prises) — port du fix D42.30-11.
+  - **P3_brief_valide FAIL (musique fr) = même corruption de saisie que
+    D42.30-13** — port de saisir_et_verifier (Monnaie FCFA déjà en place).
+  - Côté APP, tout est sain : export voix/musique hasAudioTrack=true,
+    VERIFIE_PARTIELLEMENT, attempt 0 SUCCESS, base silencieuse D42.21
+    correctement déclenchée par le fix D42.30-14.
 - **17/11 (D42.30-14 = bug produit EXPORT trouvé par RCA des artefacts, FIX
   app poussé)** : lab 43129951436 (46fe2a4) 14 jobs SUCCESS — camerap 62/0/0
   (4e preuve), **S03b_es_ja_absents PASS ×4 (retrait es/ja PROUVÉ)**, p1

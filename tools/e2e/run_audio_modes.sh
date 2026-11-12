@@ -333,6 +333,30 @@ fermer_clavier() {
     sleep 1
   fi
 }
+saisir_et_verifier() { # index, valeur — remplit puis VÉRIFIE le contenu (D42.30-13, port P1)
+  # RCA lab 43148299573 (p3-musique fr) : brief_valide FAIL « tous les champs
+  # remplis mais écran absent » — même classe que D42.30-13 : DEL×24 sur tap
+  # décalé / frappe input text incomplète, jamais vérifiée (le draft Room
+  # montrait devise="" et whatsapp amputé). On vérifie la valeur dans le dump
+  # (comparaison sans espaces) et on RETAPE avec coordonnées fraîches sinon.
+  local idx="$1" val="$2" attendu essai
+  attendu=$(printf '%s' "$val" | tr -d ' \u00a0')
+  for essai in 1 2; do
+    $UI champs > "$OUT/champs.txt" 2>&1 || true
+    remplir_champ "$idx" "$val" "$OUT/champs.txt" || true
+    sleep 1
+    adb shell rm -f /sdcard/d.xml >/dev/null 2>&1
+    adb shell uiautomator dump /sdcard/d.xml >/dev/null 2>&1
+    adb exec-out cat /sdcard/d.xml > "$OUT/_saisie_$idx.xml" 2>/dev/null
+    if [ -s "$OUT/_saisie_$idx.xml" ] \
+       && tr -d ' \u00a0' < "$OUT/_saisie_$idx.xml" | grep -qF "$attendu"; then
+      return 0
+    fi
+    echo "E2E saisie non confirmée (essai $essai, champ #$idx) : « $val » absent du dump — re-saisie"
+  done
+  return 1
+}
+
 remplir_champ() { # index, texte — coordonnées relues à chaque champ (P1 éprouvé)
   local idx="$1" val="$2" src="${3:-$OUT/champs.txt}" ligne x1 y1 x2 y2 cx cy
   ligne=$(awk -v i="$idx" '$1=="E2E" && $2=="CHAMP" && $3==i {print $4, $5, $6, $7}' "$src")
@@ -389,7 +413,7 @@ for tour in 1 2 3 4 5 6 7 8 9 10 11 12; do
     progresse=1
     if [ -z "$val" ]; then echo "E2E P3 champ laissé prérempli : [$libelle]"; continue; fi
     echo "E2E P3 remplissage [$libelle] <- $val"
-    remplir_champ "$idx" "$val" "$OUT/champs.txt" && remplis=$((remplis+1))
+    saisir_et_verifier "$idx" "$val" && remplis=$((remplis+1))
     break
   done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
   if [ "$progresse" = "0" ]; then
@@ -416,7 +440,7 @@ for passe in 1 2 3; do
     [ -n "$val" ] || continue
     restant=$((restant+1))
     echo "E2E P3 complément [$libelle] <- $val"
-    remplir_champ "$idx" "$val" "$OUT/champs.txt" && remplis=$((remplis+1))
+    saisir_et_verifier "$idx" "$val" && remplis=$((remplis+1))
     break
   done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
   [ "$restant" = "0" ] && [ "$passe" -ge 2 ] && break
@@ -481,7 +505,7 @@ basse_passe() { # $1 = numéro de passe
       val=$(valeur_pour "$libelle")
       if [ -n "$val" ]; then
         echo "E2E P3 passe basse [$libelle] <- $val"
-        remplir_champ "$idx" "$val" "$OUT/champs_bas.txt" && remplis=$((remplis+1))
+        saisir_et_verifier "$idx" "$val" && remplis=$((remplis+1))
       fi
     done < <(grep "^E2E CHAMP " "$OUT/champs_bas.txt" | grep " vide " | head -1)
   fi
@@ -558,6 +582,14 @@ prise() { # numéro
   $UI wait --text "$E6_REC" --exact --timeout 25 >/dev/null 2>&1 \
     || $UI wait --text "$CAM_REC" --exact --timeout 10 >/dev/null 2>&1 \
     || $UI wait --text "Refaire" --exact --timeout 10 >/dev/null 2>&1 && return 0
+  # D42.30-13 (port P1) : après la DERNIÈRE prise du gabarit (T4/T5 = 2 prises),
+  # l'app va LÉGITIMEMENT à l'aperçu — issue VALIDE, pas un échec (rc=4 faux
+  # au lab 43148299573 : P3_prise_2 FAIL ×6 alors que le guide était terminé).
+  if $UI wait --text "Aperçu de ta vidéo" --timeout 10 >/dev/null 2>&1 \
+     || $UI wait --text "Créer ma vidéo" --timeout 10 >/dev/null 2>&1; then
+    echo "E2E prise $n : DERNIÈRE prise du gabarit — guide terminé, aperçu atteint (comportement app correct)"
+    return 0
+  fi
   return 4
 }
 prises=0
@@ -811,12 +843,21 @@ if [ -s "$OUT/export.mp4" ] && command -v ffprobe >/dev/null 2>&1; then
   echo "RMS_global_dB=${RMS_G:-indisponible} RMS_intro_2s_dB=${RMS_I:-indisponible}" >> "$OUT/constats_mode.txt"
   case "$MODE" in
     musique|mix)
-      # l'intro (avant toute prise) porte la musique seule : audible
-      if [ -n "${RMS_I:-}" ] && [ "$RMS_I" != "inf" ] 2>/dev/null \
-         && awk -v r="$RMS_I" 'BEGIN{exit !(r > -28)}'; then
-        record PASS "P3_mode_${MODE}_${LANGUE}" "musique audible dès l'intro (RMS intro ${RMS_I} dB > -28) — mode ${MODE} confirmé acoustiquement"
+      # D42.30-15 (RCA lab 43148299573) : l'exigence « musique audible DANS
+      # l'intro 2 s » contredit le produit — le mixeur applique un fade-in
+      # (contrat AudioChain D41 F60) et la musique monte sur ~4 s (mesuré sur
+      # le MP4 musique : t=0 -54 dB, t=2 -26 dB, t=5 -17.6 dB, global
+      # -17.6 dB). Le standard devient celui du banc OFFX (déjà éprouvé) :
+      # RMS GLOBAL > -28 dB = musique établie, PLUS la preuve STRUCTURELLE
+      # que l'app a décodé la BGM pour le mixage (marqueur D42-BGM au logcat).
+      # Le RMS intro reste consigné à titre diagnostic (constats_mode.txt).
+      BGM_DECODEE=$(adb logcat -d 2>/dev/null | grep -c "D42-BGM : décodage BGM" || true)
+      if [ "${BGM_DECODEE:-0}" -ge 1 ] \
+         && [ -n "${RMS_G:-}" ] && [ "$RMS_G" != "inf" ] 2>/dev/null \
+         && awk -v r="$RMS_G" 'BEGIN{exit !(r > -28)}'; then
+        record PASS "P3_mode_${MODE}_${LANGUE}" "musique établie : BGM décodée pour le mixage (${BGM_DECODEE} marqueur(s) D42-BGM) + RMS global ${RMS_G} dB > -28 (intro 2 s à ${RMS_I:-?} dB : fade-in produit)"
       else
-        record FAIL "P3_mode_${MODE}_${LANGUE}" "intro quasi muette (RMS intro ${RMS_I:-?} dB) : le mode ${MODE} n'est pas établi"
+        record FAIL "P3_mode_${MODE}_${LANGUE}" "mode ${MODE} non établi : marqueurs D42-BGM=${BGM_DECODEE:-0}, RMS global ${RMS_G:-?} dB (attendu > -28)"
       fi
       ;;
     voix)
@@ -830,7 +871,12 @@ if [ -s "$OUT/export.mp4" ] && command -v ffprobe >/dev/null 2>&1; then
       ;;
   esac
   # décodage intégral
-  if ffmpeg -v error -i "$OUT/export.mp4" -f null - > "$OUT/decode_check.txt" 2>&1 && [ ! -s "$OUT/decode_check.txt" ]; then
+  # D42.30-15 : ffmpeg émet « Application provided invalid, non monotonically
+  # increasing dts to muxer » sur les exports concaténés — BÉNIN, déjà filtré
+  # par le banc OFFX (run_offline_export.sh l.161-174). Alignement : seules les
+  # erreurs RÉELLES font échouer le décodage.
+  ffmpeg -v error -i "$OUT/export.mp4" -f null - > "$OUT/decode_check.txt" 2>&1 || true
+  if ! grep -qE "Invalid data found|Error while decoding|error:" "$OUT/decode_check.txt" 2>/dev/null; then
     record PASS "P3_mp4_decode_${LANGUE}_${MODE}" "décodage intégral sans erreur"
   else
     record FAIL "P3_mp4_decode_${LANGUE}_${MODE}" "erreurs de décodage (decode_check.txt)"
