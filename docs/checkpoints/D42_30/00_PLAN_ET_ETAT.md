@@ -240,6 +240,17 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   FCFA) sont validés par la même occasion (brief_valide PASS dans les DEUX
   bancs). Non-régression audio déclenchée : p3-modes (musique voix mix) —
   le fix touche le chemin audio du Worker.
+- **17/11 (D42.30-17 REVALIDÉ : lab 43182516945 sur 95449cf — 14/14 jobs
+  SUCCESS, journal fonctionnel p1 35/0/0 / 0 FAIL / 0 BLOCKED** (job
+  android-e2e-p1 131061699172 : P1_brief_valide PASS 08:34:56Z, prix « abc »
+  refusé, vide refusé, cascade complète caméra → 2 prises → rushs →
+  P1_export_termine « Vidéo prête ! » → MP4 5 312 086 o → partage → notif FGS
+  → écran éteint 45 s → P1_aucun_crash). Offline-export : 35/0/0 +
+  OFFLINE_EXPORT 41/0 (journal CONFIRMED, RMS musique -17,609 dB, solde 2).
+  Marqueurs « E2E intégrité » D42.30-17 : AUCUN déclenché (aucune erreur de
+  champ affichée — runner sain ~40 min) → le fix est une garantie dormant
+  contre la course IME, pas un PASS fabriqué. Durée du lab ~40 min (vs 113
+  min au lab final) : confirme le facteur environnemental du RCA.
 - **17/11 (D42.30-17 : lab final 43167388350 — p1 21/6/7 FONCTIONNEL, RCA
   complète, fix harnais)** : les 14 jobs sont SUCCESS côté GitHub MAIS le
   journal du p1 (131012346489) donne 21 PASS/6 FAIL/7 BLOCKED. Preuves

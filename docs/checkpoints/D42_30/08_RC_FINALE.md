@@ -36,9 +36,9 @@ l'APK signée exacte.
 | Banc | Verdict | Preuve (runs GitHub) |
 |---|---|---|
 | android-ci | SUCCESS | 43167388352 (137c972), 43160964884 (02eff63), 43154617344 (818d8d6) |
-| android-e2e-lab | 14/14 jobs | 43167388350 (137c972, lab final — voir ligne p1 ci-dessous) |
+| android-e2e-lab | 14/14 jobs | **43182516945 (95449cf) : 14/14 + p1 35/0/0** ; 43167388350 (137c972) : 14/14 mais p1 21/6/7 (flake harnais IME — RCA + D42.30-17) |
 | Caméra (camerap) | **62 PASS / 0 FAIL / 0 BLOCKED** ×6 runs | labs 43082333578, 43100433919, 43115322040, 43129951436, 43142014528, 43167388350 |
-| Parcours complet (p1) | **35/0/0** sur 02eff63/b279bca | labs 43142014528, 43148343691, 43160964840 |
+| Parcours complet (p1) | **35/0/0** sur 95449cf/02eff63/b279bca | **lab 43182516945 (95449cf)** + labs 43142014528, 43148343691, 43160964840 |
 | Export hors connexion + OFFX | **35/0/0 + OFFLINE_EXPORT 41/0** | lab 43142014528 (b279bca) : RMS musique -17,609 dB, journal CONFIRMED, solde 2 |
 | 3 modes audio × fr/en | **6/6 cellules à 0 FAIL** | p3-modes 43161021108 (02eff63) : voix 28/0×2, mix 28/0×2, musique 27/0×2 |
 | FR/EN uniquement | **S03b_es_ja_absents PASS ×4** | lab 43129951436 android-e2e (base/font130/rot90 + petit écran) |
@@ -60,8 +60,14 @@ contrôle d'intégrité final avant Continuer — si l'app AFFICHE une erreur de
 champ, le champ fautif est re-saisi (2 essais). Aucun changement produit :
 **l'APK RC15 reste exacte** (le code app de 137c972 est inchangé) ; la
 preuve de livraison sur l'APK signée reste release-official-e2e 43168986328
-(36/0/0). Revalidation : lab sur le commit du correctif (p1 + offline-export
-embarquent run_p1.sh).
+(36/0/0). **Revalidation faite : lab 43182516945 sur 95449cf — 14/14 jobs
+SUCCESS, journal fonctionnel p1 35/0/0** (P1_brief_valide PASS, invalides
+refusés, cascade entière : caméra, 2 prises, rushs, export « Vidéo prête ! »,
+MP4 5 312 086 o extrait, partage, notification FGS, écran éteint 45 s, zéro
+crash) ; job offline-export 35/0/0 + OFFX 41/0 (journal CONFIRMED, RMS
+musique -17,609 dB, solde 2). Le contrôle d'intégrité D42.30-17 n'a pas eu
+besoin de se déclencher (aucune erreur de champ affichée — runner sain,
+job ~40 min) : il reste en garantie contre la récidive de la course IME.
 
 ## Défauts terrain RC14 → correctifs D42.30 (aucun défaut sans correction ou preuve)
 
@@ -101,7 +107,9 @@ téléphone :
 0de99a6 → 05ca482 → 401ce39 (D42.30-11) → 46fe2a4 (D42.30-12 es/ja) →
 4ee2b4b (D42.30-13 harnais saisie) → b279bca (**D42.30-14 fix export**) →
 39189c4 (journal) → 818d8d6 (D42.30-15 p3) → 02eff63 (D42.30-16) →
-**137c972 (état final, tagué d42.30-build-rc15 + d42.30-rc15)**.
+**137c972 (état final, tagué d42.30-build-rc15 + d42.30-rc15)** →
+95449cf (D42.30-17 : harnais p1, contrôle d'intégrité final du brief ;
+code APP inchangé, RC15 reste exacte).
 
 Tags : `D42_29`, `d42.29-build-rc14`, `d42.29-rc14`, `d42.30-build-rc15`,
 `d42.30-rc15`. Releases : RC14 = 441446648, **RC15 = 442574529**.

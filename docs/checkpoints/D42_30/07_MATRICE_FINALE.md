@@ -1,8 +1,9 @@
 # D42.30 — 07_MATRICE_FINALE
 
-Matrice de validation produit sur **02eff63** (= b279bca + harnais ; le code APP
-est celui de b279bca (fix export D42.30-14 ; chaîne
-46fe2a4 → 4ee2b4b → b279bca → 39189c4 docs). Tous les bancs = émulateur API 30
+Matrice de validation produit sur **02eff63**, revalidée sur **95449cf**
+(= 137c972 + harnais D42.30-17 ; **le code APP est inchangé depuis b279bca**
+(fix export D42.30-14 ; chaîne
+46fe2a4 → 4ee2b4b → b279bca → 39189c4 → 818d8d6 → 02eff63 → 137c972 → 95449cf, seule la suite harnais évolue). Tous les bancs = émulateur API 30
 Pixel 5 swiftshader, APK debug du commit, sauf mention contraire. Aucun PASS
 fabriqué : chaque ligne pointe le run/artefact GitHub qui la prouve.
 
@@ -27,7 +28,7 @@ fabriqué : chaque ligne pointe le run/artefact GitHub qui la prouve.
 | Brief : prix stable, clavier, erreurs à hauteur réservée | PASS | p1 35/0/0 + offline-export 35/0/0 (P1_brief*, P1_prise*) |
 | WhatsApp international (BJ 01 10 chiffres, sélecteur pays, E.164) | PASS | P1_brief_valide avec 0197000000 ; libphonenumber 8.13.50 validé JVM |
 | Écran vérification (ReadyCheck responsive) | PASS | p1 P1_brief_valide → « Avant de commencer » |
-| Parcours complet 25+ étapes | **PASS 35/0/0** | lab 43142014528 job android-e2e-p1 (log FIN P1) |
+| Parcours complet 25+ étapes | **PASS 35/0/0** | lab 43182516945 (95449cf) job android-e2e-p1 (131061699172) : FIN P1 35/0/0 — brief valide + invalides refusés + caméra + 2 prises + rushs + export « Vidéo prête ! » + MP4 5 312 086 o + partage + notif FGS + écran éteint + zéro crash ; labs antérieurs 43142014528/43148343691/43160964840 ; APK signée 36/0/0 (43168986328) |
 | Export local abouti, « Vidéo prête ! », partage | **PASS (1re fois)** | P1_export_termine + P1_partage PASS — fix D42.30-14 |
 | Export HORS CONNEXION avec musique | **PASS** | OFFX_mp4_decode_offline : RMS -17.609050 dB > -28 |
 | Journal d'export / crédits | **PASS** | OFFX_journal_export : CONFIRMED, solde 2 |
