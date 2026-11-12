@@ -1,6 +1,7 @@
 # D42.30 — 07_MATRICE_FINALE
 
-Matrice de validation produit sur **b279bca** (fix export D42.30-14 ; chaîne
+Matrice de validation produit sur **02eff63** (= b279bca + harnais ; le code APP
+est celui de b279bca (fix export D42.30-14 ; chaîne
 46fe2a4 → 4ee2b4b → b279bca → 39189c4 docs). Tous les bancs = émulateur API 30
 Pixel 5 swiftshader, APK debug du commit, sauf mention contraire. Aucun PASS
 fabriqué : chaque ligne pointe le run/artefact GitHub qui la prouve.
@@ -34,7 +35,7 @@ fabriqué : chaque ligne pointe le run/artefact GitHub qui la prouve.
 | FR/EN uniquement (es/ja retirés du parcours actif) | **PASS ×4** | S03b_es_ja_absents (lab 43129951436 android-e2e : base/font130/rot90 + petit écran) ; asset l10n purgé 9 716→4 948 o ; dialog dashboard FR/EN |
 | Langues EN (parcours anglais) | PASS | android-e2e-langues (en) SUCCESS |
 | Brouillons inter-sessions, auth, deeplink, offline | PASS | jobs SUCCESS lab 43142014528 |
-| 3 modes audio (musique/voix/mix) | ⏳ en cours | p3-modes 43148299573 déclenché (non-régression du fix ExportWorker) |
+| 3 modes audio (musique/voix/mix × fr/en) | **PASS 6/6 à 0 FAIL** | p3-modes 43161021108 (02eff63) : voix fr/en 28/0/0, mix fr/en 28/0/0, musique fr/en 27/0/0 — musique établie (D42-BGM + RMS global -17,6 dB), mix prouvé au delta (+5 dB vs voix seule), voix pass-through (intro quasi muette) |
 
 ## Stabilité
 

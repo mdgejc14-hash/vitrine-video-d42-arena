@@ -240,6 +240,14 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   FCFA) sont validés par la même occasion (brief_valide PASS dans les DEUX
   bancs). Non-régression audio déclenchée : p3-modes (musique voix mix) —
   le fix touche le chemin audio du Worker.
+- **17/11 (D42.30-16 VALIDÉ : p3-modes 43161021108 sur 02eff63 — 6/6 cellules
+  à 0 FAIL)** : voix fr/en 28/0/0, mix fr/en 28/0/0, musique fr/en 27/0/0 ;
+  P3_prise_2_en PASS (libellés EN couverts), P3_mode_mix PASS (delta +5 dB vs
+  voix seule : la musique duckée apporte son énergie, preuve physique du mix).
+  **ÉTAT : toutes les validations D42.30 sont VERTES** — android-ci SUCCESS,
+  lab 14/14 (camerap 62/0/0 ×6, p1 35/0/0, offline-export 35/0/0 + OFFX 41/0,
+  S03b_es_ja_absents ×4, drafts/auth/deeplink/langues-en/offline/backend/
+  security/selftest/gabarits-audit), p3-modes 6/6. → RC15.
 - **17/11 (D42.30-15 = p3-modes analysé : 5 correctifs harnais, app INNOCENTE)** :
   p3-modes 43148299573 (b279bca) : jobs SUCCESS mais verdicts internes —
   voix 26/2, mix 25/3, musique fr 13/4/7 (cascade) + en 24/3. RCA (artefacts
