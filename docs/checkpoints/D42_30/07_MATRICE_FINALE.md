@@ -1,9 +1,9 @@
 # D42.30 — 07_MATRICE_FINALE
 
-Matrice de validation produit sur **02eff63**, revalidée sur **95449cf**
-(= 137c972 + harnais D42.30-17 ; **le code APP est inchangé depuis b279bca**
+Matrice de validation produit sur **02eff63**, revalidée sur **0abebc9**
+(= 137c972 + harnais D42.30-17/-18 ; **le code APP est inchangé depuis b279bca**
 (fix export D42.30-14 ; chaîne
-46fe2a4 → 4ee2b4b → b279bca → 39189c4 → 818d8d6 → 02eff63 → 137c972 → 95449cf, seule la suite harnais évolue). Tous les bancs = émulateur API 30
+46fe2a4 → 4ee2b4b → b279bca → 39189c4 → 818d8d6 → 02eff63 → 137c972 → 95449cf → 6ef3273 → 0abebc9, seule la suite harnais évolue). Tous les bancs = émulateur API 30
 Pixel 5 swiftshader, APK debug du commit, sauf mention contraire. Aucun PASS
 fabriqué : chaque ligne pointe le run/artefact GitHub qui la prouve.
 
@@ -11,13 +11,14 @@ fabriqué : chaque ligne pointe le run/artefact GitHub qui la prouve.
 
 | Test | Verdict | Preuve |
 |---|---|---|
-| STREAMING capteur (flux réel dans le viseur) | PASS ×5 | camerap 62/0/0 — marqueur VV_E2E « PREVIEW STREAMING : le flux caméra est actif (frames réelles) » (artefacts e2e-camerap, ex. 13894710199) |
-| Compte à rebours 3-2-1 VRAI puis enregistrement | PASS ×5 | marqueurs « compte à rebours : 3/2/1 » → « startRecording : ENREGISTREMENT ACTIF » |
-| Jamais 2 enregistrements simultanés | PASS ×5 | garde onRecord « enregistrement=true » refusé |
-| Finalize + fichier rush complet | PASS ×5 | « Finalize : hasError=false taille=…octets » ×2 par run |
+| STREAMING capteur (flux réel dans le viseur) | PASS ×8 | camerap 62/0/0 — marqueur VV_E2E « PREVIEW STREAMING : le flux caméra est actif (frames réelles) » (logcat e2e-p1 du lab 43193984605 : artefact 13932824643, 09:56:02 ; artefacts antérieurs ex. 13894710199) |
+| Compte à rebours 3-2-1 VRAI puis enregistrement | PASS ×8 | marqueurs « compte à rebours » ×6 → « startRecording : ENREGISTREMENT ACTIF » ×2 (logcat 43193984605) |
+| Jamais 2 enregistrements simultanés | PASS ×8 | garde onRecord « enregistrement=true » refusé |
+| Finalize + fichier rush complet | PASS ×8 | « Finalize : hasError=false taille=…octets » ×2 par run ; rushs MP4 réels 787 554 / 747 527 / 760 139 o (B04_rushs_finaux.txt, artefact 13934217930) |
 | Suppression fichier incomplet si échec | codé+couvert | CameraGuideActivity l.494 (chemin d'échec défensif) |
-| Bascules AVANT/ARRIÈRE, Refaire slot seul, reprise, conservation | PASS ×5 | camerap 62/0/0 |
-| Zéro crash caméra | PASS ×5 | camerap 62/0/0 (aucun FATAL du processus app) |
+| Bascules AVANT/ARRIÈRE, Refaire slot seul, reprise, conservation | PASS ×8 | camerap 62/0/0 ; bascules prouvées par fichiers (flip_avant=1, bind_avant=1, flip_arriere=1) |
+| Zéro crash caméra | PASS ×8 | camerap 62/0/0 (aucun FATAL du processus app, crash_a/b/c.txt vides) |
+| **Résilience du harnais caméra (D42.30-18)** | **RÉSOLU** | épisode 43182516945 : 45/3/12 — remplissage whatsapp À L'AVEUGLE (tel=0 aux preuves CPA/CPB) + détection d'erreur greppant les dumps des phases PRÉCÉDENTES (CPC tel=1 à sa preuve mais FAIL sans même tenter Continuer) ; **app innocente** (elle refusait à juste titre les numéros vides/amputés). Correctif harnais-only 0abebc9 : portage saisir_et_verifier + contrôle d'intégrité final + détection rescopée par phase. Revalidation 43193984605 : **62/0/0**, le correctif s'est DÉCLENCHÉ ×2 en vol (« saisie non confirmée, champ #1 — re-saisie » 09:52:52 et 10:16:09) : le défaut a été intercepté et réparé, pas évité par chance |
 | **Caméra CAPTEUR PHYSIQUE (téléphone fondateur)** | **BLOCKED_DEVICE_TEST** | exige un appareil réel ; seuls le STREAMING capteur, le countdown au doigt et le MP4 capteur y sont prouvables |
 
 ## P1 — Produit
