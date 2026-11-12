@@ -472,7 +472,19 @@ class ExportWorker(
      */
     private fun rushesAudioPresente(rushes: Array<String>?): Boolean {
         if (rushes.isNullOrEmpty()) return true // hors chemin composition : inchangé
-        return rushes.any { rush ->
+        // D42.30-14 (RCA lab 401ce39) : sonder les rushs RÉELS — le même
+        // alignement que la composition (RushSlots.resolve, audit D41 F55).
+        // Le tableau brut contient des slots vides "" (prise sautée : le guide
+        // transmet un tableau ALIGNÉ, "" = prise absente — gabarit 3 prises
+        // avec 2 tournées) : setDataSource("") lève une exception et le repli
+        // conservateur « voix présente » désactivait à tort la base silencieuse
+        // → export sans piste audio → audioVerdict=ECHEC → les 3 tentatives
+        // étaient rejetées puis échec final (essai 0/1/2 hasAudioTrack=false,
+        // journal COMPENSATED, ~35 min d'encodage perdues, crédit compensé).
+        // Un slot vide n'est pas un fichier : il ne peut pas porter de voix.
+        val rushsReels = video.vitrine.ins.effects.RushSlots.resolve(rushes.toList())
+        if (rushsReels.isEmpty()) return true
+        return rushsReels.any { rush ->
             runCatching {
                 val extractor = android.media.MediaExtractor()
                 try {

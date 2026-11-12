@@ -228,6 +228,27 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   isole le défaut en une étape — ici le défaut était dans le HARNAIS, pas
   dans l'app ; le message d'erreur affiché à l'écran était la preuve depuis
   le premier dump.
+- **17/11 (D42.30-14 = bug produit EXPORT trouvé par RCA des artefacts, FIX
+  app poussé)** : lab 43129951436 (46fe2a4) 14 jobs SUCCESS — camerap 62/0/0
+  (4e preuve), **S03b_es_ja_absents PASS ×4 (retrait es/ja PROUVÉ)**, p1
+  33/1/1, offline-export 33/1/1 + OFFX 37/3 (brief_valide PASSé cette fois —
+  la corruption de saisie D42.30-13 est bien intermittente). Restaient
+  P1_export_termine + OFFX_journal_export (COMPENSATED) +
+  OFFX_mp4_decode_offline (SANS musique). **RCA (logcat artefact p1 +
+  draft Room)** : D42-VERIF essai 0/1/2 → `hasAudioTrack=false,
+  audioVerdict=ECHEC` — les 3 tentatives produisaient des MP4 COMPLETS
+  (35 s, bitrate OK, nonBlackFrames=3) mais SANS piste audio, rejetés par
+  le vérificateur → FAILURE 23:43, journal COMPENSATED, ~35 min perdues.
+  Chaîne : gabarit T1 « Nouvel arrivage » = 3 prises, parcours = 2 prises →
+  `client_rushes` contient un slot VIDE "" ; `rushesAudioPresente()` sondait
+  le tableau BRUT → `setDataSource("")` lève → repli conservateur « voix
+  présente » → base silencieuse D42-21 désactivée → Transformer sans graphe
+  audio → piste absente → ECHEC. **Impact utilisateur réel : merchant qui
+  saute une prise = export mort (crédit compensé, aucune vidéo).**
+  **Fix (ExportWorker.rushesAudioPresente)** : sonder `RushSlots.resolve()`
+  — les rushs RÉELS, même alignement que la composition. Avec le fix :
+  base silencieuse préparée → SFX/BGM mixés → piste audio → export
+  CONFIRMED (~12 min/tentative, fenêtre 95 min large).
 - **17/11 (D42.30-11 VALIDÉ : lab 43115322040 sur 401ce39, 14 jobs SUCCESS)** :
   camerap 62/0/0 (3e preuve) ; **p1 PASS=33 FAIL=1 BLOCKED=1** — P1_prise_2 ✔,
   P1_aucun_crash ✔, P1_brief_invalide ✔ (les 3 correctifs D42.30-11 font
