@@ -229,7 +229,9 @@ PYEOF2
 }
 
 swipe_h() { # de droite à gauche pour révéler les chips suivants
-  adb shell input swipe $(( EFF_W * 8 / 10 )) $(( EFF_H * $1 / 100 ))     $(( EFF_W * 2 / 10 )) $(( EFF_H * $1 / 100 )) "${2:-250}" >/dev/null 2>&1
+  # v6 : la rangée de chips est à ~44 % de la hauteur (mesuré sur le dump
+  # secteur_iter6 du run v5 : y 1020-1047 sur 2340) — pas en haut.
+  adb shell input swipe $(( EFF_W * 8 / 10 )) $(( EFF_H * 44 / 100 ))     $(( EFF_W * 2 / 10 )) $(( EFF_H * 44 / 100 )) "${2:-300}" >/dev/null 2>&1
 }
 # cherche UN PARMI les motifs (texte+content-desc, casse ignorée) dans le dump
 # courant et renvoie "x y" ; sinon code retour 1
@@ -287,8 +289,11 @@ case "$LANGUE" in
       EXPORT_PREP="Ta vidéo se prépare"; DONE="Vidéo prête"
       PARTAGER="Partager la vidéo"; ESPACE="Voir mon espace"
       AUTORISER="AUTORISER"; ACCES="Accès caméra nécessaire"; PLUS_TARD="PLUS TARD"
+      REC_TXT="Verrouiller et enregistrer"; STOP_TXT="Arrêter et continuer"
+      FLIP_TXT="Changer de caméra"; REDO_TXT="Refaire"; NEXT_TXT="Suivant"
+      PRISE_OK="enregistrée"
       ERREUR_TEL="n.est pas valide"; ERREUR_PRIX="Saisis un nombre"
-      GABARITS_CANDIDATS="Nouvel arrivage Nouveautés New Arrivals Avant Après Before Présentation Quick Promo Promotion Témoignage Customer Un"
+      GABARITS_CANDIDATS="client raconte Nouvel arrivage Nouveautés New Arrivals ancien prix montre l.article Présentation Quick Promo Promotion Témoignage Customer Avant"
       SECT1="Vêtements"; SECT2="Coiffure"; SECT3="Restauration"; SECT4="Bâtiment"; SECT5="Voitures"; SECT6="Boutique" ;;
   en) CARTE="English"; ATTENDU_AUTH="Continue with Google"; S1="Shoot. Sell. Done."
       S2="Film your products, we guide you"; S3="A video ready to post in 30 seconds"
@@ -301,8 +306,11 @@ case "$LANGUE" in
       EXPORT_PREP="Your video is being prepared"; DONE="Video ready"
       PARTAGER="Share the video"; ESPACE="View my space"
       AUTORISER="ALLOW"; ACCES="Camera access required"; PLUS_TARD="LATER"
+      REC_TXT="Lock and record"; STOP_TXT="Stop and continue"
+      FLIP_TXT="Switch camera"; REDO_TXT="Redo"; NEXT_TXT="Next"
+      PRISE_OK="saved"
       ERREUR_TEL="isn.t valid"; ERREUR_PRIX="Enter a number"
-      GABARITS_CANDIDATS="New Arrivals Nouvel arrivage Nouveautés Avant Après Before Présentation Quick Promo Promotion Témoignage Customer Un"
+      GABARITS_CANDIDATS="client raconte Nouvel arrivage Nouveautés New Arrivals ancien prix montre l.article Présentation Quick Promo Promotion Témoignage Customer Avant"
       SECT1="Clothing"; SECT2="Hair"; SECT3="Restaurants"; SECT4="Building"; SECT5="Cars"; SECT6="Shops" ;;
   *) echo "langue non supportée : $LANGUE (FR/EN uniquement)"; exit 2 ;;
 esac
@@ -450,7 +458,7 @@ if [ "$okcat" = "1" ]; then
             # shellcheck disable=SC2086
             adb shell input tap $bounds >/dev/null 2>&1; trouve=1; break
           fi
-          swipe_h 14 300; sleep 1
+          swipe_h; sleep 1
         done
         sleep 2
         if [ "$trouve" = "1" ]; then
@@ -479,7 +487,7 @@ if [ "$okcat" = "1" ]; then
         # shellcheck disable=SC2086
         adb shell input tap $bounds >/dev/null 2>&1; break
       fi
-      swipe_h 14 300; sleep 1
+      swipe_h; sleep 1
     done
     sleep 2
     haut_de_page
@@ -657,61 +665,80 @@ if attendre "$FILME"; then
   galshot "camera_guide" "Guide de tournage (consignes)" "camera" "guide"
 fi
 WT=20
+# v6 : les contrôles caméra sont des BOUTONS TEXTE (« VERROUILLER ET
+# ENREGISTRER », « CHANGER DE CAMÉRA », « REFAIRE », « SUIVANT » — dumps
+# v5) ; l'id camera_record_button n'est pas toujours exposé. Recherche par
+# texte (dump) avec id en repli.
+demarrer_enregistrement() {
+  $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1 \
+    || tap_coord_text "$REC_TXT" || true
+}
+arreter_enregistrement() {
+  $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1 \
+    || tap_coord_text "$STOP_TXT" || true
+}
 ok_cam=0
 for _ in 1 2 3; do
-  if $UI wait --id "camera_record_button" --timeout 25 >/dev/null 2>&1; then ok_cam=1; break; fi
+  if $UI wait --id "camera_record_button" --timeout 20 >/dev/null 2>&1; then ok_cam=1; break; fi
+  dump_courant "_cam_cherche"
+  if coord_parmi "$OUT/_cam_cherche.xml" "$REC_TXT"; then ok_cam=1; break; fi
   taper "$AUTORISER" exact || true; sleep 2
 done
 if [ "$ok_cam" = "1" ]; then
   sleep 2
   galshot "camera_preview" "Viseur caméra — PreviewView (flux ÉMULÉ de l'émulateur)" "camera" "preview streaming"
-  # countdown : rafale après le tap d'enregistrement
-  $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1
+  demarrer_enregistrement
   galshot "camera_countdown_a" "Compte à rebours (capture a)" "prises" "countdown"
   sleep 1
   galshot "camera_countdown_b" "Compte à rebours (capture b)" "prises" "countdown"
   sleep 2
   galshot "camera_rec" "Enregistrement ACTIF — badge REC" "prises" "rec"
   sleep 2
-  $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1
+  arreter_enregistrement
   sleep 2
   galshot "camera_arret" "Arrêt de la prise — finalisation" "prises" "arrêt"
-  if $UI tap --id "camera_flip_button" --timeout 8 >/dev/null 2>&1; then
+  WT=25
+  if attendre "$PRISE_OK"; then
+    WT=20
+    galshot "camera_prise_validee" "Prise validée (✓ enregistrée)" "prises" "validée"
+  else
+    WT=20
+  fi
+  if tap_coord_text "$FLIP_TXT"; then
     sleep 2
     galshot "camera_avant" "Caméra AVANT (flux émulé) après bascule" "prises" "bascule avant"
-    $UI tap --id "camera_flip_button" --timeout 8 >/dev/null 2>&1; sleep 2
+    tap_coord_text "$FLIP_TXT"; sleep 2
     galshot "camera_arriere" "Retour caméra ARRIÈRE (flux émulé)" "prises" "bascule retour"
   else
     gap "bouton de bascule caméra introuvable"
   fi
-  if $UI tap --id "camera_redo_button" --timeout 8 >/dev/null 2>&1; then
+  if tap_coord_text "$REDO_TXT"; then
     sleep 2
     galshot "camera_refaire" "Reprise d'une prise (Refaire)" "prises" "reprise"
-    $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1
+    demarrer_enregistrement
     sleep 5
-    $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1
+    arreter_enregistrement
     sleep 2
   else
-    gap "bouton Refaire introuvable (état avant enregistrement ?)"
+    gap "bouton Refaire introuvable"
   fi
   # scènes suivantes (jusqu'à 4) puis sortie vers l'aperçu
   scene=2
   while [ "$scene" -le 4 ]; do
-    if ! $UI tap --id "camera_next_button" --timeout 8 >/dev/null 2>&1; then break; fi
-    sleep 2
-    galshot "camera_scene${scene}" "Scène ${scene} du guide" "prises" "scène ${scene}"
-    $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1
-    sleep 6
-    $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1
-    sleep 2
-    scene=$((scene+1))
-    # si l'aperçu est atteint, le guide est terminé
     WT=8
     if attendre "$APERCU"; then break; fi
     WT=20
+    if ! tap_coord_text "$NEXT_TXT"; then break; fi
+    sleep 2
+    galshot "camera_scene${scene}" "Scène ${scene} du guide" "prises" "scène ${scene}"
+    demarrer_enregistrement
+    sleep 6
+    arreter_enregistrement
+    sleep 2
+    scene=$((scene+1))
   done
 else
-  gap "écran caméra non atteint (bouton enregistrement absent)"
+  gap "écran caméra non atteint (bouton enregistrement absent) — dump _cam_cherche.xml"
 fi
 
 # =====================================================================
