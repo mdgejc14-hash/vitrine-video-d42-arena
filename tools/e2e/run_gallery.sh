@@ -450,16 +450,34 @@ if [ "$okcat" = "1" ]; then
       done
       if [ "$ouvre" = "1" ]; then
         galshot "secteur_change_${s}" "Catalogue — filtres secteur dépliés (itération $s)" "secteurs" "changement"
-        # chip cible (avec défilement horizontal des chips si nécessaire)
+        # chip cible — bloc de chips MULTI-LIGNES (dump v6 : lignes à
+        # ~31 %, ~38 % et ~44 % de la hauteur) : swipe horizontal à
+        # plusieurs hauteurs + petit défilement vertical de secours
         trouve=0
-        for h in 1 2 3; do
+        for h in 1 2 3 4; do
           dump_courant "secteur_iter${s}"
           if bounds=$(coord_parmi "$OUT/secteur_iter${s}.xml" "$S"); then
             # shellcheck disable=SC2086
             adb shell input tap $bounds >/dev/null 2>&1; trouve=1; break
           fi
-          swipe_h; sleep 1
+          swipe_h 31 250; sleep 1
+          dump_courant "secteur_iter${s}"
+          if bounds=$(coord_parmi "$OUT/secteur_iter${s}.xml" "$S"); then
+            # shellcheck disable=SC2086
+            adb shell input tap $bounds >/dev/null 2>&1; trouve=1; break
+          fi
+          swipe_h 38 250; sleep 1
         done
+        if [ "$trouve" = "0" ]; then
+          # secours : la chip est peut-être SOUS le pli vertical
+          swipe_v 62 52 250 >/dev/null 2>&1; sleep 1
+          dump_courant "secteur_iter${s}"
+          if bounds=$(coord_parmi "$OUT/secteur_iter${s}.xml" "$S"); then
+            # shellcheck disable=SC2086
+            adb shell input tap $bounds >/dev/null 2>&1; trouve=1
+          fi
+          swipe_v 42 52 250 >/dev/null 2>&1; sleep 1
+        fi
         sleep 2
         if [ "$trouve" = "1" ]; then
           galshot "catalogue_secteur${s}" "Catalogue — secteur « $S » (en-tête de focus)" "catalogue" "secteur $s"
@@ -577,7 +595,10 @@ fi
 # 11_verification — réparation puis validation du brief
 # =====================================================================
 if [ "$GABARIT_OK" = "1" ]; then
-for tentative in 1 2 3; do
+# v7 : le brief est MULTI-ÉTAPES (le bouton Continuer avance d'étape en
+# étape — constat offline v6 : champs Prix/Monnaie/Quartier puis nouvelle
+# page) ; on boucle jusqu'à 8 avancements avec réparation à chaque étape.
+for tentative in 1 2 3 4 5 6 7 8; do
   # boucle de réparation : erreurs affichées ou champs vides → re-saisir
   for _ in 1 2 3; do
     dump_courant "_verif_brief"
@@ -602,8 +623,9 @@ for tentative in 1 2 3; do
   fermer_clavier
   # révéler Continuer puis l'actionner (v3 : recherche par défilement)
   tap_coord_text "$CONTINUER" || taper "$CONTINUER" exact
-  WT=25
+  WT=14
   if attendre "$AVANT"; then
+    WT=20
     galshot "verification" "Écran de vérification (avant de commencer)" "verification" "récapitulatif"
     swipe_v 72 30 300; sleep 1
     galshot "verification_bas" "Vérification — bas de l'écran" "verification" "défilé"
@@ -611,7 +633,13 @@ for tentative in 1 2 3; do
     break
   fi
   WT=20
-  echo "GALERIE : « $AVANT » absent après Continuer (tentative $tentative) — réparation"
+  # nouvelle étape du brief ? (des champs sont encore présents → remplir et
+  # continuer ; sinon simple attente avant la prochaine tentative)
+  lister_champs
+  if grep -q "^E2E CHAMP " "$OUT/champs.txt" 2>/dev/null; then
+    echo "GALERIE : étape de brief supplémentaire détectée (tentative $tentative)"
+    galshot "brief_etape${tentative}" "Brief — étape ${tentative} (multi-étapes)" "brief" "étape $tentative"
+  fi
 done
 if ! attendre "$AVANT"; then
   gap "écran de vérification jamais atteint (brief non validable après réparations)"
@@ -744,14 +772,26 @@ fi
 # =====================================================================
 # 14/15 — audio (mode automatique) + aperçu E7
 # =====================================================================
-WT=60
+WT=90
 if attendre "$APERCU"; then
   galshot "apercu" "Aperçu de la vidéo (E7) — mode audio automatique" "montage" "aperçu"
   swipe_v 72 30 300; sleep 1
   galshot "apercu_bas" "Aperçu — bas (typographie, voix)" "audio" "détail"
   haut_de_page
 else
-  gap "écran d'aperçu E7 non atteint"
+  # v7 : le rendu de l'aperçu est LENT sur swiftshader (run v6 : le tap
+  # « Créer ma vidéo » réussissait après l'expiration de l'attente) —
+  # vérification par dump et capture tardive
+  sleep 10
+  dump_courant "_e7_tardif"
+  if coord_parmi "$OUT/_e7_tardif.xml" "$APERCU"; then
+    galshot "apercu" "Aperçu de la vidéo (E7) — mode audio automatique" "montage" "aperçu"
+    swipe_v 72 30 300; sleep 1
+    galshot "apercu_bas" "Aperçu — bas (typographie, voix)" "audio" "détail"
+    haut_de_page
+  else
+    gap "écran d'aperçu E7 non atteint — dump _e7_tardif.xml"
+  fi
 fi
 WT=20
 tap_coord_text "$CREER" || taper "$CREER" exact
@@ -785,9 +825,16 @@ if attendre "$EXPORT_START" "$EXPORT_RUNNING" "$EXPORT_PREP"; then
 else
   gap "écran d'export non atteint"
 fi
-# fin d'export : longue attente UNIQUEMENT si l'export a démarré
-if [ "$export_lance" = "1" ]; then
-  WT=1500
+# fin d'export : longue attente UNIQUEMENT si l'export a démarré.
+# Fenêtre 95 min : mesures p1 (D42.28-26 : export BGM > 40 min ; D42.30-13 :
+# abouti après > 75 min — swiftshader, h264 1080p, fenêtre p1 = 95 min).
+# HORS LIGNE : la fin d'export (95 min) est couverte par base-fr/base-en —
+# le profil offline documente ses états propres puis s'arrête honnêtement.
+if [ "$export_lance" = "1" ] && [ "$PROFIL" = "offline" ]; then
+  galshot "export_offline_en_cours" "Hors connexion — export local en cours (état propre au profil)" "hors_connexion" "export en cours"
+  gap "fin d'export non attendue en offline (couverte par base-fr/base-en, fenêtre 95 min)"
+elif [ "$export_lance" = "1" ]; then
+  WT=5700
   if attendre "$DONE"; then
     WT=20
     galshot "export_termine" "« $DONE » — export terminé" "export" "terminé"
@@ -822,10 +869,11 @@ if [ "$export_lance" = "1" ]; then
     fi
   else
     WT=20
-    gap "export non terminé dans le délai (25 min) après lancement effectif"
+    galshot "export_etat_final" "Export — état final après fenêtre de 95 min" "export" "délai dépassé"
+    gap "export non terminé dans la fenêtre de 95 min (lancement effectif — capture d'état final fournie)"
   fi
 else
-  gap "export jamais lancé : pas d'attente longue (diagnostic v2)"
+  gap "export jamais lancé : pas d'attente longue"
 fi
 
 # 20_hors_connexion — le profil offline a déroulé TOUT le parcours déconnecté
