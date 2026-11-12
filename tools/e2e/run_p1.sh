@@ -510,6 +510,30 @@ if [ "$brief_ok" = "1" ]; then
   echo "E2E champs remplis (après complément) : $remplis"
   $UI champs > "$OUT/champs_apres.txt" 2>&1 || true
   cat "$OUT/champs_apres.txt" | sed 's/^/E2E /'
+  # D42.30-17 (RCA lab final 43167388350) : une valeur vérifiée À LA FRAPPE
+  # peut disparaître ENSUITE — le whatsapp « 0197000000 » (vérifié au dump de
+  # saisie) s'est retrouvé « 019700000 » au fill SUIVANT (course IME/perte de
+  # focus sur runner étranglé : 113 min vs ~35). L'APP a correctement refusé
+  # (« Ce numéro n'est pas valide pour le pays choisi ») — le défaut était le
+  # remplissage automatisé, sans contrôle FINAL. On remonte désormais le
+  # formulaire et, si l'app AFFICHE une erreur de champ, on RE-SAISIT le
+  # champ fautif (signal = la validation de l'app elle-même, rien de masqué).
+  for essai_integrite in 1 2; do
+    remonter_formulaire
+    sleep 1
+    dump "_integrite_$essai_integrite" >/dev/null 2>&1
+    if ! grep -q "pas valide pour le pays choisi" "$OUT/_integrite_$essai_integrite.xml" 2>/dev/null; then
+      break
+    fi
+    echo "E2E intégrité ($essai_integrite) : erreur de validation affichée par l'app — re-saisie du numéro whatsapp"
+    $UI champs > "$OUT/champs.txt" 2>&1 || true
+    idx_wa=$(grep "^E2E CHAMP " "$OUT/champs.txt" | grep -i "whatsapp" | awk '{print $3}' | head -1)
+    if [ -n "$idx_wa" ]; then
+      saisir_et_verifier "$idx_wa" "0197000000" || true
+    else
+      echo "E2E intégrité : champ whatsapp introuvable au listing (voir _integrite_$essai_integrite.xml)"
+    fi
+  done
   # Le bouton est en bas d'un écran défilant. On descend PAR PAS en vérifiant
   # après chaque geste qu'il est réellement apparu (un nombre fixe de glissements
   # ne garantit rien : le run 42205571080 est resté bloqué en haut du formulaire).

@@ -240,6 +240,23 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   FCFA) sont validés par la même occasion (brief_valide PASS dans les DEUX
   bancs). Non-régression audio déclenchée : p3-modes (musique voix mix) —
   le fix touche le chemin audio du Worker.
+- **17/11 (D42.30-17 : lab final 43167388350 — p1 21/6/7 FONCTIONNEL, RCA
+  complète, fix harnais)** : les 14 jobs sont SUCCESS côté GitHub MAIS le
+  journal du p1 (131012346489) donne 21 PASS/6 FAIL/7 BLOCKED. Preuves
+  (artefact 13925839270) : `_saisie_2.xml` montre le whatsapp à
+  « 019700000 » (9 chiffres — un chiffre perdu APRÈS la vérification de
+  frappe, entre le fill whatsapp et le fill vêtement) + l'erreur app
+  « Ce numéro n'est pas valide pour le pays choisi » ; 22b : tous les autres
+  champs remplis (RobeWax, 15 000, FCFA, Akpakpa) ; aucun « saisie non
+  confirmée » loggé. **L'app a correctement refusé** — défaut = remplissage
+  automatisé (course IME/perte de focus, runner étranglé 113 min vs ~35).
+  Fix run_p1.sh (harnais uniquement, app/APK inchangés) : contrôle
+  d'intégrité FINAL avant Continuer — remonter le formulaire, si l'app
+  affiche une erreur de champ → re-saisie du champ fautif (2 essais).
+  Le RC15 (release 442574529, APK fd28ffc7…) reste INTACTE : la preuve de
+  livraison sur l'APK signée exacte est release-official-e2e 43168986328
+  SUCCESS (36/0/0) obtenue AVANT ce flake harnais. Revalidation ciblée :
+  lab sur le commit du correctif.
 - **17/11 (D42.30-16 VALIDÉ : p3-modes 43161021108 sur 02eff63 — 6/6 cellules
   à 0 FAIL)** : voix fr/en 28/0/0, mix fr/en 28/0/0, musique fr/en 27/0/0 ;
   P3_prise_2_en PASS (libellés EN couverts), P3_mode_mix PASS (delta +5 dB vs
