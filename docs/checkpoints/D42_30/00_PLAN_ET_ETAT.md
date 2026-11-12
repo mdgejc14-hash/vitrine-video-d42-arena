@@ -228,6 +228,18 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   isole le défaut en une étape — ici le défaut était dans le HARNAIS, pas
   dans l'app ; le message d'erreur affiché à l'écran était la preuve depuis
   le premier dump.
+- **17/11 (D42.30-14 VALIDÉ : lab 43142014528 sur b279bca — 14 jobs SUCCESS
+  en ~40 min, TOUT PASS)** : android-ci SUCCESS ; camerap **62/0/0 (5e
+  consécutive)** ; **p1 35/0/0** — P1_export_termine PASS (« Vidéo prête ! »)
+  + P1_partage PASS, PREMIÈRE FOIS ; **offline-export 35/0/0 +
+  OFFLINE_EXPORT 41/0** — OFFX_mp4_decode_offline PASS « MP4 exporté HORS
+  CONNEXION avec musique (RMS -17.609050 dB > -28) », OFFX_journal_export
+  PASS « CONFIRMED, solde 2 ». Le fix produit (sonde sur rushs réels) est
+  VALIDÉ : l'export aboutit, avec audio, hors connexion, journal et crédits
+  justes. Les correctifs harnais D42.30-13 (saisie vérifiée + Monnaie
+  FCFA) sont validés par la même occasion (brief_valide PASS dans les DEUX
+  bancs). Non-régression audio déclenchée : p3-modes (musique voix mix) —
+  le fix touche le chemin audio du Worker.
 - **17/11 (D42.30-14 = bug produit EXPORT trouvé par RCA des artefacts, FIX
   app poussé)** : lab 43129951436 (46fe2a4) 14 jobs SUCCESS — camerap 62/0/0
   (4e preuve), **S03b_es_ja_absents PASS ×4 (retrait es/ja PROUVÉ)**, p1
