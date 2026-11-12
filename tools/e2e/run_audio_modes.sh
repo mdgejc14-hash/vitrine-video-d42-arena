@@ -586,7 +586,9 @@ prise() { # numéro
   # l'app va LÉGITIMEMENT à l'aperçu — issue VALIDE, pas un échec (rc=4 faux
   # au lab 43148299573 : P3_prise_2 FAIL ×6 alors que le guide était terminé).
   if $UI wait --text "Aperçu de ta vidéo" --timeout 10 >/dev/null 2>&1 \
-     || $UI wait --text "Créer ma vidéo" --timeout 10 >/dev/null 2>&1; then
+     || $UI wait --text "Créer ma vidéo" --timeout 10 >/dev/null 2>&1 \
+     || $UI wait --text "Preview of your video" --timeout 10 >/dev/null 2>&1 \
+     || $UI wait --text "Create my video" --timeout 10 >/dev/null 2>&1; then
     echo "E2E prise $n : DERNIÈRE prise du gabarit — guide terminé, aperçu atteint (comportement app correct)"
     return 0
   fi
@@ -852,12 +854,21 @@ if [ -s "$OUT/export.mp4" ] && command -v ffprobe >/dev/null 2>&1; then
       # que l'app a décodé la BGM pour le mixage (marqueur D42-BGM au logcat).
       # Le RMS intro reste consigné à titre diagnostic (constats_mode.txt).
       BGM_DECODEE=$(adb logcat -d 2>/dev/null | grep -c "D42-BGM : décodage BGM" || true)
+      # D42.30-16 : le mix DUCKE la musique sous la voix (contrat D41 F59).
+      # Mesuré (run 43154672536, injection identique) : voix seule
+      # -40,95 dB ; mix -35,98 dB ; musique seule -17,61 dB → la musique
+      # duckée apporte +5 dB. Preuve du mix = marqueur structurel D42-BGM
+      # + RMS global AU-DESSUS de la référence voix (-38 dB = baseline
+      # voix + ~3 dB de marge). Pour le mode musique (sans voix), la
+      # musique porte seule : seuil plein -28 dB (standard OFFX).
+      SEUIL=-28
+      if [ "$MODE" = "mix" ]; then SEUIL=-38; fi
       if [ "${BGM_DECODEE:-0}" -ge 1 ] \
          && [ -n "${RMS_G:-}" ] && [ "$RMS_G" != "inf" ] 2>/dev/null \
-         && awk -v r="$RMS_G" 'BEGIN{exit !(r > -28)}'; then
-        record PASS "P3_mode_${MODE}_${LANGUE}" "musique établie : BGM décodée pour le mixage (${BGM_DECODEE} marqueur(s) D42-BGM) + RMS global ${RMS_G} dB > -28 (intro 2 s à ${RMS_I:-?} dB : fade-in produit)"
+         && awk -v r="$RMS_G" -v s="$SEUIL" 'BEGIN{exit !(r > s)}'; then
+        record PASS "P3_mode_${MODE}_${LANGUE}" "musique établie : BGM décodée pour le mixage (${BGM_DECODEE} marqueur(s) D42-BGM) + RMS global ${RMS_G} dB > ${SEUIL} (réf. voix sans musique : -40,95 dB ; intro 2 s à ${RMS_I:-?} dB : fade-in produit)"
       else
-        record FAIL "P3_mode_${MODE}_${LANGUE}" "mode ${MODE} non établi : marqueurs D42-BGM=${BGM_DECODEE:-0}, RMS global ${RMS_G:-?} dB (attendu > -28)"
+        record FAIL "P3_mode_${MODE}_${LANGUE}" "mode ${MODE} non établi : marqueurs D42-BGM=${BGM_DECODEE:-0}, RMS global ${RMS_G:-?} dB (attendu > ${SEUIL})"
       fi
       ;;
     voix)
