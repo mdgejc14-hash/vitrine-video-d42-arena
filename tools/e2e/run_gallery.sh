@@ -545,14 +545,31 @@ if [ "$PROFIL" = "base" ]; then
     galshot "camera_permission_dialogue" "Dialogue système de permission caméra" "camera" "permission demandée"
     adb shell input keyevent 4 >/dev/null 2>&1; sleep 2
     galshot "camera_permission_refusee" "Caméra — permission refusée" "camera" "permission refusée"
+    # provoquer la 2e demande (bouton enregistrement) → dialogue produit possible
+    $UI tap --id "camera_record_button" --timeout 8 >/dev/null 2>&1 || true
+    sleep 2
     if attendre "$ACCES"; then
       galshot "camera_dialogue_produit" "Dialogue produit « accès caméra nécessaire »" "camera" "rationale"
+    fi
+    if focus_dans "permissioncontroller"; then
+      galshot "camera_permission_dialogue_2" "Dialogue système (2e demande)" "camera" "permission redemandée"
+      adb shell input keyevent 4 >/dev/null 2>&1; sleep 1
     fi
     adb shell pm grant "$PKG" android.permission.CAMERA >/dev/null 2>&1 || true
     adb shell input keyevent 4 >/dev/null 2>&1; sleep 1
     taper "$PLUS_TARD" || true
     sleep 1
     adb shell am start -n "$PKG/.MainActivity" >/dev/null 2>&1; sleep 4
+    # v4 : après le refus, l'activité caméra s'est fermée et le brouillon
+    # peut rouvrir le BRIEF (constat run v3) — on RE-VALIDE le parcours :
+    # Continuer → vérification → OK. La permission étant accordée (pm grant),
+    # le guide s'ouvre cette fois avec le viseur actif.
+    for _recup in 1 2; do
+      if $UI wait --id "camera_record_button" --timeout 15 >/dev/null 2>&1; then break; fi
+      tap_coord_text "$CONTINUER" || true; sleep 2
+      WT=20; attendre "$AVANT" || true; WT=20
+      tap_coord_text "$OK_COMMENCE" || true; sleep 3
+    done
   else
     adb shell pm grant "$PKG" android.permission.CAMERA >/dev/null 2>&1 || true
   fi
