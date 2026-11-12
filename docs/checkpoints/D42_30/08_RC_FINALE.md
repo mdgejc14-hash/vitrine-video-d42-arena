@@ -37,7 +37,7 @@ l'APK signée exacte.
 |---|---|---|
 | android-ci | SUCCESS | 43167388352 (137c972), 43160964884 (02eff63), 43154617344 (818d8d6) |
 | android-e2e-lab | 14/14 jobs | **43182516945 (95449cf) : 14/14 + p1 35/0/0** ; 43167388350 (137c972) : 14/14 mais p1 21/6/7 (flake harnais IME — RCA + D42.30-17) |
-| Caméra (camerap) | **62 PASS / 0 FAIL / 0 BLOCKED** ×6 runs | labs 43082333578, 43100433919, 43115322040, 43129951436, 43142014528, 43167388350 |
+| Caméra (camerap) | **62 PASS / 0 FAIL / 0 BLOCKED** ×8 runs | labs 43082333578, 43100433919, 43115322040, 43129951436, 43142014528, 43167388350, 43188419438 (6ef3273), **43193984605 (0abebc9, harnais D42.30-18 — voir RCA ci-dessous)** ; intermède 43182516945 : 45/3/12 = flake harnais (remplissage aveugle + contamination croisée), app innocente |
 | Parcours complet (p1) | **35/0/0** sur 95449cf/02eff63/b279bca | **lab 43182516945 (95449cf)** + labs 43142014528, 43148343691, 43160964840 |
 | Export hors connexion + OFFX | **35/0/0 + OFFLINE_EXPORT 41/0** | lab 43142014528 (b279bca) : RMS musique -17,609 dB, journal CONFIRMED, solde 2 |
 | 3 modes audio × fr/en | **6/6 cellules à 0 FAIL** | p3-modes 43161021108 (02eff63) : voix 28/0×2, mix 28/0×2, musique 27/0×2 |
@@ -68,6 +68,28 @@ crash) ; job offline-export 35/0/0 + OFFX 41/0 (journal CONFIRMED, RMS
 musique -17,609 dB, solde 2). Le contrôle d'intégrité D42.30-17 n'a pas eu
 besoin de se déclencher (aucune erreur de champ affichée — runner sain,
 job ~40 min) : il reste en garantie contre la récidive de la course IME.
+
+**Incohérence camerap du même lab 43182516945 (45/3/12 alors que p1 passait
+35/0/0 sur le même code app) — RCA D42.30-18, deux défauts harnais distincts
+(job 131061698882, log + artefact)** : (1) le remplissage du brief camerap se
+faisait À L'AVEUGLE (pas de saisir_et_verifier, contrairement à p1) : en
+CPA/CPB le whatsapp finissait VIDE (« tel=0 » aux preuves) et l'app refusait
+à juste titre ; (2) la détection d'erreur finale greppait `$OUT/*.xml` sans
+préfixe de phase : les dumps d'erreur de CPA persistaient et faisaient FAILer
+CPB/CPC sans produire leur propre diagnostic (preuve : aucun
+`CPB/CPC_brief_haut_diag`) — CPC avait tel=1/prix=1/RobeWax=1 à sa preuve
+finale et n'a JAMAIS tenté de cliquer Continuer. Le run suivant (43188419438,
+harnais identique, runner sain) a redonné 62/0/0 : intermittence
+environnementale, app innocente — le validateur téléphonique n'a PAS été
+touché. Correctif **D42.30-18 (harnais uniquement, commit 0abebc9)** : portage
+de saisir_et_verifier sur tous les points de remplissage + contrôle
+d'intégrité final avant Continuer (portage D42.30-17) + détection rescopée à
+la phase courante. **Revalidation lab 43193984605 (0abebc9) : 14/14 jobs,
+camerap 62/0/0 fonctionnel (results.tsv de l'artefact 13934217930), avec le
+correctif déclenché ×2 en vol** (« saisie non confirmée, champ #1 — re-saisie »
+à 09:52:52 et 10:16:09) : le défaut a été intercepté et réparé pendant le run,
+preuve que la cause était bien celle identifiée. p1 35/0/0 et OFFX 35/0/0+41/0
+confirmés sur le même run (jobs 131100096644/131100096850).
 
 ## Défauts terrain RC14 → correctifs D42.30 (aucun défaut sans correction ou preuve)
 
@@ -108,8 +130,10 @@ téléphone :
 4ee2b4b (D42.30-13 harnais saisie) → b279bca (**D42.30-14 fix export**) →
 39189c4 (journal) → 818d8d6 (D42.30-15 p3) → 02eff63 (D42.30-16) →
 **137c972 (état final, tagué d42.30-build-rc15 + d42.30-rc15)** →
-95449cf (D42.30-17 : harnais p1, contrôle d'intégrité final du brief ;
-code APP inchangé, RC15 reste exacte).
+95449cf (D42.30-17 : harnais p1, contrôle d'intégrité final du brief) →
+6ef3273 (docs revalidation) →
+0abebc9 (D42.30-18 : harnais camerap — portage saisir_et_verifier + contrôle
+final + détection par phase ; code APP inchangé, RC15 reste exacte).
 
 Tags : `D42_29`, `d42.29-build-rc14`, `d42.29-rc14`, `d42.30-build-rc15`,
 `d42.30-rc15`. Releases : RC14 = 441446648, **RC15 = 442574529**.

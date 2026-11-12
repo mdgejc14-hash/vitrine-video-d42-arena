@@ -240,6 +240,31 @@ fonctionnement (analyse d'impact systématique avant non-régression).
   FCFA) sont validés par la même occasion (brief_valide PASS dans les DEUX
   bancs). Non-régression audio déclenchée : p3-modes (musique voix mix) —
   le fix touche le chemin audio du Worker.
+- **17/11 (D42.30-18 : incohérence camerap RÉSOLUE — lab 43193984605 sur
+  0abebc9 : camerap 62/0/0 fonctionnel, correctif déclenché ×2 en vol)** :
+  constat user : au run 43182516945, android-e2e-camerap = 45/3/12 alors que
+  p1 passait 35/0/0 sur le même code app. RCA (log job 131061698882) : (1)
+  remplissage du brief À L'AVEUGLE — pas de saisir_et_verifier en camerap,
+  le whatsapp finissait VIDE (tel=0 aux preuves CPA/CPB) malgré
+  re-remplissages dont chaque fill suivant pouvait l'effacer (course IME),
+  l'app refusait à juste titre ; (2) contamination croisée — la détection
+  d'erreur finale greppait $OUT/*.xml sans préfixe de phase, les dumps
+  d'erreur de CPA faisaient FAILer CPB/CPC sans diagnostic propre (aucun
+  CPB/CPC_brief_haut_diag ; CPC tel=1 à sa preuve, jamais cliqué Continuer).
+  Le run 43188419438 (6ef3273, harnais identique, runner sain) a redonné
+  62/0/0 → intermittence environnementale, APP INNOCENTE, validateur
+  téléphonique INTACT. Fix 0abebc9 (harnais uniquement) : portage
+  saisir_et_verifier (D42.30-13) sur tous les remplissages + contrôle
+  d'intégrité final avant Continuer (D42.30-17) + détection rescopée
+  ${P}_*.xml. Revalidation lab 43193984605 : 14/14 jobs SUCCESS, camerap
+  62/0/0 (results.tsv artefact 13934217930), avec « saisie non confirmée,
+  champ #1 — re-saisie » ×2 (09:52:52, 10:16:09) : le défaut a été
+  intercepté et réparé EN VOL. Preuves caméra complètes : permission
+  refusée/réautorisée (dumpsys), guide atteint ×3, reprise (2 rushs),
+  conservation (B04_rushs_finaux.txt : 3 MP4 réels), bascules avant/retour
+  (fichiers de comptage), prise depuis l'AVANT, Finalize ×2 sans erreur,
+  0 crash ×3. p1 35/0/0 + OFFX 35/0/0+41/0 sur le même run. android-ci
+  0abebc9 SUCCESS. RC15 INTACTE (code APP inchangé depuis b279bca).
 - **17/11 (D42.30-17 REVALIDÉ : lab 43182516945 sur 95449cf — 14/14 jobs
   SUCCESS, journal fonctionnel p1 35/0/0 / 0 FAIL / 0 BLOCKED** (job
   android-e2e-p1 131061699172 : P1_brief_valide PASS 08:34:56Z, prix « abc »
