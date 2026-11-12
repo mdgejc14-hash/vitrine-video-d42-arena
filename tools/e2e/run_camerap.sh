@@ -143,6 +143,30 @@ remplir_champ() {
   return 0
 }
 
+saisir_et_verifier() { # index, valeur — remplit puis VÉRIFIE le contenu (portage D42.30-13)
+  # RCA camerap 43182516945 (45/3/12) : remplir_champ remplissait À L'AVEUGLE —
+  # le listing ne connaît que vide/rempli, et un remplissage pouvait se perdre
+  # (course IME / tap sans effet) sans que le harnais le voie : le whatsapp
+  # finissait VIDE (tel=0) et l'app refusait à juste titre. On vérifie
+  # désormais que la valeur est réellement affichée (comparaison SANS ESPACES :
+  # « 15000 » s'affiche « 15 000 », « 0197000000 » groupé), sinon on RETAPE
+  # avec des coordonnées fraîches.
+  local idx="$1" val="$2" attendu essai
+  attendu=$(printf '%s' "$val" | sed 's/\xc2\xa0//g; s/ //g')
+  for essai in 1 2; do
+    $UI champs > "$OUT/champs.txt" 2>&1 || true
+    remplir_champ "$idx" "$val" "$OUT/champs.txt" || true
+    sleep 1
+    dump "_saisie_$idx" >/dev/null 2>&1
+    if [ -s "$OUT/_saisie_$idx.xml" ] \
+       && sed 's/\xc2\xa0//g; s/ //g' "$OUT/_saisie_$idx.xml" | grep -qF "$attendu"; then
+      return 0
+    fi
+    echo "E2E saisie non confirmée (essai $essai, champ #$idx) : « $val » absent du dump — re-saisie"
+  done
+  return 1
+}
+
 parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
   local P="$1"
   # D42.26-18b : TAP À CONTRÔLE D'EFFET pour les actions critiques du brief —
@@ -248,7 +272,7 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
       case " $deja " in *" $idx "*) continue;; esac
       val=$(valeur_pour "$libelle")
       [ -n "$val" ] || continue
-      if remplir_champ "$idx" "$val" "$OUT/champs.txt"; then
+      if saisir_et_verifier "$idx" "$val"; then
         remplis=$((remplis+1)); deja="$deja $idx "
       fi
       break
@@ -272,7 +296,7 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
       val=$(valeur_pour "$libelle")
       [ -n "$val" ] || continue
       restant=$((restant+1))
-      remplir_champ "$idx" "$val" "$OUT/champs.txt" && remplis=$((remplis+1))
+      saisir_et_verifier "$idx" "$val" && remplis=$((remplis+1))
       break
     done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
     [ "$restant" = "0" ] && [ "$passe" -ge 2 ] && break
@@ -321,10 +345,7 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
       [ $haut_ok -eq 1 ] && [ $bas_ok -eq 1 ] && break
       continue
     fi
-    if ! remplir_champ "$vide_idx" "$val" "$OUT/champs.txt"; then
-      $UI champs > "$OUT/champs.txt" 2>&1 || true
-      remplir_champ "$vide_idx" "$val" "$OUT/champs.txt" || true
-    fi
+    saisir_et_verifier "$vide_idx" "$val" || true
   done
   $UI champs > "$OUT/champs_apres.txt" 2>&1 || true
   nb_vides=$(grep -c " vide |" "$OUT/champs_apres.txt" 2>/dev/null); nb_vides=${nb_vides:-0}
@@ -363,8 +384,8 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
       etat=$(echo "$l" | awk '{print $8}')
       libelle=$(echo "$l" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
       case "$libelle" in
-        *whatsapp*)   echo "$att_norm" | grep -q "0197000000" || { remplir_champ "$idx" "0197000000" "$OUT/champs.txt" || true; } ;;
-        *Prix*|*prix*) echo "$att_norm" | grep -q "15000" || { remplir_champ "$idx" "15000" "$OUT/champs.txt" || true; } ;;
+        *whatsapp*)   echo "$att_norm" | grep -q "0197000000" || { saisir_et_verifier "$idx" "0197000000" || true; } ;;
+        *Prix*|*prix*) echo "$att_norm" | grep -q "15000" || { saisir_et_verifier "$idx" "15000" || true; } ;;
       esac
     done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
     # redescendre pour les champs du bas si nécessaire
@@ -376,9 +397,9 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
       etat=$(echo "$l" | awk '{print $8}')
       libelle=$(echo "$l" | sed 's/^[^|]*|//; s/|[[:space:]]*$//')
       case "$libelle" in
-        *v*tement*)   [ -z "$(grep -o 'RobeWax' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { remplir_champ "$idx" "RobeWax" "$OUT/champs.txt" || true; } ;;
-        *Quartier*|*quartier*) [ -z "$(grep -o 'Akpakpa' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { remplir_champ "$idx" "Akpakpa" "$OUT/champs.txt" || true; } ;;
-        *commerce*)   [ -z "$(grep -o 'BoutiqueAwa' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { remplir_champ "$idx" "BoutiqueAwa" "$OUT/champs.txt" || true; } ;;
+        *v*tement*)   [ -z "$(grep -o 'RobeWax' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { saisir_et_verifier "$idx" "RobeWax" || true; } ;;
+        *Quartier*|*quartier*) [ -z "$(grep -o 'Akpakpa' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { saisir_et_verifier "$idx" "Akpakpa" || true; } ;;
+        *commerce*)   [ -z "$(grep -o 'BoutiqueAwa' "$OUT/verif_contenu.xml" 2>/dev/null)" ] && { saisir_et_verifier "$idx" "BoutiqueAwa" || true; } ;;
       esac
     done < <(grep "^E2E CHAMP " "$OUT/champs.txt")
   done
@@ -387,6 +408,37 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
   adb exec-out cat /sdcard/d.xml > "$OUT/verif_contenu_final.xml" 2>/dev/null
   fin_norm=$(sed 's/\xc2\xa0//g; s/ //g' "$OUT/verif_contenu_final.xml" 2>/dev/null || echo "")
   echo "E2E preuve contenu final : tel=$(echo "$fin_norm" | grep -c '0197000000') prix=$(echo "$fin_norm" | grep -c '15000') RobeWax=$(grep -c 'RobeWax' "$OUT/verif_contenu_final.xml" 2>/dev/null)"
+  # D42.30-18 : CONTRÔLE D'INTÉGRITÉ FINAL avant Continuer (portage D42.30-17
+  # validé en p1). RCA 43182516945 : un whatsapp rempli pouvait être vidé ou
+  # amputé APRÈS les contrôles (course IME sur runner chargé) et CPC avait
+  # tel=1 à la preuve puis FAIL sans même tenter Continuer — l'app refusait
+  # à juste titre et les trois phases cascadaient. On remonte le formulaire
+  # (le champ whatsapp et son erreur vivent en HAUT), on dump : si l'app
+  # AFFICHE « … n'est pas valide … » ou si le numéro est absent du dump
+  # normalisé, on RE-SAISIT le whatsapp EN DERNIER — plus AUCUN remplissage
+  # ensuite — puis on re-dump. 2 essais. Le signal = la validation de l'app
+  # elle-même : aucun FAIL masqué.
+  local essai_integrite idx_wa int_norm
+  for essai_integrite in 1 2; do
+    swipe_v 26 73 400 >/dev/null 2>&1; sleep 1
+    swipe_v 30 70 400 >/dev/null 2>&1; sleep 1
+    fermer_clavier
+    dump "_integrite_${P}_${essai_integrite}" >/dev/null 2>&1
+    int_norm=$(sed 's/\xc2\xa0//g; s/ //g' "$OUT/_integrite_${P}_${essai_integrite}.xml" 2>/dev/null || echo "")
+    if ! grep -q "n.est pas valide" "$OUT/_integrite_${P}_${essai_integrite}.xml" 2>/dev/null \
+       && printf '%s' "$int_norm" | grep -q "0197000000"; then
+      break
+    fi
+    echo "E2E intégrité (${P}, essai $essai_integrite) : erreur affichée ou numéro absent — re-saisie finale du whatsapp"
+    fermer_clavier
+    $UI champs > "$OUT/champs.txt" 2>&1 || true
+    idx_wa=$(grep "^E2E CHAMP " "$OUT/champs.txt" | grep -i "whatsapp" | awk '{print $3}' | head -1)
+    if [ -n "$idx_wa" ]; then
+      saisir_et_verifier "$idx_wa" "0197000000" || true
+    else
+      echo "E2E intégrité (${P}) : champ whatsapp introuvable au listing (voir _integrite_${P}_${essai_integrite}.xml)"
+    fi
+  done
   local trouve=0 _
   for _ in 1 2 3 4 5 6; do
     if $UI wait --text "Continuer" --exact --timeout 2 >/dev/null 2>&1; then trouve=1; break; fi
@@ -399,13 +451,17 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
   # défaut de tap. On le nomme au lieu de « 4 essais sans effet ». Le message
   # d'erreur vit SOUS le champ (section haute du formulaire) : s'il n'est dans
   # aucun dump, on remonte exprès avant de conclure.
-  if ! grep -lq "n.est pas valide" "$OUT"/*.xml 2>/dev/null; then
+  # D42.30-18 : la détection est RESSCOPEÉE aux dumps de la PHASE courante —
+  # RCA 43182516945 : le grep sur $OUT/*.xml matchait les dumps d'erreur des
+  # phases PRÉCÉDENTES (CPB et CPC ont FAILé sans produire leur propre
+  # brief_haut_diag, CPC ayant tel=1 à sa preuve : il n'a jamais cliqué).
+  if ! grep -lq "n.est pas valide" "$OUT"/${P}_*.xml 2>/dev/null; then
     swipe_v 26 73 400 >/dev/null 2>&1; sleep 1
     swipe_v 30 70 400 >/dev/null 2>&1; sleep 1
     dump "${P}_brief_haut_diag"
   fi
-  if grep -lq "n.est pas valide" "$OUT"/*.xml 2>/dev/null; then
-    champ_err=$(grep -h -o '[^"]*n.est pas valide[^"]*' "$OUT"/*.xml 2>/dev/null | head -1 | cut -c1-120)
+  if grep -lq "n.est pas valide" "$OUT"/${P}_*.xml 2>/dev/null; then
+    champ_err=$(grep -h -o '[^"]*n.est pas valide[^"]*' "$OUT"/${P}_*.xml 2>/dev/null | head -1 | cut -c1-120)
     record FAIL "${P}_brief_valide" "champ INVALIDE — Continuer correctement DÉSACTIVÉ : « $champ_err » (voir dumps)"
     record BLOCKED "${P}_guide" "brief non validable (champ invalide)"
     return 1
