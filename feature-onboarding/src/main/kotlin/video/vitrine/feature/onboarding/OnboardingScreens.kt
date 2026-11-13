@@ -29,6 +29,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.res.painterResource
 import video.vitrine.core.designsystem.BleuNuit
+import video.vitrine.core.designsystem.BleuVoile
 import video.vitrine.core.designsystem.OrangeVoile
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -201,32 +202,137 @@ fun WelcomeScreen(
     refusCode: String,
     onContinue: () -> Unit,
 ) {
+    // D42.32 (Lot 9) : équilibre visuel — même patron que les étapes 1/3 et
+    // 2/3 (logo + badge d'étape, contenu défilant, action ÉPINGLÉE). Avant :
+    // texte nu sans logo ni badge « 3 / 3 », bouton non épinglé, crédits
+    // confirmés noyés dans un Text simple. Aucune chaîne nouvelle (FR/EN
+    // existants, assertions e2e « Bienvenue »/« crédits »/« Continuer »
+    // préservées à l'identique).
     Column(
-        modifier = Modifier.fillMaxWidth().padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
-        Text(stringResource(R.string.welcome_title), style = MaterialTheme.typography.headlineSmall)
-        when (statut) {
-            "attente" -> {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    CircularProgressIndicator(modifier = Modifier.size(20.dp))
-                    Text(stringResource(R.string.welcome_credits_pending))
-                }
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                VitrineLogoHeader(modifier = Modifier.weight(1f))
+                EtapeBadge(etape = 3, total = 3)
             }
-            "ok" -> Text(
-                if (credits > 0) stringResource(R.string.welcome_credits, credits)
-                else stringResource(R.string.welcome_credits_zero)
-            )
-            "horsligne" -> Text(stringResource(R.string.welcome_offline))
-            "refuse" -> Text(messageRefus(refusStatut, refusCode))
-            else -> Text(stringResource(R.string.welcome_credits_pending))
+            Text(stringResource(R.string.welcome_title), style = MaterialTheme.typography.headlineSmall)
+            ContenuCredits(credits, statut, refusStatut, refusCode)
+            Box(modifier = Modifier.padding(bottom = 4.dp))
         }
         // Jamais bloquant : le client entre dans l'application dans tous les cas.
-        Button(onClick = onContinue, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.action_continue))
+        // D42.32 (Lot 9) : barre d'action épinglée, bouton 56 dp (police 130 %).
+        Surface(
+            tonalElevation = 3.dp,
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp, vertical = 12.dp)
+            ) {
+                Button(
+                    onClick = onContinue,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 56.dp)
+                ) {
+                    Text(stringResource(R.string.action_continue))
+                }
+            }
+        }
+    }
+}
+
+/**
+ * D42.32 (Lot 9) : état des crédits de bienvenue — les 4 cas typés D42.30
+ * (attente / confirmé / hors ligne / refus serveur), extraits de
+ * WelcomeScreen (detekt LongMethod).
+ */
+@Composable
+private fun ContenuCredits(
+    credits: Int,
+    statut: String,
+    refusStatut: Int,
+    refusCode: String
+) {
+    when (statut) {
+        "attente" -> AttenteCredits()
+        "ok" -> {
+            if (credits > 0) {
+                CarteCreditsConfirmes(credits)
+            } else {
+                // D42.32 (Lot 9) : argument %1$d ENFIN passé — avant, le texte
+                // affichait littéralement « Ton solde actuel : %1$d. ».
+                Text(
+                    stringResource(R.string.welcome_credits_zero, credits),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+        "horsligne" -> Text(
+            stringResource(R.string.welcome_offline),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        "refuse" -> Text(
+            messageRefus(refusStatut, refusCode),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        else -> AttenteCredits()
+    }
+}
+
+/** D42.32 (Lot 9) : attente serveur — spinner + message, jamais bloquant. */
+@Composable
+private fun AttenteCredits() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        CircularProgressIndicator(modifier = Modifier.size(20.dp))
+        Text(stringResource(R.string.welcome_credits_pending))
+    }
+}
+
+/**
+ * D42.32 (Lot 9) : crédits de bienvenue CONFIRMÉS par le serveur — le montant
+ * réel dans une carte BleuVoile avec le chiffre en grand : le client voit le
+ * don d'un coup d'œil (avant : phrase noyée dans un Text simple).
+ */
+@Composable
+private fun CarteCreditsConfirmes(credits: Int) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(BleuVoile, RoundedCornerShape(12.dp))
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                credits.toString(),
+                style = MaterialTheme.typography.displaySmall,
+                color = BleuNuit
+            )
+            Text(
+                stringResource(R.string.welcome_credits, credits),
+                style = MaterialTheme.typography.bodyLarge,
+                color = BleuNuit
+            )
         }
     }
 }

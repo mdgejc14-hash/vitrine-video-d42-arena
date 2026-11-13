@@ -355,7 +355,9 @@ class CameraDiagnosticActivity : VitrineActivity() {
     }
 
     private suspend fun pixelCopier(vue: SurfaceView): Bitmap? =
-        suspendCancellableCoroutine { suite ->
+        // D42.32 (fix CI 6d1ad6a) : type EXPLICITE — l'inférence mixte
+        // Result<Bitmap>/Result<Nothing?> échouait (« Missing return statement »).
+        suspendCancellableCoroutine<Bitmap?> { suite ->
             runCatching {
                 val bmp = Bitmap.createBitmap(vue.width, vue.height, Bitmap.Config.ARGB_8888)
                 PixelCopy.request(vue, bmp, { resultat ->

@@ -19,7 +19,7 @@
 | 6 | P0 | Parrainage : code immédiatement visible, copier/partager, paliers secondaires | **TERMINÉ (partie dashboard + écran 12)** (code + tests écrits ; validation android-ci au push groupé) |
 | 7 | P0 | Tarifs : 3 formules exactes (Pass 500/6, Pro 3000/90, Boutique 7500/200), paiement 501 honnête | **TERMINÉ** (grille fondateur, fin « illimité », bouton inactif « Paiement en ligne bientôt disponible », badge Recommandé ; SSOT documentée dans 05_TARIFICATION.md avec écart fair_use) |
 | 8 | P1 | Formulaires : WhatsApp international (+229/+33/+1), prix stable au clavier | **TERMINÉ** (conjugaison tutoiement RCA EZ_REGEX + 15 chaînes corrigées + test caractérisation ; ImeAction « Suivant » ; zone erreur élastique 130 % ; WhatsApp/adjustResize/prix déjà D42.30 — détail 08_FORMULAIRES.md) |
-| 9 | P1 | Écran de bienvenue | à faire |
+| 9 | P1 | Écran de bienvenue | **TERMINÉ** (patron des étapes 1-2 : logo + badge 3/3, carte crédits confirmés, bouton épinglé 56 dp ; bug %1$d littéral corrigé — détail 09_BIENVENUE.md) |
 | 10 | — | Design system : harmonisation (bleu marine/orange, typo, espacements) | transversal |
 
 ## Règles actives
@@ -36,9 +36,10 @@
 - Workflows : android-ci SUCCESS sur 90f1ac5 ; android-e2e-lab in_progress sur 90f1ac5
   (sera auto-annulé par le push groupé suivant — comportement connu).
 - Dernière tâche terminée : D42.31 (galerie v2, 7 liens livrés).
-- Tâche actuelle : Phase A — Lots 7, 4, 3 (outil), 8 faits.
-  **CI 316bb80 + b0a988b ROUGE** (detekt :data + compile Lot 3) — corrections
-  regroupées avec le Lot 8 dans le commit suivant (08_FORMULAIRES.md).
-  Prochain : poll CI du nouveau commit, Lots 9 (bienvenue), 10 (design
-  system), non-régression groupée (Niveau 3) et Phase B (galerie).
+- Tâche actuelle : Phase A — Lots 7, 4, 3 (outil), 8, 9 faits.
+  **CI 6d1ad6a ROUGE** (1 erreur résiduelle : inférence suspendCancellable
+  dans pixelCopier — corrigée par type explicite `<Bitmap?>`, regroupée avec
+  le Lot 9). Prochain : poll CI, Lot 10 (design system) en local SANS push
+  tant que l'e2e-lab du commit tourne (préservation des preuves
+  camera-diagnostic + parcours), puis non-régression groupée et Phase B.
 - Porte d'approbation : **FERMÉE** (Phase B galerie avant/après pas encore produite).
