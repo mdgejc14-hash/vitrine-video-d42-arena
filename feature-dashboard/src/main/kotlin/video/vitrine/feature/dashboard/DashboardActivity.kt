@@ -44,6 +44,9 @@ class DashboardActivity : VitrineActivity() {
     private var sectorOverride: String? = null
     private var merchantId = "local"
 
+    /** D42.32 (Lot 5) : etat de sync honnete affiche par la carte credits. */
+    private var syncEtat: SyncState = SyncState.EN_COURS
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         view = intent.getStringExtra("view") ?: "dashboard"
@@ -52,8 +55,16 @@ class DashboardActivity : VitrineActivity() {
             ?: session.getString("uid", null)
             ?: "local"
         render()
-        // D41 (F1/F2) : rafraichissement serveur pour TOUTES les vues (le paywall
-        // a besoin des credits reels, le dashboard du code parrain serveur).
+        synchroniser()
+    }
+
+    /**
+     * D42.32 (Lot 5) : sync serveur unique, reutilisee par « Reessayer ».
+     * Etat honnete : SYNCHRONISE seulement si flushPending reussit (preuve
+     * d'un aller-retour serveur), HORS_CONNEXION sinon.
+     */
+    private fun synchroniser() {
+        val session = getSharedPreferences("vv_session", MODE_PRIVATE)
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 val db = VitrineLocalDatabase.get(this@DashboardActivity)
@@ -61,11 +72,12 @@ class DashboardActivity : VitrineActivity() {
                 val token = session.getString("token", null)
                 if (!synced) {
                     synced = true
-                    runCatching {
+                    val flushOk = runCatching {
                         BackendSync.flushPending(
                             this@DashboardActivity, db, BuildConfig.API_BASE_URL, token, merchantId
                         )
-                    }
+                    }.isSuccess
+                    syncEtat = if (flushOk) SyncState.SYNCHRONISE else SyncState.HORS_CONNEXION
                     cachedRow = runCatching { db.entitlements().byMerchant(merchantId) }.getOrNull()
                 }
                 chargerParrainage(db, token)
@@ -73,6 +85,28 @@ class DashboardActivity : VitrineActivity() {
             storageLabel = espaceUtilise()
             render()
         }
+    }
+
+    /** Bouton « Reessayer » : force un nouveau cycle de sync complet. */
+    private fun relancerSync() {
+        synced = false
+        syncEtat = SyncState.EN_COURS
+        render()
+        synchroniser()
+    }
+
+    /** D42.32 (Lot 6) : « Copier mon code » copie REELLEMENT au presse-papiers. */
+    private fun copierCode() {
+        val code = gaugeUi?.code ?: intent.getStringExtra("code")
+        if (code.isNullOrBlank()) {
+            message(R.string.ref_share_no_code)
+            return
+        }
+        val pressePapiers = getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        pressePapiers.setPrimaryClip(
+            android.content.ClipData.newPlainText("code parrain", code)
+        )
+        message(R.string.ref_code_copied)
     }
 
     /** Serveur d'abord (autorite), miroir Room en repli hors-ligne (D41 F2). */
@@ -159,8 +193,11 @@ class DashboardActivity : VitrineActivity() {
             merchantName = intent.getStringExtra("merchant_name") ?: "",
             sectorLabel = sectorOverride ?: intent.getStringExtra("sector_label") ?: "",
             referralCode = gaugeUi?.code ?: intent.getStringExtra("code") ?: "",
+            referralGauge = gaugeUi,
+            syncState = syncEtat,
+            onRetrySync = { relancerSync() },
             onCreateVideo = { finishWithCreate() },
-            onCopyCode = { share() },
+            onCopyCode = { copierCode() },
             onShareWhatsApp = { share() },
             onViewFilleuls = { view = "referral"; render() }
         )
