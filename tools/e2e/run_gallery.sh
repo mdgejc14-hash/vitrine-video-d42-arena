@@ -1086,19 +1086,39 @@ elif [ "$export_lance" = "1" ]; then
           galshot_sr "dashboard_parrainage" "Parrainage — jauge et code (screenrecord)" "parrainage" "depuis dashboard"
           adb shell input keyevent 4 >/dev/null 2>&1; sleep 2
         fi
+        # v11f : « Réglages » absent du sommet du dashboard (dump _dashboard.xml
+        # du run v11e 43471051633 : aucun nœud ni content-desc « Réglages ») —
+        # tentative après défilement, gap documenté sinon.
+        REGLAGES_OK=0
         if taper "Réglages" || taper "Paramètres" || taper "Settings"; then
+          REGLAGES_OK=1
+        else
+          swipe_v 70 35 300 >/dev/null 2>&1; sleep 1
+          if taper "Réglages" || taper "Paramètres" || taper "Settings"; then
+            REGLAGES_OK=1
+          fi
+          haut_de_page
+        fi
+        if [ "$REGLAGES_OK" = "1" ]; then
           sleep 3
           galshot_sr "profil_reglages" "Réglages / profil (screenrecord)" "profil" "ouvert"
           adb shell input keyevent 4 >/dev/null 2>&1; sleep 2
+        else
+          gap "réglages : aucun libellé « Réglages » exposé sur le dashboard (sommet et bas testés — dump _dashboard.xml) — écran non capturé (constat UX)"
         fi
-        # v11e : dash_buy = « Acheter » (strings_dashboard.xml) — absent de la
-        # liste v11b, le paywall n'avait donc jamais été atteint (run 43465731951).
+        # v11f : retour au SOMMET avant « Acheter » — le BACK du parrainage peut
+        # laisser le dashboard défilé et le bouton hors champ (tap du run v11e
+        # silencieusement infructueux) + dump de preuve du paywall ouvert.
+        haut_de_page
         if taper "Acheter" || taper "crédits" || taper "Crédits" || taper "Recharger" || taper "Buy"; then
           sleep 3
+          dump_courant "_paywall"
           galshot_sr "paywall" "Crédits / formules — paywall (screenrecord)" "credits" "offre"
           swipe_v 70 35 300 >/dev/null 2>&1; sleep 1
           galshot_sr "paywall_bas" "Paywall — bas, formules (screenrecord)" "credits" "défilé"
           adb shell input keyevent 4 >/dev/null 2>&1; sleep 2
+        else
+          gap "paywall : bouton « Acheter » introuvable sur le dashboard (dump _dashboard.xml) — écran non capturé"
         fi
       else
         gap "bouton « $ESPACE » introuvable — dashboard non capturé"
