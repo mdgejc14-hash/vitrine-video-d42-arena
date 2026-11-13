@@ -298,6 +298,7 @@ case "$LANGUE" in
       EXPORT_START="Lancer l'export local"; EXPORT_RUNNING="Export local en cours"
       EXPORT_PREP="Ta vidéo se prépare"; DONE="Vidéo prête"
       PARTAGER="Partager la vidéo"; ESPACE="Voir mon espace"
+      E7_CHECK="Vérifie ces informations"
       AUTORISER="AUTORISER"; ACCES="Accès caméra nécessaire"; PLUS_TARD="PLUS TARD"
       REC_TXT="Verrouiller et enregistrer"; STOP_TXT="Arrêter et continuer"
       FLIP_TXT="Changer de caméra"; REDO_TXT="Refaire"; NEXT_TXT="Suivant"
@@ -315,6 +316,7 @@ case "$LANGUE" in
       EXPORT_START="Start local export"; EXPORT_RUNNING="Local export running"
       EXPORT_PREP="Your video is being prepared"; DONE="Video ready"
       PARTAGER="Share the video"; ESPACE="View my space"
+      E7_CHECK="Check this information"
       AUTORISER="ALLOW"; ACCES="Camera access required"; PLUS_TARD="LATER"
       REC_TXT="Lock and record"; STOP_TXT="Stop and continue"
       FLIP_TXT="Switch camera"; REDO_TXT="Redo"; NEXT_TXT="Next"
@@ -346,7 +348,7 @@ fi
 if [ "$PROFIL" = "petit" ]; then
   adb shell wm size 720x1520 >/dev/null 2>&1 || true; sleep 2; lire_taille_ecran
 fi
-if [ "$PROFIL" = "font130" ] || [ "$PROFIL" = "petit" ]; then
+if [ "$PROFIL" = "font130" ] || [ "$PROFIL" = "petit" ] || [ "$PROFIL" = "cible" ]; then
   adb shell pm grant "$PKG" android.permission.CAMERA >/dev/null 2>&1 || true
 fi
 adb shell am start -W -n "$PKG/.MainActivity" > "$OUT/start.log" 2>&1
@@ -784,7 +786,7 @@ fi
 # 14/15 — audio (mode automatique) + aperçu E7
 # =====================================================================
 WT=90
-if attendre "$APERCU"; then
+if attendre "$APERCU" "$E7_CHECK"; then
   galshot "apercu" "Aperçu de la vidéo (E7) — mode audio automatique" "montage" "aperçu"
   swipe_v 72 30 300; sleep 1
   galshot "apercu_bas" "Aperçu — bas (typographie, voix)" "audio" "détail"
@@ -795,7 +797,7 @@ else
   # vérification par dump et capture tardive
   sleep 10
   dump_courant "_e7_tardif"
-  if coord_parmi "$OUT/_e7_tardif.xml" "$APERCU"; then
+  if coord_parmi "$OUT/_e7_tardif.xml" "$APERCU" "$E7_CHECK"; then
     galshot "apercu" "Aperçu de la vidéo (E7) — mode audio automatique" "montage" "aperçu"
     swipe_v 72 30 300; sleep 1
     galshot "apercu_bas" "Aperçu — bas (typographie, voix)" "audio" "détail"
@@ -803,6 +805,13 @@ else
   else
     gap "écran d'aperçu E7 non atteint — dump _e7_tardif.xml"
   fi
+fi
+
+# ---- profil ciblé (capture E7 uniquement) : sortie propre, pas d'export ----
+if [ "$PROFIL" = "cible" ]; then
+  adb logcat -d > "$OUT/logcat_gallery.txt" 2>/dev/null || true
+  echo "=========== GALERIE $LANGUE / $PROFIL (cible E7) : $ORDRE captures ==========="
+  exit 0
 fi
 WT=20
 tap_coord_text "$CREER" || taper "$CREER" exact
