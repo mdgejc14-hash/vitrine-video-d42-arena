@@ -117,6 +117,28 @@ difficile d'accès. P2 : « Tu pouvez » (faute) ; libellé focus tronqué ;
 bouton Continuer à bornes nulles (accessibilité). P3 : accents manquants
 dashboard ; en-tête E7 non épinglé.
 
+## Livraison (commits e25fe9e → e22d3f6, 13/11/2026)
+
+- `e25fe9e` : galerie v2 complète (179 captures affichables, 212 originaux,
+  preuves FLAG_SECURE, UX_AUDIT v2, SCREEN_INVENTORY 212 lignes) ;
+- `7ba83e6` : README 168 vignettes Markdown épinglées à `e25fe9e` ;
+- `e22d3f6` : correctif URL (préfixe complet) — **rendu GitHub vérifié :
+  168 vignettes `<img>` raw + 373 liens blob épinglés, 0 URL relative, 0 404**
+  (contrôles HTTP : paywall 417 Ko, partage 87 Ko, viseur camerafix 375 Ko,
+  export.mp4 4,5 Mo, tous 200).
+
+**Les 7 liens de livraison :**
+
+1. Galerie complète : `docs/checkpoints/D42_31/visual-review/README.md`
+2. Captures caméra (screenrecord) : `…/visual-review/12_camera/` + `…/13_prises/`
+3. Écrans export + partage : `…/visual-review/16_export/` + `…/18_partage/`
+   (+ preuves FLAG_SECURE : `…/visual-review/runs/preuves/` — dumps XML +
+   export.mp4)
+4. Inventaire exact : `…/visual-review/SCREEN_INVENTORY.csv` (212 lignes)
+5. Inventaire 30 gabarits : `…/visual-review/GABARITS_INVENTAIRE.csv`
+6. Audit UX : `…/visual-review/UX_AUDIT.md`
+7. Commit final de livraison : `e22d3f6`
+
 ## Prochaine étape
 
 **ARRÊT À LA PORTE DE VALIDATION VISUELLE** : le fondateur examine la galerie
