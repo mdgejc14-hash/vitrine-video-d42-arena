@@ -1,11 +1,15 @@
 package video.vitrine.feature.dashboard
 
+import android.content.Context
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.test.core.app.ApplicationProvider
 import java.io.File
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -61,6 +65,33 @@ class PaywallUiCheckTest {
             "Equivalents indicatifs au taux fixe BCEAO : 1 EUR = 655,957 FCFA. " +
                 "La devise de facturation reelle reste a valider."
         ).assertExists()
+    }
+
+    /**
+     * D42.32 (Lot 7) : grille fondateur exacte — Pass 500/6 exports/1 cloud/24 h,
+     * Pro 3 000/90 exports/5 cloud, Boutique 7 500/200/20. JAMAIS « illimité ».
+     * Bouton paiement INACTIF (« Paiement en ligne bientôt disponible ») —
+     * CinetPay reporté, aucune fausse transaction.
+     */
+    @Test
+    fun `grille fondateur - limites exactes, pas d'illimite, bouton inactif`() {
+        compose.setContent {
+            VitrineTheme {
+                PaywallScreen(PaywallMapper.ui(welcomeCreditsLeft = 0, exportsLimit = 0)) { }
+            }
+        }
+        val ctx: Context = ApplicationProvider.getApplicationContext()
+        // limites commerciales exactes (grille fondateur 23/10/2026)
+        compose.onNodeWithText(ctx.getString(R.string.feat_pro_1), substring = true).assertExists()
+        compose.onNodeWithText(ctx.getString(R.string.feat_pass24h_3), substring = true).assertExists()
+        // hiérarchie commerciale honnête
+        compose.onNodeWithText(ctx.getString(R.string.plan_recommended)).assertExists()
+        // bouton inactif au libellé honnête (x3 cartes)
+        compose.onAllNodesWithText(ctx.getString(R.string.paywall_soon)).assertCountEquals(3)
+        // la contradiction « illimité » a disparu du parcours commercial
+        compose.onAllNodesWithText("illimit", substring = true).assertCountEquals(0)
+        compose.onAllNodesWithText("Unlimited", substring = true).assertCountEquals(0)
+        compose.onAllNodesWithText("fair use", substring = true).assertCountEquals(0)
     }
 
     @Test

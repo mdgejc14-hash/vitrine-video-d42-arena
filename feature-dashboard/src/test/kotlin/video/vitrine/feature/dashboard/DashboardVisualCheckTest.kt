@@ -153,6 +153,47 @@ class DashboardVisualCheckTest {
         capturer("d42-32-lot5-dashboard-hors-connexion-en.png")
     }
 
+    /**
+     * D42.32 (Lot 7) : formule active (exportsLimit serveur > 0, crédits
+     * bienvenue épuisés) — PAS de compteur inventé : « Formule active »
+     * plutôt qu'un « 0 exports restants » trompeur ou un 9999 technique.
+     */
+    @Test
+    @Config(sdk = [34], qualifiers = "fr-w360dp-h820dp")
+    fun `dashboard formule active - pas de compteur invente`() {
+        val ctx = contexte()
+        val entitlesPro = entitlesTest().copy(
+            exportsLimit = 9999, welcomeCreditsLeft = 0
+        )
+        compose.setContent {
+            VitrineTheme {
+                DashboardScreen(
+                    entitlements = entitlesPro,
+                    welcomeCreditsLeft = 0,
+                    onBuy = { },
+                    onReferral = { },
+                    onSettings = { },
+                    merchantName = "Boutique Fatou",
+                    sectorLabel = "Restauration",
+                    referralCode = "SHALOM-842",
+                    referralGauge = null,
+                    syncState = SyncState.SYNCHRONISE,
+                    planExportsLimit = 9999,
+                    onRetrySync = { },
+                    onCreateVideo = { },
+                    onCopyCode = { },
+                    onShareWhatsApp = { },
+                    onViewFilleuls = { }
+                )
+            }
+        }
+        compose.onNodeWithText(ctx.getString(R.string.dash_plan_active)).assertExists()
+        // jamais « 0 exports restants » ni le plafond technique 9999 affichés
+        compose.onAllNodesWithText(ctx.getString(R.string.dash_exports_count, 0)).assertCountEquals(0)
+        compose.onAllNodesWithText("9999", substring = true).assertCountEquals(0)
+        capturer("d42-32-lot7-dashboard-formule-active-fr.png")
+    }
+
     @Test
     @Config(sdk = [34], qualifiers = "fr-w360dp-h820dp")
     fun `ecran parrainage - historique repliable`() {

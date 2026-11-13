@@ -6,8 +6,8 @@
     <string name="plan_boutique_title">Boutique</string>
     <string name="feat_pass24h_1">6 watermark-free 1080p exports</string>
     <string name="feat_pass24h_2">1 cloud render included</string>
-    <string name="feat_pass24h_3">One-off purchase, no renewal</string>
-    <string name="feat_pro_1">Unlimited exports (fair use: 90)</string>
+    <string name="feat_pass24h_3">Valid for 24 h · one-off purchase</string>
+    <string name="feat_pro_1">90 exports</string>
     <string name="feat_pro_2">5 cloud renders</string>
     <string name="feat_pro_3">Brand kit</string>
     <string name="feat_pro_4">14-day cache</string>
@@ -21,4 +21,6 @@
     <string name="billing_network_error">Payment unavailable offline. Retry with a connection.</string>
     <string name="billing_error_generic">Payment failed on the server. No charge was made — try again.</string>
     <string name="billing_no_browser">No browser available to open the secure payment page.</string>
+    <string name="paywall_soon">Online payment coming soon</string>
+    <string name="plan_recommended">Recommended</string>
 </resources>

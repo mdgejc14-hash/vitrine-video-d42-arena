@@ -6,8 +6,8 @@
     <string name="plan_boutique_title">Boutique</string>
     <string name="feat_pass24h_1">6 exports 1080p sans filigrane</string>
     <string name="feat_pass24h_2">1 rendu cloud inclus</string>
-    <string name="feat_pass24h_3">Achat unique, non renouvelé</string>
-    <string name="feat_pro_1">Exports illimités (usage loyal : 90)</string>
+    <string name="feat_pass24h_3">Valable 24 h · achat unique</string>
+    <string name="feat_pro_1">90 exports</string>
     <string name="feat_pro_2">5 rendus cloud</string>
     <string name="feat_pro_3">Kit de marque</string>
     <string name="feat_pro_4">Cache 14 j</string>
@@ -21,4 +21,6 @@
     <string name="billing_network_error">Paiement impossible hors-ligne. Réessaie avec une connexion.</string>
     <string name="billing_error_generic">Le paiement a échoué côté serveur. Aucun débit n’a eu lieu — réessaie.</string>
     <string name="billing_no_browser">Aucun navigateur disponible pour ouvrir la page de paiement sécurisée.</string>
+    <string name="paywall_soon">Paiement en ligne bientôt disponible</string>
+    <string name="plan_recommended">Recommandé</string>
 </resources>

@@ -171,12 +171,26 @@ private fun GabaritLayout(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         gabarits.forEach { g ->
-            // D42.32 (Lot 2) : carte horizontale premium — vignette sectorielle
-            // à gauche (cadrage caméra, pellicule = nombre réel de scènes,
-            // badge durée), hiérarchie nom > méta > phrase courte à droite,
-            // chevron orange = indication de choix. Les 5 gabarits du secteur
-            // sont immédiatement identifiables sans défilement interminable.
-            androidx.compose.material3.OutlinedCard(
+            GabaritCard(g, showSector, onGabaritClick)
+        }
+    }
+}
+
+/**
+ * D42.32 (Lot 2) : carte horizontale premium — vignette sectorielle
+ * à gauche (cadrage caméra, pellicule = nombre réel de scènes,
+ * badge durée), hiérarchie nom > méta > phrase courte à droite,
+ * chevron orange = indication de choix. Les 5 gabarits du secteur
+ * sont immédiatement identifiables sans défilement interminable.
+ * (Extraction D42.32 : detekt LongMethod sur GabaritLayout.)
+ */
+@Composable
+private fun GabaritCard(
+    g: GabaritSummary,
+    showSector: Boolean,
+    onGabaritClick: (GabaritSummary) -> Unit,
+) {
+    androidx.compose.material3.OutlinedCard(
                 onClick = { onGabaritClick(g) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = androidx.compose.material3.CardDefaults.outlinedCardColors(
@@ -252,8 +266,6 @@ private fun GabaritLayout(
                     }
                 }
             }
-        }
-    }
 }
 
 /**

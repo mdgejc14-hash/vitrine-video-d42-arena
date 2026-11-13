@@ -15,7 +15,6 @@
     <string name="paywall_title">Choisissez votre formule</string>
     <string name="paywall_credits_left">Il vous reste %1$d exports offerts : aucun paiement necessaire.</string>
     <string name="paywall_quota">Quota de bienvenue epuise : choisissez un forfait pour continuer.</string>
-    <string name="paywall_pay">Payer avec Mobile Money</string>
     <string name="ref2_title">Parrainer des commerçants</string>
     <string name="ref2_invites">Tes invitations Pro</string>
     <string name="ref2_your_code">Ton code</string>
@@ -77,4 +76,5 @@
     <string name="ref_code_copied">Code copié</string>
     <string name="ref2_history_show">Afficher l\'historique (%1$d)</string>
     <string name="ref2_history_hide">Masquer l\'historique</string>
+    <string name="dash_plan_active">Formule active · exports inclus</string>
 </resources>

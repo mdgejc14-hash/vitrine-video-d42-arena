@@ -17,7 +17,7 @@
 | 4 | P1 | Localisation FR/EN complète (parcours + 30 gabarits + notifications) | à faire |
 | 5 | P0 | Dashboard : en-tête pro, carte crédits, action principale, état sync honnête | **TERMINÉ** (code + tests écrits ; validation android-ci au push groupé) |
 | 6 | P0 | Parrainage : code immédiatement visible, copier/partager, paliers secondaires | **TERMINÉ (partie dashboard + écran 12)** (code + tests écrits ; validation android-ci au push groupé) |
-| 7 | P0 | Tarifs : 3 formules exactes (Pass 500/6, Pro 3000/90, Boutique 7500/200), paiement 501 honnête | à faire |
+| 7 | P0 | Tarifs : 3 formules exactes (Pass 500/6, Pro 3000/90, Boutique 7500/200), paiement 501 honnête | **TERMINÉ** (grille fondateur, fin « illimité », bouton inactif « Paiement en ligne bientôt disponible », badge Recommandé ; SSOT documentée dans 05_TARIFICATION.md avec écart fair_use) |
 | 8 | P1 | Formulaires : WhatsApp international (+229/+33/+1), prix stable au clavier | à faire |
 | 9 | P1 | Écran de bienvenue | à faire |
 | 10 | — | Design system : harmonisation (bleu marine/orange, typo, espacements) | transversal |
@@ -36,6 +36,8 @@
 - Workflows : android-ci SUCCESS sur 90f1ac5 ; android-e2e-lab in_progress sur 90f1ac5
   (sera auto-annulé par le push groupé suivant — comportement connu).
 - Dernière tâche terminée : D42.31 (galerie v2, 7 liens livrés).
-- Tâche actuelle : Phase A — Lots 2, 5, 6 poussés ensemble ; prochain : Lot 7 (tarifs SSOT)
-  puis Lot 4 (localisation) et Lot 3 (caméra).
+- Tâche actuelle : Phase A — Lot 7 terminé + fix detekt (2 LongMethod extraits) ;
+  CI 9cc233a : compile OK + tous les tests PASS, seuls 2 detekt LongMethod
+  faisaient échouer le build (corrigés). Prochain : Lot 4 (localisation),
+  Lot 3 (caméra), Lots 8/9/10.
 - Porte d'approbation : **FERMÉE** (Phase B galerie avant/après pas encore produite).

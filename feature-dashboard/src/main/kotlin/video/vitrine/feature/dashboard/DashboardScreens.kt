@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import video.vitrine.core.designsystem.BleuNuit
 import video.vitrine.core.designsystem.BleuVoile
 import video.vitrine.core.designsystem.OrangeStore
+import video.vitrine.core.model.billing.Plan
 import video.vitrine.data.local.EntitlementsCache
 
 /**
@@ -71,6 +72,7 @@ fun DashboardScreen(
     referralCode: String = "",
     referralGauge: ReferralGaugeUi? = null,
     syncState: SyncState = SyncState.EN_COURS,
+    planExportsLimit: Int = 0,
     onRetrySync: () -> Unit = {},
     onCreateVideo: () -> Unit = {},
     onCopyCode: () -> Unit = {},
@@ -88,7 +90,9 @@ fun DashboardScreen(
         // qualite, sync honnete), action principale creation, parrainage
         // (code visible), acces secondaires.
         DashboardHeader(merchantName, sectorLabel, onSettings)
-        DashboardCreditsCard(entitlements, welcomeCreditsLeft, syncState, onRetrySync, onBuy)
+        DashboardCreditsCard(
+            entitlements, welcomeCreditsLeft, planExportsLimit, syncState, onRetrySync, onBuy
+        )
         DashboardCreateCard(onCreateVideo)
         DashboardReferralCard(referralCode, referralGauge, onCopyCode, onShareWhatsApp, onViewFilleuls)
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -190,6 +194,7 @@ private fun DrawScope.dessinerEngrenage(couleur: Color) {
 private fun DashboardCreditsCard(
     entitlements: EntitlementsCache?,
     welcomeCreditsLeft: Int,
+    planExportsLimit: Int,
     syncState: SyncState,
     onRetrySync: () -> Unit,
     onBuy: () -> Unit
@@ -204,12 +209,24 @@ private fun DashboardCreditsCard(
                 color = OrangeStore,
                 style = MaterialTheme.typography.labelLarge
             )
-            Text(
-                stringResource(R.string.dash_exports_count, welcomeCreditsLeft),
-                style = MaterialTheme.typography.headlineLarge,
-                color = BleuNuit,
-                fontWeight = FontWeight.Bold
-            )
+            if (welcomeCreditsLeft > 0 || planExportsLimit <= 0) {
+                // credits de bienvenue (ou miroir pas encore synchronise)
+                Text(
+                    stringResource(R.string.dash_exports_count, welcomeCreditsLeft),
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = BleuNuit,
+                    fontWeight = FontWeight.Bold
+                )
+            } else {
+                // D42.32 (Lot 7) : formule active — pas de compteur invente ;
+                // la limite commerciale est celle de la grille (paywall).
+                Text(
+                    stringResource(R.string.dash_plan_active),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = BleuNuit,
+                    fontWeight = FontWeight.Bold
+                )
+            }
             val e = entitlements
             if (e != null) {
                 Text(
@@ -403,8 +420,31 @@ fun PaywallScreen(ui: PaywallUi, onChoose: (String) -> Unit) {
         ui.cards.forEach { card ->
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Text(stringResource(card.titleRes), style = MaterialTheme.typography.titleMedium)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            // D42.32 (Lot 7) : hiérarchie commerciale — Pro recommandé.
+                            if (card.plan == Plan.PRO) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(OrangeStore, RoundedCornerShape(6.dp))
+                                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                                ) {
+                                    Text(
+                                        stringResource(R.string.plan_recommended),
+                                        color = Color.White,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                }
+                            }
+                            Text(stringResource(card.titleRes), style = MaterialTheme.typography.titleMedium)
+                        }
                         Text(
                             "  ·  " + card.priceValue +
                                 (card.periodRes?.let { " / " + stringResource(it) } ?: ""),
@@ -413,10 +453,19 @@ fun PaywallScreen(ui: PaywallUi, onChoose: (String) -> Unit) {
                         )
                     }
                     card.featureRes.forEach { Text("• " + stringResource(it), style = MaterialTheme.typography.bodySmall) }
+                    // D42.32 (Lot 7) : CinetPay volontairement reporté — bouton
+                    // INACTIF, aucun checkout, aucune fausse transaction. Le libellé
+                    // dit la vérité : paiement en ligne bientôt disponible.
                     Button(
-                    onClick = { onChoose(card.plan.code) },
-                    modifier = Modifier.testTag("paywall_" + card.plan.code)
-                ) { Text(stringResource(R.string.paywall_pay)) }
+                        onClick = { onChoose(card.plan.code) },
+                        enabled = false,
+                        modifier = Modifier.testTag("paywall_" + card.plan.code)
+                    ) {
+                        Text(
+                            stringResource(R.string.paywall_soon),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 }
             }
         }
@@ -490,20 +539,7 @@ fun ReferralScreen(gauge: ReferralGaugeUi, onShare: () -> Unit) {
                 )
             }
         }
-        // D42.32 (Lot 6) : historique REPLIABLE — ouvert par defaut, pliable.
-        var historiqueReplie by remember { mutableStateOf(false) }
-        TextButton(onClick = { historiqueReplie = !historiqueReplie }) {
-            Text(
-                stringResource(
-                    if (historiqueReplie) R.string.ref2_history_show
-                    else R.string.ref2_history_hide,
-                    gauge.entries.size
-                )
-            )
-        }
-        if (!historiqueReplie) {
-            ReferralHistorique(gauge.entries)
-        }
+        ReferralHistoriqueRepliable(gauge.entries)
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(stringResource(R.string.ref2_reward_title), style = MaterialTheme.typography.titleMedium)
@@ -515,6 +551,27 @@ fun ReferralScreen(gauge: ReferralGaugeUi, onShare: () -> Unit) {
             }
         }
         Button(onClick = onShare, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.ref_share_whatsapp)) }
+    }
+}
+
+/**
+ * D42.32 (Lot 6) : historique REPLIABLE — ouvert par defaut, pliable.
+ * (Extraction D42.32 : detekt LongMethod sur ReferralScreen.)
+ */
+@Composable
+private fun ReferralHistoriqueRepliable(entries: List<ReferralEntry>) {
+    var historiqueReplie by remember { mutableStateOf(false) }
+    TextButton(onClick = { historiqueReplie = !historiqueReplie }) {
+        Text(
+            stringResource(
+                if (historiqueReplie) R.string.ref2_history_show
+                else R.string.ref2_history_hide,
+                entries.size
+            )
+        )
+    }
+    if (!historiqueReplie) {
+        ReferralHistorique(entries)
     }
 }
 

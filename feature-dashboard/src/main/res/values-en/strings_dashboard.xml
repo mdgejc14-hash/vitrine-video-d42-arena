@@ -15,7 +15,6 @@
     <string name="paywall_title">Choose your plan</string>
     <string name="paywall_credits_left">You have %1$d free exports left: no payment needed.</string>
     <string name="paywall_quota">Welcome quota used up: pick a plan to continue.</string>
-    <string name="paywall_pay">Pay with Mobile Money</string>
     <string name="ref2_title">Refer merchants</string>
     <string name="ref2_invites">Your Pro invitations</string>
     <string name="ref2_your_code">Your code</string>
@@ -77,4 +76,5 @@
     <string name="ref_code_copied">Code copied</string>
     <string name="ref2_history_show">Show history (%1$d)</string>
     <string name="ref2_history_hide">Hide history</string>
+    <string name="dash_plan_active">Active plan · exports included</string>
 </resources>

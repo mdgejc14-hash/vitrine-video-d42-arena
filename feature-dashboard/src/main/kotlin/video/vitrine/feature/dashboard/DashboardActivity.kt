@@ -195,6 +195,7 @@ class DashboardActivity : VitrineActivity() {
             referralCode = gaugeUi?.code ?: intent.getStringExtra("code") ?: "",
             referralGauge = gaugeUi,
             syncState = syncEtat,
+            planExportsLimit = cachedRow?.exportsLimit ?: 0,
             onRetrySync = { relancerSync() },
             onCreateVideo = { finishWithCreate() },
             onCopyCode = { copierCode() },
