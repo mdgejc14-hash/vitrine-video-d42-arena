@@ -156,8 +156,15 @@ class CameraGuideActivity : VitrineActivity() {
         lifecycleScope.launch {
             val raw = runCatching { repo.rawJson(gabaritId) }.getOrNull()
             if (raw != null) {
-                prises = runCatching { GabaritJson.parsePrises(raw) }.getOrDefault(emptyList())
-                guideSummary = runCatching { GabaritJson.parse(raw) }.getOrNull()
+                // D42.32 (Lot 4) : consignes de prises en EN si langue choisie —
+                // fin du mélange « Film your take » + consignes FR.
+                val t = video.vitrine.data.i18n.GabaritUiL10n.traductions(
+                    this@CameraGuideActivity,
+                    video.vitrine.core.designsystem.VitrineLocale.saved(this@CameraGuideActivity),
+                    gabaritId
+                )
+                prises = runCatching { GabaritJson.parsePrises(raw, t) }.getOrDefault(emptyList())
+                guideSummary = runCatching { GabaritJson.parse(raw, t) }.getOrNull()
                 majVisibiliteBoutonsGabarit()
             }
         }

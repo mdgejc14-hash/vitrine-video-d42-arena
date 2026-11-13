@@ -57,9 +57,16 @@ class ExportActivity : VitrineActivity() {
         lifecycleScope.launch {
             val repo = GabaritRepository(this@ExportActivity, VitrineLocalDatabase.get(this@ExportActivity).gabarits())
             val raw = runCatching { repo.rawJson(gabaritId) }.getOrNull()
-            val summary = raw?.let { runCatching { GabaritJson.parse(it) }.getOrNull() }
+            // D42.32 (Lot 4) : récapitulatif E7 en EN si langue choisie
+            // (les textes incrustés vidéo restent localisés par GabaritL10n).
+            val t = video.vitrine.data.i18n.GabaritUiL10n.traductions(
+                this@ExportActivity,
+                video.vitrine.core.designsystem.VitrineLocale.saved(this@ExportActivity),
+                gabaritId
+            )
+            val summary = raw?.let { runCatching { GabaritJson.parse(it, t) }.getOrNull() }
             val rows = raw?.let {
-                runCatching { GabaritJson.parseCheckRows(it) }.getOrDefault(emptyList())
+                runCatching { GabaritJson.parseCheckRows(it, t) }.getOrDefault(emptyList())
             }.orEmpty()
             val values = mutableMapOf<String, String>()
             rows.forEach { (id, _) ->

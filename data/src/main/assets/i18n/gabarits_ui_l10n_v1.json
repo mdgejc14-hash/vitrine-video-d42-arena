@@ -1,0 +1,2383 @@
+{
+ "batiment_travaux_T1": {
+  "nom_format": "New arrivals",
+  "phrase_courte": "Show the site, the materials, the work and the visible result.",
+  "secteur_libelle": "Building & Works",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Bâtir Pro"
+   },
+   "nom_offre": {
+    "label": "Name of the job to be done",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Kitchen renovation"
+   },
+   "prix": {
+    "label": "Price of the job",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The site and the materials",
+    "consigne": "Start by showing the site and the materials. Hold your phone upright and keep fairly still. Film from a safe spot and show the real work.",
+    "segments": {
+     "0": {
+      "show": "Also keep on screen a still from the take \"The site and the materials\", behind or next to the \"TO DISCOVER\" card.",
+      "tell": "Say what work you do.",
+      "exemple": "Here is the site."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "A work action",
+    "consigne": "Then show a work action. Hold your phone upright and keep fairly still. Film from a safe spot and show the real work.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The result of the work",
+    "consigne": "Then show the result of the work. Hold your phone upright and keep fairly still. Film from a safe spot and show the real work.",
+    "segments": {}
+   }
+  }
+ },
+ "batiment_travaux_T2": {
+  "nom_format": "Before and after",
+  "phrase_courte": "Show the site at the start, two work steps, then the finished result.",
+  "secteur_libelle": "Building & Works",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Bâtir Pro"
+   },
+   "nom_offre": {
+    "label": "Name of the job to be done",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Kitchen renovation"
+   },
+   "prix": {
+    "label": "Price of the job",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The site at the start",
+    "consigne": "Film the site at the start from a safe spot. Keep the same spot for the other videos.",
+    "segments": {
+     "0": {
+      "show": "Show the site at the start, then the next step.",
+      "tell": "Say what has changed.",
+      "exemple": "Here is the site at the start."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "A first step",
+    "consigne": "Film a first step of the work from the same spot.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "A second step",
+    "consigne": "Film another step of the work from the same spot.",
+    "segments": {}
+   },
+   "prise_4": {
+    "libelle": "The finished work",
+    "consigne": "When the work is done, film the result from the same spot.",
+    "segments": {}
+   }
+  }
+ },
+ "batiment_travaux_T3": {
+  "nom_format": "Showcasing a product",
+  "phrase_courte": "Show the job to be done, the tools and the result.",
+  "secteur_libelle": "Building & Works",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Bâtir Pro"
+   },
+   "nom_offre": {
+    "label": "Name of the job to be done",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Kitchen renovation"
+   },
+   "prix": {
+    "label": "Price of the job",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The place of work",
+    "consigne": "Start by showing the place of work. Hold your phone upright and keep fairly still. Film from a safe spot and show the real work.",
+    "segments": {
+     "0": {
+      "show": "Show the tools, the materials or the work.",
+      "tell": "Say what you do.",
+      "exemple": "Here is the work in progress."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The tools and materials",
+    "consigne": "Then show the tools and materials. Hold your phone upright and keep fairly still. Film from a safe spot and show the real work.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The result up close",
+    "consigne": "Then show the result up close. Hold your phone upright and keep fairly still. Film from a safe spot and show the real work.",
+    "segments": {}
+   }
+  }
+ },
+ "batiment_travaux_T4": {
+  "nom_format": "Sale",
+  "phrase_courte": "Show the service on offer and its price.",
+  "secteur_libelle": "Building & Works",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Bâtir Pro"
+   },
+   "nom_offre": {
+    "label": "Name of the job to be done",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Kitchen renovation"
+   },
+   "prix": {
+    "label": "Price of the job",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "12000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "ancien_prix": {
+    "label": "Price before the discount",
+    "aide": "Enter the real previous price.",
+    "exemple": "15000"
+   },
+   "fin_promo": {
+    "label": "Last day of the offer",
+    "aide": "Choose the last day of the offer.",
+    "exemple": "Example: October 30"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "promotion": "Prices and the last day",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The service on offer",
+    "consigne": "Start by showing the service on offer. Hold your phone upright and keep fairly still. Film from a safe spot and show the real work.",
+    "segments": {}
+   },
+   "prise_2": {
+    "libelle": "A detail of the work",
+    "consigne": "Then show a detail of the work. Hold your phone upright and keep fairly still. Film from a safe spot and show the real work.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "A step of the site",
+    "consigne": "Then show a step of the site. Hold your phone upright and keep fairly still. Film from a safe spot and show the real work.",
+    "segments": {
+     "0": {
+      "show": "Show the work and the displayed price.",
+      "tell": "Say the displayed price.",
+      "exemple": "Here is the work."
+     }
+    }
+   }
+  }
+ },
+ "batiment_travaux_T5": {
+  "nom_format": "A customer tells the story",
+  "phrase_courte": "The customer talks about their experience.",
+  "secteur_libelle": "Building & Works",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Bâtir Pro"
+   },
+   "nom_offre": {
+    "label": "Name of the job to be done",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Kitchen renovation"
+   },
+   "prix": {
+    "label": "Price of the job",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "prenom_client": {
+    "label": "Customer's first name",
+    "aide": "Enter the real customer's first name.",
+    "exemple": "Aïcha"
+   },
+   "accord_client_diffusion": {
+    "label": "Does the customer agree to publish the video?",
+    "aide": "Tick only if the customer agrees to have their video published.",
+    "exemple": "Yes, the customer agreed"
+   },
+   "citation_client": {
+    "label": "The customer's words (optional)",
+    "aide": "Enter their actual words. You can leave this empty.",
+    "exemple": "Great service!"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "client_consentement": "The customer and their consent",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The customer speaking",
+    "consigne": "Start by showing the customer speaking. Hold your phone upright and keep fairly still. Film from a safe spot and show the real work.",
+    "segments": {
+     "0": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Ask the customer why they are talking about this site.",
+      "exemple": "I'm talking about the site."
+     },
+     "1": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Let them tell about their visit to the site.",
+      "exemple": "I'm telling about my visit."
+     },
+     "2": {
+      "show": "Also keep on screen a still from the take \"The customer speaking\", behind or next to the \"{prenom_client} · {quartier_ville}\" card.",
+      "tell": "Ask them to tell what they saw.",
+      "exemple": "I'm continuing my account."
+     },
+     "3": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Ask them to talk about a step of the site they saw.",
+      "exemple": "I saw the site progress."
+     },
+     "4": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Let them show the work and tell what they see.",
+      "exemple": "I'm watching the work."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The finished work",
+    "consigne": "Then show the finished work. Hold your phone upright and keep fairly still. Film from a safe spot and show the real work.",
+    "segments": {}
+   }
+  }
+ },
+ "coiffure_beaute_T1": {
+  "nom_format": "New arrivals",
+  "phrase_courte": "Show the treatment or the result, then the hairdresser's work.",
+  "secteur_libelle": "Hair & Beauty",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Belle Tresse Salon"
+   },
+   "nom_offre": {
+    "label": "Name of the treatment or hairstyle",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Goddess locs braids"
+   },
+   "prix": {
+    "label": "Price of the treatment",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The workstation or the treatment",
+    "consigne": "Start by showing the workstation or the treatment. Hold your phone upright and keep fairly still. Film the face near a window. Do not put the light behind the person.",
+    "segments": {
+     "0": {
+      "show": "Also keep on screen a still from the take \"The workstation or the treatment\", behind or next to the \"TO DISCOVER\" card.",
+      "tell": "Say the name of the treatment or service.",
+      "exemple": "Let me show you this treatment."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The hairdresser's technique",
+    "consigne": "Then show the hairdresser's technique. Hold your phone upright and keep fairly still. Film the face near a window. Do not put the light behind the person.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The result on the hair or face",
+    "consigne": "Then show the result on the hair or face. Hold your phone upright and keep fairly still. Film the face near a window. Do not put the light behind the person.",
+    "segments": {}
+   }
+  }
+ },
+ "coiffure_beaute_T2": {
+  "nom_format": "Before and after",
+  "phrase_courte": "Film the hair or face before, then after, from the same spot.",
+  "secteur_libelle": "Hair & Beauty",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Belle Tresse Salon"
+   },
+   "nom_offre": {
+    "label": "Name of the treatment or hairstyle",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Goddess locs braids"
+   },
+   "prix": {
+    "label": "Price of the treatment",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The hair or face before",
+    "consigne": "Film the hair or face before the treatment. Ask the person for consent.",
+    "segments": {
+     "0": {
+      "show": "Show the hair or face at the start, then after the treatment.",
+      "tell": "Say what has changed.",
+      "exemple": "Here is the hair at the start."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The hairdresser's work",
+    "consigne": "Film the hairdresser's real work.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The result after",
+    "consigne": "Film the result after, roughly in the same place and under the same light.",
+    "segments": {}
+   }
+  }
+ },
+ "coiffure_beaute_T3": {
+  "nom_format": "Showcasing a product",
+  "phrase_courte": "Show the treatment, the technique and the result.",
+  "secteur_libelle": "Hair & Beauty",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Belle Tresse Salon"
+   },
+   "nom_offre": {
+    "label": "Name of the treatment or hairstyle",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Goddess locs braids"
+   },
+   "prix": {
+    "label": "Price of the treatment",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The face or the treatment",
+    "consigne": "Start by showing the face or the treatment. Hold your phone upright and keep fairly still. Film the face near a window. Do not put the light behind the person.",
+    "segments": {
+     "0": {
+      "show": "Show a tool or a treatment technique.",
+      "tell": "Say what you do.",
+      "exemple": "Let me show you this technique."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The technique and the tools",
+    "consigne": "Then show the technique and the tools. Hold your phone upright and keep fairly still. Film the face near a window. Do not put the light behind the person.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The result up close",
+    "consigne": "Then show the result up close. Hold your phone upright and keep fairly still. Film the face near a window. Do not put the light behind the person.",
+    "segments": {}
+   }
+  }
+ },
+ "coiffure_beaute_T4": {
+  "nom_format": "Sale",
+  "phrase_courte": "Show the result, then both prices and the real end date.",
+  "secteur_libelle": "Hair & Beauty",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Belle Tresse Salon"
+   },
+   "nom_offre": {
+    "label": "Name of the treatment or hairstyle",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Goddess locs braids"
+   },
+   "prix": {
+    "label": "Price of the treatment",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "12000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "ancien_prix": {
+    "label": "Price before the discount",
+    "aide": "Enter the real previous price.",
+    "exemple": "15000"
+   },
+   "fin_promo": {
+    "label": "Last day of the offer",
+    "aide": "Choose the last day of the offer.",
+    "exemple": "Example: October 30"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "promotion": "Prices and the last day",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The result of the treatment",
+    "consigne": "Start by showing the result of the treatment. Hold your phone upright and keep fairly still. Film the face near a window. Do not put the light behind the person.",
+    "segments": {
+     "0": {
+      "show": "Show the treatment and both displayed prices.",
+      "tell": "Say when the offer ends.",
+      "exemple": "The prices are displayed here."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "A detail of the result",
+    "consigne": "Then show a detail of the result. Hold your phone upright and keep fairly still. Film the face near a window. Do not put the light behind the person.",
+    "segments": {}
+   }
+  }
+ },
+ "coiffure_beaute_T5": {
+  "nom_format": "A customer tells the story",
+  "phrase_courte": "The customer shares their experience in their own words.",
+  "secteur_libelle": "Hair & Beauty",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Belle Tresse Salon"
+   },
+   "nom_offre": {
+    "label": "Name of the treatment or hairstyle",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Goddess locs braids"
+   },
+   "prix": {
+    "label": "Price of the treatment",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "prenom_client": {
+    "label": "Customer's first name",
+    "aide": "Enter the real customer's first name.",
+    "exemple": "Aïcha"
+   },
+   "accord_client_diffusion": {
+    "label": "Does the customer agree to publish the video?",
+    "aide": "Tick only if the customer agrees to have their video published.",
+    "exemple": "Yes, the customer agreed"
+   },
+   "citation_client": {
+    "label": "The customer's words (optional)",
+    "aide": "Enter their actual words. You can leave this empty.",
+    "exemple": "Great service!"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "client_consentement": "The customer and their consent",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The customer speaking",
+    "consigne": "Start by showing the customer speaking. Hold your phone upright and keep fairly still. Film the face near a window. Do not put the light behind the person.",
+    "segments": {
+     "0": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Ask the customer to talk about the treatment they received.",
+      "exemple": "I'm talking about the treatment I received."
+     },
+     "1": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Let them tell how the treatment went.",
+      "exemple": "I'm telling about my stop-by."
+     },
+     "2": {
+      "show": "Also keep on screen a still from the take \"The customer speaking\", behind or next to the \"{prenom_client} · {quartier_ville}\" card.",
+      "tell": "Ask them to talk about a moment of the treatment.",
+      "exemple": "I'm continuing my story."
+     },
+     "3": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Let them say what they see now.",
+      "exemple": "This is what I see."
+     },
+     "4": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Ask them which technique they saw during the treatment.",
+      "exemple": "I'm talking about the technique I saw."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The result of the treatment",
+    "consigne": "Then show the result of the treatment. Hold your phone upright and keep fairly still. Film the face near a window. Do not put the light behind the person.",
+    "segments": {}
+   }
+  }
+ },
+ "immo_auto_T1": {
+  "nom_format": "New arrivals",
+  "phrase_courte": "Show the outside, the inside and the key information.",
+  "secteur_libelle": "Real Estate & Auto",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Auto Immo Conseil"
+   },
+   "nom_offre": {
+    "label": "Name of the property or car",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Toyota Corolla 2018"
+   },
+   "prix": {
+    "label": "Price of the property or car",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The outside of the property or car",
+    "consigne": "Start by showing the outside of the property or car. Hold your phone upright and keep fairly still. Film slowly and show the details that are really there.",
+    "segments": {
+     "0": {
+      "show": "Also keep on screen a still from the take \"The outside of the property or car\", behind or next to the \"TO DISCOVER\" card.",
+      "tell": "Say what you offer.",
+      "exemple": "Here is {nom_offre}."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The interior",
+    "consigne": "Then show the interior. Hold your phone upright and keep fairly still. Film slowly and show the details that are really there.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "An important piece of information",
+    "consigne": "Then show an important piece of information. Hold your phone upright and keep fairly still. Film slowly and show the details that are really there.",
+    "segments": {}
+   }
+  }
+ },
+ "immo_auto_T2": {
+  "nom_format": "Before and after",
+  "phrase_courte": "Show the property before, its real preparation and the result.",
+  "secteur_libelle": "Real Estate & Auto",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Auto Immo Conseil"
+   },
+   "nom_offre": {
+    "label": "Name of the property or car",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Toyota Corolla 2018"
+   },
+   "prix": {
+    "label": "Price of the property or car",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The property or the car before",
+    "consigne": "Film the property or car before cleaning or preparation.",
+    "segments": {
+     "0": {
+      "show": "Show {nom_offre} at the start, then after the preparation.",
+      "tell": "Say what has changed.",
+      "exemple": "Here is {nom_offre} at the start."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The preparation work",
+    "consigne": "Film the preparation work as it was really done.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The result after",
+    "consigne": "Film the result after, from the same spot.",
+    "segments": {}
+   }
+  }
+ },
+ "immo_auto_T3": {
+  "nom_format": "Showcasing a product",
+  "phrase_courte": "Tour the property or car, then show the details and useful information.",
+  "secteur_libelle": "Real Estate & Auto",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Auto Immo Conseil"
+   },
+   "nom_offre": {
+    "label": "Name of the property or car",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Toyota Corolla 2018"
+   },
+   "prix": {
+    "label": "Price of the property or car",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The property or car from the front",
+    "consigne": "Start by showing the property or car from the front. Hold your phone upright and keep fairly still. Film slowly and show the details that are really there.",
+    "segments": {
+     "0": {
+      "show": "Show {nom_offre} up close.",
+      "tell": "Talk about a detail that can be seen.",
+      "exemple": "Here is {nom_offre} up close."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The side or a room",
+    "consigne": "Then show the side or a room. Hold your phone upright and keep fairly still. Film slowly and show the details that are really there.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The interior and the details",
+    "consigne": "Then show the interior and the details. Hold your phone upright and keep fairly still. Film slowly and show the details that are really there.",
+    "segments": {}
+   }
+  }
+ },
+ "immo_auto_T4": {
+  "nom_format": "Sale",
+  "phrase_courte": "Show the property or car, its verified information, then the price and the real end date.",
+  "secteur_libelle": "Real Estate & Auto",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Auto Immo Conseil"
+   },
+   "nom_offre": {
+    "label": "Name of the property or car",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Toyota Corolla 2018"
+   },
+   "prix": {
+    "label": "Price of the property or car",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "12000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "ancien_prix": {
+    "label": "Price before the discount",
+    "aide": "Enter the real previous price.",
+    "exemple": "15000"
+   },
+   "fin_promo": {
+    "label": "Last day of the offer",
+    "aide": "Choose the last day of the offer.",
+    "exemple": "Example: October 30"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "promotion": "Prices and the last day",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The property or the car",
+    "consigne": "Start by showing the property or car. Hold your phone upright and keep fairly still. Film slowly and show the details that are really there.",
+    "segments": {}
+   },
+   "prise_2": {
+    "libelle": "An important detail",
+    "consigne": "Then show an important detail. Hold your phone upright and keep fairly still. Film slowly and show the details that are really there.",
+    "segments": {
+     "0": {
+      "show": "Show {nom_offre} and the displayed price.",
+      "tell": "Say where people can reach you; the address and number are also on screen.",
+      "exemple": "The price is displayed here."
+     }
+    }
+   }
+  }
+ },
+ "immo_auto_T5": {
+  "nom_format": "A customer tells the story",
+  "phrase_courte": "The customer tells about their visit or purchase in their own words.",
+  "secteur_libelle": "Real Estate & Auto",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Auto Immo Conseil"
+   },
+   "nom_offre": {
+    "label": "Name of the property or car",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Toyota Corolla 2018"
+   },
+   "prix": {
+    "label": "Price of the property or car",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "prenom_client": {
+    "label": "Customer's first name",
+    "aide": "Enter the real customer's first name.",
+    "exemple": "Aïcha"
+   },
+   "accord_client_diffusion": {
+    "label": "Does the customer agree to publish the video?",
+    "aide": "Tick only if the customer agrees to have their video published.",
+    "exemple": "Yes, the customer agreed"
+   },
+   "citation_client": {
+    "label": "The customer's words (optional)",
+    "aide": "Enter their actual words. You can leave this empty.",
+    "exemple": "Great service!"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "client_consentement": "The customer and their consent",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The customer speaking",
+    "consigne": "Start by showing the customer speaking. Hold your phone upright and keep fairly still. Film slowly and show the details that are really there.",
+    "segments": {
+     "0": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Ask the customer to talk about their visit.",
+      "exemple": "I'm talking about my visit."
+     },
+     "1": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Let them tell what they saw during the visit.",
+      "exemple": "I'm telling about the visit."
+     },
+     "2": {
+      "show": "Also keep on screen a still from the take \"The customer speaking\", behind or next to the \"{prenom_client} · {quartier_ville}\" card.",
+      "tell": "Ask them to tell about a moment of their visit.",
+      "exemple": "I'm continuing my account."
+     },
+     "3": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Invite them to talk about a detail they saw.",
+      "exemple": "Here is what I saw."
+     },
+     "4": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Let them describe what they saw in the home or car.",
+      "exemple": "I'm saying what I saw."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The property they are talking about",
+    "consigne": "Then show the property they are talking about. Hold your phone upright and keep fairly still. Film slowly and show the details that are really there.",
+    "segments": {}
+   }
+  }
+ },
+ "restaurants_maquis_T1": {
+  "nom_format": "New arrivals",
+  "phrase_courte": "Start with the dish, then show the ingredients, the cooking and the serving.",
+  "secteur_libelle": "Restaurants & Local Eateries",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Chez Maman Maquis"
+   },
+   "nom_offre": {
+    "label": "Name of the dish",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Grilled fish"
+   },
+   "prix": {
+    "label": "Price of the dish",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The whole dish",
+    "consigne": "Start by showing the whole dish. Hold your phone upright and keep fairly still. Film near a window. Show the dish and the real actions.",
+    "segments": {}
+   },
+   "prise_2": {
+    "libelle": "The dish up close",
+    "consigne": "Then show the dish up close. Hold your phone upright and keep fairly still. Film near a window. Show the dish and the real actions.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The preparation or the serving",
+    "consigne": "Then show the preparation or the serving. Hold your phone upright and keep fairly still. Film near a window. Show the dish and the real actions.",
+    "segments": {
+     "0": {
+      "show": "Also keep on screen a still from the take \"The preparation or the serving\", behind or next to the \"TO DISCOVER\" card.",
+      "tell": "Say what you prepared.",
+      "exemple": "Here is our dish."
+     }
+    }
+   }
+  }
+ },
+ "restaurants_maquis_T2": {
+  "nom_format": "Before and after",
+  "phrase_courte": "Show the ingredients, the cooking, the plating and the finished dish.",
+  "secteur_libelle": "Restaurants & Local Eateries",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Chez Maman Maquis"
+   },
+   "nom_offre": {
+    "label": "Name of the dish",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Grilled fish"
+   },
+   "prix": {
+    "label": "Price of the dish",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The ingredients",
+    "consigne": "Lay the dish's ingredients out on a clean surface. Film them from above, near a window.",
+    "segments": {
+     "0": {
+      "show": "Show the dish's ingredients.",
+      "tell": "Say what you chose to prepare it.",
+      "exemple": "Here are the ingredients."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The cooking",
+    "consigne": "Film a real cooking or grilling action. Keep the phone steady. If the sound is good, keep it.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "Plating the dish",
+    "consigne": "Film your hands while you plate the dish. Finish with a brief moment without moving.",
+    "segments": {}
+   },
+   "prise_4": {
+    "libelle": "The finished dish up close",
+    "consigne": "Film the finished dish up close. Show the real steam if there is any. Do not add any.",
+    "segments": {}
+   }
+  }
+ },
+ "restaurants_maquis_T3": {
+  "nom_format": "Showcasing a product",
+  "phrase_courte": "Show the dish from several angles, its size and its details.",
+  "secteur_libelle": "Restaurants & Local Eateries",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Chez Maman Maquis"
+   },
+   "nom_offre": {
+    "label": "Name of the dish",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Grilled fish"
+   },
+   "prix": {
+    "label": "Price of the dish",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The dish from the side",
+    "consigne": "Start by showing the dish from the side. Hold your phone upright and keep fairly still. Film near a window. Show the dish and the real actions.",
+    "segments": {
+     "0": {
+      "show": "Show the dish up close.",
+      "tell": "Talk about the portion or an ingredient.",
+      "exemple": "Here is the dish up close."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The dish from above",
+    "consigne": "Then show the dish from above. Hold your phone upright and keep fairly still. Film near a window. Show the dish and the real actions.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The size and details of the dish",
+    "consigne": "Then show the size and details of the dish. Hold your phone upright and keep fairly still. Film near a window. Show the dish and the real actions.",
+    "segments": {}
+   }
+  }
+ },
+ "restaurants_maquis_T4": {
+  "nom_format": "Sale",
+  "phrase_courte": "Show the hot dish, the price and the real offer end date.",
+  "secteur_libelle": "Restaurants & Local Eateries",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Chez Maman Maquis"
+   },
+   "nom_offre": {
+    "label": "Name of the dish",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Grilled fish"
+   },
+   "prix": {
+    "label": "Price of the dish",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "12000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "ancien_prix": {
+    "label": "Price before the discount",
+    "aide": "Enter the real previous price.",
+    "exemple": "15000"
+   },
+   "fin_promo": {
+    "label": "Last day of the offer",
+    "aide": "Choose the last day of the offer.",
+    "exemple": "Example: October 30"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "promotion": "Prices and the last day",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The hot dish",
+    "consigne": "Start by showing the hot dish. Hold your phone upright and keep fairly still. Film near a window. Show the dish and the real actions.",
+    "segments": {
+     "0": {
+      "show": "Show the hot dish while you talk about it.",
+      "tell": "Tell people they can come and eat.",
+      "exemple": "Come and eat."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The cooking or a detail of the dish",
+    "consigne": "Then show the cooking or a detail of the dish. Hold your phone upright and keep fairly still. Film near a window. Show the dish and the real actions.",
+    "segments": {}
+   }
+  }
+ },
+ "restaurants_maquis_T5": {
+  "nom_format": "A customer tells the story",
+  "phrase_courte": "The customer tells about their meal in their own words.",
+  "secteur_libelle": "Restaurants & Local Eateries",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Chez Maman Maquis"
+   },
+   "nom_offre": {
+    "label": "Name of the dish",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Grilled fish"
+   },
+   "prix": {
+    "label": "Price of the dish",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "prenom_client": {
+    "label": "Customer's first name",
+    "aide": "Enter the real customer's first name.",
+    "exemple": "Aïcha"
+   },
+   "accord_client_diffusion": {
+    "label": "Does the customer agree to publish the video?",
+    "aide": "Tick only if the customer agrees to have their video published.",
+    "exemple": "Yes, the customer agreed"
+   },
+   "citation_client": {
+    "label": "The customer's words (optional)",
+    "aide": "Enter their actual words. You can leave this empty.",
+    "exemple": "Great service!"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "client_consentement": "The customer and their consent",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The customer speaking",
+    "consigne": "Start by showing the customer speaking. Hold your phone upright and keep fairly still. Film near a window. Show the dish and the real actions.",
+    "segments": {
+     "0": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Ask the customer to talk about the meal they had.",
+      "exemple": "I'm talking about my meal."
+     },
+     "1": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Let them tell how the meal went.",
+      "exemple": "I'm telling about the meal."
+     },
+     "2": {
+      "show": "Also keep on screen a still from the take \"The customer speaking\", behind or next to the \"{prenom_client} · {quartier_ville}\" card.",
+      "tell": "Ask them to talk about a dish they ate.",
+      "exemple": "I'm continuing my account."
+     },
+     "3": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Invite them to tell about a moment of the meal.",
+      "exemple": "Here is what I ate."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The dish and the table",
+    "consigne": "Then show the dish and the table. Hold your phone upright and keep fairly still. Film near a window. Show the dish and the real actions.",
+    "segments": {}
+   }
+  }
+ },
+ "shops_small_business_T1": {
+  "nom_format": "New arrivals",
+  "phrase_courte": "Unbox the parcel or show the shelf, then the product and its details.",
+  "secteur_libelle": "Shops & Small Business",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Chez Awa"
+   },
+   "nom_offre": {
+    "label": "Name of the product",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Compact blender"
+   },
+   "prix": {
+    "label": "Price of the product",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "Unboxing the parcel or the shelf",
+    "consigne": "Start by showing the unboxing or the shelf. Hold your phone upright and keep fairly still. Show the product and only the accessories included in the price.",
+    "segments": {
+     "0": {
+      "show": "Also keep on screen a still from the take \"Unboxing the parcel or the shelf\", behind or next to the \"Ask if it's available\" card.",
+      "tell": "Introduce it in your own words.",
+      "exemple": "Here is the new arrival."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The product",
+    "consigne": "Then show the product. Hold your phone upright and keep fairly still. Show the product and only the accessories included in the price.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The product and its details",
+    "consigne": "Then show the product and its details. Hold your phone upright and keep fairly still. Show the product and only the accessories included in the price.",
+    "segments": {}
+   }
+  }
+ },
+ "shops_small_business_T2": {
+  "nom_format": "Before and after",
+  "phrase_courte": "Show the product before, then its setup or packaging.",
+  "secteur_libelle": "Shops & Small Business",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Chez Awa"
+   },
+   "nom_offre": {
+    "label": "Name of the product",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Compact blender"
+   },
+   "prix": {
+    "label": "Price of the product",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The product before",
+    "consigne": "Film the product before putting it away or packing it.",
+    "segments": {
+     "0": {
+      "show": "Show the product before, then after packaging or setup.",
+      "tell": "Say what you do.",
+      "exemple": "Here is the product before."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The setup or the packaging",
+    "consigne": "Film your hands while you tidy or pack the product.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The result",
+    "consigne": "Film the product once put away or packed.",
+    "segments": {}
+   }
+  }
+ },
+ "shops_small_business_T3": {
+  "nom_format": "Showcasing a product",
+  "phrase_courte": "Show the product from the front, the side and up close, then in use.",
+  "secteur_libelle": "Shops & Small Business",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Chez Awa"
+   },
+   "nom_offre": {
+    "label": "Name of the product",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Compact blender"
+   },
+   "prix": {
+    "label": "Price of the product",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The product from the front",
+    "consigne": "Start by showing the product from the front. Hold your phone upright and keep fairly still. Show the product and only the accessories included in the price.",
+    "segments": {
+     "0": {
+      "show": "Show the product from the front and up close.",
+      "tell": "Talk about a visible detail.",
+      "exemple": "Here is the product up close."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The product in hand",
+    "consigne": "Then show the product in hand. Hold your phone upright and keep fairly still. Show the product and only the accessories included in the price.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "A detail of the product",
+    "consigne": "Then show a detail of the product. Hold your phone upright and keep fairly still. Show the product and only the accessories included in the price.",
+    "segments": {}
+   }
+  }
+ },
+ "shops_small_business_T4": {
+  "nom_format": "Sale",
+  "phrase_courte": "Show the product, the old price, the new price and the real end date.",
+  "secteur_libelle": "Shops & Small Business",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Chez Awa"
+   },
+   "nom_offre": {
+    "label": "Name of the product",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Compact blender"
+   },
+   "prix": {
+    "label": "Price of the product",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "12000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "ancien_prix": {
+    "label": "Price before the discount",
+    "aide": "Enter the real previous price.",
+    "exemple": "15000"
+   },
+   "fin_promo": {
+    "label": "Last day of the offer",
+    "aide": "Choose the last day of the offer.",
+    "exemple": "Example: October 30"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "promotion": "Prices and the last day",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The product on offer",
+    "consigne": "Start by showing the product on offer. Hold your phone upright and keep fairly still. Show the product and only the accessories included in the price.",
+    "segments": {
+     "0": {
+      "show": "Show the offer and the displayed prices.",
+      "tell": "Say where people can find you.",
+      "exemple": "Price: {prix} {devise}."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "A detail of the product",
+    "consigne": "Then show a detail of the product. Hold your phone upright and keep fairly still. Show the product and only the accessories included in the price.",
+    "segments": {}
+   }
+  }
+ },
+ "shops_small_business_T5": {
+  "nom_format": "A customer tells the story",
+  "phrase_courte": "The customer talks about their purchase in their own words.",
+  "secteur_libelle": "Shops & Small Business",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Chez Awa"
+   },
+   "nom_offre": {
+    "label": "Name of the product",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Compact blender"
+   },
+   "prix": {
+    "label": "Price of the product",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "prenom_client": {
+    "label": "Customer's first name",
+    "aide": "Enter the real customer's first name.",
+    "exemple": "Aïcha"
+   },
+   "accord_client_diffusion": {
+    "label": "Does the customer agree to publish the video?",
+    "aide": "Tick only if the customer agrees to have their video published.",
+    "exemple": "Yes, the customer agreed"
+   },
+   "citation_client": {
+    "label": "The customer's words (optional)",
+    "aide": "Enter their actual words. You can leave this empty.",
+    "exemple": "Great service!"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "client_consentement": "The customer and their consent",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The customer speaking",
+    "consigne": "Start by showing the customer speaking. Hold your phone upright and keep fairly still. Show the product and only the accessories included in the price.",
+    "segments": {
+     "0": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Ask the customer to talk about the product they took.",
+      "exemple": "I'm talking about my purchase."
+     },
+     "1": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Let them tell how they received or used the product.",
+      "exemple": "I'm telling about my purchase."
+     },
+     "2": {
+      "show": "Also keep on screen a still from the take \"The customer speaking\", behind or next to the \"{prenom_client} · {quartier_ville}\" card.",
+      "tell": "Ask them to continue their story.",
+      "exemple": "I'm continuing my account."
+     },
+     "3": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Invite them to show the product if they want to.",
+      "exemple": "Here is the product."
+     },
+     "4": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Let them show how they use the product.",
+      "exemple": "I'm showing how I use it."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The product bought or used",
+    "consigne": "Then show the product bought or used. Hold your phone upright and keep fairly still. Show the product and only the accessories included in the price.",
+    "segments": {}
+   }
+  }
+ },
+ "vetements_mode_T1": {
+  "nom_format": "New arrivals",
+  "phrase_courte": "Show the clothes that have just arrived first.",
+  "secteur_libelle": "Clothing & Fashion",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Élégance Boutique"
+   },
+   "nom_offre": {
+    "label": "Name of the garment",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Wax dress"
+   },
+   "prix": {
+    "label": "Price",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The new clothes",
+    "consigne": "Start by showing the new clothes. Hold your phone upright and keep fairly still. Film near a window so the true colours show.",
+    "segments": {
+     "0": {
+      "show": "Also keep on screen a still from the take \"The new clothes\", behind or next to the \"TO DISCOVER\" card.",
+      "tell": "Say what has just arrived.",
+      "exemple": "Here are the new outfits."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "A garment being worn",
+    "consigne": "Then show a garment being worn. Hold your phone upright and keep fairly still. Film near a window so the true colours show.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The fabric up close",
+    "consigne": "Then show the fabric up close. Hold your phone upright and keep fairly still. Film near a window so the true colours show.",
+    "segments": {}
+   }
+  }
+ },
+ "vetements_mode_T2": {
+  "nom_format": "Before and after",
+  "phrase_courte": "See the outfit at the start, then after the change.",
+  "secteur_libelle": "Clothing & Fashion",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Élégance Boutique"
+   },
+   "nom_offre": {
+    "label": "Name of the garment",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Wax dress"
+   },
+   "prix": {
+    "label": "Price",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The outfit before",
+    "consigne": "Film the outfit before, from the front.",
+    "segments": {
+     "0": {
+      "show": "Show the outfit at the start, then after the change.",
+      "tell": "Say what has changed.",
+      "exemple": "Here is the outfit at the start."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The outfit change",
+    "consigne": "Film the outfit change or the person's movement.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The outfit after",
+    "consigne": "Film the outfit after, in the same place and under the same light.",
+    "segments": {}
+   }
+  }
+ },
+ "vetements_mode_T3": {
+  "nom_format": "Showcasing a product",
+  "phrase_courte": "Show the garment from the front, the side and up close.",
+  "secteur_libelle": "Clothing & Fashion",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Élégance Boutique"
+   },
+   "nom_offre": {
+    "label": "Name of the garment",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Wax dress"
+   },
+   "prix": {
+    "label": "Price",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The garment from the front",
+    "consigne": "Start by showing the garment from the front. Hold your phone upright and keep fairly still. Film near a window so the true colours show.",
+    "segments": {
+     "0": {
+      "show": "Show the garment from the front, the side and up close.",
+      "tell": "Talk about a detail that can be seen.",
+      "exemple": "Look at this fabric up close."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The garment from the side",
+    "consigne": "Then show the garment from the side. Hold your phone upright and keep fairly still. Film near a window so the true colours show.",
+    "segments": {}
+   },
+   "prise_3": {
+    "libelle": "The fabric and the details",
+    "consigne": "Then show the fabric and the details. Hold your phone upright and keep fairly still. Film near a window so the true colours show.",
+    "segments": {}
+   }
+  }
+ },
+ "vetements_mode_T4": {
+  "nom_format": "Sale",
+  "phrase_courte": "Show the item, the old price then the new price.",
+  "secteur_libelle": "Clothing & Fashion",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Élégance Boutique"
+   },
+   "nom_offre": {
+    "label": "Name of the garment",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Wax dress"
+   },
+   "prix": {
+    "label": "Price",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "12000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "ancien_prix": {
+    "label": "Price before the discount",
+    "aide": "Enter the real previous price.",
+    "exemple": "15000"
+   },
+   "fin_promo": {
+    "label": "Last day of the offer",
+    "aide": "Choose the last day of the offer.",
+    "exemple": "Example: October 30"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "promotion": "Prices and the last day",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The garment on offer",
+    "consigne": "Start by showing the garment on offer. Hold your phone upright and keep fairly still. Film near a window so the true colours show.",
+    "segments": {
+     "0": {
+      "show": "Show the offer and both displayed prices.",
+      "tell": "Say when it ends.",
+      "exemple": "Both prices are displayed."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "A detail of the garment",
+    "consigne": "Then show a detail of the garment. Hold your phone upright and keep fairly still. Film near a window so the true colours show.",
+    "segments": {}
+   }
+  }
+ },
+ "vetements_mode_T5": {
+  "nom_format": "A customer tells the story",
+  "phrase_courte": "The customer speaks in their own words.",
+  "secteur_libelle": "Clothing & Fashion",
+  "champs": {
+   "nom_commerce": {
+    "label": "Your business name",
+    "aide": "Enter the name customers should see.",
+    "exemple": "Élégance Boutique"
+   },
+   "nom_offre": {
+    "label": "Name of the garment",
+    "aide": "Enter the name of the dish, product or job.",
+    "exemple": "Wax dress"
+   },
+   "prix": {
+    "label": "Price",
+    "aide": "Enter the real price. FCFA is the default currency.",
+    "exemple": "15000"
+   },
+   "devise": {
+    "label": "Currency",
+    "aide": "FCFA is already selected. Change it only if needed.",
+    "exemple": "FCFA"
+   },
+   "prenom_client": {
+    "label": "Customer's first name",
+    "aide": "Enter the real customer's first name.",
+    "exemple": "Aïcha"
+   },
+   "accord_client_diffusion": {
+    "label": "Does the customer agree to publish the video?",
+    "aide": "Tick only if the customer agrees to have their video published.",
+    "exemple": "Yes, the customer agreed"
+   },
+   "citation_client": {
+    "label": "The customer's words (optional)",
+    "aide": "Enter their actual words. You can leave this empty.",
+    "exemple": "Great service!"
+   },
+   "quartier_ville": {
+    "label": "Neighbourhood and city",
+    "aide": "Enter the neighbourhood and city where customers can come.",
+    "exemple": "Akpakpa, Cotonou"
+   },
+   "whatsapp": {
+    "label": "your WhatsApp number",
+    "aide": "Choose your country, then enter the number customers can reach you on.",
+    "exemple": "+229 01 97 00 00 00"
+   },
+   "badge_engagement_actif": {
+    "label": "Show a special message (optional)",
+    "aide": "Leave it off unless the message is true.",
+    "exemple": "No"
+   }
+  },
+  "sections": {
+   "commerce_contact": "Your business and your WhatsApp",
+   "offre": "What you offer",
+   "client_consentement": "The customer and their consent",
+   "prix": "The price",
+   "lieu": "Where to find you",
+   "options_avancees": "Other options (optional)"
+  },
+  "prises": {
+   "prise_1": {
+    "libelle": "The customer speaking",
+    "consigne": "Start by showing the customer speaking. Hold your phone upright and keep fairly still. Film near a window so the true colours show.",
+    "segments": {
+     "0": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Ask the customer to talk about the garment they are showing.",
+      "exemple": "I'm talking about this outfit."
+     },
+     "1": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Let them tell about their visit or fitting.",
+      "exemple": "I'm telling about my fitting."
+     },
+     "2": {
+      "show": "Also keep on screen a still from the take \"The customer speaking\", behind or next to the \"{prenom_client} · {quartier_ville}\" card.",
+      "tell": "Ask them what they looked at or tried.",
+      "exemple": "I'm continuing my account."
+     },
+     "3": {
+      "show": "Show the customer while they answer in their own words.",
+      "tell": "Invite them to talk about a moment of their visit.",
+      "exemple": "This is what I experienced."
+     }
+    }
+   },
+   "prise_2": {
+    "libelle": "The garment being worn",
+    "consigne": "Then show the garment being worn. Hold your phone upright and keep fairly still. Film near a window so the true colours show.",
+    "segments": {}
+   }
+  }
+ }
+}

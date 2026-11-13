@@ -47,7 +47,19 @@ class CatalogActivity : VitrineActivity() {
                 var failed by remember { mutableStateOf(false) }
                 var gabarits by remember { mutableStateOf<List<GabaritSummary>>(emptyList()) }
                 LaunchedEffect(Unit) {
-                    gabarits = runCatching { gabaritRepository.summaries() }.getOrDefault(emptyList())
+                    // D42.32 (Lot 4) : catalogue en EN si langue choisie
+                    // (JSON canonique FR intact, traduction à la lecture).
+                    val langue = video.vitrine.core.designsystem.VitrineLocale.saved(this@CatalogActivity)
+                    gabarits = runCatching {
+                        gabaritRepository.summaries().map { g ->
+                            video.vitrine.data.i18n.GabaritUiL10n.traduireSummary(
+                                g,
+                                video.vitrine.data.i18n.GabaritUiL10n.traductions(
+                                    this@CatalogActivity, langue, g.id
+                                )
+                            )
+                        }
+                    }.getOrDefault(emptyList())
                 }
                 LaunchedEffect(canary) {
                     runCatching { repository.load(canary) }
