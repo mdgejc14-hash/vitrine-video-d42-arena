@@ -721,6 +721,20 @@ for tentative in $(seq 1 "$BRIEF_TENTATIVES"); do
       remplir_par_label "prix|price" "15000" || true
     fi
     v=$(nombre_de_vides); v=${v:-0}
+    if [ "$v" -eq 0 ] && [ -z "$probleme" ]; then
+      # v11h : des champs REQUIS peuvent être sous le pli (« Quartier et
+      # ville » en bas de brief) — invisibles du dump, donc jamais remplis,
+      # « Continuer » reste désactivé et la boucle s'épuise sans diagnostic
+      # (runs v11c/v11f/v11g : brief_etape4..20 = même écran). On révèle le
+      # bas du formulaire AVANT de conclure que tout est rempli.
+      swipe_v 70 35 280 >/dev/null 2>&1; sleep 1
+      dump_courant "_verif_brief"
+      v=$(nombre_de_vides); v=${v:-0}
+      if [ "$v" -gt 0 ]; then
+        echo "GALERIE réparation ($tentative.$_) : $v champ(s) vide(s) révélé(s) par défilement (sous le pli) → remplissage"
+        remplir_les_vides
+      fi
+    fi
     if [ "$v" -gt 0 ]; then
       echo "GALERIE réparation ($tentative.$_) : $v champ(s) vide(s) → remplissage"
       remplir_les_vides
