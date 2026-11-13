@@ -1103,35 +1103,9 @@ elif [ "$export_lance" = "1" ]; then
         swipe_v 70 35 300 >/dev/null 2>&1; sleep 1
         galshot_sr "dashboard_bas" "Tableau de bord — bas de page (screenrecord)" "historique" "défilé"
         haut_de_page
-        if taper "Parrainage" || taper "parrainage" || taper "Referral"; then
-          sleep 3
-          galshot_sr "dashboard_parrainage" "Parrainage — jauge et code (screenrecord)" "parrainage" "depuis dashboard"
-          adb shell input keyevent 4 >/dev/null 2>&1; sleep 2
-        fi
-        # v11f : « Réglages » absent du sommet du dashboard (dump _dashboard.xml
-        # du run v11e 43471051633 : aucun nœud ni content-desc « Réglages ») —
-        # tentative après défilement, gap documenté sinon.
-        REGLAGES_OK=0
-        if taper "Réglages" || taper "Paramètres" || taper "Settings"; then
-          REGLAGES_OK=1
-        else
-          swipe_v 70 35 300 >/dev/null 2>&1; sleep 1
-          if taper "Réglages" || taper "Paramètres" || taper "Settings"; then
-            REGLAGES_OK=1
-          fi
-          haut_de_page
-        fi
-        if [ "$REGLAGES_OK" = "1" ]; then
-          sleep 3
-          galshot_sr "profil_reglages" "Réglages / profil (screenrecord)" "profil" "ouvert"
-          adb shell input keyevent 4 >/dev/null 2>&1; sleep 2
-        else
-          gap "réglages : aucun libellé « Réglages » exposé sur le dashboard (sommet et bas testés — dump _dashboard.xml) — écran non capturé (constat UX)"
-        fi
-        # v11f : retour au SOMMET avant « Acheter » — le BACK du parrainage peut
-        # laisser le dashboard défilé et le bouton hors champ (tap du run v11e
-        # silencieusement infructueux) + dump de preuve du paywall ouvert.
-        haut_de_page
+        # v11i : PAYWALL D'ABORD, dashboard FRAIS (« Acheter » visible au
+        # sommet — dump _dashboard.xml). Au run v11h, les taps post-parrainage
+        # tapaient dans le vide : le BACK avait quitté le dashboard.
         if taper "Acheter" || taper "crédits" || taper "Crédits" || taper "Recharger" || taper "Buy"; then
           sleep 3
           dump_courant "_paywall"
@@ -1140,8 +1114,35 @@ elif [ "$export_lance" = "1" ]; then
           galshot_sr "paywall_bas" "Paywall — bas, formules (screenrecord)" "credits" "défilé"
           adb shell input keyevent 4 >/dev/null 2>&1; sleep 2
         else
-          gap "paywall : bouton « Acheter » introuvable sur le dashboard (dump _dashboard.xml) — écran non capturé"
+          gap "paywall : bouton « Acheter » introuvable sur le dashboard frais (dump _dashboard.xml) — écran non capturé"
         fi
+        # retour dashboard (le BACK du paywall doit y ramener)
+        $UI wait --text "TES VIDÉOS" --timeout 12 >/dev/null 2>&1 || true
+        if taper "Parrainage" || taper "parrainage" || taper "Referral"; then
+          sleep 3
+          galshot_sr "dashboard_parrainage" "Parrainage — jauge et code (screenrecord)" "parrainage" "depuis dashboard"
+          adb shell input keyevent 4 >/dev/null 2>&1; sleep 2
+        fi
+        # v11i : « Réglages » = OutlinedButton TEXTUEL en BAS du dashboard
+        # (DashboardScreens.kt :61) — défilements progressifs avec essai à
+        # chaque pas (le v11f n'avait défilé qu'une fois).
+        $UI wait --text "TES VIDÉOS" --timeout 12 >/dev/null 2>&1 || true
+        REGLAGES_OK=0
+        for _pas in 1 2 3 4 5; do
+          if taper "Réglages" || taper "Paramètres" || taper "Settings"; then
+            REGLAGES_OK=1
+            break
+          fi
+          swipe_v 70 35 300 >/dev/null 2>&1; sleep 1
+        done
+        if [ "$REGLAGES_OK" = "1" ]; then
+          sleep 3
+          galshot_sr "profil_reglages" "Réglages / profil (screenrecord)" "profil" "ouvert"
+          adb shell input keyevent 4 >/dev/null 2>&1; sleep 2
+        else
+          gap "réglages : bouton « Réglages » (bas du dashboard, DashboardScreens.kt:61) non atteint après 5 défilements — écran non capturé"
+        fi
+        haut_de_page
       else
         gap "bouton « $ESPACE » introuvable — dashboard non capturé"
       fi
