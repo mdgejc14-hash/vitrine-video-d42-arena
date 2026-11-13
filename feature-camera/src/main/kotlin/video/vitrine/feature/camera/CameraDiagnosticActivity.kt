@@ -351,7 +351,10 @@ class CameraDiagnosticActivity : VitrineActivity() {
         }
         json.put("view_largeur", previewView.width)
         json.put("view_hauteur", previewView.height)
-        json
+        // D42.32 (fix CI, vraie cause des 3 runs rouges) : corps de BLOC ->
+        // return explicite exigé. L'erreur « Missing return statement »
+        // pointait l'accolade fermante (348:5 puis 355:5), pas pixelCopier.
+        return json
     }
 
     private suspend fun pixelCopier(vue: SurfaceView): Bitmap? =
