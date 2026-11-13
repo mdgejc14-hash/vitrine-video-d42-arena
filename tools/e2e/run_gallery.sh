@@ -308,16 +308,25 @@ galshot_sr() { # id titre ecran etat
     # image de la dernière seconde (état stabilisé)
     if ffmpeg -y -sseof -1 -i "$OUT/_sr_tmp.mp4" -update 1 -frames:v 1 "$OUT/$f" >/dev/null 2>&1        && [ -s "$OUT/$f" ]; then ok=1; fi
   fi
+  local src="screenrecord"
   if [ "$ok" != "1" ]; then
-    # repli honnête : screencap classique (documenté comme affecté)
-    cp "$OUT/diag_${1}_screencap.png" "$OUT/$f"
+    # repli honnête : screencap classique — retenu SEULEMENT s'il est non vide
+    if [ -s "$OUT/diag_${1}_screencap.png" ]; then
+      cp "$OUT/diag_${1}_screencap.png" "$OUT/$f"
+      src="screencap-repli"
+    else
+      rm -f "$OUT/$f"
+      gap "capture « $1 » : screenrecord ET screencap vides — aucune image produite (aucune ligne manifest)"
+      echo "GALERIE [$ORDRE] $1 — ÉCHEC capture (aucune image)"
+      return 0
+    fi
   fi
   rm -f "$OUT/_sr_tmp.mp4"
   adb shell rm -f /sdcard/sr_capture.mp4 >/dev/null 2>&1
   local res; res=$(res_ecran); [ -n "$res" ] || res="${EFF_W}x${EFF_H}"
   printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
-    "$ORDRE" "$1" "$2" "$3" "$4" "$LANGUE" "$PROFIL" "$f" "$res" "screenrecord" >> "$MANIFEST"
-  echo "GALERIE [$ORDRE] $1 — $2 ($4, source screenrecord=$ok)"
+    "$ORDRE" "$1" "$2" "$3" "$4" "$LANGUE" "$PROFIL" "$f" "$res" "$src" >> "$MANIFEST"
+  echo "GALERIE [$ORDRE] $1 — $2 ($4, source=$src)"
 }
 
 # ----------------------------------------------------------------- labels ---
@@ -383,7 +392,7 @@ if [ "$PROFIL" = "petit" ]; then
   adb shell wm size 720x1520 >/dev/null 2>&1 || true; sleep 2; lire_taille_ecran
 fi
 if [ "$PROFIL" = "font130" ] || [ "$PROFIL" = "petit" ] || [ "$PROFIL" = "cible" ] \
-   || [ "$PROFIL" = "camerafix" ]; then
+   || [ "$PROFIL" = "camerafix" ] || [ "$PROFIL" = "exportfix" ]; then
   adb shell pm grant "$PKG" android.permission.CAMERA >/dev/null 2>&1 || true
 fi
 adb shell am start -W -n "$PKG/.MainActivity" > "$OUT/start.log" 2>&1
@@ -568,6 +577,12 @@ fi
 # témoignage 50 s : complétion attendue ~30 min, run p1-official 43168986328).
 if [ "$PROFIL" = "camerafix" ]; then
   GABARITS_CANDIDATS="Promotion client raconte Nouvel arrivage Nouveautés New Arrivals ancien prix montre l.article Présentation Quick Témoignage Customer Avant"
+fi
+# v11 exportfix : T1 « Nouvel arrivage » d'abord — gabarit du run p1-official
+# 43168986328 (export abouti ~14 min sur la même APK RC15) ; le T5 des
+# profils base dépasse la fenêtre de 95 min sous swiftshader.
+if [ "$PROFIL" = "exportfix" ]; then
+  GABARITS_CANDIDATS="Nouvel arrivage client raconte Nouveautés New Arrivals ancien prix montre l.article Présentation Quick Promo Promotion Témoignage Customer Avant"
 fi
 haut_de_page
 GABARIT_OK=0
@@ -880,26 +895,47 @@ tap_coord_text "$CREER" || taper "$CREER" exact
 # 16_export
 # =====================================================================
 export_lance=0
+# v11 exportfix : écran maintenu ALLUMÉ pendant l'export (screenrecord)
+if [ "$PROFIL" = "exportfix" ]; then
+  adb shell svc power stayon true >/dev/null 2>&1 || true
+fi
 WT=40
 if attendre "$EXPORT_START" "$EXPORT_RUNNING" "$EXPORT_PREP"; then
-  galshot "export_pret" "Écran d'export (E8) — avant lancement" "export" "prêt"
+  if [ "$PROFIL" = "exportfix" ]; then
+    galshot_sr "export_pret" "Écran d'export (E8) — avant lancement (screenrecord)" "export" "prêt"
+  else
+    galshot "export_pret" "Écran d'export (E8) — avant lancement" "export" "prêt"
+  fi
   if tap_coord_text "$EXPORT_START" || taper "$EXPORT_START" exact; then
     export_lance=1
     sleep 3
     WT=25
     if attendre "$EXPORT_RUNNING" "$EXPORT_PREP"; then
-      galshot "export_en_cours" "Export local en cours" "export" "en cours"
+      if [ "$PROFIL" = "exportfix" ]; then
+        galshot_sr "export_en_cours" "Export local en cours (screenrecord)" "export" "en cours"
+      else
+        galshot "export_en_cours" "Export local en cours" "export" "en cours"
+      fi
     fi
     WT=20
     adb shell dumpsys notification 2>/dev/null | grep -c "vv_export" > "$OUT/notif_verif.txt" || true
     adb shell cmd statusbar expand-notifications >/dev/null 2>&1; sleep 2
-    galshot "export_notification" "Tiroir de notifications — export (FGS)" "export" "notification"
+    if [ "$PROFIL" = "exportfix" ]; then
+      galshot_sr "export_notification" "Tiroir de notifications — export FGS (screenrecord)" "export" "notification"
+    else
+      galshot "export_notification" "Tiroir de notifications — export (FGS)" "export" "notification"
+    fi
     adb shell cmd statusbar collapse >/dev/null 2>&1; sleep 1
-    adb shell input keyevent 26 >/dev/null 2>&1; sleep 8
-    adb shell input keyevent 26 >/dev/null 2>&1; sleep 1
-    adb shell input keyevent 224 >/dev/null 2>&1; sleep 1
-    adb shell input keyevent 82 >/dev/null 2>&1; sleep 2
-    galshot "export_apres_ecran_etaint" "Export après écran éteint (réveil)" "export" "écran éteint survécu"
+    if [ "$PROFIL" != "exportfix" ]; then
+      # test « écran éteint » : déjà prouvé 3× (p1-official, lab p1, lab
+      # offline-export : P1_ecran_etaint PASS) — exportfix le saute pour
+      # privilégier la complétion de l'export et la capture screenrecord.
+      adb shell input keyevent 26 >/dev/null 2>&1; sleep 8
+      adb shell input keyevent 26 >/dev/null 2>&1; sleep 1
+      adb shell input keyevent 224 >/dev/null 2>&1; sleep 1
+      adb shell input keyevent 82 >/dev/null 2>&1; sleep 2
+      galshot "export_apres_ecran_etaint" "Export après écran éteint (réveil)" "export" "écran éteint survécu"
+    fi
   else
     gap "bouton « $EXPORT_START » introuvable"
   fi
@@ -918,15 +954,38 @@ elif [ "$export_lance" = "1" ]; then
   WT=5700
   if attendre "$DONE"; then
     WT=20
-    galshot "export_termine" "« $DONE » — export terminé" "export" "terminé"
+    if [ "$PROFIL" = "exportfix" ]; then
+      galshot_sr "export_termine" "« $DONE » — export terminé (screenrecord)" "export" "terminé"
+      # v11 : preuve FICHIER — MP4 du moteur de production (run-as, sinon adb root)
+      MP4NAME=$(adb shell run-as "$PKG" ls cache 2>/dev/null | tr -d '\r' | grep -m1 'export-.*\.mp4' || true)
+      if [ -z "$MP4NAME" ]; then
+        adb root >/dev/null 2>&1 || true; sleep 3
+        MP4NAME=$(adb shell ls "/data/data/$PKG/cache" 2>/dev/null | tr -d '\r' | grep -m1 'export-.*\.mp4' || true)
+        [ -n "$MP4NAME" ] && adb pull "/data/data/$PKG/cache/$MP4NAME" "$OUT/export.mp4" >/dev/null 2>&1 || true
+      else
+        adb shell run-as "$PKG" cat "cache/$MP4NAME" > "$OUT/export.mp4" 2>/dev/null || true
+      fi
+      if [ -s "$OUT/export.mp4" ] && command -v ffprobe >/dev/null 2>&1; then
+        ffprobe -v error -show_format -show_streams "$OUT/export.mp4" > "$OUT/ffprobe.txt" 2>&1 || true
+      fi
+    else
+      galshot "export_termine" "« $DONE » — export terminé" "export" "terminé"
+    fi
     if tap_coord_text "$PARTAGER" || taper "$PARTAGER" exact; then
       sleep 3
-      galshot "partage_feuille" "Feuille de partage Android (cible système)" "partage" "feuille ouverte"
+      if [ "$PROFIL" = "exportfix" ]; then
+        galshot_sr "partage_feuille" "Feuille de partage Android — export-0.mp4 (screenrecord)" "partage" "feuille ouverte"
+        adb shell dumpsys activity activities 2>/dev/null | grep -i "chooser\|ResolverActivity" > "$OUT/partage_preuve.txt" || true
+      else
+        galshot "partage_feuille" "Feuille de partage Android (cible système)" "partage" "feuille ouverte"
+      fi
       adb shell input keyevent 4 >/dev/null 2>&1; sleep 2
     else
       gap "bouton « $PARTAGER » introuvable"
     fi
-    if tap_coord_text "$ESPACE" || taper "$ESPACE" exact; then
+    if [ "$PROFIL" = "exportfix" ]; then
+      gap "dashboard post-export volontairement non couvert par exportfix (ciblage : « Vidéo prête ! » + partage uniquement)"
+    elif tap_coord_text "$ESPACE" || taper "$ESPACE" exact; then
       sleep 3
       galshot "dashboard" "Mon espace — tableau de bord" "historique" "connecté-local"
       galshot "profil_dashboard" "Tableau de bord — en-tête et cartes" "profil" "vue complète"
@@ -950,7 +1009,11 @@ elif [ "$export_lance" = "1" ]; then
     fi
   else
     WT=20
-    galshot "export_etat_final" "Export — état final après fenêtre de 95 min" "export" "délai dépassé"
+    if [ "$PROFIL" = "exportfix" ]; then
+      galshot_sr "export_etat_final" "Export — état final après fenêtre de 95 min (screenrecord)" "export" "délai dépassé"
+    else
+      galshot "export_etat_final" "Export — état final après fenêtre de 95 min" "export" "délai dépassé"
+    fi
     gap "export non terminé dans la fenêtre de 95 min (lancement effectif — capture d'état final fournie)"
   fi
 else
@@ -962,7 +1025,7 @@ fi
 # action intents (écrans RÉELS de DashboardActivity — aucune dépendance à
 # la fin d'export ; captured pour tous les profils non-variantes)
 # =====================================================================
-if [ "$PROFIL" != "font130" ] && [ "$PROFIL" != "petit" ]; then
+if [ "$PROFIL" != "font130" ] && [ "$PROFIL" != "petit" ] && [ "$PROFIL" != "exportfix" ]; then
   adb shell am start -a video.vitrine.action.VIEW_DASHBOARD >/dev/null 2>&1
   sleep 4
   galshot "dashboard" "Mon espace — tableau de bord (vue intents)" "profil" "connecté-local"
