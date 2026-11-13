@@ -1,6 +1,7 @@
 package video.vitrine.feature.catalog
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -16,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -31,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -107,12 +111,28 @@ fun CatalogScreen(
                     )
                 }
             }
+            // D42.32 (Lot 2) : badge secteur compact (pastille de la teinte
+            // métier + libellé) — remplace la phrase « Gabarits adaptés à
+            // votre commerce : … » tronquée et confuse avec le secteur Commerce.
             if (sector != Sector.TOUS) {
-                Text(
-                    stringResource(R.string.catalog_sector_focus, sectorLabel(sector)),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(10.dp)
+                            .background(
+                                paletteSecteur(sector).first,
+                                androidx.compose.foundation.shape.CircleShape,
+                            )
+                    )
+                    Text(
+                        sectorLabel(sector),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
             if (filtresOuverts && !secteurFixe) {
                 SectorRow(sector) { sector = it }
@@ -151,36 +171,84 @@ private fun GabaritLayout(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         gabarits.forEach { g ->
-            Card(onClick = { onGabaritClick(g) }, modifier = Modifier.fillMaxWidth()) {
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    // D42.30 : vignette sectorielle dessinée (cadrage caméra,
-                    // pellicule = nombre réel de scènes, badge durée) — plus de
-                    // carte 100 % texte.
+            // D42.32 (Lot 2) : carte horizontale premium — vignette sectorielle
+            // à gauche (cadrage caméra, pellicule = nombre réel de scènes,
+            // badge durée), hiérarchie nom > méta > phrase courte à droite,
+            // chevron orange = indication de choix. Les 5 gabarits du secteur
+            // sont immédiatement identifiables sans défilement interminable.
+            androidx.compose.material3.OutlinedCard(
+                onClick = { onGabaritClick(g) },
+                modifier = Modifier.fillMaxWidth(),
+                colors = androidx.compose.material3.CardDefaults.outlinedCardColors(
+                    containerColor = androidx.compose.ui.graphics.Color.White,
+                ),
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     VignetteSecteur(
                         secteur = sectorFromGabaritCode(g.secteur) ?: Sector.TOUS,
                         dureeS = g.dureeTotaleS,
                         scenes = g.nombreScenes,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(10.dp),
+                        modifier = Modifier.width(112.dp),
                     )
                     Column(
-                        modifier = Modifier.padding(horizontal = 14.dp).padding(bottom = 14.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(3.dp),
                     ) {
-                    Text(g.nomFormatAffiche, style = MaterialTheme.typography.titleMedium)
-                    val meta = buildString {
-                        if (showSector) append(g.secteurLibelle).append(" · ")
-                        append(g.dureeTotaleS).append(" s · ")
-                        append(g.nombreScenes).append(" scenes · ")
-                        append(g.nombrePrises).append(" prises")
+                        Text(
+                            g.nomFormatAffiche,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                        )
+                        Text(
+                            stringResource(
+                                R.string.catalog_gabarit_meta,
+                                g.dureeTotaleS,
+                                g.nombreScenes,
+                                g.nombrePrises,
+                            ),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        if (showSector) {
+                            Text(
+                                g.secteurLibelle,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        Text(
+                            g.phraseCourte,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 2,
+                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                        )
                     }
-                    Text(
-                        meta,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                    Text(g.phraseCourte, style = MaterialTheme.typography.bodyMedium)
+                    // indication de choix — chevron dessiné (orange d'action)
+                    Canvas(modifier = Modifier.size(20.dp)) {
+                        val t = size.width * 0.14f
+                        val w = size.width
+                        val h = size.height
+                        drawLine(
+                            video.vitrine.core.designsystem.OrangeStore,
+                            Offset(w * 0.36f, h * 0.22f),
+                            Offset(w * 0.64f, h * 0.50f),
+                            t,
+                            androidx.compose.ui.graphics.StrokeCap.Round,
+                        )
+                        drawLine(
+                            video.vitrine.core.designsystem.OrangeStore,
+                            Offset(w * 0.64f, h * 0.50f),
+                            Offset(w * 0.36f, h * 0.78f),
+                            t,
+                            androidx.compose.ui.graphics.StrokeCap.Round,
+                        )
                     }
                 }
             }

@@ -50,7 +50,7 @@ internal fun VignetteSecteur(
             .background(Brush.verticalGradient(listOf(teinteHaute, teinteBasse)))
     ) {
         Canvas(modifier = Modifier.matchParentSize()) {
-            dessinerDecorVignette(teinteBasse, scenes)
+            dessinerDecorVignette(scenes)
         }
         // icône métier du secteur (haut-gauche)
         Canvas(
@@ -112,7 +112,7 @@ internal fun VignetteSecteurAvecLibelle(
 
 
 /** Décor dessiné de la vignette : viseur caméra, pastille lecture, pellicule. */
-private fun DrawScope.dessinerDecorVignette(teinteBasse: Color, scenes: Int?) {
+private fun DrawScope.dessinerDecorVignette(scenes: Int?) {
     val w = size.width
     val h = size.height
     val encrage = Color.White.copy(alpha = 0.5f)
@@ -127,19 +127,10 @@ private fun DrawScope.dessinerDecorVignette(teinteBasse: Color, scenes: Int?) {
     drawLine(encrage, Offset(marge, h - marge), Offset(marge, h - marge - coin), 3f)
     drawLine(encrage, Offset(w - marge, h - marge), Offset(w - marge - coin, h - marge), 3f)
     drawLine(encrage, Offset(w - marge, h - marge), Offset(w - marge, h - marge - coin), 3f)
-    // 2) pastille LECTURE centrale — ce que vend le produit : une vidéo
-    val cx = w / 2f
-    val cy = h * 0.42f
-    val r = kotlin.math.min(w, h) * 0.13f
-    drawCircle(Color.White.copy(alpha = 0.16f), radius = r * 1.3f, center = Offset(cx, cy))
-    drawCircle(Color.White.copy(alpha = 0.92f), radius = r, center = Offset(cx, cy))
-    val lecture = Path().apply {
-        moveTo(cx - r * 0.32f, cy - r * 0.5f)
-        lineTo(cx + r * 0.55f, cy)
-        lineTo(cx - r * 0.32f, cy + r * 0.5f)
-        close()
-    }
-    drawPath(lecture, teinteBasse)
+    // 2) D42.32 (Lot 2) : PLUS de pastille LECTURE centrale — un bouton Play
+    // sans prévisualisation réelle est un faux lecteur vidéo (exigence
+    // fondateur). Le visuel reste honnête : cadrage caméra + pellicule des
+    // scènes (info réelle) + icône métier + badge durée.
     // 3) pellicule bas : une cellule par scène (info réelle du gabarit)
     val nScenes = (scenes ?: 0).coerceIn(0, 12)
     if (nScenes > 0) {

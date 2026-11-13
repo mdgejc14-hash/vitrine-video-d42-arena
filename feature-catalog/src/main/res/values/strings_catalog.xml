@@ -7,7 +7,7 @@
     <string name="skin_quick_presentation">Présentation Rapide de Produit</string>
     <string name="skin_flash_promo">Promo Flash &amp; Réduction</string>
     <string name="skin_customer_review">Témoignage &amp; Avis Client</string>
-    <string name="catalog_sector_focus">Gabarits adaptés à votre commerce : %1$s</string>
+    <string name="catalog_gabarit_meta">%1$d s · %2$d scènes · %3$d prises</string>
     <string name="catalog_change_sector">Changer de secteur</string>
     <string name="catalog_skins_unavailable">Catalogue des styles indisponible pour le moment. Les 30 formats universels restent disponibles.</string>
 </resources>
