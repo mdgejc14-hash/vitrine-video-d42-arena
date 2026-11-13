@@ -57,6 +57,62 @@ class CatalogVisualCheckTest {
         compose.onAllNodesWithText("Avant / Après Transformation").assertCountEquals(0)
         compose.onAllNodesWithText("Témoignage & Avis Client").assertCountEquals(0)
     }
+
+    /**
+     * D42.32 (P0-1) : secteur choisi → AUCUNE sélection de secteur intégrée au
+     * catalogue (pas de « Changer de secteur », pas de rangée de secteurs, pas
+     * de « Tous les métiers ») ; seuls les gabarits du secteur s'affichent.
+     */
+    @Test
+    fun catalogue_secteur_choisi_sans_selection_integree() {
+        val gabarits = listOf(
+            gabarit("vetements_mode_T1", "vetements_mode", "Nouvel Arrivage & Nouveautés"),
+            gabarit("vetements_mode_T2", "vetements_mode", "Avant / Après Transformation"),
+            gabarit("vetements_mode_T3", "vetements_mode", "Présentation Produit"),
+            gabarit("vetements_mode_T4", "vetements_mode", "Promotion Flash"),
+            gabarit("vetements_mode_T5", "vetements_mode", "Témoignage & Avis Client"),
+            gabarit("coiffure_beaute_T1", "coiffure_beaute", "Coiffure Élégance"),
+            gabarit("shops_small_business_T1", "shops_small_business", "Boutique Spécial"),
+        )
+        compose.setContent {
+            VitrineTheme {
+                CatalogScreen(
+                    manifest,
+                    offline = false,
+                    initialSector = Sector.MODE,
+                    gabarits = gabarits,
+                )
+            }
+        }
+        compose.onRoot().save("04-catalogue-secteur-choisi-sans-filtres.png")
+        // Les 5 gabarits du secteur choisi sont présentés.
+        compose.onAllNodesWithText("Nouvel Arrivage & Nouveautés").assertCountEquals(1)
+        compose.onAllNodesWithText("Avant / Après Transformation").assertCountEquals(1)
+        compose.onAllNodesWithText("Présentation Produit").assertCountEquals(1)
+        compose.onAllNodesWithText("Promotion Flash").assertCountEquals(1)
+        compose.onAllNodesWithText("Témoignage & Avis Client").assertCountEquals(1)
+        // Aucun gabarit d'un autre secteur.
+        compose.onAllNodesWithText("Coiffure Élégance").assertCountEquals(0)
+        compose.onAllNodesWithText("Boutique Spécial").assertCountEquals(0)
+        // Aucune sélection de secteur intégrée (P0-1).
+        compose.onAllNodesWithText("Changer de secteur").assertCountEquals(0)
+        compose.onAllNodesWithText("Tous les métiers").assertCountEquals(0)
+        compose.onAllNodesWithText("Coiffure & Beauté").assertCountEquals(0)
+    }
+
+    private fun gabarit(id: String, secteur: String, nom: String) = video.vitrine.core.model.GabaritSummary(
+        id = id,
+        secteur = secteur,
+        secteurLibelle = secteur,
+        format = "T1_x",
+        nomFormatAffiche = nom,
+        dureeTotaleS = 35,
+        nombreScenes = 15,
+        nombrePrises = 3,
+        ratio = "9:16",
+        phraseCourte = "phrase courte",
+        promesse = "promesse",
+    )
 }
 
 private fun SemanticsNodeInteraction.save(name: String) {

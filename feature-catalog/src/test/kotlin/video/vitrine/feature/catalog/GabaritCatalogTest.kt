@@ -41,4 +41,34 @@ class GabaritCatalogTest {
         assertEquals(listOf("vetements_mode_T4"), GabaritCatalog.visible(all, Sector.MODE).map { it.id })
         assertTrue(GabaritCatalog.visible(all, Sector.IMMO_AUTO).isEmpty())
     }
+
+    /**
+     * D42.32 (P0-1) : contrats des 30 associations réelles (content/gabarits_v2
+     * = 6 secteurs × 5 gabarits T1-T5). Pour CHAQUE secteur : exactement 5
+     * gabarits visibles, aucun gabarit d'un autre secteur, aucun mélange.
+     */
+    @Test
+    fun `six secteurs cinq gabarits exactement aucun melange`() {
+        val codes = listOf(
+            "batiment_travaux", "coiffure_beaute", "immo_auto",
+            "restaurants_maquis", "shops_small_business", "vetements_mode",
+        )
+        val trente = codes.flatMap { code ->
+            (1..5).map { t -> g("${code}_T$t", code) }
+        }
+        assertEquals(30, trente.size)
+        assertEquals(30, GabaritCatalog.visible(trente, Sector.TOUS).size)
+        val secteursReels = listOf(
+            Sector.BTP, Sector.COIFFURE, Sector.IMMO_AUTO,
+            Sector.RESTAURATION, Sector.COMMERCE, Sector.MODE,
+        )
+        for (secteur in secteursReels) {
+            val visibles = GabaritCatalog.visible(trente, secteur)
+            assertEquals("secteur $secteur : 5 gabarits attendus", 5, visibles.size)
+            assertTrue(
+                "secteur $secteur : aucun gabarit étranger attendu",
+                visibles.all { GabaritCatalog.visible(listOf(it), secteur).isNotEmpty() },
+            )
+        }
+    }
 }

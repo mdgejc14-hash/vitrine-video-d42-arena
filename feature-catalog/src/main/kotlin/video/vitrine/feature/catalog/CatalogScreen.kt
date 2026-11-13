@@ -55,10 +55,18 @@ fun CatalogScreen(
     gabarits: List<GabaritSummary> = emptyList(),
     onGabaritClick: (GabaritSummary) -> Unit = {},
 ) {
+    // D42.32 (P0-1) : le secteur est choisi sur l'écran de sélection DÉDIÉ
+    // (onboarding, 6 secteurs). Quand il est connu (parcours commercial
+    // normal), le catalogue ne propose PLUS de seconde sélection : pas de
+    // rangée de secteurs, pas de filtre « Tous les métiers », pas de bouton
+    // « Changer de secteur ». Le RETOUR ARRIÈRE est l'unique chemin vers la
+    // sélection (MainActivity.stepBack REQ_CATALOG → relance l'onboarding,
+    // qui redémarre le catalogue avec le NOUVEAU secteur).
+    val secteurFixe = initialSector != null
     var sector by remember { mutableStateOf(initialSector ?: Sector.TOUS) }
-    // D42.30 : filtres secteur REPLIÉS quand un secteur est déjà choisi
-    // (moins de bruit visuel) ; « Changer de secteur » les déplie.
-    var filtresOuverts by remember { mutableStateOf(initialSector == null) }
+    // Repli défensif : initialSector null = anomalie (l'onboarding garantit
+    // un choix) — on garde alors l'ancien comportement de sélection intégrée.
+    var filtresOuverts by remember { mutableStateOf(!secteurFixe) }
     Column(modifier = Modifier.fillMaxSize()) {
         if (offline) {
             Text(
@@ -77,6 +85,8 @@ fun CatalogScreen(
             VitrineLogoHeader()
             // D42.30 : le titre et l'action « Changer de secteur » partagent la
             // même ligne (retour terrain : secteur affiché + action discrète).
+            // D42.32 (P0-1) : l'action disparaît quand le secteur est déjà
+            // choisi — le retour arrière remplace le changement de secteur.
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -86,14 +96,16 @@ fun CatalogScreen(
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.weight(1f),
                 )
-                Text(
-                    stringResource(R.string.catalog_change_sector),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .clickable { filtresOuverts = !filtresOuverts }
-                        .padding(6.dp),
-                )
+                if (!secteurFixe) {
+                    Text(
+                        stringResource(R.string.catalog_change_sector),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .clickable { filtresOuverts = !filtresOuverts }
+                            .padding(6.dp),
+                    )
+                }
             }
             if (sector != Sector.TOUS) {
                 Text(
@@ -102,7 +114,7 @@ fun CatalogScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            if (filtresOuverts) {
+            if (filtresOuverts && !secteurFixe) {
                 SectorRow(sector) { sector = it }
             }
         }
