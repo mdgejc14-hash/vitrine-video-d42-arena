@@ -1,0 +1,20 @@
+1	splash	Splash (lancement)	accueil	lancement	fr	petit	001_splash.png	720x1520
+2	splash_tardif	Splash (t) — premier plan	accueil	lancement	fr	petit	002_splash_tardif.png	720x1520
+3	langue	Écran de choix de langue	langues	initial	fr	petit	003_langue.png	720x1520
+4	auth	Connexion — bouton Google (non actionné ici)	authentification	non connecté	fr	petit	004_auth.png	720x1520
+5	carrousel_1	Carrousel — Filme. Vends. C'est tout.	accueil	repli sans compte	fr	petit	005_carrousel_1.png	720x1520
+6	carrousel_2	Carrousel — Filme tes produits, on te guide	accueil	slide 2	fr	petit	006_carrousel_2.png	720x1520
+7	carrousel_3	Carrousel — Une vidéo prête à publier en 30 secondes	accueil	slide 3	fr	petit	007_carrousel_3.png	720x1520
+8	secteurs	Choix du secteur (activité principale)	secteurs	initial	fr	petit	008_secteurs.png	720x1520
+9	secteurs_bas	Choix du secteur — bas de liste	secteurs	défilé	fr	petit	009_secteurs_bas.png	720x1520
+10	parrainage	Étape parrainage — saisie du code	parrainage	vide	fr	petit	010_parrainage.png	720x1520
+11	catalogue_haut	Catalogue — haut (secteur sélectionné)	catalogue	initial	fr	petit	011_catalogue_haut.png	720x1520
+12	catalogue_scroll1	Catalogue — position 1	catalogue	défilé	fr	petit	012_catalogue_scroll1.png	720x1520
+13	catalogue_scroll2	Catalogue — position 2	catalogue	défilé	fr	petit	013_catalogue_scroll2.png	720x1520
+14	catalogue_scroll3	Catalogue — position 3	catalogue	défilé	fr	petit	014_catalogue_scroll3.png	720x1520
+15	catalogue_scroll4	Catalogue — position 4	catalogue	défilé	fr	petit	015_catalogue_scroll4.png	720x1520
+16	catalogue_scroll5	Catalogue — position 5	catalogue	défilé	fr	petit	016_catalogue_scroll5.png	720x1520
+17	brief_vide	Formulaire de brief — vide (Continuer désactivé)	brief	vide	fr	petit	017_brief_vide.png	720x1520
+18	brief_rempli	Formulaire de brief — rempli (valeurs fictives)	brief	rempli	fr	petit	018_brief_rempli.png	720x1520
+19	brief_final	Formulaire de brief — état final avant validation	brief	prêt	fr	petit	019_brief_final.png	720x1520
+20	variante_resume	Variante petit — brief rempli (état final)	brief	variante petit	fr	petit	020_variante_resume.png	720x1520

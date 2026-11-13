@@ -1,0 +1,67 @@
+1	splash	Splash (lancement)	accueil	lancement	fr	base	001_splash.png	1080x2340
+2	splash_tardif	Splash (t) — premier plan	accueil	lancement	fr	base	002_splash_tardif.png	1080x2340
+3	langue	Écran de choix de langue	langues	initial	fr	base	003_langue.png	1080x2340
+4	auth	Connexion — bouton Google (non actionné ici)	authentification	non connecté	fr	base	004_auth.png	1080x2340
+5	carrousel_1	Carrousel — Filme. Vends. C'est tout.	accueil	repli sans compte	fr	base	005_carrousel_1.png	1080x2340
+6	carrousel_2	Carrousel — Filme tes produits, on te guide	accueil	slide 2	fr	base	006_carrousel_2.png	1080x2340
+7	carrousel_3	Carrousel — Une vidéo prête à publier en 30 secondes	accueil	slide 3	fr	base	007_carrousel_3.png	1080x2340
+8	secteurs	Choix du secteur (activité principale)	secteurs	initial	fr	base	008_secteurs.png	1080x2340
+9	secteurs_bas	Choix du secteur — bas de liste	secteurs	défilé	fr	base	009_secteurs_bas.png	1080x2340
+10	parrainage	Étape parrainage — saisie du code	parrainage	vide	fr	base	010_parrainage.png	1080x2340
+11	credits_bienvenue	Bienvenue — confirmation des crédits	credits	connecté-local	fr	base	011_credits_bienvenue.png	1080x2340
+12	catalogue_haut	Catalogue — haut (secteur sélectionné)	catalogue	initial	fr	base	012_catalogue_haut.png	1080x2340
+13	catalogue_scroll1	Catalogue — position 1	catalogue	défilé	fr	base	013_catalogue_scroll1.png	1080x2340
+14	catalogue_scroll2	Catalogue — position 2	catalogue	défilé	fr	base	014_catalogue_scroll2.png	1080x2340
+15	catalogue_scroll3	Catalogue — position 3	catalogue	défilé	fr	base	015_catalogue_scroll3.png	1080x2340
+16	catalogue_scroll4	Catalogue — position 4	catalogue	défilé	fr	base	016_catalogue_scroll4.png	1080x2340
+17	secteur_change_1	Catalogue — filtres secteur dépliés (itération 1)	secteurs	changement	fr	base	017_secteur_change_1.png	1080x2340
+18	catalogue_secteur1	Catalogue — secteur « Vêtements » (en-tête de focus)	catalogue	secteur 1	fr	base	018_catalogue_secteur1.png	1080x2340
+19	catalogue_secteur1_scroll1	Catalogue — secteur « Vêtements », position 1	catalogue	secteur 1, défilé	fr	base	019_catalogue_secteur1_scroll1.png	1080x2340
+20	catalogue_secteur1_scroll2	Catalogue — secteur « Vêtements », position 2	catalogue	secteur 1, défilé	fr	base	020_catalogue_secteur1_scroll2.png	1080x2340
+21	secteur_change_2	Catalogue — filtres secteur dépliés (itération 2)	secteurs	changement	fr	base	021_secteur_change_2.png	1080x2340
+22	catalogue_secteur2	Catalogue — secteur « Coiffure » (en-tête de focus)	catalogue	secteur 2	fr	base	022_catalogue_secteur2.png	1080x2340
+23	catalogue_secteur2_scroll1	Catalogue — secteur « Coiffure », position 1	catalogue	secteur 2, défilé	fr	base	023_catalogue_secteur2_scroll1.png	1080x2340
+24	catalogue_secteur2_scroll2	Catalogue — secteur « Coiffure », position 2	catalogue	secteur 2, défilé	fr	base	024_catalogue_secteur2_scroll2.png	1080x2340
+25	secteur_change_3	Catalogue — filtres secteur dépliés (itération 3)	secteurs	changement	fr	base	025_secteur_change_3.png	1080x2340
+26	catalogue_secteur3	Catalogue — secteur « Restauration » (en-tête de focus)	catalogue	secteur 3	fr	base	026_catalogue_secteur3.png	1080x2340
+27	catalogue_secteur3_scroll1	Catalogue — secteur « Restauration », position 1	catalogue	secteur 3, défilé	fr	base	027_catalogue_secteur3_scroll1.png	1080x2340
+28	catalogue_secteur3_scroll2	Catalogue — secteur « Restauration », position 2	catalogue	secteur 3, défilé	fr	base	028_catalogue_secteur3_scroll2.png	1080x2340
+29	secteur_change_4	Catalogue — filtres secteur dépliés (itération 4)	secteurs	changement	fr	base	029_secteur_change_4.png	1080x2340
+30	catalogue_secteur4	Catalogue — secteur « Bâtiment » (en-tête de focus)	catalogue	secteur 4	fr	base	030_catalogue_secteur4.png	1080x2340
+31	catalogue_secteur4_scroll1	Catalogue — secteur « Bâtiment », position 1	catalogue	secteur 4, défilé	fr	base	031_catalogue_secteur4_scroll1.png	1080x2340
+32	catalogue_secteur4_scroll2	Catalogue — secteur « Bâtiment », position 2	catalogue	secteur 4, défilé	fr	base	032_catalogue_secteur4_scroll2.png	1080x2340
+33	secteur_change_5	Catalogue — filtres secteur dépliés (itération 5)	secteurs	changement	fr	base	033_secteur_change_5.png	1080x2340
+34	catalogue_secteur5	Catalogue — secteur « Voitures » (en-tête de focus)	catalogue	secteur 5	fr	base	034_catalogue_secteur5.png	1080x2340
+35	catalogue_secteur5_scroll1	Catalogue — secteur « Voitures », position 1	catalogue	secteur 5, défilé	fr	base	035_catalogue_secteur5_scroll1.png	1080x2340
+36	catalogue_secteur5_scroll2	Catalogue — secteur « Voitures », position 2	catalogue	secteur 5, défilé	fr	base	036_catalogue_secteur5_scroll2.png	1080x2340
+37	secteur_change_6	Catalogue — filtres secteur dépliés (itération 6)	secteurs	changement	fr	base	037_secteur_change_6.png	1080x2340
+38	brief_vide	Formulaire de brief — vide (Continuer désactivé)	brief	vide	fr	base	038_brief_vide.png	1080x2340
+39	brief_whatsapp_clavier	Champ WhatsApp — clavier ouvert	formulaires	clavier ouvert	fr	base	039_brief_whatsapp_clavier.png	1080x2340
+40	brief_rempli	Formulaire de brief — rempli (valeurs fictives)	brief	rempli	fr	base	040_brief_rempli.png	1080x2340
+41	brief_final	Formulaire de brief — état final avant validation	brief	prêt	fr	base	041_brief_final.png	1080x2340
+42	verification	Écran de vérification (avant de commencer)	verification	récapitulatif	fr	base	042_verification.png	1080x2340
+43	verification_bas	Vérification — bas de l'écran	verification	défilé	fr	base	043_verification_bas.png	1080x2340
+44	camera_permission_dialogue	Dialogue système de permission caméra	camera	permission demandée	fr	base	044_camera_permission_dialogue.png	1080x2340
+45	camera_permission_refusee	Caméra — permission refusée	camera	permission refusée	fr	base	045_camera_permission_refusee.png	1080x2340
+46	camera_dialogue_produit	Dialogue produit « accès caméra nécessaire »	camera	rationale	fr	base	046_camera_dialogue_produit.png	1080x2340
+47	camera_guide	Guide de tournage (consignes)	camera	guide	fr	base	047_camera_guide.png	1080x2340
+48	camera_preview	Viseur caméra — PreviewView (flux ÉMULÉ de l'émulateur)	camera	preview streaming	fr	base	048_camera_preview.png	1080x2340
+49	camera_countdown_a	Compte à rebours (capture a)	prises	countdown	fr	base	049_camera_countdown_a.png	1080x2340
+50	camera_countdown_b	Compte à rebours (capture b)	prises	countdown	fr	base	050_camera_countdown_b.png	1080x2340
+51	camera_rec	Enregistrement ACTIF — badge REC	prises	rec	fr	base	051_camera_rec.png	1080x2340
+52	camera_arret	Arrêt de la prise — finalisation	prises	arrêt	fr	base	052_camera_arret.png	1080x2340
+53	camera_avant	Caméra AVANT (flux émulé) après bascule	prises	bascule avant	fr	base	053_camera_avant.png	1080x2340
+54	camera_arriere	Retour caméra ARRIÈRE (flux émulé)	prises	bascule retour	fr	base	054_camera_arriere.png	1080x2340
+55	camera_refaire	Reprise d'une prise (Refaire)	prises	reprise	fr	base	055_camera_refaire.png	1080x2340
+56	camera_scene2	Scène 2 du guide	prises	scène 2	fr	base	056_camera_scene2.png	1080x2340
+57	export_pret	Écran d'export (E8) — avant lancement	export	prêt	fr	base	057_export_pret.png	1080x2340
+58	export_en_cours	Export local en cours	export	en cours	fr	base	058_export_en_cours.png	1080x2340
+59	export_notification	Tiroir de notifications — export (FGS)	export	notification	fr	base	059_export_notification.png	1080x2340
+60	export_apres_ecran_etaint	Export après écran éteint (réveil)	export	écran éteint survécu	fr	base	060_export_apres_ecran_etaint.png	1080x2340
+61	export_etat_final	Export — état final après fenêtre de 95 min	export	délai dépassé	fr	base	061_export_etat_final.png	1080x2340
+62	dashboard	Mon espace — tableau de bord (vue intents)	profil	connecté-local	fr	base	062_dashboard.png	1080x2340
+63	dashboard_bas	Tableau de bord — bas de page	profil	défilé	fr	base	063_dashboard_bas.png	1080x2340
+64	dashboard_parrainage	Parrainage — jauge et code (vue intents)	parrainage	depuis dashboard	fr	base	064_dashboard_parrainage.png	1080x2340
+65	profil_reglages	Réglages / profil (vue intents)	profil	ouvert	fr	base	065_profil_reglages.png	1080x2340
+66	paywall	Crédits / formules — paywall (vue intents)	credits	offre	fr	base	066_paywall.png	1080x2340
+67	paywall_bas	Paywall — bas (formules)	credits	défilé	fr	base	067_paywall_bas.png	1080x2340

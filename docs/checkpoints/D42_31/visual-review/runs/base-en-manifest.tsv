@@ -1,0 +1,49 @@
+1	splash	Splash (lancement)	accueil	lancement	en	base	001_splash.png	1080x2340
+2	splash_tardif	Splash (t) — premier plan	accueil	lancement	en	base	002_splash_tardif.png	1080x2340
+3	langue	Écran de choix de langue	langues	initial	en	base	003_langue.png	1080x2340
+4	auth	Connexion — bouton Google (non actionné ici)	authentification	non connecté	en	base	004_auth.png	1080x2340
+5	carrousel_1	Carrousel — Shoot. Sell. Done.	accueil	repli sans compte	en	base	005_carrousel_1.png	1080x2340
+6	carrousel_2	Carrousel — Film your products, we guide you	accueil	slide 2	en	base	006_carrousel_2.png	1080x2340
+7	carrousel_3	Carrousel — A video ready to post in 30 seconds	accueil	slide 3	en	base	007_carrousel_3.png	1080x2340
+8	secteurs	Choix du secteur (activité principale)	secteurs	initial	en	base	008_secteurs.png	1080x2340
+9	secteurs_bas	Choix du secteur — bas de liste	secteurs	défilé	en	base	009_secteurs_bas.png	1080x2340
+10	parrainage	Étape parrainage — saisie du code	parrainage	vide	en	base	010_parrainage.png	1080x2340
+11	credits_bienvenue	Bienvenue — confirmation des crédits	credits	connecté-local	en	base	011_credits_bienvenue.png	1080x2340
+12	catalogue_haut	Catalogue — haut (secteur sélectionné)	catalogue	initial	en	base	012_catalogue_haut.png	1080x2340
+13	catalogue_scroll1	Catalogue — position 1	catalogue	défilé	en	base	013_catalogue_scroll1.png	1080x2340
+14	catalogue_scroll2	Catalogue — position 2	catalogue	défilé	en	base	014_catalogue_scroll2.png	1080x2340
+15	catalogue_scroll3	Catalogue — position 3	catalogue	défilé	en	base	015_catalogue_scroll3.png	1080x2340
+16	catalogue_scroll4	Catalogue — position 4	catalogue	défilé	en	base	016_catalogue_scroll4.png	1080x2340
+17	brief_vide	Formulaire de brief — vide (Continuer désactivé)	brief	vide	en	base	017_brief_vide.png	1080x2340
+18	brief_whatsapp_clavier	Champ WhatsApp — clavier ouvert	formulaires	clavier ouvert	en	base	018_brief_whatsapp_clavier.png	1080x2340
+19	brief_rempli	Formulaire de brief — rempli (valeurs fictives)	brief	rempli	en	base	019_brief_rempli.png	1080x2340
+20	brief_final	Formulaire de brief — état final avant validation	brief	prêt	en	base	020_brief_final.png	1080x2340
+21	brief_etape1	Brief — étape 1 (multi-étapes)	brief	étape 1	en	base	021_brief_etape1.png	1080x2340
+22	verification	Écran de vérification (avant de commencer)	verification	récapitulatif	en	base	022_verification.png	1080x2340
+23	verification_bas	Vérification — bas de l'écran	verification	défilé	en	base	023_verification_bas.png	1080x2340
+24	camera_permission_dialogue	Dialogue système de permission caméra	camera	permission demandée	en	base	024_camera_permission_dialogue.png	1080x2340
+25	camera_permission_refusee	Caméra — permission refusée	camera	permission refusée	en	base	025_camera_permission_refusee.png	1080x2340
+26	camera_dialogue_produit	Dialogue produit « accès caméra nécessaire »	camera	rationale	en	base	026_camera_dialogue_produit.png	1080x2340
+27	camera_guide	Guide de tournage (consignes)	camera	guide	en	base	027_camera_guide.png	1080x2340
+28	camera_preview	Viseur caméra — PreviewView (flux ÉMULÉ de l'émulateur)	camera	preview streaming	en	base	028_camera_preview.png	1080x2340
+29	camera_countdown_a	Compte à rebours (capture a)	prises	countdown	en	base	029_camera_countdown_a.png	1080x2340
+30	camera_countdown_b	Compte à rebours (capture b)	prises	countdown	en	base	030_camera_countdown_b.png	1080x2340
+31	camera_rec	Enregistrement ACTIF — badge REC	prises	rec	en	base	031_camera_rec.png	1080x2340
+32	camera_arret	Arrêt de la prise — finalisation	prises	arrêt	en	base	032_camera_arret.png	1080x2340
+33	camera_avant	Caméra AVANT (flux émulé) après bascule	prises	bascule avant	en	base	033_camera_avant.png	1080x2340
+34	camera_arriere	Retour caméra ARRIÈRE (flux émulé)	prises	bascule retour	en	base	034_camera_arriere.png	1080x2340
+35	camera_refaire	Reprise d'une prise (Refaire)	prises	reprise	en	base	035_camera_refaire.png	1080x2340
+36	camera_scene2	Scène 2 du guide	prises	scène 2	en	base	036_camera_scene2.png	1080x2340
+37	apercu	Aperçu de la vidéo (E7) — mode audio automatique	montage	aperçu	en	base	037_apercu.png	1080x2340
+38	apercu_bas	Aperçu — bas (typographie, voix)	audio	détail	en	base	038_apercu_bas.png	1080x2340
+39	export_pret	Écran d'export (E8) — avant lancement	export	prêt	en	base	039_export_pret.png	1080x2340
+40	export_en_cours	Export local en cours	export	en cours	en	base	040_export_en_cours.png	1080x2340
+41	export_notification	Tiroir de notifications — export (FGS)	export	notification	en	base	041_export_notification.png	1080x2340
+42	export_apres_ecran_etaint	Export après écran éteint (réveil)	export	écran éteint survécu	en	base	042_export_apres_ecran_etaint.png	1080x2340
+43	export_etat_final	Export — état final après fenêtre de 95 min	export	délai dépassé	en	base	043_export_etat_final.png	1080x2340
+44	dashboard	Mon espace — tableau de bord (vue intents)	profil	connecté-local	en	base	044_dashboard.png	1080x2340
+45	dashboard_bas	Tableau de bord — bas de page	profil	défilé	en	base	045_dashboard_bas.png	1080x2340
+46	dashboard_parrainage	Parrainage — jauge et code (vue intents)	parrainage	depuis dashboard	en	base	046_dashboard_parrainage.png	1080x2340
+47	profil_reglages	Réglages / profil (vue intents)	profil	ouvert	en	base	047_profil_reglages.png	1080x2340
+48	paywall	Crédits / formules — paywall (vue intents)	credits	offre	en	base	048_paywall.png	1080x2340
+49	paywall_bas	Paywall — bas (formules)	credits	défilé	en	base	049_paywall_bas.png	1080x2340

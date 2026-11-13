@@ -1,0 +1,5 @@
+écran de vérification jamais atteint (brief non validable après réparations)
+écran caméra non atteint (bouton enregistrement absent) — dump _cam_cherche.xml
+écran d'aperçu E7 non atteint — dump _e7_tardif.xml
+écran d'export non atteint
+export jamais lancé : pas d'attente longue

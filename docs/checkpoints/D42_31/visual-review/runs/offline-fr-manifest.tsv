@@ -1,0 +1,36 @@
+1	splash	Splash (lancement)	accueil	lancement	fr	offline	001_splash.png	1080x2340
+2	splash_tardif	Splash (t) — premier plan	accueil	lancement	fr	offline	002_splash_tardif.png	1080x2340
+3	langue	Écran de choix de langue	langues	initial	fr	offline	003_langue.png	1080x2340
+4	auth	Connexion — bouton Google (non actionné ici)	authentification	non connecté	fr	offline	004_auth.png	1080x2340
+5	carrousel_1	Carrousel — Filme. Vends. C'est tout.	accueil	repli sans compte	fr	offline	005_carrousel_1.png	1080x2340
+6	carrousel_2	Carrousel — Filme tes produits, on te guide	accueil	slide 2	fr	offline	006_carrousel_2.png	1080x2340
+7	carrousel_3	Carrousel — Une vidéo prête à publier en 30 secondes	accueil	slide 3	fr	offline	007_carrousel_3.png	1080x2340
+8	secteurs	Choix du secteur (activité principale)	secteurs	initial	fr	offline	008_secteurs.png	1080x2340
+9	secteurs_bas	Choix du secteur — bas de liste	secteurs	défilé	fr	offline	009_secteurs_bas.png	1080x2340
+10	parrainage	Étape parrainage — saisie du code	parrainage	vide	fr	offline	010_parrainage.png	1080x2340
+11	credits_bienvenue	Bienvenue — confirmation des crédits	credits	connecté-local	fr	offline	011_credits_bienvenue.png	1080x2340
+12	catalogue_haut	Catalogue — haut (secteur sélectionné)	catalogue	initial	fr	offline	012_catalogue_haut.png	1080x2340
+13	catalogue_scroll1	Catalogue — position 1	catalogue	défilé	fr	offline	013_catalogue_scroll1.png	1080x2340
+14	catalogue_scroll2	Catalogue — position 2	catalogue	défilé	fr	offline	014_catalogue_scroll2.png	1080x2340
+15	catalogue_scroll3	Catalogue — position 3	catalogue	défilé	fr	offline	015_catalogue_scroll3.png	1080x2340
+16	catalogue_scroll4	Catalogue — position 4	catalogue	défilé	fr	offline	016_catalogue_scroll4.png	1080x2340
+17	catalogue_scroll5	Catalogue — position 5	catalogue	défilé	fr	offline	017_catalogue_scroll5.png	1080x2340
+18	brief_vide	Formulaire de brief — vide (Continuer désactivé)	brief	vide	fr	offline	018_brief_vide.png	1080x2340
+19	brief_whatsapp_clavier	Champ WhatsApp — clavier ouvert	formulaires	clavier ouvert	fr	offline	019_brief_whatsapp_clavier.png	1080x2340
+20	brief_rempli	Formulaire de brief — rempli (valeurs fictives)	brief	rempli	fr	offline	020_brief_rempli.png	1080x2340
+21	brief_final	Formulaire de brief — état final avant validation	brief	prêt	fr	offline	021_brief_final.png	1080x2340
+22	brief_etape1	Brief — étape 1 (multi-étapes)	brief	étape 1	fr	offline	022_brief_etape1.png	1080x2340
+23	brief_etape2	Brief — étape 2 (multi-étapes)	brief	étape 2	fr	offline	023_brief_etape2.png	1080x2340
+24	brief_etape3	Brief — étape 3 (multi-étapes)	brief	étape 3	fr	offline	024_brief_etape3.png	1080x2340
+25	brief_etape4	Brief — étape 4 (multi-étapes)	brief	étape 4	fr	offline	025_brief_etape4.png	1080x2340
+26	brief_etape5	Brief — étape 5 (multi-étapes)	brief	étape 5	fr	offline	026_brief_etape5.png	1080x2340
+27	brief_etape6	Brief — étape 6 (multi-étapes)	brief	étape 6	fr	offline	027_brief_etape6.png	1080x2340
+28	brief_etape7	Brief — étape 7 (multi-étapes)	brief	étape 7	fr	offline	028_brief_etape7.png	1080x2340
+29	brief_etape8	Brief — étape 8 (multi-étapes)	brief	étape 8	fr	offline	029_brief_etape8.png	1080x2340
+30	dashboard	Mon espace — tableau de bord (vue intents)	profil	connecté-local	fr	offline	030_dashboard.png	1080x2340
+31	dashboard_bas	Tableau de bord — bas de page	profil	défilé	fr	offline	031_dashboard_bas.png	1080x2340
+32	dashboard_parrainage	Parrainage — jauge et code (vue intents)	parrainage	depuis dashboard	fr	offline	032_dashboard_parrainage.png	1080x2340
+33	profil_reglages	Réglages / profil (vue intents)	profil	ouvert	fr	offline	033_profil_reglages.png	1080x2340
+34	paywall	Crédits / formules — paywall (vue intents)	credits	offre	fr	offline	034_paywall.png	1080x2340
+35	paywall_bas	Paywall — bas (formules)	credits	défilé	fr	offline	035_paywall_bas.png	1080x2340
+36	offline_final	État final hors connexion	hors_connexion	hors connexion	fr	offline	036_offline_final.png	1080x2340
