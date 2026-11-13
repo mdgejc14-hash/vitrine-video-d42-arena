@@ -609,8 +609,16 @@ fi
 # v11 exportfix : T1 « Nouvel arrivage » d'abord — gabarit du run p1-official
 # 43168986328 (export abouti ~14 min sur la même APK RC15) ; le T5 des
 # profils base dépasse la fenêtre de 95 min sous swiftshader.
-if [ "$PROFIL" = "exportfix" ] || [ "$PROFIL" = "suite" ]; then
+# v11g suite : « Nouvel arrivage » RETIRÉ pour le profil suite — sa carte Mode
+# (homonyme) ouvre un brief à champ contact 🇧🇯+229 + « Nom du vêtement » dont
+# le champ quartier (hors champ) ne se remplit pas → « Continuer » bloqué et
+# la boucle s'épuise (runs v11c 43461281227 et v11f 43475521898). La carte
+# « Avant et après » (générique, 35 s · 15 scènes · 3 prises) est prouvée par
+# le run v11d 43465731951 : brief générique une étape → export réel terminé.
+if [ "$PROFIL" = "exportfix" ]; then
   GABARITS_CANDIDATS="Nouvel arrivage client raconte Nouveautés New Arrivals ancien prix montre l.article Présentation Quick Promo Promotion Témoignage Customer Avant"
+elif [ "$PROFIL" = "suite" ]; then
+  GABARITS_CANDIDATS="Avant et après Présentation client raconte Nouveautés New Arrivals ancien prix montre l.article Quick Promo Promotion Témoignage Customer"
 fi
 haut_de_page
 GABARIT_OK=0
