@@ -692,7 +692,13 @@ if [ "$GABARIT_OK" = "1" ]; then
 # v7 : le brief est MULTI-ÉTAPES (le bouton Continuer avance d'étape en
 # étape — constat offline v6 : champs Prix/Monnaie/Quartier puis nouvelle
 # page) ; on boucle jusqu'à 8 avancements avec réparation à chaque étape.
-for tentative in 1 2 3 4 5 6 7 8; do
+# v11d suite/exportfix : 20 tentatives — le run 43461281227 a épuisé les 8
+# sur le T1 « Nouvel arrivage » du secteur MODE (carte homonyme de celle du
+# Commerce, sélectionnée selon la position de défilement : brief à contact
+# 🇧🇯 +229 + produit + prix + …, ≥ 9 étapes) sans atteindre la vérification.
+BRIEF_TENTATIVES=8
+[ "$PROFIL" = "suite" ] || [ "$PROFIL" = "exportfix" ] && BRIEF_TENTATIVES=20
+for tentative in $(seq 1 "$BRIEF_TENTATIVES"); do
   # boucle de réparation : erreurs affichées ou champs vides → re-saisir
   for _ in 1 2 3; do
     dump_courant "_verif_brief"
