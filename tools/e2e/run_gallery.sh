@@ -380,6 +380,34 @@ if [ "$PROFIL" = "offline" ]; then
   adb shell svc data disable >/dev/null 2>&1 || true
   sleep 2
 fi
+# v11c — appareil client propre (technique établie p1 / run_official_e2e.sh).
+# L'image système AOSP « default » des émulateurs CI contient /system/xbin/su :
+# les heuristiques anti-falsification d'IntegrityGuard (V2.0 §22) y voient un
+# appareil compromis → porte d'export DENY_INTEGRITY (« Vérification de
+# sécurité échouée »). C'est la cause racine de l'échec de TOUS les exports
+# des runs galerie v6→v11b (0 ligne codec après le tap « LANCER L'EXPORT
+# LOCAL », écran figé « Ta vidéo se prépare — % » ; runs 43276442451,
+# 43395637118, 43412790349, 43428876674 — message capturé dans les dumps
+# _export_en_cours.xml / _export_etat_final.xml du run suite). Les appareils
+# clients de production n'ont pas su : on masque /system/xbin par bind-mount
+# d'un répertoire vide — SANS écrire dans /system ni redémarrer — pour rendre
+# l'image CI équivalente à un appareil client réel. Le contrôle de CERTIFICAT
+# reste pleinement actif (un APK non officiel serait toujours refusé).
+# IntegrityGuard n'est ni modifié ni contourné.
+adb root >/dev/null 2>&1 || true
+sleep 3
+adb shell setenforce 0 2>/dev/null || true
+adb shell mkdir -p /data/local/tmp/vv_xbin_vide
+{
+  echo "=== avant masquage ==="
+  adb shell 'ls /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1'
+  echo "=== masquage : bind-mount d'un répertoire vide sur /system/xbin ==="
+  adb shell mount -o bind /data/local/tmp/vv_xbin_vide /system/xbin 2>&1 \
+    || adb shell mount --bind /data/local/tmp/vv_xbin_vide /system/xbin 2>&1
+  echo "=== après masquage (attendu : su invisible) ==="
+  adb shell 'ls /system/xbin/ 2>&1'
+  adb shell 'ls /system/bin/su /system/xbin/su /system/app/Superuser.apk 2>&1'
+} | tee "$OUT/su_mask_proof.txt"
 adb uninstall "$PKG" >/dev/null 2>&1 || true
 if ! adb install -r "$APK" > "$OUT/install.log" 2>&1; then
   echo "INSTALL ÉCHOUÉE :"; tail -3 "$OUT/install.log"; exit 1
