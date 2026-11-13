@@ -13,7 +13,7 @@
 |---|---|---|---|
 | 1 | P0 | Catalogue : secteur choisi → uniquement ses 5 gabarits, zéro filtre intégré (retour = sélection) | **TERMINÉ** — commit 90f1ac5, android-ci SUCCESS (GabaritCatalogTest 30/30, CatalogVisualCheckTest) |
 | 2 | P0 | Présentation catalogue : cartes premium, hiérarchie claire, 5 gabarits identifiables | **TERMINÉ** (code + tests écrits ; validation android-ci au push groupé) |
-| 3 | P0 | Caméra : diagnostic différentiel mosaïque (ImageAnalysis/PreviewView/VideoCapture/MP4) + présentation écran | à faire |
+| 3 | P0 | Caméra : diagnostic différentiel mosaïque (ImageAnalysis/PreviewView/VideoCapture/MP4) + présentation écran | **TERMINÉ (outil)** : diagnostic 4 sources × 2 modes + banc instrumenté + job e2e — résultats émulateur au run, physique = fondateur (06_CAMERA_DIAGNOSTIC.md). AUCUNE modif CameraX sans cause démontrée |
 | 4 | P1 | Localisation FR/EN complète (parcours + 30 gabarits + notifications) | **TERMINÉ** (overlay EN 376 chaînes par IDs stables + 2 contrôles auto nouveaux ; détail 03_LOCALISATION_FR_EN.md) |
 | 5 | P0 | Dashboard : en-tête pro, carte crédits, action principale, état sync honnête | **TERMINÉ** (code + tests écrits ; validation android-ci au push groupé) |
 | 6 | P0 | Parrainage : code immédiatement visible, copier/partager, paliers secondaires | **TERMINÉ (partie dashboard + écran 12)** (code + tests écrits ; validation android-ci au push groupé) |
@@ -36,7 +36,7 @@
 - Workflows : android-ci SUCCESS sur 90f1ac5 ; android-e2e-lab in_progress sur 90f1ac5
   (sera auto-annulé par le push groupé suivant — comportement connu).
 - Dernière tâche terminée : D42.31 (galerie v2, 7 liens livrés).
-- Tâche actuelle : Phase A — Lot 7 VALIDÉ (android-ci SUCCESS sur e47262a),
-  Lot 4 localisation terminé (overlay EN). Prochain : Lot 3 (caméra P0),
-  puis Lots 8/9/10, non-régression groupée, Phase B.
+- Tâche actuelle : Phase A — Lots 7 VALIDÉ + 4 + 3 (outil diagnostic) faits.
+  Prochain : Lots 8 (formulaires), 9 (bienvenue), 10 (design system),
+  puis non-régression groupée (Niveau 3) et Phase B (galerie).
 - Porte d'approbation : **FERMÉE** (Phase B galerie avant/après pas encore produite).

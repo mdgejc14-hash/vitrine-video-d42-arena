@@ -103,6 +103,8 @@ dependencies {
 
     // D42 — tests instrumentes (emulateur) : rendus de production reels.
     androidTestImplementation(project(":feature-export"))
+    // D42.32 (Lot 3) : banc du diagnostic différentiel caméra (4 sources).
+    androidTestImplementation(project(":feature-camera"))
     androidTestImplementation(project(":data"))
     androidTestImplementation(project(":core-model"))
     androidTestImplementation(libs.androidx.test.core)

@@ -7,5 +7,13 @@
             android:name=".CameraGuideActivity"
             android:exported="false" 
             android:screenOrientation="portrait" />
+        <!-- D42.32 (Lot 3) : diagnostic mosaïque — HORS parcours commercial.
+             Lancé par le banc (ActivityScenario) ou am instrument (fondateur,
+             téléphone physique). Non exporté : aucune application tierce ne
+             peut déclencher la caméra via ce diagnostic. -->
+        <activity
+            android:name=".CameraDiagnosticActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>
