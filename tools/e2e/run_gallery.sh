@@ -1074,6 +1074,8 @@ elif [ "$export_lance" = "1" ]; then
       # refusés — DashboardActivity android:exported="false") ; screenrecord.
       if tap_coord_text "$ESPACE" || taper "$ESPACE" exact; then
         sleep 3
+        # v11e : dump de preuve + diagnostic des libellés réels du dashboard
+        dump_courant "_dashboard"
         galshot_sr "dashboard" "Mon espace — tableau de bord (screenrecord)" "historique" "connecté-local"
         galshot_sr "profil_dashboard" "Tableau de bord — en-tête et cartes (screenrecord)" "profil" "vue complète"
         swipe_v 70 35 300 >/dev/null 2>&1; sleep 1
@@ -1089,7 +1091,9 @@ elif [ "$export_lance" = "1" ]; then
           galshot_sr "profil_reglages" "Réglages / profil (screenrecord)" "profil" "ouvert"
           adb shell input keyevent 4 >/dev/null 2>&1; sleep 2
         fi
-        if taper "crédits" || taper "Crédits" || taper "Recharger" || taper "Buy"; then
+        # v11e : dash_buy = « Acheter » (strings_dashboard.xml) — absent de la
+        # liste v11b, le paywall n'avait donc jamais été atteint (run 43465731951).
+        if taper "Acheter" || taper "crédits" || taper "Crédits" || taper "Recharger" || taper "Buy"; then
           sleep 3
           galshot_sr "paywall" "Crédits / formules — paywall (screenrecord)" "credits" "offre"
           swipe_v 70 35 300 >/dev/null 2>&1; sleep 1
