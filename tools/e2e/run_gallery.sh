@@ -68,8 +68,8 @@ galshot() { # id titre ecran etat
   f=$(printf '%03d_%s.png' "$ORDRE" "$1")
   adb exec-out screencap -p > "$OUT/$f" 2>/dev/null
   local res; res=$(res_ecran); [ -n "$res" ] || res="${EFF_W}x${EFF_H}"
-  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
-    "$ORDRE" "$1" "$2" "$3" "$4" "$LANGUE" "$PROFIL" "$f" "$res" >> "$MANIFEST"
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+    "$ORDRE" "$1" "$2" "$3" "$4" "$LANGUE" "$PROFIL" "$f" "$res" "screencap" >> "$MANIFEST"
   echo "GALERIE [$ORDRE] $1 — $2 ($4)"
 }
 gap() { echo "$*" >> "$GAPS"; echo "GAP : $*"; }
@@ -286,6 +286,40 @@ choisir_gabarit() { # motifs...
   return 1
 }
 
+# v10 (D42.31-IMAGE-FIX) : capture du viseur via SCREENRECORD — diagnostic
+# différentiel : le MP4 exporté est riche (flux CameraX + enregistrement
+# SAINS) mais `screencap` capture le SurfaceView en bandes uniformes
+# (mosaïque verte/blanche/marron vue par le fondateur). screenrecord
+# capture la sortie COMPOSÉE par SurfaceFlinger = ce que l'écran affiche
+# réellement. Un screencap de diagnostic est conservé à côté.
+galshot_sr() { # id titre ecran etat
+  ORDRE=$((ORDRE+1))
+  local f
+  f=$(printf '%03d_%s.png' "$ORDRE" "$1")
+  adb shell rm -f /sdcard/sr_capture.mp4 >/dev/null 2>&1
+  adb shell screenrecord --time-limit 8 /sdcard/sr_capture.mp4 >/dev/null 2>&1 &
+  local srpid=$!
+  sleep 6   # frames stables
+  adb exec-out screencap -p > "$OUT/diag_${1}_screencap.png" 2>/dev/null
+  wait $srpid 2>/dev/null
+  adb pull /sdcard/sr_capture.mp4 "$OUT/_sr_tmp.mp4" >/dev/null 2>&1
+  local ok=0
+  if command -v ffmpeg >/dev/null 2>&1 && [ -s "$OUT/_sr_tmp.mp4" ]; then
+    # image de la dernière seconde (état stabilisé)
+    if ffmpeg -y -sseof -1 -i "$OUT/_sr_tmp.mp4" -update 1 -frames:v 1 "$OUT/$f" >/dev/null 2>&1        && [ -s "$OUT/$f" ]; then ok=1; fi
+  fi
+  if [ "$ok" != "1" ]; then
+    # repli honnête : screencap classique (documenté comme affecté)
+    cp "$OUT/diag_${1}_screencap.png" "$OUT/$f"
+  fi
+  rm -f "$OUT/_sr_tmp.mp4"
+  adb shell rm -f /sdcard/sr_capture.mp4 >/dev/null 2>&1
+  local res; res=$(res_ecran); [ -n "$res" ] || res="${EFF_W}x${EFF_H}"
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+    "$ORDRE" "$1" "$2" "$3" "$4" "$LANGUE" "$PROFIL" "$f" "$res" "screenrecord" >> "$MANIFEST"
+  echo "GALERIE [$ORDRE] $1 — $2 ($4, source screenrecord=$ok)"
+}
+
 # ----------------------------------------------------------------- labels ---
 case "$LANGUE" in
   fr) CARTE="Français"; ATTENDU_AUTH="Continuer avec Google"; S1="Filme. Vends. C'est tout."
@@ -348,7 +382,8 @@ fi
 if [ "$PROFIL" = "petit" ]; then
   adb shell wm size 720x1520 >/dev/null 2>&1 || true; sleep 2; lire_taille_ecran
 fi
-if [ "$PROFIL" = "font130" ] || [ "$PROFIL" = "petit" ] || [ "$PROFIL" = "cible" ]; then
+if [ "$PROFIL" = "font130" ] || [ "$PROFIL" = "petit" ] || [ "$PROFIL" = "cible" ] \
+   || [ "$PROFIL" = "camerafix" ]; then
   adb shell pm grant "$PKG" android.permission.CAMERA >/dev/null 2>&1 || true
 fi
 adb shell am start -W -n "$PKG/.MainActivity" > "$OUT/start.log" 2>&1
@@ -528,7 +563,12 @@ else
 fi
 
 # 09_brief — sélection du gabarit (v5 : UNE passe de motifs par écran, skins
-# différents selon le secteur ; vérification par la PRÉSENCE DE CHAMPS)
+# différents selon le secteur ; vérification par la PRÉSENCE DE CHAMPS).
+# v10 camerafix : T4 « Promotion » d'abord (33 s — export plus court que le
+# témoignage 50 s : complétion attendue ~30 min, run p1-official 43168986328).
+if [ "$PROFIL" = "camerafix" ]; then
+  GABARITS_CANDIDATS="Promotion client raconte Nouvel arrivage Nouveautés New Arrivals ancien prix montre l.article Présentation Quick Témoignage Customer Avant"
+fi
 haut_de_page
 GABARIT_OK=0
 if choisir_gabarit $GABARITS_CANDIDATS; then
@@ -727,13 +767,21 @@ for _ in 1 2 3; do
 done
 if [ "$ok_cam" = "1" ]; then
   sleep 2
-  galshot "camera_preview" "Viseur caméra — PreviewView (flux ÉMULÉ de l'émulateur)" "camera" "preview streaming"
+  if [ "$PROFIL" = "camerafix" ]; then
+    galshot_sr "camera_preview" "Viseur caméra — PreviewView (flux ÉMULÉ — capture screenrecord du contenu composé)" "camera" "preview streaming"
+  else
+    galshot "camera_preview" "Viseur caméra — PreviewView (flux ÉMULÉ de l'émulateur)" "camera" "preview streaming"
+  fi
   demarrer_enregistrement
   galshot "camera_countdown_a" "Compte à rebours (capture a)" "prises" "countdown"
   sleep 1
   galshot "camera_countdown_b" "Compte à rebours (capture b)" "prises" "countdown"
   sleep 2
-  galshot "camera_rec" "Enregistrement ACTIF — badge REC" "prises" "rec"
+  if [ "$PROFIL" = "camerafix" ]; then
+    galshot_sr "camera_rec" "Enregistrement ACTIF — badge REC (capture screenrecord)" "prises" "rec"
+  else
+    galshot "camera_rec" "Enregistrement ACTIF — badge REC" "prises" "rec"
+  fi
   sleep 2
   arreter_enregistrement
   sleep 2
@@ -746,16 +794,28 @@ if [ "$ok_cam" = "1" ]; then
     WT=20
   fi
   if tap_coord_text "$FLIP_TXT"; then
-    sleep 2
-    galshot "camera_avant" "Caméra AVANT (flux émulé) après bascule" "prises" "bascule avant"
-    tap_coord_text "$FLIP_TXT"; sleep 2
-    galshot "camera_arriere" "Retour caméra ARRIÈRE (flux émulé)" "prises" "bascule retour"
+    sleep 3
+    if [ "$PROFIL" = "camerafix" ]; then
+      galshot_sr "camera_avant" "Caméra AVANT (flux émulé) après bascule (screenrecord)" "prises" "bascule avant"
+    else
+      galshot "camera_avant" "Caméra AVANT (flux émulé) après bascule" "prises" "bascule avant"
+    fi
+    tap_coord_text "$FLIP_TXT"; sleep 3
+    if [ "$PROFIL" = "camerafix" ]; then
+      galshot_sr "camera_arriere" "Retour caméra ARRIÈRE (flux émulé) (screenrecord)" "prises" "bascule retour"
+    else
+      galshot "camera_arriere" "Retour caméra ARRIÈRE (flux émulé)" "prises" "bascule retour"
+    fi
   else
     gap "bouton de bascule caméra introuvable"
   fi
   if tap_coord_text "$REDO_TXT"; then
-    sleep 2
-    galshot "camera_refaire" "Reprise d'une prise (Refaire)" "prises" "reprise"
+    sleep 3
+    if [ "$PROFIL" = "camerafix" ]; then
+      galshot_sr "camera_refaire" "Reprise d'une prise (Refaire) (screenrecord)" "prises" "reprise"
+    else
+      galshot "camera_refaire" "Reprise d'une prise (Refaire)" "prises" "reprise"
+    fi
     demarrer_enregistrement
     sleep 5
     arreter_enregistrement
