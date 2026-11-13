@@ -1,0 +1,3 @@
+E7 (aperçu) : écran sous FLAG_SECURE (ExportActivity) — capture d'écran impossible par conception (protection produit) ; preuve par dump _e7_apercu.xml
+« Vidéo prête » : écran sous FLAG_SECURE (ExportActivity) — capture pixel impossible par conception (protection produit) ; preuves : dump _export_termine.xml + MP4 tiré
+réglages : bouton « Réglages » (bas du dashboard, DashboardScreens.kt:61) non atteint après 5 défilements — écran non capturé

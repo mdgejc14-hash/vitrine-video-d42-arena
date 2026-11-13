@@ -1,0 +1,9 @@
+=== avant masquage ===
+ls: /system/bin/su: No such file or directory
+ls: /system/app/Superuser.apk: No such file or directory
+/system/xbin/su
+=== masquage : bind-mount d'un répertoire vide sur /system/xbin ===
+=== après masquage (attendu : su invisible) ===
+ls: /system/bin/su: No such file or directory
+ls: /system/xbin/su: No such file or directory
+ls: /system/app/Superuser.apk: No such file or directory

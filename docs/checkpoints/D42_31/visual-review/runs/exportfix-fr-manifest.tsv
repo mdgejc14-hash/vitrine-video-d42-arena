@@ -1,0 +1,39 @@
+1	splash	Splash (lancement)	accueil	lancement	fr	exportfix	001_splash.png	1080x2340	screencap
+2	splash_tardif	Splash (t) — premier plan	accueil	lancement	fr	exportfix	002_splash_tardif.png	1080x2340	screencap
+3	langue	Écran de choix de langue	langues	initial	fr	exportfix	003_langue.png	1080x2340	screencap
+4	auth	Connexion — bouton Google (non actionné ici)	authentification	non connecté	fr	exportfix	004_auth.png	1080x2340	screencap
+5	carrousel_1	Carrousel — Filme. Vends. C'est tout.	accueil	repli sans compte	fr	exportfix	005_carrousel_1.png	1080x2340	screencap
+6	carrousel_2	Carrousel — Filme tes produits, on te guide	accueil	slide 2	fr	exportfix	006_carrousel_2.png	1080x2340	screencap
+7	carrousel_3	Carrousel — Une vidéo prête à publier en 30 secondes	accueil	slide 3	fr	exportfix	007_carrousel_3.png	1080x2340	screencap
+8	secteurs	Choix du secteur (activité principale)	secteurs	initial	fr	exportfix	008_secteurs.png	1080x2340	screencap
+9	secteurs_bas	Choix du secteur — bas de liste	secteurs	défilé	fr	exportfix	009_secteurs_bas.png	1080x2340	screencap
+10	parrainage	Étape parrainage — saisie du code	parrainage	vide	fr	exportfix	010_parrainage.png	1080x2340	screencap
+11	credits_bienvenue	Bienvenue — confirmation des crédits	credits	connecté-local	fr	exportfix	011_credits_bienvenue.png	1080x2340	screencap
+12	catalogue_haut	Catalogue — haut (secteur sélectionné)	catalogue	initial	fr	exportfix	012_catalogue_haut.png	1080x2340	screencap
+13	catalogue_scroll1	Catalogue — position 1	catalogue	défilé	fr	exportfix	013_catalogue_scroll1.png	1080x2340	screencap
+14	catalogue_scroll2	Catalogue — position 2	catalogue	défilé	fr	exportfix	014_catalogue_scroll2.png	1080x2340	screencap
+15	catalogue_scroll3	Catalogue — position 3	catalogue	défilé	fr	exportfix	015_catalogue_scroll3.png	1080x2340	screencap
+16	catalogue_scroll4	Catalogue — position 4	catalogue	défilé	fr	exportfix	016_catalogue_scroll4.png	1080x2340	screencap
+17	brief_vide	Formulaire de brief — vide (Continuer désactivé)	brief	vide	fr	exportfix	017_brief_vide.png	1080x2340	screencap
+18	brief_whatsapp_clavier	Champ WhatsApp — clavier ouvert	formulaires	clavier ouvert	fr	exportfix	018_brief_whatsapp_clavier.png	1080x2340	screencap
+19	brief_rempli	Formulaire de brief — rempli (valeurs fictives)	brief	rempli	fr	exportfix	019_brief_rempli.png	1080x2340	screencap
+20	brief_final	Formulaire de brief — état final avant validation	brief	prêt	fr	exportfix	020_brief_final.png	1080x2340	screencap
+21	brief_etape1	Brief — étape 1 (multi-étapes)	brief	étape 1	fr	exportfix	021_brief_etape1.png	1080x2340	screencap
+22	verification	Écran de vérification (avant de commencer)	verification	récapitulatif	fr	exportfix	022_verification.png	1080x2340	screencap
+23	verification_bas	Vérification — bas de l'écran	verification	défilé	fr	exportfix	023_verification_bas.png	1080x2340	screencap
+24	camera_guide	Guide de tournage (consignes)	camera	guide	fr	exportfix	024_camera_guide.png	1080x2340	screencap
+25	camera_preview	Viseur caméra — PreviewView (flux ÉMULÉ de l'émulateur)	camera	preview streaming	fr	exportfix	025_camera_preview.png	1080x2340	screencap
+26	camera_countdown_a	Compte à rebours (capture a)	prises	countdown	fr	exportfix	026_camera_countdown_a.png	1080x2340	screencap
+27	camera_countdown_b	Compte à rebours (capture b)	prises	countdown	fr	exportfix	027_camera_countdown_b.png	1080x2340	screencap
+28	camera_rec	Enregistrement ACTIF — badge REC	prises	rec	fr	exportfix	028_camera_rec.png	1080x2340	screencap
+29	camera_arret	Arrêt de la prise — finalisation	prises	arrêt	fr	exportfix	029_camera_arret.png	1080x2340	screencap
+30	camera_avant	Caméra AVANT (flux émulé) après bascule	prises	bascule avant	fr	exportfix	030_camera_avant.png	1080x2340	screencap
+31	camera_arriere	Retour caméra ARRIÈRE (flux émulé)	prises	bascule retour	fr	exportfix	031_camera_arriere.png	1080x2340	screencap
+32	camera_refaire	Reprise d'une prise (Refaire)	prises	reprise	fr	exportfix	032_camera_refaire.png	1080x2340	screencap
+33	camera_scene2	Scène 2 du guide	prises	scène 2	fr	exportfix	033_camera_scene2.png	1080x2340	screencap
+34	apercu	Aperçu de la vidéo (E7) — mode audio automatique	montage	aperçu	fr	exportfix	034_apercu.png	1080x2340	screencap
+35	apercu_bas	Aperçu — bas (typographie, voix)	audio	détail	fr	exportfix	035_apercu_bas.png	1080x2340	screencap
+36	export_pret	Écran d'export (E8) — avant lancement (screenrecord)	export	prêt	fr	exportfix	036_export_pret.png	1080x2340	screenrecord
+37	export_en_cours	Export local en cours (screenrecord)	export	en cours	fr	exportfix	037_export_en_cours.png	1080x2340	screenrecord
+38	export_notification	Tiroir de notifications — export FGS (screenrecord)	export	notification	fr	exportfix	038_export_notification.png	1080x2340	screenrecord
+39	export_etat_final	Export — état final après fenêtre de 95 min (screenrecord)	export	délai dépassé	fr	exportfix	039_export_etat_final.png	1080x2340	screenrecord
