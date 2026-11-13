@@ -10,6 +10,7 @@ import android.hardware.camera2.CameraManager
 import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.os.Bundle
+import android.view.PixelCopy
 import android.view.SurfaceView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -176,7 +177,13 @@ class CameraDiagnosticActivity : VitrineActivity() {
             != PackageManager.PERMISSION_GRANTED
         ) {
             statut.text = "Permission CAMÉRA refusée : aucun diagnostic possible (rapport honnête écrit)."
-            lifecycleScope.launch { ecrireRapport(erreur = "permission_camera_refusee") }
+            lifecycleScope.launch {
+                val rapportRefus = JSONObject()
+                rapportRefus.put("horodatage", horodatage)
+                rapportRefus.put("preview_mode_demande", mode)
+                rapportRefus.put("appareil", infoAppareil())
+                ecrireRapport(rapportRefus, erreur = "permission_camera_refusee")
+            }
             return
         }
         lifecycleScope.launch { diagnostiquer() }
@@ -258,9 +265,9 @@ class CameraDiagnosticActivity : VitrineActivity() {
      *  qui fausserait la mesure : les trois sources partagent le même flux). */
     private suspend fun enregistrer(fichier: File): JSONObject {
         val finalise = CompletableDeferred<Unit>()
-        val recording = recorderLie.prepare(
-            this, androidx.camera.video.FileOutputOptions.Builder(fichier).build()
-        ).start(executor) { ev ->
+        val options = androidx.camera.video.FileOutputOptions.Builder(fichier).build()
+        val pending = recorderLie.prepareRecording(this, options)
+        val recording = pending.start(executor) { ev ->
             if (ev is androidx.camera.video.VideoRecordEvent.Finalize) finalise.complete(Unit)
         }
         delay(2_000)
@@ -520,7 +527,8 @@ class CameraDiagnosticActivity : VitrineActivity() {
                         "niveau_materiel",
                         c.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL)?.toString()
                     )
-                    val tailles = c.get(CameraCharacteristics.ScalerStreamConfigurationMap)
+                    val map = c.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+                    val tailles = map
                         ?.getOutputSizes(android.graphics.SurfaceTexture::class.java)
                         ?.take(5)
                         ?.map { "${it.width}x${it.height}" }

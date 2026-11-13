@@ -73,14 +73,62 @@ private val EXACT_INTERFACE_V2 = mapOf(
     "votre commerce et votre WhatsApp" to "Ton commerce et ton WhatsApp",
     "Ce que vous proposez" to "Ce que tu proposes",
     "Où vous trouver" to "Où te trouver",
-    "votre numéro WhatsApp" to "Ton numéro whatsapp"
+    "votre numéro WhatsApp" to "Ton numéro whatsapp",
+    // D42.32 (Lot 8) : « vous » PRONOM OBJET après un verbe — le remplacement
+    // mécanique vous->tu produisait « les clients peuvent tu écrire ».
+    // Forme correcte figée une fois pour toutes (aucune retouche du JSON source).
+    "Choisissez votre pays, puis écrivez le numéro sur lequel les clients peuvent vous écrire."
+        to "Choisis ton pays, puis écris le numéro sur lequel les clients peuvent t’écrire."
 )
 
+/**
+ * D42.32 (Lot 8, RCA) : verbes que EZ_REGEX ne conjugue PAS correctement —
+ * soit radical trop court (< 5 lettres : « pouvez » restait « pouvez » ->
+ * « Tu pouvez laisser vide », défaut exact cité par l'audit fondateur ;
+ * « avez » -> « tu avez préparé » ; « rangez » -> « tu rangez »), soit
+ * conjugaison réelle en -s et non en -e (« choisissez » -> « choisis »,
+ * pas « choisisse » ; « emballez » -> « emballes »).
+ * Application par FRONTIÈRE DE MOT (jamais par sous-chaîne).
+ */
 private val VERB_EXCEPTIONS_V2 = mapOf(
     "Tenez" to "Tiens",
     "tenez" to "tiens",
     "Soyez" to "Sois",
-    "soyez" to "sois"
+    "soyez" to "sois",
+    "Choisissez" to "Choisis",
+    "choisissez" to "choisis",
+    "Pouvez" to "Peux",
+    "pouvez" to "peux",
+    "Avez" to "As",
+    "avez" to "as",
+    "Rangez" to "Ranges",
+    "rangez" to "ranges",
+    "Emballez" to "Emballes",
+    "emballez" to "emballes",
+    "Écrivez" to "Écris",
+    "écrivez" to "écris",
+    // D42.32 (Lot 8) : impératifs pluriels restés en forme « vous » une fois
+    // le reste de la phrase tutoyé (« Dites ce que tu as préparé »).
+    "Dites" to "Dis",
+    "dites" to "dis",
+    "Faites" to "Fais",
+    "faites" to "fais",
+    // D42.32 (Lot 8) : indicatifs « tu » réguliers en -es (EZ_REGEX produit -e
+    // ou ne matche pas) — « tu dresses le plat », « tu en parles ».
+    "Proposez" to "Proposes",
+    "proposez" to "proposes",
+    "Dressez" to "Dresses",
+    "dressez" to "dresses",
+    "Parlez" to "Parles",
+    "parlez" to "parles",
+    // D42.32 (Lot 8) : impératifs à radical trop court pour EZ_REGEX
+    // ( « Film+ez », « Gard+ez », « Pos+ez » ) — 80 occurrences réelles.
+    "Filmez" to "Filme",
+    "filmez" to "filme",
+    "Gardez" to "Garde",
+    "gardez" to "garde",
+    "Posez" to "Pose",
+    "posez" to "pose"
 )
 
 /** Verbes reguliers -ez -> -e (assez/chez/nez preserves par longueur de radical). */
@@ -89,12 +137,19 @@ private val EZ_REGEX = Regex("\\b([A-Za-z\u00C0-\u00FF]{4,}[bcdfghklmnprstv])ez\
 fun toInterfaceFrench(source: String): String {
     EXACT_INTERFACE_V2[source]?.let { return it }
     var seeded = source
-    VERB_EXCEPTIONS_V2.forEach { (k, v) -> seeded = seeded.replace(k, v) }
+    // D42.32 (Lot 8) : frontières de mot — « avez » ne touchera jamais « engravez ».
+    VERB_EXCEPTIONS_V2.forEach { (k, v) ->
+        seeded = Regex("\\b" + Regex.escape(k) + "\\b").replace(seeded, v)
+    }
     seeded = seeded
-        .replace("Écrivez", "Écris")
         .replace("Ajoutez", "Ajoute")
         .replace("Changez", "Change")
     val replaced = EZ_REGEX.replace(seeded) { m -> m.groupValues[1] + "e" }
+        // D42.32 (Lot 8) : « vous » PRONOM OBJET après un verbe pluriel
+        // (« les gens peuvent vous joindre ») — « t’ » devant voyelle,
+        // « te » devant consonne ; jamais « tu » (« peuvent tu joindre »).
+        .replace(Regex("\\bpeuvent vous ([aeiouyàâéèêëîïôûh])")) { "peuvent t’" + it.groupValues[1] }
+        .replace(Regex("\\bpeuvent vous ([bcdfgjklmnpqrstvwxz])")) { "peuvent te " + it.groupValues[1] }
         .replace("votre", "ton")
         .replace("Vos", "Tes")
         .replace("vos", "tes")

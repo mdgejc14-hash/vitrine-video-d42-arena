@@ -26,15 +26,29 @@ object GabaritJson {
      */
     fun parseBrief(raw: String, t: org.json.JSONObject? = null): GabaritBrief {
         val root = JSONObject(raw)
-        val tChamps = t?.optJSONObject("champs")
-        val tSections = t?.optJSONObject("sections")
+        val form = root.optJSONObject("formulaire_ui")
+        return GabaritBrief(
+            sectorLabel = t?.optStr("secteur_libelle")
+                ?: root.optString("secteur_libelle", root.optString("secteur", "")),
+            formatLabel = t?.optStr("nom_format") ?: root.optString("nom_format_affiche", ""),
+            fields = parseChamps(root, t?.optJSONObject("champs")),
+            sections = parseSections(form, t?.optJSONObject("sections")),
+            defaultCurrency = form?.optString("devise_defaut", "FCFA") ?: "FCFA"
+        )
+    }
+
+    /** Champs du brief (E5) avec repli FR tutoyé champ par champ (Lot 4). */
+    private fun parseChamps(
+        root: JSONObject,
+        tChamps: JSONObject?
+    ): List<BriefField> {
         val fields = mutableListOf<BriefField>()
         root.optJSONArray("champs_saisie")?.let { arr ->
             for (i in 0 until arr.length()) {
                 val c = arr.getJSONObject(i)
                 val choix = mutableListOf<String>()
-                c.optJSONArray("choix")?.let { arr ->
-                    for (j in 0 until arr.length()) choix += arr.getString(j)
+                c.optJSONArray("choix")?.let { a ->
+                    for (j in 0 until a.length()) choix += a.getString(j)
                 }
                 // D42.32 (Lot 4) : overlay EN par id de champ (stable).
                 val tc = tChamps?.optJSONObject(c.getString("id"))
@@ -52,8 +66,15 @@ object GabaritJson {
                 )
             }
         }
+        return fields
+    }
+
+    /** Sections E5 (principales + options repliées) avec repli FR (Lot 4). */
+    private fun parseSections(
+        form: JSONObject?,
+        tSections: JSONObject?
+    ): List<BriefSection> {
         val sections = mutableListOf<BriefSection>()
-        val form = root.optJSONObject("formulaire_ui")
         form?.optJSONArray("sections_principales")?.let { arr ->
             for (i in 0 until arr.length()) {
                 val sec = arr.getJSONObject(i)
@@ -85,14 +106,7 @@ object GabaritJson {
                 optional = true
             )
         }
-        return GabaritBrief(
-            sectorLabel = t?.optStr("secteur_libelle")
-                ?: root.optString("secteur_libelle", root.optString("secteur", "")),
-            formatLabel = t?.optStr("nom_format") ?: root.optString("nom_format_affiche", ""),
-            fields = fields,
-            sections = sections.sortedBy { it.order },
-            defaultCurrency = form?.optString("devise_defaut", "FCFA") ?: "FCFA"
-        )
+        return sections.sortedBy { it.order }
     }
 
     /** Prises du guide tournage E6 (maquettes E6_*_prise_*) : consignes + segments parole. */

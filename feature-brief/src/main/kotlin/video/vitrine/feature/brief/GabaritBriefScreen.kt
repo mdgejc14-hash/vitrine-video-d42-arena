@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -27,8 +28,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import video.vitrine.core.designsystem.BleuNuit
 import video.vitrine.core.designsystem.BleuVoile
@@ -311,7 +315,10 @@ private fun ZoneErreurEtAide(field: BriefField, value: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(20.dp)
+            // D42.32 (Lot 8) : minimum réservé (pas de saut à taille normale),
+            // mais la zone S'AGRANDIT si le message dépasse (police 130 %,
+            // écran étroit) au lieu de rogner le texte d'erreur.
+            .heightIn(min = 20.dp)
     ) {
         fieldError(field, value)?.let { erreur ->
             Text(
@@ -340,15 +347,23 @@ private fun ChampTexteSimple(
     onValue: (String, String) -> Unit,
 ) {
     val saisieIci = stringResource(R.string.brief_g_type_here)
+    // D42.32 (Lot 8) : touche « Suivant » du clavier (Gboard) — avant, la
+    // touche d'action était un retour ligne muet sur un champ singleLine.
+    val focusManager = LocalFocusManager.current
+    val uneLigne = field.type != "texte_long"
     OutlinedTextField(
         value = value,
         onValueChange = { onValue(field.id, it) },
         placeholder = { Text(field.example.ifBlank { saisieIci }) },
         modifier = Modifier.fillMaxWidth(),
-        singleLine = field.type != "texte_long",
+        singleLine = uneLigne,
         isError = enErreur,
         keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text
+            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
+            imeAction = if (uneLigne) ImeAction.Next else ImeAction.Default
+        ),
+        keyboardActions = androidx.compose.foundation.text.KeyboardActions(
+            onNext = { focusManager.moveFocus(FocusDirection.Down) }
         )
     )
 }
@@ -410,6 +425,7 @@ private fun ChampPrix(
     } else {
         valeur.filter { it.isDigit() }.reversed().chunked(3).joinToString(" ").reversed()
     }
+    val focusManager = LocalFocusManager.current
     OutlinedTextField(
         value = affichage,
         onValueChange = { brut ->
@@ -424,7 +440,12 @@ private fun ChampPrix(
         isError = enErreur,
         suffix = { Text("FCFA", style = MaterialTheme.typography.bodySmall) },
         keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-            keyboardType = androidx.compose.ui.text.input.KeyboardType.Number
+            keyboardType = androidx.compose.ui.text.input.KeyboardType.Number,
+            // D42.32 (Lot 8) : « Suivant » pour passer au champ suivant.
+            imeAction = ImeAction.Next
+        ),
+        keyboardActions = androidx.compose.foundation.text.KeyboardActions(
+            onNext = { focusManager.moveFocus(FocusDirection.Down) }
         )
     )
 }

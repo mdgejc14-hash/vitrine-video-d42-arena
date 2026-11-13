@@ -134,6 +134,7 @@ private fun LignePaysEtNumero(
                 style = MaterialTheme.typography.titleMedium
             )
         }
+        val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
         OutlinedTextField(
             value = national,
             onValueChange = onSaisie,
@@ -141,7 +142,12 @@ private fun LignePaysEtNumero(
             singleLine = true,
             placeholder = { Text(stringResource(R.string.brief_phone_placeholder)) },
             keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                keyboardType = KeyboardType.Phone
+                keyboardType = KeyboardType.Phone,
+                // D42.32 (Lot 8) : « Suivant » comme les autres champs du brief.
+                imeAction = androidx.compose.ui.text.input.ImeAction.Next
+            ),
+            keyboardActions = androidx.compose.foundation.text.KeyboardActions(
+                onNext = { focusManager.moveFocus(androidx.compose.ui.focus.FocusDirection.Down) }
             ),
             isError = national.isNotBlank() && !TelephoneValidator.estValide(
                 TelephoneValidator.versE164(national, pays) ?: national
