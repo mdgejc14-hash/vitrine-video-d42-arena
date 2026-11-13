@@ -13,6 +13,15 @@ name: visual-gallery-fix
 #    p1-official 43168986328 sur la même APK RC15) ; écran maintenu allumé ;
 #    test « écran éteint » sauté (déjà prouvé 3×) ; fenêtre 95 min ;
 #    timeout job 135 min ; MP4 tiré en preuve + ffprobe.
+# 3) suite (v11b) : complète exportfix — RÉSULTAT exportfix 43412790349 :
+#    écran d'export FLAG_SECURE (ExportActivity — « Recents bloqués », code
+#    assumé) → screenrecord NOIR, screencap VIDE : E8/E7/« Vidéo prête ! »
+#    ne sont PAS capturables en pixels PAR CONCEPTION (preuves = dumps
+#    uiautomator + MP4 réel). Le profil suite capture donc : feuille de
+#    partage (UI système), notification FGS (UI système), dashboard/profil/
+#    paywall RÉELS via « Voir mon espace » (intents shell refusés :
+#    DashboardActivity android:exported="false") ; dumps de preuve pour E7/
+#    export ; fenêtre étendue 180 min (exportfix a expiré à 95 min).
 # Aucune autre campagne relancée. Aucune modification produit.
 
 on:
@@ -24,6 +33,7 @@ on:
         default: 'exportfix'
         type: choice
         options:
+          - suite
           - exportfix
           - camerafix
 
@@ -32,6 +42,49 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  gallery-suite-fr:
+    if: inputs.profil == 'suite'
+    runs-on: ubuntu-latest
+    timeout-minutes: 220
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - name: APK RC15 exacte (sha256 vérifié)
+        run: |
+          set -e
+          curl -sL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/octet-stream" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/assets/738360276" -o rc15.apk
+          ls -la rc15.apk
+          echo "fd28ffc75cc7ec22c0edd6dcf2c63b1d9fab31469505ede079ddb3aeb3b78936  rc15.apk" | sha256sum -c -
+      - name: KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: ffmpeg (extraction de frames screenrecord)
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          fi
+          command -v ffmpeg && ffmpeg -version | head -1
+      - name: Galerie FR suite (E7 aperçu + export + partage + dashboard, screenrecord)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front emulated
+          script: |
+            adb devices
+            bash tools/e2e/run_gallery.sh fr suite rc15.apk
+      - name: Artefacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: gallery-suite-fr, path: artifacts/gallery/**, retention-days: 14, if-no-files-found: warn }
+
   gallery-exportfix-fr:
     if: inputs.profil == 'exportfix'
     runs-on: ubuntu-latest
