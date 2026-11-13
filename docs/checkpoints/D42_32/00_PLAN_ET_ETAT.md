@@ -11,12 +11,12 @@
 
 | Lot | Priorité | Périmètre | État |
 |---|---|---|---|
-| 1 | P0 | Catalogue : secteur choisi → uniquement ses 5 gabarits, zéro filtre intégré (retour = sélection) | **EN COURS** (code + tests écrits, commit à pousser) |
-| 2 | P0 | Présentation catalogue : cartes premium, hiérarchie claire, 5 gabarits identifiables | à faire |
+| 1 | P0 | Catalogue : secteur choisi → uniquement ses 5 gabarits, zéro filtre intégré (retour = sélection) | **TERMINÉ** — commit 90f1ac5, android-ci SUCCESS (GabaritCatalogTest 30/30, CatalogVisualCheckTest) |
+| 2 | P0 | Présentation catalogue : cartes premium, hiérarchie claire, 5 gabarits identifiables | **TERMINÉ** (code + tests écrits ; validation android-ci au push groupé) |
 | 3 | P0 | Caméra : diagnostic différentiel mosaïque (ImageAnalysis/PreviewView/VideoCapture/MP4) + présentation écran | à faire |
 | 4 | P1 | Localisation FR/EN complète (parcours + 30 gabarits + notifications) | à faire |
-| 5 | P0 | Dashboard : en-tête pro, carte crédits, action principale, état sync honnête | à faire |
-| 6 | P0 | Parrainage : code immédiatement visible, copier/partager, paliers secondaires | à faire |
+| 5 | P0 | Dashboard : en-tête pro, carte crédits, action principale, état sync honnête | **TERMINÉ** (code + tests écrits ; validation android-ci au push groupé) |
+| 6 | P0 | Parrainage : code immédiatement visible, copier/partager, paliers secondaires | **TERMINÉ (partie dashboard + écran 12)** (code + tests écrits ; validation android-ci au push groupé) |
 | 7 | P0 | Tarifs : 3 formules exactes (Pass 500/6, Pro 3000/90, Boutique 7500/200), paiement 501 honnête | à faire |
 | 8 | P1 | Formulaires : WhatsApp international (+229/+33/+1), prix stable au clavier | à faire |
 | 9 | P1 | Écran de bienvenue | à faire |
@@ -32,8 +32,10 @@
 
 ## État courant
 
-- HEAD local = 9fbc261 + Lot 1 en cours de commit.
-- Workflows : android-ci SUCCESS sur 9fbc261 ; android-e2e-lab SUCCESS sur 9fbc261.
+- HEAD local = 90f1ac5 (Lot 1 poussé, android-ci **SUCCESS**) + Lots 2/5/6 en commit.
+- Workflows : android-ci SUCCESS sur 90f1ac5 ; android-e2e-lab in_progress sur 90f1ac5
+  (sera auto-annulé par le push groupé suivant — comportement connu).
 - Dernière tâche terminée : D42.31 (galerie v2, 7 liens livrés).
-- Tâche actuelle : Lot 1 (P0-1 catalogue).
+- Tâche actuelle : Phase A — Lots 2, 5, 6 poussés ensemble ; prochain : Lot 7 (tarifs SSOT)
+  puis Lot 4 (localisation) et Lot 3 (caméra).
 - Porte d'approbation : **FERMÉE** (Phase B galerie avant/après pas encore produite).
