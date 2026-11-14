@@ -40,9 +40,6 @@ private val LightScheme = lightColorScheme(
     onErrorContainer = AmbreAlerte
 )
 
-/** Voile succès (rgba(14,159,110,.12) spec §7.6). */
-val VertVoile = androidx.compose.ui.graphics.Color(0x1F0E9F6E)
-
 /** Fond des écrans d'émotion et caméra (navy, halos portés par les écrans). */
 private val DarkScheme = darkColorScheme(
     primary = OrangeStore,

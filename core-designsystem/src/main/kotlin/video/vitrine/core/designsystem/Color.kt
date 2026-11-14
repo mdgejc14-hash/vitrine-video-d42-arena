@@ -39,6 +39,8 @@ val Muted = Color(0xFF6C7C99)
 val OrangeVoile = Color(0xFFFFF1E8)
 /** Badge informatif. */
 val BleuVoile = Color(0xFFE9F0FF)
+/** Badge succès (rgba(14,159,110,.12) spec §7.6). */
+val VertVoile = Color(0x1F0E9F6E)
 
 // ── États (sémantique stricte) ──────────────────────────────────────────────
 /** Point de synchro, coche validée. */
@@ -59,6 +61,8 @@ val GrisDesactive = Color(0xFFEDEFF5)
 val GrisDesactiveTexte = Color(0xFF9AA7BE)
 /** Pastille « sur sombre » (blanc 18 %). */
 val BlancVoile = Color(0x2EFFFFFF)
+/** Rangée de badges de la carte héro (blanc 10 %, §7.5). */
+val Blanc10 = Color(0x1AFFFFFF)
 /** Badge sur fond sombre (blanc 18 %, alias sémantique). */
 val BadgeSurSombre = BlancVoile
 /** Scrim navy 45 % du carrousel et bandeau consigne caméra 55 %. */
