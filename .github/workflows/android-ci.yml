@@ -11,7 +11,10 @@ name: android-ci
 # Les 5 workflows Phase A existants ne sont pas modifies.
 on:
   push:
-    branches: [main]
+    # D42.33 : validation continue sur la branche de refonte visuelle (debug
+    # + tests unitaires uniquement — AUCUNE release, RC15 reste immuable).
+    # À retirer avant la fusion finale.
+    branches: [main, d42.33-visual-redesign]
   pull_request:
 
 # D42.28 (P0) : clé Firebase RÉELLE injectée dans TOUS les builds de ce
