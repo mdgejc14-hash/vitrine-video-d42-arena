@@ -1,6 +1,6 @@
 # Famille 09 — Dashboard & parrainage (§7.12 / §9.3)
 
-**Statut : terminée localement, commit <à remplacer après push>, CI à vérifier.**
+**Statut : TERMINÉE — commit fae6000 poussé, CI VERTE (android-ci run 43604879046).**
 
 ## Périmètre
 

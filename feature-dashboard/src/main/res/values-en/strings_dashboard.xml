@@ -91,4 +91,5 @@
     <string name="dash_exports_derniere">Last: %1$s</string>
     <string name="dash_badge_essai">Free trial</string>
     <string name="dash_badge_formules">Plans ›</string>
+    <string name="paywall_later">Recharge later</string>
 </resources>

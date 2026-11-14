@@ -91,4 +91,5 @@
     <string name="dash_exports_derniere">Dernière : %1$s</string>
     <string name="dash_badge_essai">Essai gratuit</string>
     <string name="dash_badge_formules">Formules ›</string>
+    <string name="paywall_later">Recharger plus tard</string>
 </resources>

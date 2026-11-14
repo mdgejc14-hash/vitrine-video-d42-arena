@@ -203,8 +203,11 @@ class DashboardActivity : VitrineActivity() {
             PaywallMapper.ui(
                 cachedRow?.welcomeCreditsLeft ?: 0,
                 cachedRow?.exportsLimit ?: 0
-            )
-        ) { plan -> startCheckout(plan) }
+            ),
+            onChoose = { plan -> startCheckout(plan) },
+            // « Recharger plus tard » : retour honnête au dashboard.
+            onLater = { view = "dashboard"; relireDonneesProjet() }
+        )
     }
 
     @androidx.compose.runtime.Composable

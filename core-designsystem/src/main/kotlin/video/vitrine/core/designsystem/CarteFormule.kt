@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
 /**
@@ -37,6 +38,9 @@ fun CarteFormule(
     libelleBadge: String? = null,
     boutonActif: Boolean = false,
     testTag: String? = null,
+    teinteBadge: TeinteBadge = TeinteBadge.Sombre,
+    taillePrix: TextUnit? = null,
+    testTagPrix: String? = null,
     modifier: Modifier = Modifier
 ) {
     val forme = FormeCarte
@@ -61,14 +65,17 @@ fun CarteFormule(
                 modifier = Modifier.weight(1f)
             )
             if (recommandee && libelleBadge != null) {
-                BadgeVitrine(texte = libelleBadge, teinte = TeinteBadge.Sombre)
+                BadgeVitrine(texte = libelleBadge, teinte = teinteBadge)
             }
         }
         Text(
             prix,
-            style = VitrineText.Num,
+            style = taillePrix?.let { VitrineText.Num.copy(fontSize = it) }
+                ?: VitrineText.Num,
             color = if (recommandee) Blanc else Navy,
-            modifier = Modifier.padding(top = 4.dp)
+            modifier = Modifier
+                .let { m -> testTagPrix?.let { m.testTag(it) } ?: m }
+                .padding(top = 4.dp)
         )
         AvantagesFormule(avantages = avantages, recommandee = recommandee)
         Spacer(Modifier.height(14.dp))

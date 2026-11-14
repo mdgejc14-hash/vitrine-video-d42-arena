@@ -40,9 +40,10 @@ class PaywallUiCheckTest {
                 PaywallScreen(PaywallMapper.ui(welcomeCreditsLeft = 0, exportsLimit = 0)) { }
             }
         }
-        compose.onNodeWithText("  ·  500 FCFA").assertExists()
-        compose.onNodeWithText("  ·  3 000 FCFA / 30 j").assertExists()
-        compose.onNodeWithText("  ·  7 500 FCFA / 30 j").assertExists()
+        // D42.33 (famille 10) : format « · N FCFA » sur une ligne (CarteFormule).
+        compose.onNodeWithText("· 500 FCFA").assertExists()
+        compose.onNodeWithText("· 3 000 FCFA / 30 j").assertExists()
+        compose.onNodeWithText("· 7 500 FCFA / 30 j").assertExists()
         compose.onNodeWithTag("paywall_pass24h").assertExists()
         compose.onNodeWithTag("paywall_pro").assertExists()
         compose.onNodeWithTag("paywall_boutique").assertExists()
@@ -88,6 +89,10 @@ class PaywallUiCheckTest {
         compose.onNodeWithText(ctx.getString(R.string.plan_recommended)).assertExists()
         // bouton inactif au libellé honnête (x3 cartes)
         compose.onAllNodesWithText(ctx.getString(R.string.paywall_soon)).assertCountEquals(3)
+        // D42.33 (famille 10) : écran DÉDIÉ (jamais une alerte) — solde 0 en
+        // Num + « Recharger plus tard » présents dans l'état verrouillé.
+        compose.onNodeWithText(ctx.getString(R.string.dash_exports_count, 0)).assertExists()
+        compose.onNodeWithText(ctx.getString(R.string.paywall_later)).assertExists()
         // la contradiction « illimité » a disparu du parcours commercial
         compose.onAllNodesWithText("illimit", substring = true).assertCountEquals(0)
         compose.onAllNodesWithText("Unlimited", substring = true).assertCountEquals(0)

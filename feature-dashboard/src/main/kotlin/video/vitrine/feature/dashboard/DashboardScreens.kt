@@ -15,11 +15,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,13 +42,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import video.vitrine.core.designsystem.R as Rds
-import video.vitrine.core.designsystem.AmbreAlerte
 import video.vitrine.core.designsystem.Inter
 import video.vitrine.core.designsystem.Bg
 import video.vitrine.core.designsystem.BarreOnglets
 import video.vitrine.core.designsystem.BarreProgression
 import video.vitrine.core.designsystem.BoutonPrimaire
 import video.vitrine.core.designsystem.BoutonSecondaire
+import video.vitrine.core.designsystem.CarteFormule
+import video.vitrine.core.designsystem.TeinteBadge
 import video.vitrine.core.designsystem.EntreeOnglet
 import video.vitrine.core.designsystem.IconeVitrine
 import video.vitrine.core.designsystem.LigneListe
@@ -759,85 +757,98 @@ private fun BlocCodeParrain(
     }
 }
 
-/** Ecran 9 (paywall) : bandeau credits + 3 cartes forfaits stricts (grille 23/10/2026). */
+/**
+ * Bandeau d'état du paywall : crédits restants (Sub) OU — état verrouillé,
+ * spec §10 « écran dédié, jamais une alerte » — solde 0 en Num + consigne.
+ */
 @Composable
-fun PaywallScreen(ui: PaywallUi, onChoose: (String) -> Unit) {
+private fun BandeauCreditsPaywall(banner: Int?, locked: Boolean) {
+    if (banner != null && banner > 0) {
+        Text(
+            stringResource(R.string.paywall_credits_left, banner),
+            style = VitrineText.Sub,
+            color = Muted
+        )
+    } else if (locked) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text(
+                stringResource(R.string.dash_exports_count, 0),
+                style = VitrineText.Num,
+                color = OrangeDeep
+            )
+            Text(
+                stringResource(R.string.paywall_quota),
+                style = VitrineText.Sub,
+                color = Muted
+            )
+        }
+    }
+}
+
+/**
+ * Ecran 9 (formules / quota épuisé) — D42.33 famille 10 : cartes du design
+ * system (CarteFormule), grille fondateur 23/10/2026 STRICTE (500 / 3 000 /
+ * 7 500 FCFA — jamais « illimité »). État « quota épuisé » = écran dédié,
+ * jamais une alerte : solde 0 en Num, 3 formules, CTA sur la recommandée,
+ * « Recharger plus tard ». CinetPay REPORTÉ : boutons inactifs au libellé
+ * honnête (paywall_soon) — aucune transaction fictive, aucun contrat modifié.
+ */
+@Composable
+fun PaywallScreen(ui: PaywallUi, onChoose: (String) -> Unit, onLater: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .background(Bg)
+            .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text(stringResource(R.string.paywall_title), style = MaterialTheme.typography.headlineSmall)
-        val banner = ui.bannerCreditsLeft
-        if (banner != null && banner > 0) {
-            Text(stringResource(R.string.paywall_credits_left, banner))
-        } else if (ui.locked) {
-            Text(
-                stringResource(R.string.paywall_quota),
-                color = AmbreAlerte
+        Text(
+            stringResource(R.string.paywall_title),
+            style = VitrineText.H2,
+            color = Navy
+        )
+        BandeauCreditsPaywall(ui.bannerCreditsLeft, ui.locked)
+        ui.cards.forEach { card ->
+            CarteFormule(
+                titre = stringResource(card.titleRes),
+                prix = "· " + card.priceValue +
+                    (card.periodRes?.let { " / " + stringResource(it) } ?: ""),
+                avantages = card.featureRes.map { stringResource(it) },
+                libelleBouton = stringResource(R.string.paywall_soon),
+                surChoix = { onChoose(card.plan.code) },
+                recommandee = card.plan == Plan.PRO,
+                libelleBadge = if (card.plan == Plan.PRO) {
+                    stringResource(R.string.plan_recommended)
+                } else {
+                    null
+                },
+                boutonActif = false,
+                testTag = "paywall_" + card.plan.code,
+                teinteBadge = TeinteBadge.OrangePlein,
+                taillePrix = 24.sp,
+                testTagPrix = "price_" + card.plan.code
             )
         }
-        ui.cards.forEach { card ->
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            // D42.32 (Lot 7) : hiérarchie commerciale — Pro recommandé.
-                            if (card.plan == Plan.PRO) {
-                                Box(
-                                    modifier = Modifier
-                                        .background(OrangeStore, RoundedCornerShape(6.dp))
-                                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                                ) {
-                                    Text(
-                                        stringResource(R.string.plan_recommended),
-                                        color = Color.White,
-                                        style = MaterialTheme.typography.labelSmall
-                                    )
-                                }
-                            }
-                            Text(stringResource(card.titleRes), style = MaterialTheme.typography.titleMedium)
-                        }
-                        Text(
-                            "  ·  " + card.priceValue +
-                                (card.periodRes?.let { " / " + stringResource(it) } ?: ""),
-                            color = Color.Gray,
-                            modifier = Modifier.testTag("price_" + card.plan.code)
-                        )
-                    }
-                    card.featureRes.forEach { Text("• " + stringResource(it), style = MaterialTheme.typography.bodySmall) }
-                    // D42.32 (Lot 7) : CinetPay volontairement reporté — bouton
-                    // INACTIF, aucun checkout, aucune fausse transaction. Le libellé
-                    // dit la vérité : paiement en ligne bientôt disponible.
-                    Button(
-                        onClick = { onChoose(card.plan.code) },
-                        enabled = false,
-                        modifier = Modifier.testTag("paywall_" + card.plan.code)
-                    ) {
-                        Text(
-                            stringResource(R.string.paywall_soon),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                }
-            }
+        if (ui.locked) {
+            Text(
+                stringResource(R.string.paywall_later),
+                style = VitrineText.Tiny.copy(fontWeight = FontWeight.W600),
+                color = OrangeDeep,
+                modifier = Modifier
+                    .clickable(onClick = onLater)
+                    .padding(vertical = 6.dp)
+            )
         }
-        // D41 (F8) : equivalence BCEAO traduite (FR en dur avant) — devise = zone,
-        // langue = parametres regionaux (decouplees).
+        // D41 (F8) : equivalence BCEAO traduite — devise = zone, langue = locale.
         if (ui.footnoteBceao) {
             Text(
                 stringResource(R.string.paywall_footnote_bceao),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = VitrineText.Tiny,
+                color = Muted
             )
         }
     }

@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 /** Teintes sémantiques des badges (§7.6). */
-enum class TeinteBadge { Orange, Succes, Info, Sombre }
+enum class TeinteBadge { Orange, Succes, Info, Sombre, OrangePlein }
 
 /**
  * D42.33 — §7.6 Badge : hauteur 22, padding 9, rayon pill, 11/700.
@@ -34,6 +34,9 @@ fun BadgeVitrine(
         TeinteBadge.Succes -> VertVoile to VertTexte
         TeinteBadge.Info -> BleuVoile to InfoEncre
         TeinteBadge.Sombre -> BlancVoile to Blanc
+        // D42.33 (famille 10) : aplat OrangeStore plein, texte blanc — badge
+        // « Recommandé » sur carte navy (mise en valeur + aplat charte exact).
+        TeinteBadge.OrangePlein -> OrangeStore to Blanc
     }
     Box(
         modifier = modifier

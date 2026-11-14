@@ -111,3 +111,24 @@ le rendu 700/800 doit être garanti sur les appareils économiques API 24-25 du 
   exports (comptage Room réel), tab BarreOnglets centrale. Paywall INTACT
   (famille 10). DAO +2 requêtes lecture seule. Test dash_app_name retiré
   (header), +dash_tab_create/home. Détails : 09_DASHBOARD_PARRAINAGE.md.
+
+- **Rollbacks sandbox n°6+n°7** (reprise famille 10) : la sandbox est retombée
+  deux fois à 8d530b1 (D42.27) avec .git/config détruit. GitHub intouchable =
+  fae6000 vérifié via API à chaque fois (CI 07/08/09 = 43603190662 /
+  43603381967 / 43604879046, toutes success). Débris archivés
+  (debris_rollback6.tar.gz, chemins vérifiés présents à distance avant
+  nettoyage), remote+identité reconstruits, reset --hard fae6000, arbre
+  propre. **Aucune perte : tout le travail validé était poussé.** Leçon
+  consolidée : committer/pousser les preuves CI dans le MÊME tour que le
+  constat, pas après.
+- **Ordre fondateur (reprise)** : famille 10 = TARIFICATION SEULE — l'app n'a
+  pas de centre d'aide, n'en pas créer (aucun écran/parcours/entrée réglages).
+  CinetPay reporté (501 honnête), contrats de paiement intouchés.
+
+- **Famille 10 tarification** : PaywallScreen refondu en CarteFormule ×3
+  (grille stricte 500/3 000/7 500), prix « · N FCFA » une ligne (24 sp),
+  état quota épuisé = écran dédié (solde 0 en Num + « Recharger plus
+  tard »), badge Recommandé en aplat OrangeStore (OrangePlein). AUCUN
+  écran d'aide créé (ordre fondateur). CinetPay reporté, contrats
+  intacts, PaywallMapper intact. price_* recollé via testTagPrix.
+  Détails : 10_TARIFICATION.md.
