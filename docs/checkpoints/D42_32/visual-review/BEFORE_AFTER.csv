@@ -10,4 +10,4 @@ n,correction,lot_commit,capture_avant,ecrans_apres
 9,"Bienvenue : patron étapes 1-2, crédits confirmés, bouton épinglé",Lot 9 (d88dbbf),,WelcomeScreen
 10,"Design system : PiedContinuer 52 dp, barre d'action standard",Lot 10 (1b42df4),,GabaritBriefScreen
 11,"Quota réel : Pro 90/30 j appliqué côté serveur, restes exposés",§4 (79e4b14),,PaywallScreen + DashboardScreen (affichage)
-12,Harmonisation design system transverse (§6),§6 (à committer),,dashboard/catalogue/brief/paywall/bienvenue/caméra
+12,Harmonisation design system transverse (§6),§6 (e7ffe5b),,dashboard/catalogue/brief/paywall/bienvenue/caméra

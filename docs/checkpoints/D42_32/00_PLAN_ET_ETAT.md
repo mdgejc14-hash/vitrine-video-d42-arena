@@ -64,28 +64,28 @@
 - Captures authentiques non retouchées, identifiées émulateur ; FLAG_SECURE documenté
   jamais contourné. FR/EN seuls sur le parcours commercial.
 
-## État courant (réconciliation post-rollback)
+## État courant (après reconstruction post-rollback)
 
-- **HEAD local = distant = `2a19d49`**, arbre propre sauf patch §4 en cours
-  (src/index.js, tools/e2e/quota_unit.mjs, workflow backend-http).
+- **HEAD local avance sur distant `2a19d49` de 5 commits** (push groupé imminent) :
+  `79e4b14` §4 quota serveur 90/30 j (+ quota_unit.mjs 21/21 + CI backend-http)
+  → `1b42df4` Lot 10 recréé (PiedContinuer 52 dp + 10_DESIGN_SYSTEM.md)
+  → `2adc79f` squelette Phase B visual-review/ (30 gabarits réels, 18 écrans,
+  12 corrections, 7 statuts UX)
+  → `43eaff3` §5 v2 récupération artefacts caméra (adb root + sleep 3 +
+  vérification taille/contenu réels, job ÉCHOUE si incomplet)
+  → `e7ffe5b` §6 harmonisation DS (token AmbreAlerte, ExportPreviewPanel →
+  OrangeStore, déviations justifiées documentées).
 - **e2e-lab 43520993407 (2a19d49) = COMPLETED SUCCESS 15/15** : pixel5 23 PASS/0 FAIL,
   bienvenue 3/3, p1 brief + WhatsApp E.164, camerap TOUT PASS, petit-ecran 60 PNG,
   deeplink/offline/lang_en OK. Artefacts ids dans le journal de session.
-- Commits locaux perdus au rollback (à recréer, diffs connus) :
-  **Lot 10** (PiedContinuer 52 dp + 10_DESIGN_SYSTEM.md, couleurs HUD caméra + ambre
-  BriefScreen:67 conservées), **squelette Phase B** (5 fichiers visual-review/ :
-  README, GABARITS_INVENTAIRE.csv 30, SCREEN_INVENTORY.csv 18, BEFORE_AFTER.csv 12,
-  UX_AUDIT.md 7 statuts), **fix caméra v2 §5**.
 - Stash « debris pre-D42.30 rollback » présent — NE PAS pop.
-- Tâche actuelle : §4 à committer → recréer Lot 10 + squelette Phase B + fix caméra v2
-  → §6 harmonisation → push groupé + CI + §5 artefacts caméra → galerie §8 → rapport.
 - Porte d'approbation : **FERMÉE** (galerie avant/après pas encore produite).
 
 ## Prochain travail (ordre)
 
-1. Commit §4 (worker quota + quota_unit.mjs + CI backend-http) — présent working tree.
-2. Recréer Lot 10 + 10_DESIGN_SYSTEM.md ; squelette visual-review/ ; fix caméra v2 §5.
-3. §6 harmonisation design system + tests ciblés consommateurs.
-4. Push groupé → android-ci + e2e-lab sur le commit candidat → §5 artefacts caméra.
-5. Phase B : captures authentiques (émulateur identifié) → galerie avant/après complète.
-6. Rapport §8 → **ARRÊT à la porte d'approbation fondateur** (avant toute RC16/Phase C).
+1. ~~Commit §4~~ ✓ 79e4b14 · ~~Lot 10~~ ✓ 1b42df4 · ~~squelette Phase B~~ ✓ 2adc79f
+   · ~~fix caméra v2~~ ✓ 43eaff3 · ~~§6 harmonisation~~ ✓ e7ffe5b.
+2. Push groupé → android-ci + e2e-lab sur `e7ffe5b` → §5 artefacts caméra réels
+   (4 sources × 2 modes + PNG + emulateur=true).
+3. Phase B : captures authentiques (émulateur identifié) → galerie avant/après complète.
+4. Rapport §8 → **ARRÊT à la porte d'approbation fondateur** (avant toute RC16/Phase C).
