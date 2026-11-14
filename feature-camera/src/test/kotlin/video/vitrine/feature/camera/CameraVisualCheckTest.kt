@@ -35,8 +35,6 @@ class CameraVisualCheckTest {
                     scenes = buildSceneGuides(script, 30),
                     currentIdx = idx,
                     progress = progress,
-                    faceCount = faces,
-                    gateAllowed = true,
                     recording = recording,
                 )
             }

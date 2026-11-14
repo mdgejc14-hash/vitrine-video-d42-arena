@@ -42,7 +42,7 @@ servent de référence de trace pour le fondateur. Aucune valeur inventée depui
 | 4 | `04_ONBOARDING.md` | ouverture, carrousel, langue, auth, code parrain, secteurs, bienvenue | ⬜ |
 | 5 | `05_CATALOGUE.md` | catalogue, vignettes, détail gabarit | ✅ |
 | 6 | `06_BRIEF_FORMULAIRES.md` | brief 8 étapes, champs, ReadyCheck + §9.6 préparation caméra | ✅ |
-| 7 | `07_CAMERA.md` | viseur, overlay, countdown, REC, revue des prises, consentement | ⬜ |
+| 7 | `07_CAMERA.md` | viseur, overlay, countdown, REC, revue des prises, consentement | ✅ |
 | 8 | `08_MONTAGE_EXPORT.md` | aperçu, montage en cours, export prêt, partage | ⬜ |
 | 9 | `09_DASHBOARD_PARRAINAGE.md` | dashboard §9.3, mes vidéos, réglages | ⬜ |
 | 10 | `10_TARIFICATION.md` | formules, quota épuisé, aide & contact §9.7 | ⬜ |
@@ -91,3 +91,10 @@ le rendu 700/800 doit être garanti sur les appareils économiques API 24-25 du 
   transient Maven Central au runtime, hors Gradle). Fix déterministe offline
   (voir 06_BRIEF_FORMULAIRES.md) + extractions detekt. **Un seul commit/push
   pour famille 05-fix + 06 + CI** — plus de micro-campagnes.
+- **Famille 06+fixes CI** (628917e) : Robolectric offline déterministe VALIDÉ
+  en CI (jars résolus par Gradle, zéro MavenArtifactFetcher) ; échec compile
+  restant = imports manquants GabaritBriefScreen (ancre de replace inexistante,
+  silencieuse) — corrigé avec ancre vérifiée + audit automatisé.
+- **Famille 07 caméra** : §7.15 intégral (navy 55 %, OverlayViseur, consigne
+  floutée, rouge = arrêt uniquement), labels techniques « visages détectés /
+  (R4) » supprimés de l'UI, moteur ConsentGate/dialogue/e2e intacts.

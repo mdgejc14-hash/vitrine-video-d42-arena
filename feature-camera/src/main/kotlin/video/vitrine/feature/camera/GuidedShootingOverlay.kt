@@ -74,8 +74,6 @@ fun GuidedShootingOverlay(
     scenes: List<SceneGuide>,
     currentIdx: Int,
     progress: Float,
-    faceCount: Int,
-    gateAllowed: Boolean,
     recording: Boolean,
     countdown: Int? = null,
     streaming: Boolean? = null,
@@ -85,7 +83,7 @@ fun GuidedShootingOverlay(
     Box(modifier = modifier.fillMaxSize()) {
         FramingBox()
         TopHud(scene, scenes.size, progress, streaming)
-        BottomHud(scene, faceCount, gateAllowed, recording)
+        BottomHud(scene, recording)
         if (countdown != null) CompteurGeant(countdown)
     }
 }
@@ -96,7 +94,7 @@ private fun BoxScope.CompteurGeant(valeur: Int) {
     Box(
         modifier = Modifier
             .align(Alignment.Center)
-            .background(Color(0x99000000), RoundedCornerShape(70.dp))
+            .background(Color(0x99022358), RoundedCornerShape(70.dp))
             .padding(horizontal = 34.dp, vertical = 10.dp),
         contentAlignment = Alignment.Center,
     ) {
@@ -115,7 +113,9 @@ private fun BoxScope.FramingBox() {
             .align(Alignment.Center)
             .fillMaxWidth(0.72f)
             .aspectRatio(9f / 16f)
-            .border(BorderStroke(3.dp, Color(0xFFF95C0F)), RoundedCornerShape(18.dp)),
+            // D42.33 §7.15 : trait blanc 2 dp 70 % (plus de filet orange —
+            // l'orange reste réservé à la progression/CTA).
+            .border(BorderStroke(2.dp, Color(0xB3FFFFFF)), RoundedCornerShape(18.dp)),
         contentAlignment = Alignment.Center,
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -143,8 +143,9 @@ private fun BoxScope.TopHud(scene: SceneGuide?, total: Int, progress: Float, str
         modifier = Modifier
             .align(Alignment.TopCenter)
             .fillMaxWidth()
-            .background(Color(0xCC000000))
-            .padding(10.dp),
+            // D42.33 §7.15 : bandeau navy translucide (plus de noir).
+            .background(Color(0x8C022358))
+            .padding(horizontal = 20.dp, vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Row(
@@ -154,21 +155,21 @@ private fun BoxScope.TopHud(scene: SceneGuide?, total: Int, progress: Float, str
             Text(
                 stringResource(R.string.camera_scene_counter, scene?.index ?: 1, total),
                 color = Color.White,
-                style = MaterialTheme.typography.titleMedium,
+                style = video.vitrine.core.designsystem.VitrineText.H3,
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (streaming == true) {
                     Text(
                         stringResource(R.string.camera_stream_ready),
-                        color = Color(0xFF7BD88F),
-                        style = MaterialTheme.typography.labelMedium,
+                        color = video.vitrine.core.designsystem.VertSucces,
+                        style = video.vitrine.core.designsystem.VitrineText.Label,
                         modifier = Modifier.padding(end = 8.dp),
                     )
                 }
                 Text(
                     String.format("%.1f s", scene?.durationS ?: 0.0),
-                    color = Color(0xFFF95C0F),
-                    style = MaterialTheme.typography.titleMedium,
+                    color = video.vitrine.core.designsystem.OrangeHi,
+                    style = video.vitrine.core.designsystem.VitrineText.H3,
                 )
             }
         }
@@ -177,46 +178,40 @@ private fun BoxScope.TopHud(scene: SceneGuide?, total: Int, progress: Float, str
             modifier = Modifier
                 .fillMaxWidth()
                 .height(6.dp),
-            color = Color(0xFFF95C0F),
+            color = video.vitrine.core.designsystem.OrangeStore,
         )
     }
 }
 
 @Composable
-private fun BoxScope.BottomHud(scene: SceneGuide?, faceCount: Int, gateAllowed: Boolean, recording: Boolean) {
+private fun BoxScope.BottomHud(scene: SceneGuide?, recording: Boolean) {
     Column(
         modifier = Modifier
             .align(Alignment.BottomCenter)
             .fillMaxWidth()
-            .background(Color(0xCC000000))
-            .padding(12.dp),
+            // D42.33 §7.15 : bandeau consigne navy translucide.
+            .background(Color(0x8C022358))
+            .padding(horizontal = 20.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         if (scene != null) {
             Text(
                 stringResource(scene.instructionRes),
                 color = Color.White,
-                style = MaterialTheme.typography.bodyLarge,
+                style = video.vitrine.core.designsystem.VitrineText.Body.copy(
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.W600
+                ),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
-        Text(
-            if (gateAllowed) {
-                stringResource(R.string.camera_faces_ok, faceCount)
-            } else {
-                stringResource(R.string.camera_faces_ko, faceCount)
-            },
-            color = if (gateAllowed) Color(0xFF7BD88F) else Color(0xFFFF6B6B),
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(),
-        )
+        // D42.33 (mission §7.7) : plus AUCUN label « visages détectés / porte
+        // R4 » — la porte de consentement (dialogue réel) reste inchangée.
         if (recording) {
             Text(
                 stringResource(R.string.camera_recording),
-                color = Color(0xFFF95C0F),
-                style = MaterialTheme.typography.labelLarge,
+                color = video.vitrine.core.designsystem.OrangeHi,
+                style = video.vitrine.core.designsystem.VitrineText.Label,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -235,8 +230,6 @@ private fun GuidedShootingOverlayPreview() {
             ),
             currentIdx = 0,
             progress = 0.4f,
-            faceCount = 0,
-            gateAllowed = true,
             recording = false,
         )
     }

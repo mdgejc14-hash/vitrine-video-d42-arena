@@ -33,6 +33,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import video.vitrine.core.designsystem.BleuVoile
+import video.vitrine.core.designsystem.AmbreAlerte
+import video.vitrine.core.designsystem.Blanc
+import video.vitrine.core.designsystem.ChampFormulaire
+import video.vitrine.core.designsystem.FormePill
+import video.vitrine.core.designsystem.FormeTuile
+import video.vitrine.core.designsystem.Line
+import video.vitrine.core.designsystem.Muted
+import video.vitrine.core.designsystem.Navy
+import video.vitrine.core.designsystem.OrangeDeep
 import video.vitrine.core.designsystem.GrisLiserai
 import video.vitrine.core.designsystem.OrangeStore
 import video.vitrine.core.designsystem.OrangeVoile

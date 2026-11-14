@@ -60,9 +60,7 @@ class CameraGuideActivity : VitrineActivity() {
     private var decision = ConsentGate.Decision.ALLOW
     private var overlayIdx by mutableStateOf(0)
     private var overlayProgress by mutableStateOf(0f)
-    private var overlayFaces by mutableStateOf(0)
     private var overlayRecording by mutableStateOf(false)
-    private var gateAllowed by mutableStateOf(true)
     // D42.30 : état RÉEL du flux (PreviewView.previewStreamState observé) —
     // distingue « Caméra prête » (STREAMING) de « Démarrage… » (IDLE).
     private var fluxStreamState by mutableStateOf<Boolean?>(null)
@@ -196,16 +194,12 @@ class CameraGuideActivity : VitrineActivity() {
                         recording = overlayRecording,
                         countdown = compteARebours,
                         priseValidee = priseValideeMsg,
-                        faceCount = overlayFaces,
-                        gateAllowed = gateAllowed,
                     )
                 } else {
                     GuidedShootingOverlay(
                         scenes = guides,
                         currentIdx = overlayIdx,
                         progress = overlayProgress,
-                        faceCount = overlayFaces,
-                        gateAllowed = gateAllowed,
                         recording = overlayRecording,
                         countdown = compteARebours,
                         streaming = fluxStreamState,
@@ -324,11 +318,7 @@ class CameraGuideActivity : VitrineActivity() {
             minorSuspected = false
         )
         Log.i(TAG_E2E, "visages détectés : $count -> decision=$decision")
-        runOnUiThread {
-            overlayFaces = count
-            gateAllowed = decision == ConsentGate.Decision.ALLOW
-            updateStatus()
-        }
+        runOnUiThread { updateStatus() }
     }
 
     private fun updateStatus() {
@@ -354,7 +344,14 @@ class CameraGuideActivity : VitrineActivity() {
         }
         if (boutonRes != dernierTexteBouton) {
             dernierTexteBouton = boutonRes
-            findViewById<Button>(R.id.camera_record_button).setText(boutonRes)
+            val boutonRecord = findViewById<Button>(R.id.camera_record_button)
+            boutonRecord.setText(boutonRes)
+            // D42.33 §7.15 : le bouton porte une action d'ARRÊT (enregistrement
+            // en cours / annulation du décompte) → rouge #B42318 ; l'action de
+            // progression (enregistrer) reste orange. Rouge = arrêt uniquement.
+            boutonRecord.backgroundTintList = android.content.res.ColorStateList.valueOf(
+                if (recording != null || lancement) 0xFFB42318.toInt() else 0xFFF95C0F.toInt()
+            )
         }
     }
 
