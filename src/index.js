@@ -2214,7 +2214,10 @@ async function recomputeEntitlements(env, merchantId) {
           fair_use: null, cloud_renders: 1, brand_kit: 0, cache_days: 1 };
   }
   if (active && sub.plan === "pro") {
-    e = { watermark: 0, endcard_mention: 1, max_res: "1080p", exports_limit: 9999,
+    // D42.32 (§4, décision fondateur) : Pro = 90 exports / 30 jours APPLIQUÉS.
+    // Avant : exports_limit=9999 avec fair_use=90 stocké mais jamais contrôlé
+    // (écart documenté dans 05_TARIFICATION.md, désormais fermé).
+    e = { watermark: 0, endcard_mention: 1, max_res: "1080p", exports_limit: 90,
           fair_use: 90, cloud_renders: 5, brand_kit: 1, cache_days: 14 };
   }
   if (active && sub.plan === "boutique") {
@@ -2235,6 +2238,38 @@ async function recomputeEntitlements(env, merchantId) {
 // CinetPay et la notification instantanee — une seule source de verite.
 const PLAN_GRID = { pass24h: 500, pro: 3000, boutique: 7500 };
 const PLAN_DAYS = { pass24h: 1, pro: 30, boutique: 30 };
+
+// D42.32 (§4) — LIMITES RÉELLES par plan et par période (décision fondateur) :
+// Pro = 90 exports / 30 jours ; Pass 6 / 24 h ; Boutique 200 / 30 jours.
+// Rendus cloud DISTINCTS des exports (kind='cloud'). Ces constantes sont la
+// source de vérité du CONTRÔLE : entitlements.exports_limit reste un cache
+// pour l'app (les lignes Pro antérieures au correctif contiennent 9999).
+export const PLAN_EXPORTS_LIMITS = { pass24h: 6, pro: 90, boutique: 200 };
+export const PLAN_CLOUD_LIMITS = { pass24h: 1, pro: 5, boutique: 20 };
+
+/** Début de la période de consommation courante (PURE — quota_unit.mjs).
+ *  Fenêtre [max(started_at, renews_at - durée), ∞) : un renouvellement fait
+ *  glisser la fenêtre sans recompter l'historique précédent. */
+export function planPeriodStart(startedAt, renewsAt, plan) {
+  const days = PLAN_DAYS[plan] ?? 30;
+  const start = startedAt ? Date.parse(startedAt) : NaN;
+  if (!Number.isFinite(start)) return new Date(0).toISOString();
+  const renew = renewsAt ? Date.parse(renewsAt) : NaN;
+  const slid = Number.isFinite(renew) ? renew - days * 86400000 : start;
+  return new Date(Math.max(start, slid)).toISOString();
+}
+
+/** Attribution SERVEUR d'une consommation (PURE — quota_unit.mjs).
+ *  Le client déclare historiquement source="welcome" : c'est le SERVEUR qui
+ *  décide. Un abonnement ACTIF paie en premier (plan) ; à épuisement du plan,
+ *  repli sur la dotation de bienvenue ; les deux épuisés => refus.
+ *  kind : "export" | "cloud" (comptés séparément, limites distinctes). */
+export function decideQuota(plan, kind, planUsed, planLimit, welcomeLeft) {
+  const isPlan = plan === "pass24h" || plan === "pro" || plan === "boutique";
+  if (isPlan && planUsed < planLimit) return { source: plan, allowed: true };
+  if (welcomeLeft > 0) return { source: "welcome", allowed: true };
+  return { source: null, allowed: false, code: "quota_exceeded" };
+}
 
 /** Ref de commande : compatible de la regex cliente ^[A-Z]{2,6}-[0-9a-f-]{6,36}$. */
 function newBillingRef() {
@@ -2442,10 +2477,12 @@ async function routeBillingNotify(req, env) {
 }
 
 async function routeMyEntitlements(env, merchantId) { // GET /api/v1/me/entitlements (JWT JWKS requis)
-  const sub = await env.DB.prepare("SELECT plan, renews_at FROM subscriptions WHERE merchant_id=?1")
-    .bind(merchantId).first();
-  if (sub && sub.renews_at && sub.renews_at < new Date().toISOString())   // expiration PARESSEUSE
-    await recomputeEntitlements(env, merchantId);                          // (Pass 24 h inclus, sans cron)
+  const sub = await env.DB.prepare(
+    "SELECT plan, status, started_at, renews_at FROM subscriptions WHERE merchant_id=?1"
+  ).bind(merchantId).first();
+  const maintenant = new Date().toISOString();
+  if (sub && sub.renews_at && sub.renews_at < maintenant)               // expiration PARESSEUSE
+    await recomputeEntitlements(env, merchantId);                        // (Pass 24 h inclus, sans cron)
   const row = await env.DB.prepare(
     `SELECT watermark, endcard_mention, max_res, exports_limit, fair_use, cloud_renders, brand_kit, cache_days
      FROM entitlements WHERE merchant_id=?1`).bind(merchantId).first();
@@ -2453,10 +2490,26 @@ async function routeMyEntitlements(env, merchantId) { // GET /api/v1/me/entitlem
   const grant = fp && fp.fp ? await env.DB.prepare(
     `SELECT credits_total - credits_used credits_left, cloud_total - cloud_used cloud_left
      FROM welcome_grants WHERE fingerprint=?1`).bind(fp.fp).first() : null;
+  // D42.32 (§4) : consommation RÉELLE du plan sur la période courante —
+  // le paywall client se branche sur plan_exports_left (null = pas d'abonnement
+  // actif : la dotation de bienvenue gouverne, comportement inchangé).
+  let planExportsUsed = null;
+  let planExportsLeft = null;
+  const actif = !!sub && sub.status === "active" && (!sub.renews_at || sub.renews_at >= maintenant);
+  if (actif && sub.plan) {
+    const debut = planPeriodStart(sub.started_at, sub.renews_at, sub.plan);
+    const n = await env.DB.prepare(
+      "SELECT COUNT(*) n FROM quota_ledger WHERE merchant_id=?1 AND source=?2 AND kind='export' AND ts>=?3"
+    ).bind(merchantId, sub.plan, debut).first();
+    planExportsUsed = Number(n?.n ?? 0);
+    planExportsLeft = Math.max(0, PLAN_EXPORTS_LIMITS[sub.plan] - planExportsUsed);
+  }
   return json({ ...(row ?? { watermark: 1, endcard_mention: 1, max_res: "720p", exports_limit: 0,
                              fair_use: null, cloud_renders: 0, brand_kit: 0, cache_days: 3 }),
                 welcome_credits_left: grant ? grant.credits_left : 0,
-                welcome_cloud_left: grant ? grant.cloud_left : 0 },
+                welcome_cloud_left: grant ? grant.cloud_left : 0,
+                plan_exports_used: planExportsUsed,
+                plan_exports_left: planExportsLeft },
               200, { "cache-control": "private, max-age=3600" });
 }
 
@@ -2598,27 +2651,59 @@ async function routeWelcomeGrant(req, env, merchantId) {  // POST /api/v1/me/wel
 async function routeQuotaConsume(req, env, merchantId) {  // POST /api/v1/quota/consume (JWT JWKS)
   const { eventId = "", fingerprint = "", source = "", kind = "" } = await req.json();
   // Audit D41 : eventId est la PRIMARY KEY de quota_ledger (0005) — un eventId
-  // vide entrait en collision GLOBALE (le 2e consommateur avec "" etait ignore
-  // silencieusement, sa consommation jamais comptee) et permettait le rejeu
-  // croise. Il est desormais requis.
+  // vide entrait en collision GLOBALE et permettait le rejeu croise. Requis.
   if (typeof eventId !== "string" || eventId.trim() === "") {
     return json({ error: "eventId requis (cle d'idempotence)" }, 400);
   }
-  // Audit D41 : pour source=welcome, le serveur verifie que l'empreinte debitee
-  // est bien celle liee au compte (merchant_identity). Avant, n'importe quel
-  // fingerprint etait accepte — un client compromis pouvait decrementer les
-  // credits d'un AUTRE appareil ou rejouer une empreinte non liee.
-  if (source === "welcome") {
+  const kindEffectif = kind === "cloud" ? "cloud" : "export";
+
+  // ---- D42.32 (§4) : ATTRIBUTION SERVEUR -------------------------------
+  // Le client declare historiquement source="welcome" (BackendSync) : le
+  // serveur decide seul qui paie. Abonnement ACTIF en premier (limites
+  // reelles 6/90/200 exports, 1/5/20 cloud par periode), repli sur la
+  // dotation de bienvenue a epuisement du plan, refus quand les DEUX sont
+  // epuises (contrat R1 : plan OU bienvenue, jamais de blocage reseau).
+  const now = new Date().toISOString();
+  const sub = await env.DB.prepare(
+    "SELECT plan, status, started_at, renews_at FROM subscriptions WHERE merchant_id=?1"
+  ).bind(merchantId).first();
+  if (sub && sub.renews_at && sub.renews_at < now) {
+    await recomputeEntitlements(env, merchantId);   // expiration PARESSEUSE
+  }
+  const actif = !!sub && sub.status === "active" && (!sub.renews_at || sub.renews_at >= now);
+  const plan = actif ? sub.plan : null;
+  const planLimit = plan
+    ? (kindEffectif === "cloud" ? PLAN_CLOUD_LIMITS[plan] : PLAN_EXPORTS_LIMITS[plan])
+    : 0;
+  let planUsed = 0;
+  let periodeDebut = new Date(0).toISOString();
+  if (plan) {
+    periodeDebut = planPeriodStart(sub.started_at, sub.renews_at, plan);
+    const n = await env.DB.prepare(
+      "SELECT COUNT(*) n FROM quota_ledger WHERE merchant_id=?1 AND source=?2 AND kind=?3 AND ts>=?4"
+    ).bind(merchantId, plan, kindEffectif, periodeDebut).first();
+    planUsed = Number(n?.n ?? 0);
+  }
+
+  // Dotation de bienvenue restante (empreinte LIEE au compte — audit D41).
+  const fpRow = await env.DB.prepare(
+    "SELECT signup_fingerprint fp FROM merchant_identity WHERE user_id=?1"
+  ).bind(merchantId).first();
+  const grant = fpRow && fpRow.fp ? await env.DB.prepare(
+    `SELECT credits_total - credits_used credits_left,
+            cloud_total - cloud_used cloud_left
+     FROM welcome_grants WHERE fingerprint=?1`
+  ).bind(fpRow.fp).first() : null;
+  const welcomeLeft = grant
+    ? Number(kindEffectif === "cloud" ? grant.cloud_left : grant.credits_left)
+    : 0;
+
+  // Audit D41 (source=welcome, conserve pour le repli bienvenue) : l'empreinte
+  // debitee doit appartenir au compte appelant.
+  if (decideQuota(plan, kindEffectif, planUsed, planLimit, welcomeLeft).source === "welcome") {
     if (typeof fingerprint !== "string" || fingerprint.length < 16) {
       return json({ error: "fingerprint requis pour source=welcome" }, 400);
     }
-    // D42.8 (P1, mesure sur banc D1 local) : le controle n'etait applique que si
-    // le compte AVAIT deja une ligne merchant_identity. Un compte sans liaison
-    // (`lie` nul) passait donc sans controle et pouvait debiter la dotation de
-    // bienvenue d'un AUTRE marchand en envoyant son empreinte. Reproduit : un
-    // compte B jamais lie a porte les 3 credits de A a zero.
-    // Regle : l'empreinte debitee doit appartenir au compte appelant —
-    // soit par la liaison merchant_identity, soit par la propriete du grant.
     const lie = await env.DB.prepare(
       "SELECT signup_fingerprint fp FROM merchant_identity WHERE user_id=?1"
     ).bind(merchantId).first();
@@ -2627,8 +2712,6 @@ async function routeQuotaConsume(req, env, merchantId) {  // POST /api/v1/quota/
         return json({ error: "fingerprint non lie a ce compte" }, 403);
       }
     } else {
-      // Compte non lie : seule une dotation dont il est le PREMIER titulaire
-      // peut etre debitee (comptes anterieurs a la liaison 0009).
       const sien = await env.DB.prepare(
         "SELECT 1 x FROM welcome_grants WHERE fingerprint=?1 AND merchant_first_id=?2"
       ).bind(fingerprint, merchantId).first();
@@ -2637,16 +2720,53 @@ async function routeQuotaConsume(req, env, merchantId) {  // POST /api/v1/quota/
       }
     }
   }
-  const led = await env.DB.prepare(`INSERT OR IGNORE INTO quota_ledger
-    (event_id, merchant_id, fingerprint, source, kind, ts) VALUES (?1,?2,?3,?4,?5,?6)`)
-    .bind(eventId, merchantId, fingerprint, source, kind, new Date().toISOString()).run();
-  if (!led.meta.changes) return json({ ok: true, dup: true });        // rejeu offline : compte une seule fois
-  if (source === "welcome" && fingerprint)
-    await env.DB.prepare(kind === "cloud"
+
+  const decision = decideQuota(plan, kindEffectif, planUsed, planLimit, welcomeLeft);
+  if (!decision.allowed) {
+    // 91e tentative : REFUS honnete, chiffres retournes pour l'interface.
+    return json({ error: decision.code ?? "quota_exceeded",
+                  plan_exports_limit: plan ? planLimit : null,
+                  plan_exports_used: plan ? planUsed : null,
+                  welcome_left: welcomeLeft }, 429);
+  }
+  if (decision.source === "welcome" && welcomeLeft <= 0) {
+    return json({ error: "quota_exceeded", welcome_left: 0 }, 429);
+  }
+
+  // ---- ECRITURE : idempotence + controle atomique en UNE instruction ----
+  // Plan : INSERT ... SELECT ... WHERE (compte dans la periode) < limite —
+  // la lecture du compte et l'ecriture sont dans la meme transaction d'ecriture
+  // D1 : deux consommations concurrentes ne peuvent pas depasser la limite.
+  // Bienvenue : INSERT OR IGNORE (rejeu offline compte une seule fois).
+  const led = decision.source === "welcome"
+    ? await env.DB.prepare(`INSERT OR IGNORE INTO quota_ledger
+        (event_id, merchant_id, fingerprint, source, kind, ts) VALUES (?1,?2,?3,?4,?5,?6)`)
+        .bind(eventId, merchantId, fingerprint, "welcome", kindEffectif, now).run()
+    : await env.DB.prepare(`INSERT OR IGNORE INTO quota_ledger
+        (event_id, merchant_id, fingerprint, source, kind, ts)
+        SELECT ?1,?2,?3,?4,?5,?6
+        WHERE (SELECT COUNT(*) FROM quota_ledger
+               WHERE merchant_id=?2 AND source=?4 AND kind=?5 AND ts>=?7) < ?8`)
+        .bind(eventId, merchantId, fingerprint, decision.source, kindEffectif, now,
+              periodeDebut, planLimit).run();
+  if (!led.meta.changes) {
+    const deja = await env.DB.prepare(
+      "SELECT 1 x FROM quota_ledger WHERE event_id=?1"
+    ).bind(eventId).first();
+    if (deja) return json({ ok: true, dup: true });        // rejeu offline : compte une seule fois
+    // Fenetre de course microscopique (plan rempli entre lecture et ecriture)
+    // : refus chiffre, la tentative suivante sera attribuee a la bienvenue.
+    return json({ error: "quota_exceeded",
+                  plan_exports_limit: plan ? planLimit : null,
+                  plan_exports_used: plan ? planUsed : null }, 429);
+  }
+  if (decision.source === "welcome" && fingerprint) {
+    await env.DB.prepare(kindEffectif === "cloud"
       ? "UPDATE welcome_grants SET cloud_used=MIN(cloud_total,cloud_used+1) WHERE fingerprint=?1"
       : "UPDATE welcome_grants SET credits_used=MIN(credits_total,credits_used+1) WHERE fingerprint=?1")
       .bind(fingerprint).run();
-  return json({ ok: true });
+  }
+  return json({ ok: true, source: decision.source });
 }
 
 /* =====================================================

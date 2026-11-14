@@ -745,6 +745,8 @@ jobs:
           echo "::error::Worker non démarré"; tail -40 /tmp/worker.log; exit 1
       - name: Contrat HTTP
         run: python3 tools/e2e/http_contract.py http://127.0.0.1:8788 | tee http_run.txt
+      - name: Contrat quota (décisions pures — D42.32 §4)
+        run: node tools/e2e/quota_unit.mjs | tee quota_run.txt
       - name: Arrêt
         if: always()
         run: |
@@ -758,5 +760,6 @@ jobs:
           path: |
             http_contract_report.json
             http_run.txt
+            quota_run.txt
           retention-days: 14
           if-no-files-found: warn
