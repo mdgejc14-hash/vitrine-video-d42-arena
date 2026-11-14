@@ -154,3 +154,10 @@ le rendu 700/800 doit être garanti sur les appareils économiques API 24-25 du 
   diff bb759f8..fefd022), 3 fichiers moteur additifs documentés, chaînes +
   testTags e2e présents, 290→296 @Test (zéro retrait), origin/main =
   bb759f8, RC15 intacte. Détails : 12_NON_REGRESSION.md.
+
+- **Famille 13 galerie + rapports** : visual-review/ (36 captures réelles
+  avant/après identifiées — MANIFEST.tsv écran/langue/résolution/état,
+  provenance runs 43586092209 D42.32 et 43610784376 D42.33), ASSET_LICENSES
+  (OFL Inter + Plus Jakarta Sans), 13_RAPPORT_FINAL. Upload CI corrigé
+  (feature-dashboard ajouté à ci-visual-check, 0a114ce, CI 43610784376
+  SUCCESS). **D42.33 TERMINÉE — arrêt à la porte d'approbation visuelle.**
