@@ -19,6 +19,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -128,16 +129,32 @@ fun GabaritBriefScreen(
     }
 }
 
-/** D42.30 : bouton Continuer ÉPINGLÉ (pied fixe hors scroll, cf. GabaritBriefScreen). */
+/** D42.30 : bouton Continuer ÉPINGLÉ (pied fixe hors scroll, cf. GabaritBriefScreen).
+ *  D42.32 (Lot 10, design system §6) : aligné sur la barre d'action standard des
+ *  écrans à étapes — Surface tonalElevation 3 + bouton plein 52 dp (écran dense
+ *  de formulaire ; reste confortable police 130 %). Hauteur minimale PORTÉE PAR
+ *  LE BOUTON, padding par le conteneur (leçon D42.13 : jamais heightIn après
+ *  padding — le minimum s'appliquerait à la boîte paddée et écraserait le bouton). */
 @Composable
 private fun PiedContinuer(enabled: Boolean, onContinue: () -> Unit) {
-    Button(
-        onClick = onContinue,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 10.dp),
-        enabled = enabled
-    ) { Text(stringResource(R.string.brief_g_continue)) }
+    Surface(
+        tonalElevation = 3.dp,
+        color = MaterialTheme.colorScheme.surface
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 10.dp)
+        ) {
+            Button(
+                onClick = onContinue,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 52.dp),
+                enabled = enabled
+            ) { Text(stringResource(R.string.brief_g_continue)) }
+        }
+    }
 }
 
 @Composable
