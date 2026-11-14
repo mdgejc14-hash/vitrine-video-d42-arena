@@ -89,6 +89,14 @@ borné 2 lignes.
   (image_analysis/preview_view/video_capture/mp4_decode) + `emulateur=true`,
   ≥ 1 PNG de preuve — le job ÉCHOUE si la récupération est incomplète
   (compile ≠ terminé). Prochaine exécution = push groupé Phase A (§9).
+- **Run 43575685106 (33abc37)** : instrumentation ABORTÉE — `adb root` AVANT
+  la session caméra a crashé l'émulateur (`INSTRUMENTATION_ABORTED: System has
+  crashed` ; adbd redémarré pendant que CameraX tenait le capteur virtuel).
+  **Correctif v3** : root déplacé APRÈS l'instrumentation, juste avant la
+  copie (c'est le seul moment où il sert). Auth-local du même run : 21/22,
+  unique échec = sémantique 403 empreinte (corrigée côté worker, voir §4 —
+  le contrôle d'appartenance D41 est déclenché par la DÉCLARATION client
+  source=welcome, indépendamment de l'attribution serveur).
 - **Capteur physique** : EN ATTENTE de la validation fondateur (procédure
   ci-dessus). Aucun résultat physique n'existe à ce jour.
 

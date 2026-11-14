@@ -281,15 +281,18 @@ jobs:
             mkdir -p artifacts/camera-diagnostic
             adb install -r app/build/outputs/apk/debug/app-debug.apk
             adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
-            # D42.32 §5 (v2, recréé post-rollback) : adbd ROOT sur émulateur —
-            # sans cela, adb pull du stockage app-scoped est REFUSÉ (API 30,
-            # scoped storage) et l'artéfact ne contient que instrument.txt (300 o).
-            adb root
-            adb wait-for-device
             adb shell pm grant video.vitrine.app android.permission.CAMERA || true
             adb shell am instrument -w -e class video.vitrine.d42.CameraMosaicDiagnosticTest video.vitrine.app.test/androidx.test.runner.AndroidJUnitRunner > artifacts/camera-diagnostic/instrument.txt 2>&1
             tail -25 artifacts/camera-diagnostic/instrument.txt
             grep -q "OK (2 tests)" artifacts/camera-diagnostic/instrument.txt || exit 1
+            # D42.32 §5 (v3) : adbd root APRÈS l'instrumentation — le restart
+            # d'adbd PENDANT la session caméra a crashé l'émulateur au run
+            # précédent (INSTRUMENTATION_ABORTED: System has crashed). On ne
+            # passe root qu'au moment de la copie : sans root, adb pull du
+            # stockage app-scoped est REFUSÉ (API 30, scoped storage).
+            adb root
+            adb wait-for-device
+            sleep 2
             # Laisser les écritures PNG/JSON se vider avant la copie autorisée.
             sleep 3
             echo "=== contenu app-scoped avant copie ==="

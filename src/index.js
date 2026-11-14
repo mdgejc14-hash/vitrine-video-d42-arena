@@ -2657,6 +2657,32 @@ async function routeQuotaConsume(req, env, merchantId) {  // POST /api/v1/quota/
   }
   const kindEffectif = kind === "cloud" ? "cloud" : "export";
 
+  // Audit D41 (CONSERVÉ TEL QUEL, indépendant de l'attribution §4) : le client
+  // déclare source="welcome" (valeur historique codée en dur dans BackendSync) —
+  // l'empreinte DÉCLARÉE doit appartenir au compte appelant, que le plan paie ou
+  // non : tenter de débiter l'appareil d'autrui = 403, pas un quota_exceeded.
+  // (D42.8 : compte non lié => seule une dotation dont il est PREMIER titulaire.)
+  if (source === "welcome") {
+    if (typeof fingerprint !== "string" || fingerprint.length < 16) {
+      return json({ error: "fingerprint requis pour source=welcome" }, 400);
+    }
+    const lie = await env.DB.prepare(
+      "SELECT signup_fingerprint fp FROM merchant_identity WHERE user_id=?1"
+    ).bind(merchantId).first();
+    if (lie && lie.fp) {
+      if (lie.fp !== fingerprint) {
+        return json({ error: "fingerprint non lie a ce compte" }, 403);
+      }
+    } else {
+      const sien = await env.DB.prepare(
+        "SELECT 1 x FROM welcome_grants WHERE fingerprint=?1 AND merchant_first_id=?2"
+      ).bind(fingerprint, merchantId).first();
+      if (!sien) {
+        return json({ error: "fingerprint non lie a ce compte" }, 403);
+      }
+    }
+  }
+
   // ---- D42.32 (§4) : ATTRIBUTION SERVEUR -------------------------------
   // Le client declare historiquement source="welcome" (BackendSync) : le
   // serveur decide seul qui paie. Abonnement ACTIF en premier (limites
@@ -2697,29 +2723,6 @@ async function routeQuotaConsume(req, env, merchantId) {  // POST /api/v1/quota/
   const welcomeLeft = grant
     ? Number(kindEffectif === "cloud" ? grant.cloud_left : grant.credits_left)
     : 0;
-
-  // Audit D41 (source=welcome, conserve pour le repli bienvenue) : l'empreinte
-  // debitee doit appartenir au compte appelant.
-  if (decideQuota(plan, kindEffectif, planUsed, planLimit, welcomeLeft).source === "welcome") {
-    if (typeof fingerprint !== "string" || fingerprint.length < 16) {
-      return json({ error: "fingerprint requis pour source=welcome" }, 400);
-    }
-    const lie = await env.DB.prepare(
-      "SELECT signup_fingerprint fp FROM merchant_identity WHERE user_id=?1"
-    ).bind(merchantId).first();
-    if (lie && lie.fp) {
-      if (lie.fp !== fingerprint) {
-        return json({ error: "fingerprint non lie a ce compte" }, 403);
-      }
-    } else {
-      const sien = await env.DB.prepare(
-        "SELECT 1 x FROM welcome_grants WHERE fingerprint=?1 AND merchant_first_id=?2"
-      ).bind(fingerprint, merchantId).first();
-      if (!sien) {
-        return json({ error: "fingerprint non lie a ce compte" }, 403);
-      }
-    }
-  }
 
   const decision = decideQuota(plan, kindEffectif, planUsed, planLimit, welcomeLeft);
   if (!decision.allowed) {
