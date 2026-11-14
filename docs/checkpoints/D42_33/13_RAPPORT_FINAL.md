@@ -6,7 +6,7 @@ galerie authentique, arrêt à la porte d'approbation visuelle du fondateur.**
 ## 1. Dépôt et branche finale
 
 - Dépôt : `mdgejc14-hash/vitrine-video-d42-arena`
-- Branche : **`d42.33-visual-redesign`** — HEAD final : **`<SHA final>`**
+- Branche : **`d42.33-visual-redesign`** — HEAD final : **`52581057494dcb870b74468773f4313899ea28c6`**
 - Base : `bb759f8` (main, D42.32 clos) — **origin/main inchangé** (vérifié).
 
 ## 2. Chaîne des familles (toutes terminées, CI verte)
@@ -116,7 +116,7 @@ workflows CI (Robolectric offline, upload galerie), tests (+6).
 
 - Chemin : `docs/checkpoints/D42_33/` (00_PLAN_ET_ETAT.md + 13 checkpoints
   familiaux + SOURCES + visual-review/).
-- Dernier commit contenant le checkpoint : `<SHA final>`.
+- Dernier commit contenant le checkpoint : `52581057494dcb870b74468773f4313899ea28c6` (poussé, vérifié).
 - Le présent rapport et l'ensemble des checkpoints sont poussés et
   exploitables pour toute reprise (l'ordre des familles, les preuves CI,
   les incidents et les leçons y sont consignés).
