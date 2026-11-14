@@ -1106,7 +1106,9 @@ elif [ "$export_lance" = "1" ]; then
         # v11i : PAYWALL D'ABORD, dashboard FRAIS (« Acheter » visible au
         # sommet — dump _dashboard.xml). Au run v11h, les taps post-parrainage
         # tapaient dans le vide : le BACK avait quitté le dashboard.
-        if taper "Acheter" || taper "crédits" || taper "Crédits" || taper "Recharger" || taper "Buy"; then
+        # D42.32 : le dashboard Lot 5/7 dit « Voir les formules » (dash_see_plans)
+        # — chaîne étendue, anciens libellés RC15 conservés en repli.
+        if taper "Voir les formules" || taper "See plans" || taper "Acheter" || taper "crédits" || taper "Crédits" || taper "Recharger" || taper "Buy"; then
           sleep 3
           dump_courant "_paywall"
           galshot_sr "paywall" "Crédits / formules — paywall (screenrecord)" "credits" "offre"
@@ -1117,7 +1119,9 @@ elif [ "$export_lance" = "1" ]; then
           gap "paywall : bouton « Acheter » introuvable sur le dashboard frais (dump _dashboard.xml) — écran non capturé"
         fi
         # retour dashboard (le BACK du paywall doit y ramener)
-        $UI wait --text "TES VIDÉOS" --timeout 12 >/dev/null 2>&1 || true
+        # D42.32 : « TES VIDÉOS » (RC15) n'existe plus — le dashboard Lot 5 a un
+        # en-tête pro ; on attend un libellé stable du bas de page.
+        $UI wait --text "Parrainage" --timeout 12 >/dev/null 2>&1 || true
         if taper "Parrainage" || taper "parrainage" || taper "Referral"; then
           sleep 3
           galshot_sr "dashboard_parrainage" "Parrainage — jauge et code (screenrecord)" "parrainage" "depuis dashboard"
@@ -1126,7 +1130,7 @@ elif [ "$export_lance" = "1" ]; then
         # v11i : « Réglages » = OutlinedButton TEXTUEL en BAS du dashboard
         # (DashboardScreens.kt :61) — défilements progressifs avec essai à
         # chaque pas (le v11f n'avait défilé qu'une fois).
-        $UI wait --text "TES VIDÉOS" --timeout 12 >/dev/null 2>&1 || true
+        $UI wait --text "Parrainage" --timeout 12 >/dev/null 2>&1 || true
         REGLAGES_OK=0
         for _pas in 1 2 3 4 5; do
           if taper "Réglages" || taper "Paramètres" || taper "Settings"; then

@@ -1,0 +1,128 @@
+name: visual-gallery-d42
+
+# D42.32 — Phase B : GALERIE VISUELLE DU COMMIT CANDIDAT (APK debug construite
+# depuis le ref dispatché — le produit réellement exécuté, aucune maquette).
+# Réutilise tools/e2e/run_gallery.sh (harnais éprouvé D42.31/RC15, capturé ici
+# sur l'app D42.32 ; captures brutes non retouchées, gaps documentés, caméra
+# ÉMULÉE identifiée comme telle).
+#   - fr base  : parcours complet (onboarding, secteurs, brief, caméra, export,
+#                partage)
+#   - fr suite : parcours complet + dashboard/paywall/parrainage/réglages
+#                (screenrecord — DashboardActivity non exportée par conception)
+#   - en base  : parcours complet anglais
+# Les conditions petit écran / police 130 % / rotation / offline / brouillons
+# sont couvertes par les artefacts du laboratoire e2e-lab du même commit.
+# Manuel (workflow_dispatch) : aucune campagne inutile lancée par un push.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: visual-gallery-d42
+  cancel-in-progress: false
+
+jobs:
+  gallery-d32-fr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 165
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: gradle/actions/setup-gradle@v4
+      - name: APK debug du commit candidat (sha256 consigné)
+        run: |
+          set -e
+          ./gradlew :app:assembleDebug --stacktrace 2>&1 | tail -5
+          cp app/build/outputs/apk/debug/app-debug.apk candidat.apk
+          sha256sum candidat.apk | tee candidat_sha256.txt
+      - name: KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Galerie FR base (parcours complet + secteurs + caméra + export)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front emulated
+          script: |
+            adb devices
+            bash tools/e2e/run_gallery.sh fr base candidat.apk
+      - name: Artefacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: gallery-d32-fr, path: artifacts/gallery/**, retention-days: 14, if-no-files-found: warn }
+
+  gallery-d32-suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 165
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: gradle/actions/setup-gradle@v4
+      - name: APK debug du commit candidat (sha256 consigné)
+        run: |
+          set -e
+          ./gradlew :app:assembleDebug --stacktrace 2>&1 | tail -5
+          cp app/build/outputs/apk/debug/app-debug.apk candidat.apk
+          sha256sum candidat.apk | tee candidat_sha256.txt
+      - name: KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Galerie FR suite (+ dashboard, paywall, parrainage, réglages)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front emulated
+          script: |
+            adb devices
+            bash tools/e2e/run_gallery.sh fr suite candidat.apk
+      - name: Artefacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: gallery-d32-suite, path: artifacts/gallery/**, retention-days: 14, if-no-files-found: warn }
+
+  gallery-d32-en:
+    runs-on: ubuntu-latest
+    timeout-minutes: 165
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: gradle/actions/setup-gradle@v4
+      - name: APK debug du commit candidat (sha256 consigné)
+        run: |
+          set -e
+          ./gradlew :app:assembleDebug --stacktrace 2>&1 | tail -5
+          cp app/build/outputs/apk/debug/app-debug.apk candidat.apk
+          sha256sum candidat.apk | tee candidat_sha256.txt
+      - name: KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Galerie EN base (parcours complet anglais)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front emulated
+          script: |
+            adb devices
+            bash tools/e2e/run_gallery.sh en base candidat.apk
+      - name: Artefacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: gallery-d32-en, path: artifacts/gallery/**, retention-days: 14, if-no-files-found: warn }
