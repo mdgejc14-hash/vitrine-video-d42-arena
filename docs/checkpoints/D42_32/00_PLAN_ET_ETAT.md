@@ -64,36 +64,53 @@
 - Captures authentiques non retouchées, identifiées émulateur ; FLAG_SECURE documenté
   jamais contourné. FR/EN seuls sur le parcours commercial.
 
-## État courant — PHASE B LIVRÉE, ARRÊT À LA PORTE
+## État final — CLÔTURE DOCUMENTAIRE (porte d'approbation)
 
-- **HEAD local = distant = `a799c50`** + commit galerie (ce push). Chaîne
-  complète D42.32 : `2a19d49` → ae64aa1 (§4) → 95d0734 (Lot 10) → 765c841
-  (squelette) → 905a4f6 (caméra v2) → ac29fdd (§6) → 33abc37 → 2a9ad15 (403 +
-  v3) → 163e215 (caméra v4 + preuves) → a799c50 (workflow galerie + harnais
-  adapté) → **commit galerie §8**.
-- **Laboratoire VERT sur le candidat** : e2e-lab **43582492529 (a799c50) =
-  SUCCESS 15/15** — camera-diagnostic v4 PASS (2 rapports 4 sources,
-  emulateur=true, 10 PNG, **2 MP4 réels 443/430 Ko**), auth-local 22/22,
-  backend-http (quota 21/21), pixel5 23 PASS, camerap, offline, offline-export
-  (41 PASS + export.mp4 + vitrine-local.db), drafts, langues EN, petit-écran
-  (60 PNG), security, gabarits-audit, selftest. android-ci SUCCESS.
-- **Galerie §8 LIVRÉE** (`visual-review/`) : README illustré **80 images**,
-  86 entrées de manifeste (FR base 31 + suite 26 + EN 50 + e2e-lab, toutes du
-  candidat a799c50), 21 sections miroir D42.31, BEFORE_AFTER 12 corrections
-  (liens avant RC15 ↔ après candidat), UX_AUDIT 7/7 CORRIGÉ+CAPTURÉ, RUNS.md
-  (runs + artefacts + RCA caméra 4 runs), gaps documentés (FLAG_SECURE,
-  PNG vides swiftshader, audio automatique, scène AVD), preuves quota
-  (Room CONFIRMED balanceAfter=2), export-tire-candidat.mp4 (4,4 Mo).
-- **Réserves portées au fondateur** : capteur physique (toutes captures
-  caméra ÉMULÉES), FLAG_SECURE (dumps + MP4 réel), RC15 immuable.
-- **PORTE D'APPROBATION : EN ATTENTE DU FONDATEUR** (§12). Aucune RC16
-  construite. Après accord : Phase C (APK signée, checksum, E2E sur l'APK
-  exacte, release GitHub, test capteur physique fondateur).
+- **HEAD final réel = `b5a1462`** (commit de GALERIE : documents + captures,
+  **aucun changement applicatif**). **Candidat logiciel = `a799c50`** (dernier
+  commit de CODE : workflow galerie + harnais outil ; l'app qu'exécutent tous
+  les runs de preuve). Ne pas confondre : l'APK candidate est issue du code de
+  `a799c50`, la galerie vit dans `b5a1462` (docs seuls — le laboratoire a
+  re-validé ce commit sans changement de code).
+- **Chaîne D42.32 complète sur main** : `2a19d49` (fix CI, base Lots 1-9) →
+  `ae64aa1` §4 quota serveur 90/30 j → `95d0734` Lot 10 design system →
+  `765c841` squelette Phase B → `905a4f6` caméra v2 → `ac29fdd` §6
+  harmonisation → `33abc37` état réconcilié → `2a9ad15` fix 403 empreinte +
+  caméra v3 → `163e215` caméra v4 + preuves → `a799c50` workflow
+  visual-gallery-d42 + harnais adapté → **`b5a1462` galerie complète** →
+  (commit de clôture documentaire, présent).
+- **Runs définitifs** :
+  - `a799c50` : android-ci **43582492468 SUCCESS** · e2e-lab **43582492529
+    SUCCESS 15/15** · visual-gallery-d32 **43582523983 SUCCESS 3/3** (fr base
+    31, fr suite 26, en base 50).
+  - `b5a1462` : android-ci **43586092209 SUCCESS** · e2e-lab **43586092282
+    SUCCESS 15/15** (auth, langues EN, offline, offline-export, selftest,
+    drafts, gabarits-audit, pixel5, camerap, deeplink, p1, backend-http,
+    auth-local, security-local, camera-diagnostic — TOUT SUCCESS).
+  - API Security CI : dernier verdict **SUCCESS sur `2a9ad15`** — aucun commit
+    ultérieur ne touche `src/` (a799c50 = outil/workflow, b5a1462 = docs) ;
+    le code worker validé est donc inchangé.
+- **Artefacts de `43586092282`** (rétention 14 j) : e2e-pixel5 14109849145 ·
+  e2e-p1 14110254692 · camera-diagnostic 14110237482 · e2e-petit-ecran
+  14111115038 · e2e-offline-export 14111410925 · e2e-camerap 14111812186 ·
+  e2e-langue-en 14110792358 · e2e-offline 14110698027 · e2e-drafts 14110679243
+  · e2e-auth 14109948271 · e2e-deeplink 14109848703 · backend-http 14110532113
+  · auth-local 14109882869 · security-local 14110716853 · gabarits-audit
+  14110451367. Artefacts du candidat code : voir [visual-review/RUNS.md](visual-review/RUNS.md).
+- **Galerie vérifiée** : 167 liens locaux du README — 0 manquant ; manifeste
+  86 entrées — 0 fichier absent (80 PNG + MP4 export 4,4 Mo + preuve Room
+  quota + 4 dumps FLAG_SECURE) ; camera-preuves 17 fichiers ; références
+  « avant » D42_31 toutes valides.
+- **PORTE D'APPROBATION : EN ATTENTE DU FONDATEUR** (§12). Rapport final :
+  [09_RAPPORT_FINAL.md](09_RAPPORT_FINAL.md). Aucune RC16 construite, RC15
+  immuable. Après accord : Phase C (APK signée officiellement, checksum, E2E
+  sur l'APK exacte, release GitHub, test capteur physique fondateur).
 
 ## Prochain travail
 
-1. ~~Phase A (Lots 1-10 + §4 + §6)~~ ✓ · ~~non-régression groupée 15/15~~ ✓ ·
-   ~~galerie §8~~ ✓ · ~~checkpoint final~~ ✓.
+1. ~~Phase A (Lots 1-10 + §4 + §6)~~ ✓ · ~~non-régression 15/15 sur candidat
+   ET sur galerie~~ ✓ · ~~galerie §8 + vérification liens/preuves~~ ✓ ·
+   ~~clôture documentaire~~ ✓.
 2. **ARRÊT** : attendre l'approbation visuelle du fondateur sur la galerie.
-3. Après accord : Phase C (signature officielle, E2E APK exacte, release,
-   capteur physique) — jamais avant.
+3. Après accord : Phase C — signature officielle, E2E sur l'APK exacte,
+   release GitHub, capteur physique. Jamais avant l'accord.
