@@ -2,6 +2,10 @@ package video.vitrine.feature.catalog
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Canvas
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.sp
+import video.vitrine.core.designsystem.FormeCarte
+import video.vitrine.core.designsystem.ombreSm
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -22,7 +26,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Card
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -41,7 +44,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import video.vitrine.core.designsystem.VitrineLogoHeader
 import video.vitrine.core.designsystem.sectorLabel
 import video.vitrine.core.model.CatalogManifest
 import video.vitrine.core.model.Sector
@@ -73,20 +75,21 @@ fun CatalogScreen(
     var filtresOuverts by remember { mutableStateOf(!secteurFixe) }
     Column(modifier = Modifier.fillMaxSize()) {
         if (offline) {
-            Text(
-                stringResource(R.string.catalog_offline),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
-                    .padding(8.dp),
-                color = MaterialTheme.colorScheme.onSecondaryContainer
+            // D42.33 (§7.14) : bandeau hors-ligne unique du design system.
+            video.vitrine.core.designsystem.BandeauEtat(
+                titre = stringResource(R.string.catalog_offline),
+                texte = null,
+                icone = video.vitrine.core.designsystem.R.drawable.ic_wifioff,
+                action = null,
+                surAction = null,
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
             )
         }
         Column(
-            modifier = Modifier.padding(horizontal = 12.dp),
+            modifier = Modifier.padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            VitrineLogoHeader()
+            video.vitrine.core.designsystem.MarqueVitrine(taille = 40.dp, logo = 28.dp)
             // D42.30 : le titre et l'action « Changer de secteur » partagent la
             // même ligne (retour terrain : secteur affiché + action discrète).
             // D42.32 (P0-1) : l'action disparaît quand le secteur est déjà
@@ -97,14 +100,17 @@ fun CatalogScreen(
             ) {
                 Text(
                     stringResource(R.string.catalog_title),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = video.vitrine.core.designsystem.VitrineText.H2,
+                    color = video.vitrine.core.designsystem.Navy,
                     modifier = Modifier.weight(1f),
                 )
                 if (!secteurFixe) {
                     Text(
                         stringResource(R.string.catalog_change_sector),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.primary,
+                        style = video.vitrine.core.designsystem.VitrineText.Tiny.copy(
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.W700
+                        ),
+                        color = video.vitrine.core.designsystem.OrangeDeep,
                         modifier = Modifier
                             .clickable { filtresOuverts = !filtresOuverts }
                             .padding(6.dp),
@@ -164,15 +170,123 @@ private fun GabaritLayout(
     onGabaritClick: (GabaritSummary) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // D42.33 (§8-C) : 1 gabarit en vedette (héro 16:9 pleine largeur) puis
+    // grille 2 colonnes — marge 20, gouttière 12. Badge durée sur chaque tuile.
     Column(
         modifier = modifier
             .verticalScroll(androidx.compose.foundation.rememberScrollState())
-            .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+            .padding(horizontal = 20.dp)
+            .padding(bottom = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        gabarits.forEach { g ->
-            GabaritCard(g, showSector, onGabaritClick)
+        gabarits.firstOrNull()?.let { premier ->
+            GabaritHero(premier, onGabaritClick)
         }
+        val autres = gabarits.drop(1)
+        autres.chunked(2).forEach { ligne ->
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                ligne.forEach { g ->
+                    GabaritTuile(g, onGabaritClick, modifier = Modifier.weight(1f))
+                }
+                if (ligne.size == 1) {
+                    Box(modifier = Modifier.weight(1f))
+                }
+            }
+        }
+    }
+}
+
+/** Gabarit en vedette (§8-C) : vignette 16:9 pleine largeur + textes dessous. */
+@Composable
+private fun GabaritHero(
+    g: GabaritSummary,
+    onGabaritClick: (GabaritSummary) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(FormeCarte)
+            .background(video.vitrine.core.designsystem.Blanc)
+            .ombreSm(FormeCarte)
+            .clickable { onGabaritClick(g) }
+            .padding(14.dp)
+    ) {
+        VignetteSecteur(
+            secteur = sectorFromGabaritCode(g.secteur) ?: Sector.TOUS,
+            dureeS = g.dureeTotaleS,
+            scenes = g.nombreScenes,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Text(
+            g.nomFormatAffiche,
+            style = video.vitrine.core.designsystem.VitrineText.H3,
+            color = video.vitrine.core.designsystem.Navy,
+            modifier = Modifier.padding(top = 10.dp),
+            maxLines = 1,
+        )
+        Text(
+            stringResource(
+                R.string.catalog_gabarit_meta,
+                g.dureeTotaleS,
+                g.nombreScenes,
+                g.nombrePrises,
+            ),
+            style = video.vitrine.core.designsystem.VitrineText.Tiny,
+            color = video.vitrine.core.designsystem.Muted,
+            modifier = Modifier.padding(top = 2.dp),
+            maxLines = 1,
+        )
+        Text(
+            g.phraseCourte,
+            style = video.vitrine.core.designsystem.VitrineText.Sub,
+            color = video.vitrine.core.designsystem.NavySoft,
+            modifier = Modifier.padding(top = 4.dp),
+            maxLines = 2,
+            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+        )
+    }
+}
+
+/** Tuile gabarit (§8-C grille 2 col.) : vignette 16:9 + titre 13.5/700 + méta. */
+@Composable
+private fun GabaritTuile(
+    g: GabaritSummary,
+    onGabaritClick: (GabaritSummary) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .clip(FormeCarte)
+            .background(video.vitrine.core.designsystem.Blanc)
+            .ombreSm(FormeCarte)
+            .clickable { onGabaritClick(g) }
+            .padding(12.dp)
+    ) {
+        VignetteSecteur(
+            secteur = sectorFromGabaritCode(g.secteur) ?: Sector.TOUS,
+            dureeS = g.dureeTotaleS,
+            scenes = g.nombreScenes,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Text(
+            g.nomFormatAffiche,
+            style = video.vitrine.core.designsystem.VitrineText.H3.copy(fontSize = 13.5.sp),
+            color = video.vitrine.core.designsystem.Navy,
+            modifier = Modifier.padding(top = 8.dp),
+            maxLines = 1,
+        )
+        Text(
+            stringResource(
+                R.string.catalog_gabarit_meta,
+                g.dureeTotaleS,
+                g.nombreScenes,
+                g.nombrePrises,
+            ),
+            style = video.vitrine.core.designsystem.VitrineText.Tiny,
+            color = video.vitrine.core.designsystem.Muted,
+            modifier = Modifier.padding(top = 2.dp),
+            maxLines = 1,
+        )
     }
 }
 
@@ -284,17 +398,18 @@ private fun SkinLayout(
         Column(
             modifier = modifier
                 .verticalScroll(androidx.compose.foundation.rememberScrollState())
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             skins.forEach { skin -> SkinCard(skin, showSector, true, onSkinClick) }
         }
     } else {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = modifier,
         ) {
             items(skins, key = { it.id }) { skin -> SkinCard(skin, showSector, onSkinClick = onSkinClick) }
@@ -333,7 +448,7 @@ private fun SkinCard(skin: Skin, showSector: Boolean, compact: Boolean = false, 
             modifier = Modifier
                 .fillMaxWidth()
                 .then(if (compact) Modifier.height(180.dp) else Modifier.aspectRatio(9f / 16f))
-                .background(Color(0xFF1B1B1F)),
+                .background(video.vitrine.core.designsystem.Navy),
             contentAlignment = Alignment.Center
         ) {
             val image = bitmap
@@ -356,12 +471,19 @@ private fun SkinCard(skin: Skin, showSector: Boolean, compact: Boolean = false, 
                 )
             }
         }
-        Text(SkinDisplayName.label(skin), style = MaterialTheme.typography.bodyMedium)
+        Text(
+            SkinDisplayName.label(skin),
+            style = video.vitrine.core.designsystem.VitrineText.H3.copy(fontSize = 13.5.sp),
+            color = video.vitrine.core.designsystem.Navy,
+            modifier = Modifier.padding(top = 8.dp),
+            maxLines = 1,
+        )
         if (showSector) {
             Text(
                 sectorLabel(skin.sector),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = video.vitrine.core.designsystem.VitrineText.Tiny,
+                color = video.vitrine.core.designsystem.Muted,
+                modifier = Modifier.padding(top = 2.dp),
             )
         }
     }

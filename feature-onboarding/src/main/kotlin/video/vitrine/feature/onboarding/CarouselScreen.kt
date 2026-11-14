@@ -102,7 +102,7 @@ private fun ContenuCarrousel(
             .padding(horizontal = 20.dp)
             .padding(top = 46.dp, bottom = 26.dp)
     ) {
-        MarqueCarrousel()
+        video.vitrine.core.designsystem.MarqueVitrine()
         Spacer(Modifier.weight(1f))
         val (titre, sousTitre) = when (page) {
             0 -> stringResource(R.string.slide1_slogan) to stringResource(R.string.slide1_sub)
@@ -146,26 +146,6 @@ private fun ContenuCarrousel(
                 .clickable { surPasser() }
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         )
-    }
-}
-
-/** Marque en haut : insigne dans une tuile blanche rayon 26 (§9.1/§9.2). */
-@Composable
-private fun MarqueCarrousel() {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Box(
-            modifier = Modifier
-                .size(44.dp)
-                .clip(RoundedCornerShape(14.dp))
-                .background(Color.White),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(video.vitrine.core.designsystem.R.drawable.vitrine_logo),
-                contentDescription = null,
-                modifier = Modifier.size(30.dp)
-            )
-        }
     }
 }
 

@@ -221,7 +221,7 @@ fun WelcomeScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                MarqueBienvenue()
+                video.vitrine.core.designsystem.MarqueVitrine()
                 BadgeCompteCree()
             }
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -289,26 +289,6 @@ private fun Modifier.androidxHaloAccueil(): Modifier = this.then(
         )
     }
 )
-
-/** Marque : insigne dans une tuile blanche rayon 14 (§9.4). */
-@Composable
-private fun MarqueBienvenue() {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Box(
-            modifier = Modifier
-                .size(44.dp)
-                .clip(RoundedCornerShape(14.dp))
-                .background(Color.White),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(video.vitrine.core.designsystem.R.drawable.vitrine_logo),
-                contentDescription = null,
-                modifier = Modifier.size(30.dp)
-            )
-        }
-    }
-}
 
 /** Badge « Compte créé » (blanc 18 %, §7.6 sur sombre). */
 @Composable
