@@ -60,7 +60,7 @@ fun ChampFormulaire(
         SaisieChamp(
             valeur = valeur,
             surChangement = surChangement,
-            focus = focus,
+            surFocusChange = { f -> focus = f },
             erreur = erreur,
             placeholder = placeholder,
             multiligne = multiligne,
@@ -76,7 +76,7 @@ fun ChampFormulaire(
 private fun SaisieChamp(
     valeur: String,
     surChangement: (String) -> Unit,
-    focus: Boolean,
+    surFocusChange: (Boolean) -> Unit,
     erreur: String?,
     placeholder: String?,
     multiligne: Boolean,
@@ -107,7 +107,7 @@ private fun SaisieChamp(
             keyboardOptions = KeyboardOptions(keyboardType = typeClavier),
             modifier = Modifier
                 .fillMaxWidth()
-                .onFocusChanged { f -> focus = f.isFocused },
+                .onFocusChanged { f -> surFocusChange(f.isFocused) },
             decorationBox = { champ ->
                 if (valeur.isEmpty() && placeholder != null) {
                     Box(modifier = Modifier.fillMaxWidth()) {

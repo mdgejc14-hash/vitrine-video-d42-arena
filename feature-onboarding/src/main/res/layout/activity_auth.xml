@@ -1,30 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  D42.12 — ecran de connexion simplifie.
+  D42.33 — refonte visuelle (spec §8-B, dossier 03_authentification) :
+  fond Bg, insigne en tuile blanche rayon 26, titre H2 Jakarta, bouton
+  Google = pilule blanche 56 avec logo G OFFICIEL (jamais recoloré, §6),
+  3 bénéfices réels, repli hors ligne ancré en bas (D42.26 conservé).
 
-  Avant : logo + titre + sous-titre + 2 cartes de texte (4 phrases) + bouton +
-  bouton secondaire + texte + barre de progression + 2 libelles. Le commercant
-  devait lire six blocs avant de pouvoir agir. Nielsen #8 (design minimaliste) :
-  chaque element retire est un element qu'il n'a pas a comprendre.
-
-  Apres : une promesse, une phrase, un bouton. Le reste n'apparait qu'au besoin
-  (progression pendant la connexion, message en cas d'echec).
-
-  D42.26 (FAIL e2e small 540x960, run 42497790522) : le repli « Continuer
-  sans compte » etait rendu SOUS le bas de l'ecran (bounds [0,0][0,0] dans le
-  dump) — la sortie de secours D19 doit rester visible SANS defiler sur tout
-  ecran. Restructuration : contenu principal defilable (ScrollView poids 1) +
-  bloc bas ANCRE contenant le repli hors-ligne. Corollaire : sur petit ecran
-  le clic de secours ne peut plus se poser sur le bouton Google.
+  Contrats préservés : IDs et types (Button auth_google_button /
+  auth_offline_button, ProgressBar, TextViews) référencés par AuthActivity.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="#F7F8FC">
 
-    <!-- Contenu principal : defilable si l'ecran est petit ou la police
-         agrandie. Le bouton Google reste le premier appel a l'action. -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -36,42 +25,131 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp"
-            android:paddingTop="32dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="40dp"
             android:paddingBottom="8dp">
 
-            <ImageView
+            <!-- Insigne dans une tuile blanche rayon 26 (§9.1). -->
+            <FrameLayout
                 android:layout_width="72dp"
                 android:layout_height="72dp"
-                android:contentDescription="@string/auth_title"
-                android:src="@drawable/vitrine_logo" />
+                android:background="@drawable/bg_tuile_blanche_26"
+                android:contentDescription="@string/auth_title">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/auth_title"
+                    android:src="@drawable/vitrine_logo" />
+            </FrameLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/plus_jakarta_sans_extrabold"
                 android:gravity="center"
+                android:letterSpacing="-0.03"
                 android:text="@string/auth_title"
                 android:textColor="#022358"
-                android:textSize="26sp"
-                android:textStyle="bold" />
+                android:textSize="21sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/inter_regular"
                 android:gravity="center"
                 android:text="@string/auth_subtitle"
-                android:textColor="#23467F"
-                android:textSize="16sp" />
+                android:textColor="#6C7C99"
+                android:textSize="14.5sp" />
+
+            <!-- 3 bénéfices réels (produit D19 : hors ligne, export local,
+                 SSO Google sans mot de passe). -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="7dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_check" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:text="@string/auth_benefit_1"
+                        android:textColor="#23467F"
+                        android:textSize="14.5sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="7dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_check" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:text="@string/auth_benefit_2"
+                        android:textColor="#23467F"
+                        android:textSize="14.5sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="7dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_check" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:text="@string/auth_benefit_3"
+                        android:textColor="#23467F"
+                        android:textSize="14.5sp" />
+                </LinearLayout>
+            </LinearLayout>
 
             <!-- Barre de progression : visible uniquement pendant la connexion. -->
             <ProgressBar
                 android:id="@+id/auth_progress"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_marginTop="28dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="24dp"
                 android:indeterminate="true"
                 android:indeterminateTint="#F95C0F"
                 android:visibility="gone" />
@@ -81,10 +159,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:fontFamily="@font/inter_semibold"
                 android:text="@string/auth_preparing"
                 android:textColor="#022358"
                 android:textSize="15sp"
-                android:textStyle="bold"
                 android:visibility="gone" />
 
             <TextView
@@ -92,57 +170,60 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
+                android:fontFamily="@font/inter_regular"
                 android:text="@string/auth_preparing_sub"
-                android:textColor="#5A6B8C"
-                android:textSize="13sp"
+                android:textColor="#6C7C99"
+                android:textSize="12.5sp"
                 android:visibility="gone" />
 
+            <!-- Bouton Google : pilule blanche 56, logo G officiel (§6). -->
             <Button
                 android:id="@+id/auth_google_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:backgroundTint="#F95C0F"
-                android:minHeight="52dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="26dp"
+                android:background="@drawable/bg_bouton_google"
+                android:drawableStart="@drawable/ic_google_g"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:minHeight="56dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
                 android:text="@string/auth_google"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp" />
+                android:textColor="#022358"
+                android:textSize="16sp"
+                android:fontFamily="@font/plus_jakarta_sans_bold"
+                android:elevation="2dp" />
 
-            <!-- Une seule phrase de reassurance, pas un discours. -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/inter_regular"
                 android:gravity="center"
                 android:text="@string/auth_new_here"
-                android:textColor="#5A6B8C"
-                android:textSize="13sp" />
+                android:textColor="#6C7C99"
+                android:textSize="12.5sp" />
 
-            <!-- Message d'erreur : actionnable, jamais technique. -->
             <TextView
                 android:id="@+id/auth_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="14dp"
+                android:fontFamily="@font/inter_regular"
                 android:gravity="center"
                 android:textSize="14sp" />
         </LinearLayout>
     </ScrollView>
 
-    <!--
-      Bloc bas ANCRE (D42.26) : le mode sans compte est conserve (le coeur
-      creatif fonctionne reellement hors ligne) mais DECLARE comme tel, sans
-      laisser croire que le compte et les credits sont disponibles.
-      Nielsen #2 : correspondance avec le monde reel. Ce bloc ne depend plus
-      du defilement : il est TOUJOURS visible, quel que soit l'ecran.
-    -->
+    <!-- Repli hors ligne ancré (D42.26) : déclaré, jamais caché. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:paddingTop="4dp"
         android:paddingBottom="20dp">
 
@@ -150,20 +231,22 @@
             android:id="@+id/auth_offline_button"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:minHeight="48dp"
             android:text="@string/auth_offline"
             android:textAllCaps="false"
-            android:textColor="#23467F"
-            android:textSize="15sp" />
+            android:textColor="#022358"
+            android:textSize="14.5sp"
+            android:fontFamily="@font/inter_semibold" />
 
         <TextView
             android:id="@+id/auth_offline_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_regular"
             android:gravity="center"
             android:text="@string/auth_offline_body"
-            android:textColor="#7A88A3"
+            android:textColor="#6C7C99"
             android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>

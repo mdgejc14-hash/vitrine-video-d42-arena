@@ -25,5 +25,10 @@
     <string name="auth_retry">Réessayer</string>
 
     <string name="refcode_invalid">Ce code n\'a pas l\'air valide. Vérifie-le, ou passe cette étape.</string>
+    <!-- D42.33 (spec §11 dossier 03) : 3 bénéfices RÉELS (D19 hors ligne,
+         export local, SSO Google) — aucune promesse inventée. -->
+    <string name="auth_benefit_1">Tes vidéos sont enregistrées sur ton téléphone</string>
+    <string name="auth_benefit_2">Le montage automatique marche même sans Internet</string>
+    <string name="auth_benefit_3">Un compte Google suffit, pas de mot de passe</string>
     <string name="auth_new_here">Nouveau ici ? Ton compte sera créé automatiquement.</string>
 </resources>

@@ -3,6 +3,8 @@
     <string name="lang_title">Choisissez votre langue</string>
     <string name="carousel_next">Suivant</string>
     <string name="carousel_start">Commencer</string>
+    <!-- D42.33 (spec §9.2) : lien de sortie directe du carrousel. -->
+    <string name="carousel_skip">Passer</string>
     <string name="slide1_slogan">Filme. Vends. C\'est tout.</string>
     <string name="slide1_sub">L\'app vidéo des boutiques et des métiers</string>
     <!-- D42.9 : plus de « INS », « 30 FPS » ni « verrous 3A » devant un commercant. -->

@@ -20,5 +20,8 @@
     <string name="auth_error_generic">Sign-in did not go through. Try again.</string>
     <string name="auth_retry">Try again</string>
     <string name="refcode_invalid">That code doesn\'t look right. Check it, or skip this step.</string>
+    <string name="auth_benefit_1">Your videos are saved on your phone</string>
+    <string name="auth_benefit_2">Automatic editing works even offline</string>
+    <string name="auth_benefit_3">A Google account is enough, no password</string>
     <string name="auth_new_here">New here? Your account is created automatically.</string>
 </resources>

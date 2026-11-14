@@ -7,10 +7,13 @@
         <item name="android:colorPrimaryDark">#0A192F</item>
         <item name="android:colorAccent">#FF5500</item>
     </style>
-    <!-- Splash natif : logo centre sur fond clair, transition fluide. -->
+    <!-- D42.33 (spec §9.1) : temps de marque — fond navy, insigne dans une
+         tuile blanche rayon 26. Le splash disparaît au premier rendu (durée
+         système ≤ 1,2 s ; barre de chargement non rendue par l'API splash
+         12+ — écart documenté, l'écran d'émotion suivant porte la marque). -->
     <style name="Theme.VitrineVideo.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#FFFFFF</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
+        <item name="windowSplashScreenBackground">#022358</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo_tuile</item>
         <item name="postSplashScreenTheme">@style/Theme.VitrineVideo</item>
     </style>
 </resources>
