@@ -281,8 +281,46 @@ jobs:
             mkdir -p artifacts/camera-diagnostic
             adb install -r app/build/outputs/apk/debug/app-debug.apk
             adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+            # D42.32 §5 (v2, recréé post-rollback) : adbd ROOT sur émulateur —
+            # sans cela, adb pull du stockage app-scoped est REFUSÉ (API 30,
+            # scoped storage) et l'artéfact ne contient que instrument.txt (300 o).
+            adb root
+            adb wait-for-device
             adb shell pm grant video.vitrine.app android.permission.CAMERA || true
-            adb shell am instrument -w -e class video.vitrine.d42.CameraMosaicDiagnosticTest video.vitrine.app.test/androidx.test.runner.AndroidJUnitRunner > artifacts/camera-diagnostic/instrument.txt 2>&1; adb pull /sdcard/Android/data/video.vitrine.app/files/d42/camera-diagnostic/. artifacts/camera-diagnostic/ >> artifacts/camera-diagnostic/instrument.txt 2>&1; tail -25 artifacts/camera-diagnostic/instrument.txt; grep -q "OK (2 tests)" artifacts/camera-diagnostic/instrument.txt || exit 1
+            adb shell am instrument -w -e class video.vitrine.d42.CameraMosaicDiagnosticTest video.vitrine.app.test/androidx.test.runner.AndroidJUnitRunner > artifacts/camera-diagnostic/instrument.txt 2>&1
+            tail -25 artifacts/camera-diagnostic/instrument.txt
+            grep -q "OK (2 tests)" artifacts/camera-diagnostic/instrument.txt || exit 1
+            # Laisser les écritures PNG/JSON se vider avant la copie autorisée.
+            sleep 3
+            echo "=== contenu app-scoped avant copie ==="
+            adb shell ls -la /sdcard/Android/data/video.vitrine.app/files/d42/camera-diagnostic/ | tee artifacts/camera-diagnostic/ls_avant_copie.txt
+            adb pull /sdcard/Android/data/video.vitrine.app/files/d42/camera-diagnostic/. artifacts/camera-diagnostic/ >> artifacts/camera-diagnostic/copie.txt 2>&1
+            echo "=== copié ==="; cat artifacts/camera-diagnostic/copie.txt | tail -5
+            # VÉRIFICATION TAILLE + CONTENU RÉELS (compile ≠ terminé) :
+            # 2 rapports JSON (performance+compatible) contenant chacun les
+            # 4 sources, emulateur=true, luminance et quadrants ; PNG de preuve.
+            python3 - <<'PY'
+            import glob, json, os, sys
+            rapports = sorted(glob.glob("artifacts/camera-diagnostic/rapport-*.json"))
+            pngs = sorted(glob.glob("artifacts/camera-diagnostic/*.png"))
+            if len(rapports) < 2:
+                print(f"::error::rapports JSON manquants ({len(rapports)} < 2) — récupération en échec"); sys.exit(1)
+            if not pngs:
+                print("::error::aucun PNG de preuve récupéré"); sys.exit(1)
+            for r in rapports:
+                taille = os.path.getsize(r)
+                if taille < 500:
+                    print(f"::error::{r} trop petit ({taille} o) — rapport tronqué"); sys.exit(1)
+                d = json.load(open(r, encoding="utf-8"))
+                src = d.get("sources", {})
+                for s in ("image_analysis", "preview_view", "video_capture", "mp4_decode"):
+                    if s not in src:
+                        print(f"::error::{r} : source {s} absente"); sys.exit(1)
+                if not d.get("appareil", {}).get("emulateur"):
+                    print(f"::error::{r} : emulateur=true absent (identification honnête exigée)"); sys.exit(1)
+                print(f"OK {os.path.basename(r)} : {taille} o, 4 sources, emulateur=true")
+            print(f"CAMERA-DIAGNOSTIC BILAN : {len(rapports)} rapports, {len(pngs)} PNG")
+            PY
       - name: Artefacts du diagnostic
         if: always()
         uses: actions/upload-artifact@v4

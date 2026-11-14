@@ -76,9 +76,19 @@ borné 2 lignes.
 
 ## Résultats
 
-- **Émulateur (job camera-diagnostic)** : EN ATTENTE du premier run sur le
-  commit de ce lot — rapport + PNG dans l'artefact `camera-diagnostic`.
-  Sera consigné ici dès le premier run (aucune interpolation).
+- **Émulateur (job camera-diagnostic)** : run 43520993407 (2a19d49) = artefact
+  `camera-diagnostic` **14084540330 de 300 o** — RÉCUPÉRATION EN ÉCHEC :
+  `adb pull` du stockage app-scoped `/sdcard/Android/data/…` refusé par le
+  scoped storage API 30 ; l'artefact ne contenait que `instrument.txt`
+  (instrumentation elle-même OK, 2 tests). **Correctif v2 appliqué (§5)** :
+  `adb root` sur l'émulateur AVANT l'instrumentation (adbd root autorise la
+  copie du stockage app-scoped — copie AUTORISÉE sur émulateur de laboratoire,
+  FLAG_SECURE de production intact), `sleep 3` de vidage, listing `ls -la`
+  avant copie (preuve du contenu source), puis **vérification taille+contenu
+  réels** : ≥ 2 rapports JSON ≥ 500 o contenant chacun les 4 sources
+  (image_analysis/preview_view/video_capture/mp4_decode) + `emulateur=true`,
+  ≥ 1 PNG de preuve — le job ÉCHOUE si la récupération est incomplète
+  (compile ≠ terminé). Prochaine exécution = push groupé Phase A (§9).
 - **Capteur physique** : EN ATTENTE de la validation fondateur (procédure
   ci-dessus). Aucun résultat physique n'existe à ce jour.
 
