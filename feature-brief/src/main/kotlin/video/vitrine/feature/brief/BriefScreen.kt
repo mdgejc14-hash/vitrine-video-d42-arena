@@ -4,10 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,28 +31,34 @@ fun BriefScreen(
     var objective by remember { mutableStateOf("visites") }
     var error by remember { mutableStateOf<BriefValidator.Result?>(null) }
     Column(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         VitrineLogoHeader()
-        Text(stringResource(R.string.brief_title), style = MaterialTheme.typography.headlineSmall)
-        OutlinedTextField(
-            value = script,
-            onValueChange = { script = it },
-            label = { Text(stringResource(R.string.brief_script)) },
-            modifier = Modifier.fillMaxWidth()
+        Text(
+            stringResource(R.string.brief_title),
+            style = video.vitrine.core.designsystem.VitrineText.H2,
+            color = video.vitrine.core.designsystem.Navy
         )
-        OutlinedTextField(
-            value = duration,
-            onValueChange = { duration = it },
-            label = { Text(stringResource(R.string.brief_duration)) },
-            modifier = Modifier.fillMaxWidth()
+        video.vitrine.core.designsystem.ChampFormulaire(
+            valeur = script,
+            surChangement = { script = it },
+            label = stringResource(R.string.brief_script),
+            multiligne = true,
+            testTag = "brief_script"
         )
-        OutlinedTextField(
-            value = objective,
-            onValueChange = { objective = it },
-            label = { Text(stringResource(R.string.brief_objective)) },
-            modifier = Modifier.fillMaxWidth()
+        video.vitrine.core.designsystem.ChampFormulaire(
+            valeur = duration,
+            surChangement = { duration = it },
+            label = stringResource(R.string.brief_duration),
+            typeClavier = androidx.compose.ui.text.input.KeyboardType.Number,
+            testTag = "brief_duration"
+        )
+        video.vitrine.core.designsystem.ChampFormulaire(
+            valeur = objective,
+            surChangement = { objective = it },
+            label = stringResource(R.string.brief_objective),
+            testTag = "brief_objective"
         )
         OutlinedButton(onClick = onAddRushs, modifier = Modifier.fillMaxWidth()) {
             Text(stringResource(R.string.brief_rushs))
@@ -66,14 +69,16 @@ fun BriefScreen(
             val args = error?.messageArgs.orEmpty().toTypedArray()
             Text(stringResource(res, *args), color = AmbreAlerte)
         }
-        Button(
-            modifier = Modifier.fillMaxWidth(),
+        video.vitrine.core.designsystem.BoutonPrimaire(
+            libelle = stringResource(R.string.brief_validate),
             onClick = {
                 val result = BriefValidator.validate(script, duration.toIntOrNull() ?: 0, objective)
                 error = if (result.valid) null else result
                 if (result.valid) onSubmit(script, duration.toIntOrNull() ?: 0, objective)
-            }
-        ) { Text(stringResource(R.string.brief_validate)) }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            testTag = "brief_validate"
+        )
     }
 }
 

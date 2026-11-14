@@ -7,15 +7,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -35,7 +32,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import video.vitrine.core.designsystem.BleuNuit
 import video.vitrine.core.designsystem.BleuVoile
 import video.vitrine.core.designsystem.GrisLiserai
 import video.vitrine.core.designsystem.OrangeStore
@@ -96,8 +92,9 @@ fun GabaritBriefScreen(
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                .padding(horizontal = 20.dp)
+                .padding(top = 8.dp, bottom = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             BriefHeader(brief, filled, requiredIds.size)
             brief.sections.forEach { section ->
@@ -144,15 +141,14 @@ private fun PiedContinuer(enabled: Boolean, onContinue: () -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 10.dp)
+                .padding(horizontal = 20.dp, vertical = 12.dp)
         ) {
-            Button(
+            video.vitrine.core.designsystem.BoutonPrimaire(
+                libelle = stringResource(R.string.brief_g_continue),
                 onClick = onContinue,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 52.dp),
-                enabled = enabled
-            ) { Text(stringResource(R.string.brief_g_continue)) }
+                enabled = enabled,
+                testTag = "brief_continue"
+            )
         }
     }
 }
@@ -164,39 +160,34 @@ private fun BriefHeader(brief: GabaritBrief, filled: Int, requiredCount: Int) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column {
-            Text(stringResource(R.string.brief_g_my_video), style = MaterialTheme.typography.headlineSmall)
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                stringResource(R.string.brief_g_my_video),
+                style = video.vitrine.core.designsystem.VitrineText.H2,
+                color = Navy
+            )
             Text(
                 brief.sectorLabel + " · " + brief.formatLabel,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = video.vitrine.core.designsystem.VitrineText.Sub,
+                color = Muted
             )
         }
         Box(
             modifier = Modifier
-                .background(BleuVoile, RoundedCornerShape(8.dp))
+                .background(BleuVoile, FormePill)
                 .padding(horizontal = 12.dp, vertical = 6.dp)
         ) {
             Text(
                 stringResource(R.string.brief_g_step_badge, 1, 4),
-                color = BleuNuit,
-                style = MaterialTheme.typography.titleSmall
+                color = Navy,
+                style = video.vitrine.core.designsystem.VitrineText.Label
             )
         }
     }
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(6.dp)
-            .background(GrisLiserai, RoundedCornerShape(3.dp))
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(if (requiredCount == 0) 0f else filled.toFloat() / requiredCount)
-                .height(6.dp)
-                .background(OrangeStore, RoundedCornerShape(3.dp))
-        )
-    }
+    // D42.33 §7.8 : barre de progression du design system (4 dp, pill).
+    video.vitrine.core.designsystem.BarreProgression(
+        progression = if (requiredCount == 0) 0f else filled.toFloat() / requiredCount
+    )
 }
 
 /**
@@ -238,20 +229,28 @@ private fun BriefSectionBlock(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(OrangeVoile, RoundedCornerShape(8.dp))
+                .background(OrangeVoile, FormeTuile)
         ) {
             TextButton(onClick = onToggle) {
-                Text(section.title, color = OrangeStore, style = MaterialTheme.typography.titleSmall)
+                Text(
+                    section.title,
+                    color = OrangeDeep,
+                    style = video.vitrine.core.designsystem.VitrineText.Label
+                )
             }
         }
     } else {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(BleuVoile, RoundedCornerShape(8.dp))
-                .padding(horizontal = 12.dp, vertical = 10.dp)
+                .background(BleuVoile, FormeTuile)
+                .padding(horizontal = 14.dp, vertical = 10.dp)
         ) {
-            Text(section.title, color = BleuNuit, style = MaterialTheme.typography.titleSmall)
+            Text(
+                section.title,
+                color = Navy,
+                style = video.vitrine.core.designsystem.VitrineText.Label
+            )
         }
     }
     if (open) {
@@ -276,11 +275,15 @@ private fun BriefFieldInput(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(checked = checked, onCheckedChange = { onCheck(field.id, it) })
             Column {
-                Text(field.label, style = MaterialTheme.typography.titleSmall)
+                Text(
+                    field.label,
+                    style = video.vitrine.core.designsystem.VitrineText.Body,
+                    color = Navy
+                )
                 Text(
                     field.help,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = video.vitrine.core.designsystem.VitrineText.Tiny,
+                    color = Muted
                 )
             }
         }
@@ -291,35 +294,73 @@ private fun BriefFieldInput(
             BadgeChoiceRow(field.choices, choice) { onChoice(field.id, it) }
         }
     } else {
-        Text(field.label + if (field.required) " *" else "", style = MaterialTheme.typography.titleSmall, color = BleuNuit)
-        if (field.type == "telephone") {
-            // D42.30 : WhatsApp international — sélecteur de pays recherchable,
-            // saisie nationale, collage E.164, validation libphonenumber.
-            TelephoneField(
-                initialE164 = value,
-                onValue = { onValue(field.id, it) }
-            )
-        } else if (field.type == "nombre") {
-            // D42.30 (retour terrain : le prix « secouait » pendant la saisie) :
-            // valeur BRUTE pendant l'édition (le curseur ne saute JAMAIS),
-            // formatage visuel par groupes SEULEMENT à la sortie du champ,
-            // suffixe FCFA, emplacement d'erreur RÉSERVÉ (plus de saut de layout).
-            ChampPrix(
-                valeur = value,
-                exemple = field.example,
-                enErreur = fieldError(field, value) != null,
-                onValue = { onValue(field.id, it) }
-            )
-        } else {
-            ChampTexteSimple(
-                field = field,
-                value = value,
-                enErreur = fieldError(field, value) != null,
-                onValue = onValue,
-            )
-        }
-        ZoneErreurEtAide(field, value)
+        ChampStandardGabarit(field, value, onValue)
     }
+}
+
+/**
+ * D42.33 (detekt LongMethod) : champ standard du brief, extrait de
+ * BriefFieldInput — ChampFormulaire §7.9 pour les textes ; champs
+ * spécialisés D42.30 (téléphone international / prix stable) inchangés.
+ */
+@Composable
+private fun ChampStandardGabarit(
+    field: BriefField,
+    value: String,
+    onValue: (String, String) -> Unit,
+) {
+    if (field.type == "telephone" || field.type == "nombre") {
+        Text(
+            field.label + if (field.required) " *" else "",
+            style = video.vitrine.core.designsystem.VitrineText.Tiny.copy(
+                fontWeight = androidx.compose.ui.text.font.FontWeight.W600
+            ),
+            color = Navy
+        )
+    }
+    if (field.type == "telephone") {
+        // D42.30 : WhatsApp international — sélecteur de pays recherchable,
+        // saisie nationale, collage E.164, validation libphonenumber.
+        TelephoneField(
+            initialE164 = value,
+            onValue = { onValue(field.id, it) }
+        )
+    } else if (field.type == "nombre") {
+        // D42.30 (retour terrain : le prix « secouait » pendant la saisie) :
+        // valeur BRUTE pendant l'édition (le curseur ne saute JAMAIS),
+        // formatage visuel par groupes SEULEMENT à la sortie du champ,
+        // suffixe FCFA, emplacement d'erreur RÉSERVÉ (plus de saut de layout).
+        ChampPrix(
+            valeur = value,
+            exemple = field.example,
+            enErreur = fieldError(field, value) != null,
+            onValue = { onValue(field.id, it) }
+        )
+    } else {
+        // D42.33 §7.9 : champ texte = ChampFormulaire du design system
+        // (label au-dessus, filet focus, erreur/aide à hauteur réservée,
+        // touche Suivant du clavier — comportement D42.32 Lot 8 conservé).
+        val focusManager = LocalFocusManager.current
+        val erreur = fieldError(field, value)?.let { stringResource(it) }
+        ChampFormulaire(
+            valeur = value,
+            surChangement = { onValue(field.id, it) },
+            label = field.label + if (field.required) " *" else "",
+            aide = field.help,
+            erreur = erreur,
+            placeholder = field.example,
+            multiligne = field.type == "texte_long",
+            actionClavier = if (field.type == "texte_long") {
+                androidx.compose.ui.text.input.ImeAction.Default
+            } else {
+                androidx.compose.ui.text.input.ImeAction.Next
+            },
+            surSuivant = { focusManager.moveFocus(FocusDirection.Down) },
+            testTag = "brief_" + field.id
+        )
+        return
+    }
+    ZoneErreurEtAide(field, value)
 }
 
 /**
@@ -340,50 +381,20 @@ private fun ZoneErreurEtAide(field: BriefField, value: String) {
         fieldError(field, value)?.let { erreur ->
             Text(
                 stringResource(erreur),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error
+                style = video.vitrine.core.designsystem.VitrineText.Tiny,
+                color = AmbreAlerte
             )
         }
     }
     if (field.type != "telephone") {
         Text(
             field.help,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            style = video.vitrine.core.designsystem.VitrineText.Tiny,
+            color = Muted
         )
     }
 }
 
-
-/** Champ texte / texte_long standard (tout sauf téléphone et nombre). */
-@Composable
-private fun ChampTexteSimple(
-    field: BriefField,
-    value: String,
-    enErreur: Boolean,
-    onValue: (String, String) -> Unit,
-) {
-    val saisieIci = stringResource(R.string.brief_g_type_here)
-    // D42.32 (Lot 8) : touche « Suivant » du clavier (Gboard) — avant, la
-    // touche d'action était un retour ligne muet sur un champ singleLine.
-    val focusManager = LocalFocusManager.current
-    val uneLigne = field.type != "texte_long"
-    OutlinedTextField(
-        value = value,
-        onValueChange = { onValue(field.id, it) },
-        placeholder = { Text(field.example.ifBlank { saisieIci }) },
-        modifier = Modifier.fillMaxWidth(),
-        singleLine = uneLigne,
-        isError = enErreur,
-        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
-            imeAction = if (uneLigne) ImeAction.Next else ImeAction.Default
-        ),
-        keyboardActions = androidx.compose.foundation.text.KeyboardActions(
-            onNext = { focusManager.moveFocus(FocusDirection.Down) }
-        )
-    )
-}
 
 @Composable
 private fun BadgeChoiceRow(choices: List<String>, choice: String?, onChoice: (String) -> Unit) {
@@ -394,13 +405,13 @@ private fun BadgeChoiceRow(choices: List<String>, choice: String?, onChoice: (St
                 onClick = { onChoice(option) },
                 modifier = Modifier.background(
                     if (selected) OrangeVoile else GrisLiserai,
-                    RoundedCornerShape(8.dp)
+                    FormePill
                 )
             ) {
                 Text(
                     choiceLabel(option),
-                    color = if (selected) OrangeStore else BleuNuit,
-                    style = MaterialTheme.typography.labelMedium
+                    color = if (selected) OrangeDeep else Navy,
+                    style = video.vitrine.core.designsystem.VitrineText.Label
                 )
             }
         }
@@ -449,7 +460,17 @@ private fun ChampPrix(
             val chiffres = brut.filter { it.isDigit() }.take(9)
             onValue(chiffres)
         },
-        placeholder = { Text(exemple.ifBlank { saisieIci }) },
+        placeholder = { Text(exemple.ifBlank { saisieIci }, color = Muted) },
+        shape = FormeTuile,
+        colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = OrangeStore,
+            unfocusedBorderColor = Line,
+            focusedContainerColor = OrangeVoile,
+            unfocusedContainerColor = Blanc,
+            focusedTextColor = Navy,
+            unfocusedTextColor = Navy,
+            errorBorderColor = AmbreAlerte
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .onFocusChanged { focusActif = it.isFocused },

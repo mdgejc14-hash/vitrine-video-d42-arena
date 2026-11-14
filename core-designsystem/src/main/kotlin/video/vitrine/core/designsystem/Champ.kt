@@ -25,6 +25,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,6 +50,8 @@ fun ChampFormulaire(
     multiligne: Boolean = false,
     compteurMax: Int? = null,
     typeClavier: KeyboardType = KeyboardType.Text,
+    actionClavier: ImeAction = ImeAction.Default,
+    surSuivant: (() -> Unit)? = null,
     testTag: String? = null
 ) {
     var focus by remember { mutableStateOf(false) }
@@ -66,6 +70,8 @@ fun ChampFormulaire(
             placeholder = placeholder,
             multiligne = multiligne,
             typeClavier = typeClavier,
+            actionClavier = actionClavier,
+            surSuivant = surSuivant,
             testTag = testTag
         )
         MessagesChamp(erreur = erreur, aide = aide, valeur = valeur, compteurMax = compteurMax)
@@ -83,6 +89,8 @@ private fun SaisieChamp(
     placeholder: String?,
     multiligne: Boolean,
     typeClavier: KeyboardType,
+    actionClavier: ImeAction,
+    surSuivant: (() -> Unit)?,
     testTag: String?
 ) {
     val forme = FormeTuile
@@ -106,7 +114,15 @@ private fun SaisieChamp(
             textStyle = TextStyle(fontFamily = Inter, fontSize = 15.sp, color = Navy),
             cursorBrush = SolidColor(OrangeStore),
             singleLine = !multiligne,
-            keyboardOptions = KeyboardOptions(keyboardType = typeClavier),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = typeClavier,
+                imeAction = if (multiligne) ImeAction.Default else actionClavier
+            ),
+            keyboardActions = if (surSuivant != null) {
+                KeyboardActions(onNext = { surSuivant() })
+            } else {
+                KeyboardActions.Default
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { f -> surFocusChange(f.isFocused) },
@@ -130,7 +146,10 @@ private fun MessagesChamp(erreur: String?, aide: String?, valeur: String, compte
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 6.dp),
+            .padding(top = 6.dp)
+            // D42.33 §7.5 : hauteur RÉSERVÉE — l'apparition de l'erreur ne
+            // déplace JAMAIS les éléments sous le champ (leçon D42.30).
+            .heightIn(min = 18.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         val message = erreur ?: aide

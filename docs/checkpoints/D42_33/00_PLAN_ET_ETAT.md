@@ -40,8 +40,8 @@ servent de référence de trace pour le fondateur. Aucune valeur inventée depui
 | 2 | `02_TOKENS.md` | Color/Type/Shape/Dimens/Elevation + polices locales + Theme | ⬜ |
 | 3 | `03_COMPOSANTS.md` | 18 composants uniques core-designsystem | ⬜ |
 | 4 | `04_ONBOARDING.md` | ouverture, carrousel, langue, auth, code parrain, secteurs, bienvenue | ⬜ |
-| 5 | `05_CATALOGUE.md` | catalogue, vignettes, détail gabarit | ⬜ |
-| 6 | `06_BRIEF_FORMULAIRES.md` | brief 8 étapes, champs, ReadyCheck + §9.6 préparation caméra | ⬜ |
+| 5 | `05_CATALOGUE.md` | catalogue, vignettes, détail gabarit | ✅ |
+| 6 | `06_BRIEF_FORMULAIRES.md` | brief 8 étapes, champs, ReadyCheck + §9.6 préparation caméra | ✅ |
 | 7 | `07_CAMERA.md` | viseur, overlay, countdown, REC, revue des prises, consentement | ⬜ |
 | 8 | `08_MONTAGE_EXPORT.md` | aperçu, montage en cours, export prêt, partage | ⬜ |
 | 9 | `09_DASHBOARD_PARRAINAGE.md` | dashboard §9.3, mes vidéos, réglages | ⬜ |
@@ -78,3 +78,16 @@ le rendu 700/800 doit être garanti sur les appareils économiques API 24-25 du 
   branche créée). Sources fondateur rapatriées du Drive : spec md (418 l. lues), note PDF (6 p.
   extraites), 34 maquettes PNG vérifiées (PNG 1179×2556), système de design, avant/après →
   `SOURCES/` (28 Mo). Polices + OFL téléchargées. Audit dépôt (01_AUDIT_VISUEL.md).
+
+- **Familles 04-05** : onboarding §9.1/9.2/9.4 complet (commits eba2f2d, fd74b69,
+  16d78c6) + catalogue §8-C (16d78c6). Leçons CI : réassignation `val` paramètre →
+  callback ; `weight` hors RowScope → paramètre modifier ; clé i18n FR-only.
+- **Rollback sandbox n°5** (13:50 UTC) : HEAD local repéré à 8d530b1 (D42.27),
+  famille 06 non commitée perdue de la sandbox — **refaite intégralement** ;
+  GitHub = vérité durable (16d78c6 intact), débris archivés
+  (`/home/user/debris_*.tar.gz`), remote+identité git restaurés.
+- **Sortie de la boule CI** (ordre fondateur) : diagnostic run 43600512583 =
+  detekt LongMethod CatalogScreen + Robolectric MavenArtifactFetcher (404
+  transient Maven Central au runtime, hors Gradle). Fix déterministe offline
+  (voir 06_BRIEF_FORMULAIRES.md) + extractions detekt. **Un seul commit/push
+  pour famille 05-fix + 06 + CI** — plus de micro-campagnes.

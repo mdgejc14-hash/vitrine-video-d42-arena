@@ -74,76 +74,14 @@ fun CatalogScreen(
     // un choix) — on garde alors l'ancien comportement de sélection intégrée.
     var filtresOuverts by remember { mutableStateOf(!secteurFixe) }
     Column(modifier = Modifier.fillMaxSize()) {
-        if (offline) {
-            // D42.33 (§7.14) : bandeau hors-ligne unique du design system.
-            video.vitrine.core.designsystem.BandeauEtat(
-                titre = stringResource(R.string.catalog_offline),
-                texte = null,
-                icone = video.vitrine.core.designsystem.R.drawable.ic_wifioff,
-                action = null,
-                surAction = null,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
-            )
-        }
-        Column(
-            modifier = Modifier.padding(horizontal = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            video.vitrine.core.designsystem.MarqueVitrine(taille = 40.dp, logo = 28.dp)
-            // D42.30 : le titre et l'action « Changer de secteur » partagent la
-            // même ligne (retour terrain : secteur affiché + action discrète).
-            // D42.32 (P0-1) : l'action disparaît quand le secteur est déjà
-            // choisi — le retour arrière remplace le changement de secteur.
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    stringResource(R.string.catalog_title),
-                    style = video.vitrine.core.designsystem.VitrineText.H2,
-                    color = video.vitrine.core.designsystem.Navy,
-                    modifier = Modifier.weight(1f),
-                )
-                if (!secteurFixe) {
-                    Text(
-                        stringResource(R.string.catalog_change_sector),
-                        style = video.vitrine.core.designsystem.VitrineText.Tiny.copy(
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.W700
-                        ),
-                        color = video.vitrine.core.designsystem.OrangeDeep,
-                        modifier = Modifier
-                            .clickable { filtresOuverts = !filtresOuverts }
-                            .padding(6.dp),
-                    )
-                }
-            }
-            // D42.32 (Lot 2) : badge secteur compact (pastille de la teinte
-            // métier + libellé) — remplace la phrase « Gabarits adaptés à
-            // votre commerce : … » tronquée et confuse avec le secteur Commerce.
-            if (sector != Sector.TOUS) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(10.dp)
-                            .background(
-                                paletteSecteur(sector).first,
-                                androidx.compose.foundation.shape.CircleShape,
-                            )
-                    )
-                    Text(
-                        sectorLabel(sector),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
-            if (filtresOuverts && !secteurFixe) {
-                SectorRow(sector) { sector = it }
-            }
-        }
+        EnTeteCatalogue(
+            offline = offline,
+            secteurFixe = secteurFixe,
+            sector = sector,
+            filtresOuverts = filtresOuverts,
+            surSector = { sector = it },
+            surToggleFiltres = { filtresOuverts = !filtresOuverts }
+        )
         if (gabarits.isNotEmpty()) {
             GabaritLayout(
                 GabaritCatalog.visible(gabarits, sector),
@@ -154,6 +92,92 @@ fun CatalogScreen(
         } else {
             val skins = manifest?.bySector(sector) ?: emptyList()
             SkinLayout(skins, sector == Sector.TOUS, onSkinClick, Modifier.weight(1f))
+        }
+    }
+}
+
+/**
+ * D42.33 (detekt LongMethod) : en-tête du catalogue — bandeau hors-ligne
+ * §7.14, marque §7.2, titre H2 + action « Changer de secteur » (D42.30/32),
+ * badge secteur compact, rangée de filtres (repli défensif). Aucune logique
+ * nouvelle : extraction pure de CatalogScreen.
+ */
+@Composable
+private fun EnTeteCatalogue(
+    offline: Boolean,
+    secteurFixe: Boolean,
+    sector: Sector,
+    filtresOuverts: Boolean,
+    surSector: (Sector) -> Unit,
+    surToggleFiltres: () -> Unit,
+) {
+    if (offline) {
+        // D42.33 (§7.14) : bandeau hors-ligne unique du design system.
+        video.vitrine.core.designsystem.BandeauEtat(
+            titre = stringResource(R.string.catalog_offline),
+            texte = null,
+            icone = video.vitrine.core.designsystem.R.drawable.ic_wifioff,
+            action = null,
+            surAction = null,
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
+        )
+    }
+    Column(
+        modifier = Modifier.padding(horizontal = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        video.vitrine.core.designsystem.MarqueVitrine(taille = 40.dp, logo = 28.dp)
+        // D42.30 : le titre et l'action « Changer de secteur » partagent la
+        // même ligne (retour terrain : secteur affiché + action discrète).
+        // D42.32 (P0-1) : l'action disparaît quand le secteur est déjà
+        // choisi — le retour arrière remplace le changement de secteur.
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                stringResource(R.string.catalog_title),
+                style = video.vitrine.core.designsystem.VitrineText.H2,
+                color = video.vitrine.core.designsystem.Navy,
+                modifier = Modifier.weight(1f),
+            )
+            if (!secteurFixe) {
+                Text(
+                    stringResource(R.string.catalog_change_sector),
+                    style = video.vitrine.core.designsystem.VitrineText.Tiny.copy(
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.W700
+                    ),
+                    color = video.vitrine.core.designsystem.OrangeDeep,
+                    modifier = Modifier
+                        .clickable { surToggleFiltres() }
+                        .padding(6.dp),
+                )
+            }
+        }
+        // D42.32 (Lot 2) : badge secteur compact (pastille de la teinte
+        // métier + libellé).
+        if (sector != Sector.TOUS) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(10.dp)
+                        .background(
+                            paletteSecteur(sector).first,
+                            androidx.compose.foundation.shape.CircleShape,
+                        )
+                )
+                Text(
+                    sectorLabel(sector),
+                    style = video.vitrine.core.designsystem.VitrineText.Tiny,
+                    color = video.vitrine.core.designsystem.Muted,
+                )
+            }
+        }
+        if (filtresOuverts && !secteurFixe) {
+            SectorRow(sector, surSector)
         }
     }
 }

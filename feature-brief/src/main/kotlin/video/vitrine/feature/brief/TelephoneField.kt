@@ -28,6 +28,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import video.vitrine.core.designsystem.BleuNuit
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.heightIn
+import video.vitrine.core.designsystem.AmbreAlerte
+import video.vitrine.core.designsystem.BleuVoile
+import video.vitrine.core.designsystem.Blanc
+import video.vitrine.core.designsystem.FormePill
+import video.vitrine.core.designsystem.FormeTuile
+import video.vitrine.core.designsystem.Line
+import video.vitrine.core.designsystem.Muted
+import video.vitrine.core.designsystem.Navy
+import video.vitrine.core.designsystem.OrangeVoile
 import video.vitrine.core.designsystem.OrangeStore
 
 /**
@@ -127,11 +138,34 @@ private fun LignePaysEtNumero(
     ) {
         OutlinedButton(
             onClick = onOuvrirPays,
-            modifier = Modifier.width(132.dp)
+            shape = FormeTuile,
+            colors = androidx.compose.material3.ButtonDefaults.outlinedButtonColors(
+                containerColor = Blanc,
+                contentColor = Navy
+            ),
+            border = androidx.compose.foundation.BorderStroke(1.dp, Line),
+            modifier = Modifier
+                .width(132.dp)
+                .heightIn(min = 56.dp)
         ) {
+            // D42.33 : pastille typographique du code pays (BJ, FR…) —
+            // cohérente avec l'écran langue ; plus d'emoji drapeau (§6).
+            Box(
+                modifier = Modifier
+                    .background(BleuVoile, FormePill)
+                    .padding(horizontal = 7.dp, vertical = 3.dp)
+            ) {
+                Text(
+                    pays.uppercase(),
+                    style = video.vitrine.core.designsystem.VitrineText.Label,
+                    color = Navy
+                )
+            }
             Text(
-                TelephoneValidator.drapeau(pays) + " " + TelephoneValidator.indicatif(pays),
-                style = MaterialTheme.typography.titleMedium
+                TelephoneValidator.indicatif(pays),
+                style = video.vitrine.core.designsystem.VitrineText.Body,
+                color = Navy,
+                modifier = Modifier.padding(start = 6.dp)
             )
         }
         val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
@@ -140,7 +174,22 @@ private fun LignePaysEtNumero(
             onValueChange = onSaisie,
             modifier = Modifier.weight(1f),
             singleLine = true,
-            placeholder = { Text(stringResource(R.string.brief_phone_placeholder)) },
+            shape = FormeTuile,
+            colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = OrangeStore,
+                unfocusedBorderColor = Line,
+                focusedContainerColor = OrangeVoile,
+                unfocusedContainerColor = Blanc,
+                focusedTextColor = Navy,
+                unfocusedTextColor = Navy,
+                errorBorderColor = AmbreAlerte
+            ),
+            placeholder = {
+                Text(
+                    stringResource(R.string.brief_phone_placeholder),
+                    color = Muted
+                )
+            },
             keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
                 keyboardType = KeyboardType.Phone,
                 // D42.32 (Lot 8) : « Suivant » comme les autres champs du brief.
@@ -206,7 +255,21 @@ private fun DialogueChoixPays(
                 value = recherche,
                 onValueChange = onRecherche,
                 singleLine = true,
-                placeholder = { Text(stringResource(R.string.brief_phone_search)) },
+                shape = FormeTuile,
+                colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = OrangeStore,
+                    unfocusedBorderColor = Line,
+                    focusedContainerColor = OrangeVoile,
+                    unfocusedContainerColor = Blanc,
+                    focusedTextColor = Navy,
+                    unfocusedTextColor = Navy
+                ),
+                placeholder = {
+                    Text(
+                        stringResource(R.string.brief_phone_search),
+                        color = Muted
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
@@ -242,20 +305,29 @@ private fun LignePays(region: String, langue: String, onChoix: (String) -> Unit)
             .padding(vertical = 10.dp, horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            TelephoneValidator.drapeau(region),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(end = 10.dp)
-        )
+        Box(
+            modifier = Modifier
+                .background(BleuVoile, FormePill)
+                .padding(horizontal = 7.dp, vertical = 3.dp)
+        ) {
+            Text(
+                region.uppercase(),
+                style = video.vitrine.core.designsystem.VitrineText.Label,
+                color = Navy
+            )
+        }
         Text(
             TelephoneValidator.nomPays(region, langue),
-            modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.bodyLarge
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 10.dp),
+            style = video.vitrine.core.designsystem.VitrineText.Body,
+            color = Navy
         )
         Text(
             TelephoneValidator.indicatif(region),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            style = video.vitrine.core.designsystem.VitrineText.Sub,
+            color = Muted
         )
     }
 }
