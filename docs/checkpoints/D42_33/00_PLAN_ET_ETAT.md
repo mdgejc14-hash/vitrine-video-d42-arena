@@ -78,6 +78,13 @@ le rendu 700/800 doit être garanti sur les appareils économiques API 24-25 du 
   branche créée). Sources fondateur rapatriées du Drive : spec md (418 l. lues), note PDF (6 p.
   extraites), 34 maquettes PNG vérifiées (PNG 1179×2556), système de design, avant/après →
   `SOURCES/` (28 Mo). Polices + OFL téléchargées. Audit dépôt (01_AUDIT_VISUEL.md).
+- **J14 (mission v2, Lot 1)** : ordre fondateur du 14/11 reçu (audit fidélité + galerie
+  exhaustive, échéance 18/11/2026). Rollback sandbox n°8 réparé (config Git réécrite, fetch,
+  checkout -f -B d42.33-visual-redesign 3a28366, arbre propre). Livrès : `SCREEN_INVENTORY.csv`
+  (90 états / 12 parcours / statuts honnêtes), `DESIGN_FIDELITY_AUDIT.md` (audit écran par
+  écran + preuve programmatique tokens), `visual-review/tools/audit_tokens.py`. Découverte :
+  87 AVANT émulateur D42.32 déjà au dépôt → AVANT/APRÈS alignables. 57 captures APRÈS à
+  produire au Lot 2. Checkpoint : `14_AUDIT_FIDELITE_LOT1.md`.
 
 - **Familles 04-05** : onboarding §9.1/9.2/9.4 complet (commits eba2f2d, fd74b69,
   16d78c6) + catalogue §8-C (16d78c6). Leçons CI : réassignation `val` paramètre →
