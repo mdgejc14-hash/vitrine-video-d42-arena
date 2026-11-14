@@ -43,7 +43,7 @@ servent de référence de trace pour le fondateur. Aucune valeur inventée depui
 | 5 | `05_CATALOGUE.md` | catalogue, vignettes, détail gabarit | ✅ |
 | 6 | `06_BRIEF_FORMULAIRES.md` | brief 8 étapes, champs, ReadyCheck + §9.6 préparation caméra | ✅ |
 | 7 | `07_CAMERA.md` | viseur, overlay, countdown, REC, revue des prises, consentement | ✅ |
-| 8 | `08_MONTAGE_EXPORT.md` | aperçu, montage en cours, export prêt, partage | ⬜ |
+| 8 | `08_MONTAGE_EXPORT.md` | aperçu, montage en cours, export prêt, partage | ✅ |
 | 9 | `09_DASHBOARD_PARRAINAGE.md` | dashboard §9.3, mes vidéos, réglages | ⬜ |
 | 10 | `10_TARIFICATION.md` | formules, quota épuisé, aide & contact §9.7 | ⬜ |
 | 11 | `11_RESPONSIVE_ACCESSIBILITE.md` | 6 contrôles §12 (fontScale 1,3 / 360×640 / rotation / EN / contrastes / cibles) | ⬜ |

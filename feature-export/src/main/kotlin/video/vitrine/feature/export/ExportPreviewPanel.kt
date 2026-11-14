@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,7 +14,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import video.vitrine.core.designsystem.OrangeStore
 
 /**
  * Panneau de previsualisation export : typographie cinetique du script voix
@@ -33,19 +31,23 @@ fun ExportPreviewPanel(
     val words = script.split(Regex("\\s+")).filter { it.isNotBlank() }
     val keyword = words.maxByOrNull { w -> w.count { c -> c.isDigit() } * 10 + w.length }
     Column(
-        modifier = modifier.fillMaxWidth().padding(16.dp),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 4.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Text(stringResource(R.string.export_preview_title), style = MaterialTheme.typography.titleLarge)
+        Text(
+            stringResource(R.string.export_preview_title),
+            style = video.vitrine.core.designsystem.VitrineText.H3,
+            color = video.vitrine.core.designsystem.Navy
+        )
         Text(
             stringResource(R.string.export_preview_meta, durationS, clientRushCount, cameraRushCount),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = video.vitrine.core.designsystem.VitrineText.Tiny,
+            color = video.vitrine.core.designsystem.Muted,
         )
         Text(
             stringResource(R.string.export_preview_typo),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = video.vitrine.core.designsystem.VitrineText.Label,
+            color = video.vitrine.core.designsystem.Muted,
         )
         words.chunked(4).forEach { line ->
             Row(
@@ -55,12 +57,21 @@ fun ExportPreviewPanel(
                 line.forEach { word ->
                     Text(
                         text = word,
-                        fontSize = if (word == keyword) 26.sp else 18.sp,
-                        fontWeight = if (word == keyword) FontWeight.ExtraBold else FontWeight.Normal,
-                        color = if (word == keyword) {
-                            OrangeStore
+                        style = if (word == keyword) {
+                            // D42.33 : chiffre/mot-clé en Jakarta ExtraBold
+                            // OrangeDeep (AA sur fond clair §3).
+                            androidx.compose.ui.text.TextStyle(
+                                fontFamily = video.vitrine.core.designsystem.Jakarta,
+                                fontSize = 26.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = video.vitrine.core.designsystem.OrangeDeep,
+                            )
                         } else {
-                            MaterialTheme.colorScheme.onSurface
+                            androidx.compose.ui.text.TextStyle(
+                                fontFamily = video.vitrine.core.designsystem.Inter,
+                                fontSize = 17.sp,
+                                color = video.vitrine.core.designsystem.Navy,
+                            )
                         },
                         textAlign = TextAlign.Start,
                     )
