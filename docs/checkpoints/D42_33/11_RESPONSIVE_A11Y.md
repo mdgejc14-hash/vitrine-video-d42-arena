@@ -85,3 +85,16 @@ d'approbation visuelle** — aucun token modifié unilatéralement.
 Aucun contrat touché (dimensions/tokens additifs uniquement) ; les tests
 visuels existants (Dashboard/Paywall/L10n) restent inchangés et verts
 (run CI de cette famille).
+
+## Incident CI (run 43609416917, FAILURE) — causes racines et corrections
+
+1. **`petit ecran anglais - paywall lisible` (AssertionError)** : l'assertion
+   prix durcissait « / 30 j » — en anglais `period_30d` = « 30 d ».
+   Correction : assertion construite avec `ctx.getString(R.string.period_30d)`
+   (la période est localisée, le montant reste FCFA — devise découplée).
+2. **`fontScale 1,3 - parrainage et reglages` (IllegalStateException)** :
+   deux `setContent` dans un même test Compose (la règle attache un seul
+   scénario). Correction : test scindé en deux (`parrainage` / `reglages`).
+
+Leçons : ① jamais de libellé traduit en dur dans une assertion — toujours
+`ctx.getString` ; ② un `setContent` par test, toujours.

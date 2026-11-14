@@ -141,7 +141,9 @@ class ResponsiveA11yCheckTest {
         }
         compose.onNodeWithText(ctx.getString(R.string.paywall_title)).assertExists()
         compose.onNodeWithText("· 500 FCFA").assertExists()
-        compose.onNodeWithText("· 3 000 FCFA / 30 j").assertExists()
+        compose.onNodeWithText(
+            "· 3 000 FCFA / " + ctx.getString(R.string.period_30d)
+        ).assertExists()
         compose.onNodeWithText(ctx.getString(R.string.plan_recommended)).assertExists()
         compose.onNodeWithText(ctx.getString(R.string.paywall_later)).assertExists()
         capturer("f11-paywall-petit-ecran-en.png")
@@ -173,10 +175,10 @@ class ResponsiveA11yCheckTest {
         capturer("f11-dashboard-paysage-fr.png")
     }
 
-    /** Contrôles 1+2 : parrainage + réglages sous fontScale 1,3 petit écran. */
+    /** Contrôles 1+2 : parrainage sous fontScale 1,3 petit écran. */
     @Test
     @Config(sdk = [34], qualifiers = "fr-w360dp-h640dp")
-    fun `fontScale 1,3 - parrainage et reglages`() {
+    fun `fontScale 1,3 - parrainage`() {
         val ctx = contexte()
         contenu(fontScale = 1.3f) {
             ReferralScreen(
@@ -193,7 +195,13 @@ class ResponsiveA11yCheckTest {
         compose.onNodeWithText("SHALOM-842").assertExists()
         compose.onNodeWithTag("ref2_gauge").assertExists()
         capturer("f11-parrainage-fontscale13-fr.png")
+    }
 
+    /** Contrôles 1+2 : réglages sous fontScale 1,3 petit écran. */
+    @Test
+    @Config(sdk = [34], qualifiers = "fr-w360dp-h640dp")
+    fun `fontScale 1,3 - reglages`() {
+        val ctx = contexte()
         contenu(fontScale = 1.3f) {
             SettingsScreen(
                 accountEmail = "marchanda@vitrine.video",
