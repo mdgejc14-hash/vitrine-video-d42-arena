@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import video.vitrine.core.designsystem.OrangeStore
 
 /**
  * Panneau de previsualisation export : typographie cinetique du script voix
@@ -57,7 +58,7 @@ fun ExportPreviewPanel(
                         fontSize = if (word == keyword) 26.sp else 18.sp,
                         fontWeight = if (word == keyword) FontWeight.ExtraBold else FontWeight.Normal,
                         color = if (word == keyword) {
-                            androidx.compose.ui.graphics.Color(0xFFF95C0F)
+                            OrangeStore
                         } else {
                             MaterialTheme.colorScheme.onSurface
                         },

@@ -42,6 +42,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import video.vitrine.core.designsystem.AmbreAlerte
 import video.vitrine.core.designsystem.BleuNuit
 import video.vitrine.core.designsystem.BleuVoile
 import video.vitrine.core.designsystem.OrangeStore
@@ -414,7 +415,7 @@ fun PaywallScreen(ui: PaywallUi, onChoose: (String) -> Unit) {
         } else if (ui.locked) {
             Text(
                 stringResource(R.string.paywall_quota),
-                color = Color(0xFFB26A00)
+                color = AmbreAlerte
             )
         }
         ui.cards.forEach { card ->

@@ -15,10 +15,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import video.vitrine.core.designsystem.AmbreAlerte
 import video.vitrine.core.designsystem.VitrineLogoHeader
 import video.vitrine.core.designsystem.VitrineTheme
 
@@ -64,7 +64,7 @@ fun BriefScreen(
         // D41 (F67) : message d'erreur = ressource traduite (x4), plus de FR en dur.
         error?.messageRes?.let { res ->
             val args = error?.messageArgs.orEmpty().toTypedArray()
-            Text(stringResource(res, *args), color = Color(0xFFB26A00))
+            Text(stringResource(res, *args), color = AmbreAlerte)
         }
         Button(
             modifier = Modifier.fillMaxWidth(),

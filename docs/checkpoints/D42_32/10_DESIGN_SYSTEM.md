@@ -62,6 +62,32 @@ téléchargement de police (coût data réel des commerçants). Hiérarchie Mate
   pas faire croire à un bouton. Conservé.
 - **Palette statuts HUD** ≠ palette marque : fonctionnelle (sémantique vidéo),
   documentée ici même.
+- **Gradients sectoriels des vignettes** (`VignetteCatalogue` : 7 couples
+  sombres par secteur — mode, coiffure, restauration, BTP, immo/auto, commerce,
+  tous) : direction artistique D'IDENTITÉ par secteur sur la scène sombre du
+  catalogue ; les rabattre sur navy/orange détruirait la différenciation.
+- **Scène sombre du catalogue** (`CatalogScreen` fond `0xFF1B1B1F`) : galerie
+  cinématique destinée à mettre les vignettes vidéo en valeur — pas une surface
+  de lecture, reste sombre par design.
+- **Statuts de synchronisation dashboard** (`SyncVert 0xFF178A4B`,
+  `SyncGris 0xFF9AA3AF`) : sémantique d'état (synchronisé/en attente), privées
+  au module dashboard.
+- `CameraMoves.eraseColor(0xFFFFFFFF)` : opération technique bitmap, pas un
+  choix UI.
+
+## 3bis. Corrections §6 (harmonisation réelle, sans refonte)
+
+- **`AmbreAlerte` (0xFFB26A00) ajouté aux tokens** : la valeur était dupliquée
+  en dur dans `BriefScreen` (message d'erreur) et `DashboardScreens`
+  (avertissement quota paywall) — token unique, mêmes deux usages.
+- **`ExportPreviewPanel` : mot-clé mis en avant avec le token `OrangeStore`**
+  au lieu de la valeur brute `0xFFF95C0F` (dérive identique à la marque,
+  invisible à l'œil mais interdisait tout ajustement centralisé).
+- Audit boutons/champs/cartes/rayons/badges du parcours commercial :
+  boutons M3 standards (thème), champs OutlinedTextField + zone erreur 130 %
+  (Lot 8), rayons déjà dans la grille 6/8/10/12, badges sur voiles —
+  **aucune autre dérive trouvée** (grep exhaustif des `Color(0x…)` hors
+  core-designsystem : 37 occurrences, toutes classées ci-dessus).
 
 ## 4. Changement DS ⇒ tests ciblés (§6)
 
@@ -79,3 +105,7 @@ la vérification visuelle passe par la galerie §8 (captures authentiques,
   d'action standard — Surface tonalElevation 3, bouton plein **52 dp**, hauteur
   sur le bouton, padding sur conteneur. Couleurs HUD caméra et ambre BriefScreen:67
   conservés (§3 ci-dessus).
+- **§6 harmonisation** : token `AmbreAlerte` créé et appliqué (BriefScreen,
+  DashboardScreens), `ExportPreviewPanel` → `OrangeStore`, déviations justifiées
+  documentées (§3/§3bis). Tests ciblés consommateurs : android-ci (modules
+  feature-brief, feature-dashboard, feature-export, core-designsystem).

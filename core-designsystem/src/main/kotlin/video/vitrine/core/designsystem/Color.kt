@@ -18,3 +18,9 @@ val GrisDoux = Color(0xFFF7F8FC)
 val GrisLiserai = Color(0xFFE2E8F0)
 val OrangeVoile = Color(0xFFFFF1E8)
 val BleuVoile = Color(0xFFE9F0FF)
+
+/** D42.32 (§6) : ambre d'AVERTISSEMENT (champs, avertissements quota) —
+ *  volontairement distinct de l'orange d'action OrangeStore pour ne pas
+ *  ressembler à un bouton ; contraste AA sur fond clair. Était dupliquée
+ *  en valeur brute dans BriefScreen et DashboardScreens : token unique. */
+val AmbreAlerte = Color(0xFFB26A00)
