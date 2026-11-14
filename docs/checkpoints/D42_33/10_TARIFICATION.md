@@ -87,3 +87,21 @@ plus aucune occurrence de l'ancien format `"  ·  "`.
   grille 3 colonnes (prix illisible à 106 dp de large).
 - Solde 0 en OrangeDeep (pas en blanc/navy) : état d'attention honnête,
   pas une alerte bloquante.
+
+## Incident CI (run 43608092097, FAILURE) — causes racines et corrections
+
+1. **`:core-designsystem:detekt` — CyclomaticComplexMethod 16/15 sur
+   `CarteFormule`** : les 3 paramètres additifs (`?.let/?:`) ont fait
+   franchir le seuil. Correction : extraction du `Text` prix en composable
+   privé `PrixFormule` (CarteFormule ≈ 13/15, PrixFormule ≈ 5/15).
+2. **`:feature-dashboard:compileDebugUnitTestKotlin` — "No value passed for
+   parameter 'onChoose'"** (PaywallUiCheckTest l.56/81/106) : avec le 3e
+   paramètre `onLater` (défaut), la **trailing lambda se lie au DERNIER
+   paramètre** — `PaywallScreen(ui) { }` liait `{}` à onLater. Correction :
+   les 5 appels de test (4 PaywallUiCheckTest + 1 DashboardL10nCheckTest)
+   passent désormais `onChoose = { }` en argument nommé.
+
+Leçons : ① compteur de complexité à re-vérifier à chaque paramètre additif
+conditionnel sur un composant au seuil ; ② trailing lambda + nouveau
+paramètre fonctionnel en dernière position = piège Kotlin systématique,
+auditer TOUS les appelants par grep avant push.

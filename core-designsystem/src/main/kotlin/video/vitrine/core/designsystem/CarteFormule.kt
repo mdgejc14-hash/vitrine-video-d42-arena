@@ -68,14 +68,11 @@ fun CarteFormule(
                 BadgeVitrine(texte = libelleBadge, teinte = teinteBadge)
             }
         }
-        Text(
-            prix,
-            style = taillePrix?.let { VitrineText.Num.copy(fontSize = it) }
-                ?: VitrineText.Num,
-            color = if (recommandee) Blanc else Navy,
-            modifier = Modifier
-                .let { m -> testTagPrix?.let { m.testTag(it) } ?: m }
-                .padding(top = 4.dp)
+        PrixFormule(
+            prix = prix,
+            recommandee = recommandee,
+            taillePrix = taillePrix,
+            testTagPrix = testTagPrix
         )
         AvantagesFormule(avantages = avantages, recommandee = recommandee)
         Spacer(Modifier.height(14.dp))
@@ -87,6 +84,25 @@ fun CarteFormule(
             testTag = testTag
         )
     }
+}
+
+/** Prix de la formule : Num (taille modulable), blanc sur carte recommandée. */
+@Composable
+private fun PrixFormule(
+    prix: String,
+    recommandee: Boolean,
+    taillePrix: TextUnit?,
+    testTagPrix: String?
+) {
+    Text(
+        prix,
+        style = taillePrix?.let { VitrineText.Num.copy(fontSize = it) }
+            ?: VitrineText.Num,
+        color = if (recommandee) Blanc else Navy,
+        modifier = Modifier
+            .let { m -> testTagPrix?.let { m.testTag(it) } ?: m }
+            .padding(top = 4.dp)
+    )
 }
 
 /** Ligne d'avantages (chaînes du dépôt, grille tarifaire officielle). */

@@ -37,7 +37,10 @@ class PaywallUiCheckTest {
     fun `tarifs exacts UEMOA et tags stables`() {
         compose.setContent {
             VitrineTheme {
-                PaywallScreen(PaywallMapper.ui(welcomeCreditsLeft = 0, exportsLimit = 0)) { }
+                PaywallScreen(
+                    PaywallMapper.ui(welcomeCreditsLeft = 0, exportsLimit = 0),
+                    onChoose = { }
+                )
             }
         }
         // D42.33 (famille 10) : format « · N FCFA » sur une ligne (CarteFormule).
@@ -58,8 +61,9 @@ class PaywallUiCheckTest {
                         welcomeCreditsLeft = 0,
                         exportsLimit = 0,
                         zone = PaywallZone.MONDE
-                    )
-                ) { }
+                    ),
+                    onChoose = { }
+                )
             }
         }
         compose.onNodeWithText(
@@ -78,7 +82,10 @@ class PaywallUiCheckTest {
     fun `grille fondateur - limites exactes, pas d'illimite, bouton inactif`() {
         compose.setContent {
             VitrineTheme {
-                PaywallScreen(PaywallMapper.ui(welcomeCreditsLeft = 0, exportsLimit = 0)) { }
+                PaywallScreen(
+                    PaywallMapper.ui(welcomeCreditsLeft = 0, exportsLimit = 0),
+                    onChoose = { }
+                )
             }
         }
         val ctx: Context = ApplicationProvider.getApplicationContext()
@@ -103,7 +110,10 @@ class PaywallUiCheckTest {
     fun `aplats charte presents dans la capture`() {
         compose.setContent {
             VitrineTheme {
-                PaywallScreen(PaywallMapper.ui(welcomeCreditsLeft = 0, exportsLimit = 0)) { }
+                PaywallScreen(
+                    PaywallMapper.ui(welcomeCreditsLeft = 0, exportsLimit = 0),
+                    onChoose = { }
+                )
             }
         }
         val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()

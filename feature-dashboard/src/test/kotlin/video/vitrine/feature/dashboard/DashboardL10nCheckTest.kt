@@ -48,7 +48,10 @@ class DashboardL10nCheckTest {
     private fun verifierPaywall(nomPng: String) {
         compose.setContent {
             VitrineTheme {
-                PaywallScreen(PaywallMapper.ui(welcomeCreditsLeft = 0, exportsLimit = 0)) { }
+                PaywallScreen(
+                    PaywallMapper.ui(welcomeCreditsLeft = 0, exportsLimit = 0),
+                    onChoose = { }
+                )
             }
         }
         val ctx = contexte()
