@@ -460,7 +460,7 @@ private fun CarteSoldeBienvenue(credits: Int) {
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 repeat(credits) { index ->
-                    TuileVideoBienvenue(numero = index + 1)
+                    TuileVideoBienvenue(numero = index + 1, modifier = Modifier.weight(1f))
                 }
             }
         } else {
@@ -486,10 +486,9 @@ private fun CarteSoldeBienvenue(credits: Int) {
 
 /** Tuile « Vidéo n » : rayon 18, filet blanc 8 %, icône video orange (§9.4). */
 @Composable
-private fun TuileVideoBienvenue(numero: Int) {
+private fun TuileVideoBienvenue(numero: Int, modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
-            .weight(1f)
+        modifier = modifier
             .clip(RoundedCornerShape(18.dp))
             .border(1.dp, Color(0x14FFFFFF), RoundedCornerShape(18.dp))
             .padding(vertical = 14.dp),
