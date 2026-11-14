@@ -57,71 +57,97 @@ fun ChampFormulaire(
             style = VitrineText.Tiny.copy(fontWeight = FontWeight.W600),
             color = Navy
         )
-        val forme = FormeTuile
-        val actif = focus && erreur == null
-        val couleurFilet = when {
-            erreur != null -> AmbreAlerte
-            actif -> OrangeStore
-            else -> Line
-        }
-        Row(
+        SaisieChamp(
+            valeur = valeur,
+            surChangement = surChangement,
+            focus = focus,
+            erreur = erreur,
+            placeholder = placeholder,
+            multiligne = multiligne,
+            typeClavier = typeClavier,
+            testTag = testTag
+        )
+        MessagesChamp(erreur = erreur, aide = aide, valeur = valeur, compteurMax = compteurMax)
+    }
+}
+
+/** Saisie (hauteur 56 ou multiligne 96+, filet focus/erreur §7.9). */
+@Composable
+private fun SaisieChamp(
+    valeur: String,
+    surChangement: (String) -> Unit,
+    focus: Boolean,
+    erreur: String?,
+    placeholder: String?,
+    multiligne: Boolean,
+    typeClavier: KeyboardType,
+    testTag: String?
+) {
+    val forme = FormeTuile
+    val actif = focus && erreur == null
+    val couleurFilet = if (erreur != null) AmbreAlerte else if (actif) OrangeStore else Line
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 6.dp)
+            .let { m -> testTag?.let { m.testTag(it) } ?: m }
+            .heightIn(min = if (multiligne) 96.dp else Dims.Champ)
+            .clip(forme)
+            .background(if (actif) OrangeVoile else Blanc)
+            .border(if (actif) 2.dp else 1.dp, couleurFilet, forme)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        BasicTextField(
+            value = valeur,
+            onValueChange = surChangement,
+            textStyle = TextStyle(fontFamily = Inter, fontSize = 15.sp, color = Navy),
+            cursorBrush = SolidColor(OrangeStore),
+            singleLine = !multiligne,
+            keyboardOptions = KeyboardOptions(keyboardType = typeClavier),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 6.dp)
-                .let { m -> testTag?.let { m.testTag(it) } ?: m }
-                .heightIn(min = if (multiligne) 96.dp else Dims.Champ)
-                .clip(forme)
-                .background(if (actif) OrangeVoile else Blanc)
-                .border(if (actif) 2.dp else 1.dp, couleurFilet, forme)
-                .padding(horizontal = 16.dp, vertical = 14.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            BasicTextField(
-                value = valeur,
-                onValueChange = surChangement,
-                textStyle = TextStyle(fontFamily = Inter, fontSize = 15.sp, color = Navy),
-                cursorBrush = SolidColor(OrangeStore),
-                singleLine = !multiligne,
-                keyboardOptions = KeyboardOptions(keyboardType = typeClavier),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onFocusChanged { f -> focus = f.isFocused },
-                decorationBox = { champ ->
-                    if (valeur.isEmpty() && placeholder != null) {
-                        Box(modifier = Modifier.fillMaxWidth()) {
-                            Text(placeholder, style = VitrineText.Body, color = Muted)
-                            champ()
-                        }
-                    } else {
+                .onFocusChanged { f -> focus = f.isFocused },
+            decorationBox = { champ ->
+                if (valeur.isEmpty() && placeholder != null) {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Text(placeholder, style = VitrineText.Body, color = Muted)
                         champ()
                     }
+                } else {
+                    champ()
                 }
+            }
+        )
+    }
+}
+
+/** Aide/erreur + compteur « 124 / 280 » (ambre à 90 % de la limite, §7.9). */
+@Composable
+private fun MessagesChamp(erreur: String?, aide: String?, valeur: String, compteurMax: Int?) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 6.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        val message = erreur ?: aide
+        if (message != null) {
+            Text(
+                message,
+                style = VitrineText.Tiny,
+                color = if (erreur != null) AmbreAlerte else Muted,
+                modifier = Modifier.weight(1f)
             )
+        } else {
+            Box(Modifier.weight(1f))
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 6.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            val message = erreur ?: aide
-            if (message != null) {
-                Text(
-                    message,
-                    style = VitrineText.Tiny,
-                    color = if (erreur != null) AmbreAlerte else Muted,
-                    modifier = Modifier.weight(1f)
-                )
-            } else {
-                Box(Modifier.weight(1f))
-            }
-            if (compteurMax != null) {
-                Text(
-                    "${valeur.length} / $compteurMax",
-                    style = VitrineText.Tiny,
-                    color = if (valeur.length >= compteurMax * 9 / 10) AmbreAlerte else Muted
-                )
-            }
+        if (compteurMax != null) {
+            Text(
+                "${valeur.length} / $compteurMax",
+                style = VitrineText.Tiny,
+                color = if (valeur.length >= compteurMax * 9 / 10) AmbreAlerte else Muted
+            )
         }
     }
 }
