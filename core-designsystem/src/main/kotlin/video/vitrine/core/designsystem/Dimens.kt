@@ -35,7 +35,8 @@ object Dims {
     /** CTA primaire (§7.1). */
     val Cta: Dp = 56.dp
     /** CTA secondaire / lien tertiaire (§7.2). */
-    val CtaSecondaire: Dp = 46.dp
+    /** D42.33 (famille 11, a11y) : 48 dp — cible tactile minimale tenue. */
+    val CtaSecondaire: Dp = 48.dp
     /** Cible tactile minimale — même si le visuel fait 40. */
     val CibleTactile: Dp = 48.dp
     /** Bouton icône (§7.3). */

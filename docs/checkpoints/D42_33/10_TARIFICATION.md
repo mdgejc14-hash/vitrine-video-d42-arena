@@ -1,6 +1,8 @@
 # Famille 10 — Tarification (écran Formules / quota épuisé)
 
-**Statut : TERMINÉE — commit <SHA après push>, CI <run après push>.**
+**Statut : TERMINÉE — commits fbc7f8c (refonte) + fe92f42 (fix CI), CI VERTE
+(android-ci run 43608643954 ; run rouge intermédiaire 43608092097 diagnostiqué
+et corrigé, voir « Incident CI »).**
 
 ## Périmètre (ordre fondateur respecté à la lettre)
 

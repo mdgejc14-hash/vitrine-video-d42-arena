@@ -132,3 +132,16 @@ le rendu 700/800 doit être garanti sur les appareils économiques API 24-25 du 
   écran d'aide créé (ordre fondateur). CinetPay reporté, contrats
   intacts, PaywallMapper intact. price_* recollé via testTagPrix.
   Détails : 10_TARIFICATION.md.
+
+- **Famille 10 VALIDÉE** : fbc7f8c + fix fe92f42, **CI verte 43608643954**
+  (run rouge 43608092097 : detekt complexité CarteFormule + trailing lambda
+  onChoose — diagnostiqués, corrigés, leçons consignées dans 10_TARIFICATION.md).
+  Nota : commit initial brièvement tombé sur main LOCALE (branche perdue au
+  rollback n°7) — repoussé sur d42.33, main locale remise à bb759f8,
+  **aucun push sur main** (vérifié origin/main inchangé).
+
+- **Famille 11 responsive/a11y** : six contrôles — fontScale 1,3 + 360×640 +
+  rotation + EN via ResponsiveA11yCheckTest (Robolectric, captures preuve) ;
+  contraste audité par calcul WCAG (socle conforme, écarts = tokens de marque
+  documentés pour la porte d'approbation) ; cibles tactiles corrigées
+  (CtaSecondaire 48, réglages 48, liens 12 dp). Détails : 11_RESPONSIVE_A11Y.md.

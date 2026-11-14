@@ -203,7 +203,8 @@ private fun DashboardHeader(merchantName: String, sectorLabel: String, onSetting
         }
         Box(
             modifier = Modifier
-                .size(44.dp)
+                // Famille 11 (a11y) : cible tactile 48 dp (glyphe 22).
+                .size(48.dp)
                 .background(BleuVoile, CircleShape)
                 .clickable(onClick = onSettings)
                 .testTag("dash_settings_icon"),
@@ -646,7 +647,7 @@ private fun LigneSync(syncState: SyncState, onRetry: () -> Unit) {
                 color = Color.White,
                 modifier = Modifier
                     .clickable(onClick = onRetry)
-                    .padding(start = 4.dp)
+                    .padding(start = 4.dp, top = 10.dp, bottom = 10.dp)
             )
         }
     }
@@ -707,7 +708,7 @@ private fun DashboardReferralCard(
             color = OrangeDeep,
             modifier = Modifier
                 .clickable(onClick = onViewFilleuls)
-                .padding(vertical = 6.dp)
+                .padding(vertical = 12.dp)
         )
     }
 }
@@ -840,7 +841,7 @@ fun PaywallScreen(ui: PaywallUi, onChoose: (String) -> Unit, onLater: () -> Unit
                 color = OrangeDeep,
                 modifier = Modifier
                     .clickable(onClick = onLater)
-                    .padding(vertical = 6.dp)
+                    .padding(vertical = 12.dp)
             )
         }
         // D41 (F8) : equivalence BCEAO traduite — devise = zone, langue = locale.
@@ -1006,7 +1007,7 @@ private fun ReferralHistoriqueRepliable(entries: List<ReferralEntry>) {
         color = OrangeDeep,
         modifier = Modifier
             .clickable { historiqueReplie = !historiqueReplie }
-            .padding(vertical = 6.dp)
+            .padding(vertical = 12.dp)
     )
     if (!historiqueReplie) {
         ReferralHistorique(entries)
