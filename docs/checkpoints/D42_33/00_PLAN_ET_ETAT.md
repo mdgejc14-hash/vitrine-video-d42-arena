@@ -145,3 +145,12 @@ le rendu 700/800 doit être garanti sur les appareils économiques API 24-25 du 
   contraste audité par calcul WCAG (socle conforme, écarts = tokens de marque
   documentés pour la porte d'approbation) ; cibles tactiles corrigées
   (CtaSecondaire 48, réglages 48, liens 12 dp). Détails : 11_RESPONSIVE_A11Y.md.
+
+- **Famille 11 VALIDÉE** : f852ea5 + fix fefd022, **CI verte 43609958062**
+  (run rouge 43609416917 : période EN "30 d" durcie + double setContent —
+  corrigés, leçons consignées).
+- **Famille 12 non-régression VALIDÉE (audit documenté)** : moteur intact
+  (ExportWorker/ExportActivity/ins-effects/workers/DraftStore absents du
+  diff bb759f8..fefd022), 3 fichiers moteur additifs documentés, chaînes +
+  testTags e2e présents, 290→296 @Test (zéro retrait), origin/main =
+  bb759f8, RC15 intacte. Détails : 12_NON_REGRESSION.md.
