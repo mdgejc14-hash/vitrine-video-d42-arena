@@ -1,0 +1,13 @@
+n,correction,lot_commit,capture_avant,ecrans_apres
+1,Catalogue : secteur → 5 gabarits seulement (plus de filtre intégré),Lot 1 (90f1ac5),,CatalogScreen
+2,"Catalogue : cartes premium, hiérarchie, 5 gabarits identifiables",Lot 2 (095d645),,CatalogScreen + VignetteCatalogue
+3,Caméra : présentation écran + diagnostic différentiel (outil),Lot 3 (b0a988b),,PriseGuideScreen + CameraDiagnosticScreen
+4,Localisation FR/EN complète (parcours + 30 gabarits),Lot 4 (316bb80),,tous écrans du parcours (lang_en)
+5,"Dashboard : en-tête pro, carte crédits, action principale, sync honnête",Lot 5 (f07ae5c),,DashboardScreen
+6,"Parrainage : code immédiatement visible, copier/partager, paliers",Lot 6 (f07ae5c),,ReferralScreen + ReferralCodeScreen
+7,"Tarifs : 3 formules exactes, fin « illimité », 501 honnête",Lot 7 (e47262a),,PaywallScreen
+8,"Formulaires : WhatsApp international, prix stable, tutoiement, ImeAction",Lot 8 (6d1ad6a),,GabaritBriefScreen (clavier ouvert)
+9,"Bienvenue : patron étapes 1-2, crédits confirmés, bouton épinglé",Lot 9 (d88dbbf),,WelcomeScreen
+10,"Design system : PiedContinuer 52 dp, barre d'action standard",Lot 10 (1b42df4),,GabaritBriefScreen
+11,"Quota réel : Pro 90/30 j appliqué côté serveur, restes exposés",§4 (79e4b14),,PaywallScreen + DashboardScreen (affichage)
+12,Harmonisation design system transverse (§6),§6 (à committer),,dashboard/catalogue/brief/paywall/bienvenue/caméra

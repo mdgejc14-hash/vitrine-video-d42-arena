@@ -1,0 +1,19 @@
+n,slug,composable,module,contenu,campagnes_e2e_existantes
+01,langue,LanguageScreen,feature-onboarding,Choix FR/EN au premier lancement,"petit-ecran,lang_en"
+02,carrousel,CarouselScreen,feature-onboarding,Présentation du service (intro),"petit-ecran,lang_en"
+03,secteur,OnboardingScreen,feature-onboarding,Choix du secteur (cartes 3D),"petit-ecran,lang_en"
+04,bienvenue,WelcomeScreen,feature-onboarding,"Bienvenue + crédits 3/3, bouton épinglé 56 dp (Lot 9)","bienvenue,petit-ecran,lang_en"
+05,parrainage_inscription,ReferralCodeScreen,feature-onboarding,Saisie code parrain à l'inscription,"petit-ecran,lang_en"
+06,auth,AuthScreen,feature-onboarding/auth,Connexion Google,e2e-auth
+07,dashboard,DashboardScreen,feature-dashboard,"Accueil commerçant : en-tête pro, carte crédits, sync honnête (Lot 5)","pixel5,petit-ecran,lang_en"
+08,tarifs,PaywallScreen,feature-dashboard,"3 formules exactes 500/3000/7500, 501 honnête (Lot 7 + §4)","pixel5,petit-ecran,lang_en"
+09,parrainage,ReferralScreen,feature-dashboard,"Code visible, copier/partager, paliers (Lot 6)","pixel5,petit-ecran,lang_en"
+10,reglages,SettingsScreen,feature-dashboard,Réglages compte/langue,petit-ecran
+11,catalogue,CatalogScreen,feature-catalog,"5 gabarits du secteur, cartes premium (Lots 1+2)","pixel5,petit-ecran,lang_en"
+12,brief_gabarit,GabaritBriefScreen,feature-brief,"Brief guidé par gabarit, PiedContinuer 52 dp (Lot 10)","pixel5,petit-ecran,clavier,lang_en"
+13,brief_simple,BriefScreen,feature-brief,Brief simple (parcours démo),petit-ecran
+14,ready_check,ReadyCheckScreen,feature-brief,Vérification avant tournage,"petit-ecran,lang_en"
+15,camera,PriseGuideScreen,feature-camera,"Caméra guidée HUD, statuts lisibles (Lot 3 outil + §5)","camerap,pixel5"
+16,apercu_export,VideoPreviewScreen,feature-export,Aperçu vidéo + export/partage,"pixel5,petit-ecran,offline-export"
+17,diagnostic_camera,CameraDiagnosticScreen,feature-camera,Outil diagnostic différentiel (outil interne),camera-diagnostic
+18,vignette_gabarit,VignetteCatalogue,feature-catalog,Vignette gabarit dans le catalogue (composant),"pixel5,petit-ecran,lang_en"
