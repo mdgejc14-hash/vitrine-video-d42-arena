@@ -1,7 +1,7 @@
 fichier	ecran	langue	resolution	pixels	etat	provenance
-BEFORE/01_langue_fr_w360_AVANT_selection-langue.png	01_langue	fr	w360	360x820	selection langue	run 43586092209 (b5a1462, D42.32)
-BEFORE/02_carrousel_fr_defaut_AVANT_slide-1-slogan.png	02_carrousel	fr	defaut	320x470	slide 1 slogan	run 43586092209 (b5a1462, D42.32)
-BEFORE/03_secteurs_fr_w360_AVANT_grille-secteurs-3D.png	03_secteurs	fr	w360	360x820	grille secteurs 3D	run 43586092209 (b5a1462, D42.32)
+BEFORE/01_langue_fr_w360_AVANT_selection-langue.png	01_langue	fr	w360	360x820	selection langue	run 43586092209 (b5a1462, D42.32) — LANGUE RÉELLE : en (défaut Robolectric, harnais v0 sans qualifier — écart documenté Lot 2)
+BEFORE/02_carrousel_fr_defaut_AVANT_slide-1-slogan.png	02_carrousel	fr	defaut	320x470	slide 1 slogan	run 43586092209 (b5a1462, D42.32) — LANGUE RÉELLE : en (défaut Robolectric, harnais v0 sans qualifier — écart documenté Lot 2)
+BEFORE/03_secteurs_fr_w360_AVANT_grille-secteurs-3D.png	03_secteurs	fr	w360	360x820	grille secteurs 3D	run 43586092209 (b5a1462, D42.32) — LANGUE RÉELLE : en (défaut Robolectric, harnais v0 sans qualifier — écart documenté Lot 2)
 BEFORE/10_marque_fr_defaut_AVANT_header-logo-officiel.png	10_marque	fr	defaut	320x92	header logo officiel	run 43586092209 (b5a1462, D42.32)
 BEFORE/04_catalogue_fr_w360_AVANT_secteur-choisi-sans-filtres.png	04_catalogue	fr	w360	360x820	secteur choisi, sans filtres	run 43586092209 (b5a1462, D42.32)
 BEFORE/04_catalogue_fr_w360_AVANT_filtre-Mode-actif.png	04_catalogue	fr	w360	360x820	filtre Mode actif	run 43586092209 (b5a1462, D42.32)
@@ -10,9 +10,8 @@ BEFORE/06_camera_fr_w360_AVANT_guide-tournage-Coiffure.png	06_camera	fr	w360	360
 BEFORE/07_camera_fr_w360_AVANT_guide-tournage-Restauration.png	07_camera	fr	w360	360x820	guide tournage Restauration	run 43586092209 (b5a1462, D42.32)
 BEFORE/08_brief_fr_w360_AVANT_etape-import-des-rushs.png	08_brief	fr	w360	360x552	etape import des rushs	run 43586092209 (b5a1462, D42.32)
 BEFORE/09_export_fr_w360_AVANT_apercu-avant-export.png	09_export	fr	w360	360x250	apercu avant export	run 43586092209 (b5a1462, D42.32)
-AFTER/01_langue_fr_w360_APRES_selection-langue.png	01_langue	fr	w360	360x820	selection langue	run 43610784376 (0a114ce, D42.33)
-AFTER/02_carrousel_fr_defaut_APRES_slide-1-slogan.png	02_carrousel	fr	defaut	320x470	slide 1 slogan	run 43610784376 (0a114ce, D42.33)
-AFTER/03_secteurs_fr_w360_APRES_grille-secteurs-3D.png	03_secteurs	fr	w360	360x820	grille secteurs 3D	run 43610784376 (0a114ce, D42.33)
+AFTER/01_langue_fr_w360_APRES_selection-langue.png	01_langue	fr	w360	360x820	selection langue	Lot 2 D42.33 v2 — CORRECTION écart : rendu v1 en EN (harnais sans locale) remplacé par rendu FR authentique
+AFTER/03_secteurs_fr_w360_APRES_grille-secteurs-3D.png	03_secteurs	fr	w360	360x820	grille secteurs 3D	Lot 2 D42.33 v2 — CORRECTION écart : rendu v1 en EN (harnais sans locale) remplacé par rendu FR authentique
 AFTER/10_marque_fr_defaut_APRES_header-logo-officiel.png	10_marque	fr	defaut	320x92	header logo officiel	run 43610784376 (0a114ce, D42.33)
 AFTER/04_catalogue_fr_w360_APRES_secteur-choisi-sans-filtres.png	04_catalogue	fr	w360	360x820	secteur choisi, sans filtres	run 43610784376 (0a114ce, D42.33)
 AFTER/04_catalogue_fr_w360_APRES_filtre-Mode-actif.png	04_catalogue	fr	w360	360x820	filtre Mode actif	run 43610784376 (0a114ce, D42.33)
@@ -20,7 +19,6 @@ AFTER/05_camera_fr_w360_APRES_guide-tournage-Mode.png	05_camera	fr	w360	360x820	
 AFTER/06_camera_fr_w360_APRES_guide-tournage-Coiffure.png	06_camera	fr	w360	360x820	guide tournage Coiffure	run 43610784376 (0a114ce, D42.33)
 AFTER/07_camera_fr_w360_APRES_guide-tournage-Restauration.png	07_camera	fr	w360	360x820	guide tournage Restauration	run 43610784376 (0a114ce, D42.33)
 AFTER/08_brief_fr_w360_APRES_etape-import-des-rushs.png	08_brief	fr	w360	360x704	etape import des rushs	run 43610784376 (0a114ce, D42.33)
-AFTER/09_export_fr_w360_APRES_apercu-avant-export.png	09_export	fr	w360	360x199	apercu avant export	run 43610784376 (0a114ce, D42.33)
 AFTER/12_dashboard_fr_w360_APRES_synchrone-credits-6.png	12_dashboard	fr	w360	360x820	synchrone, credits 6	run 43610784376 (0a114ce, D42.33)
 AFTER/12_dashboard_en_w360_APRES_hors-connexion-code-en-attente.png	12_dashboard	en	w360	360x820	hors connexion, code en attente	run 43610784376 (0a114ce, D42.33)
 AFTER/13_dashboard_fr_w360_APRES_formule-active-(pas-de-compteur-invente).png	13_dashboard	fr	w360	360x820	formule active (pas de compteur invente)	run 43610784376 (0a114ce, D42.33)
