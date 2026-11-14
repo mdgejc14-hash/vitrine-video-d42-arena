@@ -234,6 +234,10 @@ class CameraDiagnosticActivity : VitrineActivity() {
             etape("5/6 enregistrement VideoCapture 2 s")
             val fichier = File(cacheDir, "diag-$mode.mp4")
             val clip = enregistrer(fichier)
+            // D42.32 §5 (v4) : le MP4 resteait en cacheDir, invisible de
+            // l'artefact — copie dans le dossier de preuve (le job remonte le
+            // dossier entier). Preuve vidéo réelle ~440 Ko, rien d'autre ne change.
+            runCatching { fichier.copyTo(File(dossier(), "video-$mode.mp4"), overwrite = true) }
             rapport.optJSONObject("sources")!!.put("video_capture", clip)
 
             etape("6/6 décodage MP4 + rapport")

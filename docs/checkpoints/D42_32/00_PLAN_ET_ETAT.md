@@ -64,28 +64,37 @@
 - Captures authentiques non retouchées, identifiées émulateur ; FLAG_SECURE documenté
   jamais contourné. FR/EN seuls sur le parcours commercial.
 
-## État courant (après reconstruction post-rollback)
+## État courant
 
-- **HEAD local avance sur distant `2a19d49` de 5 commits** (push groupé imminent) :
-  `79e4b14` §4 quota serveur 90/30 j (+ quota_unit.mjs 21/21 + CI backend-http)
-  → `1b42df4` Lot 10 recréé (PiedContinuer 52 dp + 10_DESIGN_SYSTEM.md)
-  → `2adc79f` squelette Phase B visual-review/ (30 gabarits réels, 18 écrans,
-  12 corrections, 7 statuts UX)
-  → `43eaff3` §5 v2 récupération artefacts caméra (adb root + sleep 3 +
-  vérification taille/contenu réels, job ÉCHOUE si incomplet)
-  → `e7ffe5b` §6 harmonisation DS (token AmbreAlerte, ExportPreviewPanel →
-  OrangeStore, déviations justifiées documentées).
-- **e2e-lab 43520993407 (2a19d49) = COMPLETED SUCCESS 15/15** : pixel5 23 PASS/0 FAIL,
-  bienvenue 3/3, p1 brief + WhatsApp E.164, camerap TOUT PASS, petit-ecran 60 PNG,
-  deeplink/offline/lang_en OK. Artefacts ids dans le journal de session.
-- Stash « debris pre-D42.30 rollback » présent — NE PAS pop.
+- **HEAD local = distant = `2a9ad15`** (rollback sandbox n°2 réparé : fetch +
+  stash débris D42.28/29 + reset — protocole d'incident, rien de perdu).
+- **Chaîne D42.32 sur main** : `2a19d49` → `ae64aa1` §4 quota serveur 90/30 j
+  (ex-79e4b14, SHAs API) → `95d0734` Lot 10 (ex-1b42df4) → `765c841` squelette
+  Phase B (ex-2adc79f) → `905a4f6` caméra v2 (ex-43eaff3) → `ac29fdd` §6
+  harmonisation (ex-e7ffe5b) → `33abc37` état réconcilié → `2a9ad15` fix 403
+  empreinte + caméra v3.
+- **Run 43578603832 (2a9ad15) = 14/15 SUCCESS** : auth-local 22/22 (fix 403
+  validé), backend-http (quota 21/21 en CI), pixel5, p1, drafts, auth, offline,
+  deeplink, langues EN, offline-export, gabarits-audit, security-local,
+  selftest, camerap — TOUT SUCCESS. **Seul camera-diagnostic FAILURE, sur le
+  script de vérification** (heredoc exécuté ligne à ligne par `sh -c`) :
+  la RÉCUPÉRATION elle-même a réussi (12 fichiers, artefact 14106994681,
+  conservés dans `visual-review/camera-preuves/`).
+- **v4 en working tree (à committer)** : vérificateur
+  `tools/e2e/verify_camera_artifacts.py` invoqué en une ligne + copie du MP4
+  dans le dossier de preuve (l'activité diagnostic le laissait en cacheDir).
+  Conclusion caméra documentée (06) : écart luminance Preview/MP4 0,1/1,0 →
+  scène virtuelle AVD, AUCUNE modif CameraX, physique = fondateur.
 - Porte d'approbation : **FERMÉE** (galerie avant/après pas encore produite).
 
 ## Prochain travail (ordre)
 
-1. ~~Commit §4~~ ✓ 79e4b14 · ~~Lot 10~~ ✓ 1b42df4 · ~~squelette Phase B~~ ✓ 2adc79f
-   · ~~fix caméra v2~~ ✓ 43eaff3 · ~~§6 harmonisation~~ ✓ e7ffe5b.
-2. Push groupé → android-ci + e2e-lab sur `e7ffe5b` → §5 artefacts caméra réels
-   (4 sources × 2 modes + PNG + emulateur=true).
-3. Phase B : captures authentiques (émulateur identifié) → galerie avant/après complète.
-4. Rapport §8 → **ARRÊT à la porte d'approbation fondateur** (avant toute RC16/Phase C).
+1. Commit v4 caméra (+ preuves + docs + checkpoint) → push → e2e-lab sur le
+   commit candidat (justifié : la galerie §8 exige les captures DU commit
+   candidat — ce n'est pas une relance gratuite d'un run vert).
+2. Run vert attendu : camera-diagnostic PASS (vérificateur + 2 MP4 réels).
+3. Télécharger les artefacts du run candidat → captures authentiques →
+   compléter la galerie §8 (README illustré, BEFORE_AFTER rempli, inventaires,
+   preuves tests, gaps documentés).
+4. Checkpoint final → **ARRÊT à la porte d'approbation fondateur** (avant
+   toute RC16/Phase C).

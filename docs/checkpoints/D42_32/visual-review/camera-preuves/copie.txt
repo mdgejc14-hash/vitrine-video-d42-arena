@@ -1,0 +1,1 @@
+/sdcard/Android/data/video.vitrine.app/files/d42/camera-diagnostic/./: 12 files pulled, 0 skipped. 1.3 MB/s (64077 bytes in 0.047s)

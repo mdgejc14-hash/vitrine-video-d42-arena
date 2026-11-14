@@ -76,27 +76,36 @@ borné 2 lignes.
 
 ## Résultats
 
-- **Émulateur (job camera-diagnostic)** : run 43520993407 (2a19d49) = artefact
-  `camera-diagnostic` **14084540330 de 300 o** — RÉCUPÉRATION EN ÉCHEC :
-  `adb pull` du stockage app-scoped `/sdcard/Android/data/…` refusé par le
-  scoped storage API 30 ; l'artefact ne contenait que `instrument.txt`
-  (instrumentation elle-même OK, 2 tests). **Correctif v2 appliqué (§5)** :
-  `adb root` sur l'émulateur AVANT l'instrumentation (adbd root autorise la
-  copie du stockage app-scoped — copie AUTORISÉE sur émulateur de laboratoire,
-  FLAG_SECURE de production intact), `sleep 3` de vidage, listing `ls -la`
-  avant copie (preuve du contenu source), puis **vérification taille+contenu
-  réels** : ≥ 2 rapports JSON ≥ 500 o contenant chacun les 4 sources
-  (image_analysis/preview_view/video_capture/mp4_decode) + `emulateur=true`,
-  ≥ 1 PNG de preuve — le job ÉCHOUE si la récupération est incomplète
-  (compile ≠ terminé). Prochaine exécution = push groupé Phase A (§9).
-- **Run 43575685106 (33abc37)** : instrumentation ABORTÉE — `adb root` AVANT
-  la session caméra a crashé l'émulateur (`INSTRUMENTATION_ABORTED: System has
-  crashed` ; adbd redémarré pendant que CameraX tenait le capteur virtuel).
-  **Correctif v3** : root déplacé APRÈS l'instrumentation, juste avant la
-  copie (c'est le seul moment où il sert). Auth-local du même run : 21/22,
-  unique échec = sémantique 403 empreinte (corrigée côté worker, voir §4 —
-  le contrôle d'appartenance D41 est déclenché par la DÉCLARATION client
-  source=welcome, indépendamment de l'attribution serveur).
+- **Émulateur (job camera-diagnostic), run 43578603832 (2a9ad15)** :
+  **RÉCUPÉRATION RÉUSSIE** — 12 fichiers de preuve (64 077 o, artefact
+  14106994681), conservés dans `visual-review/camera-preuves/`. Métriques :
+
+  | Source | PERFORMANCE | COMPATIBLE |
+  |---|---|---|
+  | ImageAnalysis | 31 frames 640×480 YUV_420_888, lum. moy 204,1 | 30 frames, lum. moy 198,1 |
+  | PreviewView (bitmap) | 1080×1916, lum. moy 204,4 | 1080×1916, lum. moy 202,4 |
+  | VideoCapture | MP4 442 370 o, 720×1280, 1 947 ms | MP4 433 047 o, 2 018 ms |
+  | MP4 décodé | 3 frames | 3 frames |
+  | **Écart luminance Preview/MP4** | **0,1** | **1,0** |
+  | Identification | `emulateur: true` | `emulateur: true` |
+
+  **CONCLUSION (§5)** : PreviewView et MP4 décodé sont pratiquement identiques
+  (écart ≤ 1,0/255) — le rendu « coloré » observé est la **scène synthétique
+  de la caméra virtuelle de l'AVD**, pas un défaut CameraX. **AUCUNE
+  modification CameraX** (RCA : la source virtuelle elle-même ; la mosaïque
+  émulateur ≠ mosaïque physique). Portée : ces résultats ne valent JAMAIS
+  validation capteur physique — le fondateur testera son téléphone.
+- **Historique récupération** : run 43520993407 (2a19d49) artefact 300 o
+  (adb pull refusé, scoped storage API 30) → v3 `adb root` APRÈS
+  l'instrumentation (le root PENDANT la session caméra crashait l'émulateur :
+  `INSTRUMENTATION_ABORTED: System has crashed`, run 43575685106) → v3 a
+  récupéré les 12 fichiers mais le **contrôle final échouait sur le heredoc**
+  (le runner exécute le script LIGNE PAR LIGNE via `sh -c` : `import: not
+  found`) → **v4** : vérificateur `tools/e2e/verify_camera_artifacts.py`
+  invoqué en une ligne (2 JSON ≥ 500 o + 4 sources + emulateur=true + PNG
+  analysis/preview/mp4 + 2 MP4 réels ≥ 100 Ko) + **copie du MP4 dans le
+  dossier de preuve** (`video-<mode>.mp4`, activité diagnostic — le MP4
+  restait en cacheDir, invisible de l'artefact).
 - **Capteur physique** : EN ATTENTE de la validation fondateur (procédure
   ci-dessus). Aucun résultat physique n'existe à ce jour.
 

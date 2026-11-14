@@ -299,31 +299,11 @@ jobs:
             adb shell ls -la /sdcard/Android/data/video.vitrine.app/files/d42/camera-diagnostic/ | tee artifacts/camera-diagnostic/ls_avant_copie.txt
             adb pull /sdcard/Android/data/video.vitrine.app/files/d42/camera-diagnostic/. artifacts/camera-diagnostic/ >> artifacts/camera-diagnostic/copie.txt 2>&1
             echo "=== copié ==="; cat artifacts/camera-diagnostic/copie.txt | tail -5
-            # VÉRIFICATION TAILLE + CONTENU RÉELS (compile ≠ terminé) :
-            # 2 rapports JSON (performance+compatible) contenant chacun les
-            # 4 sources, emulateur=true, luminance et quadrants ; PNG de preuve.
-            python3 - <<'PY'
-            import glob, json, os, sys
-            rapports = sorted(glob.glob("artifacts/camera-diagnostic/rapport-*.json"))
-            pngs = sorted(glob.glob("artifacts/camera-diagnostic/*.png"))
-            if len(rapports) < 2:
-                print(f"::error::rapports JSON manquants ({len(rapports)} < 2) — récupération en échec"); sys.exit(1)
-            if not pngs:
-                print("::error::aucun PNG de preuve récupéré"); sys.exit(1)
-            for r in rapports:
-                taille = os.path.getsize(r)
-                if taille < 500:
-                    print(f"::error::{r} trop petit ({taille} o) — rapport tronqué"); sys.exit(1)
-                d = json.load(open(r, encoding="utf-8"))
-                src = d.get("sources", {})
-                for s in ("image_analysis", "preview_view", "video_capture", "mp4_decode"):
-                    if s not in src:
-                        print(f"::error::{r} : source {s} absente"); sys.exit(1)
-                if not d.get("appareil", {}).get("emulateur"):
-                    print(f"::error::{r} : emulateur=true absent (identification honnête exigée)"); sys.exit(1)
-                print(f"OK {os.path.basename(r)} : {taille} o, 4 sources, emulateur=true")
-            print(f"CAMERA-DIAGNOSTIC BILAN : {len(rapports)} rapports, {len(pngs)} PNG")
-            PY
+            # VÉRIFICATION TAILLE + CONTENU RÉELS (v4) : le runner exécute ce
+            # script LIGNE PAR LIGNE via sh -c — un heredoc multi-lignes y est
+            # interprété comme du shell (run 43578603832 : « import: not found »).
+            # Le vérificateur est donc un fichier du dépôt, invoqué en UNE ligne.
+            python3 tools/e2e/verify_camera_artifacts.py artifacts/camera-diagnostic
       - name: Artefacts du diagnostic
         if: always()
         uses: actions/upload-artifact@v4

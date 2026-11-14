@@ -1,0 +1,8 @@
+
+video.vitrine.d42.CameraMosaicDiagnosticTest:..
+
+Time: 23.655
+
+OK (2 tests)
+
+
