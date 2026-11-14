@@ -34,6 +34,15 @@ interface ExportJournalDao {
      *  (debit -> enqueue en cours sur l'ecran actif). */
     @Query("SELECT * FROM export_journal WHERE state = 'RESERVED' AND ts < :cutoff")
     suspend fun reservedBefore(cutoff: Long): List<ExportJournal>
+
+    /** D42.33 (§9.3 « Derniers exports ») : comptage LECTURE SEULE des exports
+     *  RÉUSSIS du marchand — affichage honnête, aucune écriture. */
+    @Query("SELECT COUNT(*) FROM export_journal WHERE merchantId = :uid AND state = 'SUCCEEDED'")
+    suspend fun countSucceeded(uid: String): Int
+
+    /** D42.33 : date du dernier export réussi (0 si aucun) — lecture seule. */
+    @Query("SELECT MAX(ts) FROM export_journal WHERE merchantId = :uid AND state = 'SUCCEEDED'")
+    suspend fun lastSucceededTs(uid: String): Long?
 }
 
 @Dao

@@ -47,6 +47,17 @@ class DashboardActivity : VitrineActivity() {
     /** D42.32 (Lot 5) : etat de sync honnete affiche par la carte credits. */
     private var syncEtat: SyncState = SyncState.EN_COURS
 
+    /** D42.33 (§9.3.4/§9.3.5) : donnees REELLES du telephone, relues a chaque
+     *  rendu — brouillon actif (DraftStore), exports reussis (journal Room).
+     *  Defaults = absence honnete (lignes masquees, jamais de faux contenu). */
+    private var draftSkinName: String? = null
+    private var draftEtape: String? = null
+    private var exportsReussis = 0
+    private var dernierExportTs = 0L
+
+    /** §9.3.6 : onglet actif de la tab bar (0 = Accueil). */
+    private var ongletActif = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         view = intent.getStringExtra("view") ?: "dashboard"
@@ -54,8 +65,34 @@ class DashboardActivity : VitrineActivity() {
         merchantId = intent.getStringExtra("merchant_id")
             ?: session.getString("uid", null)
             ?: "local"
-        render()
+        relireDonneesProjet()
         synchroniser()
+    }
+
+    /**
+     * D42.33 (§9.3) : lecture locale (Room) AVANT chaque rendu — brouillon
+     * actif et journal d'exports. Echec de lecture = lignes masquees (jamais
+     * de contenu invente).
+     */
+    private fun relireDonneesProjet() {
+        lifecycleScope.launch {
+            val db = runCatching {
+                VitrineLocalDatabase.get(this@DashboardActivity)
+            }.getOrNull() ?: return@launch
+            val draft = runCatching {
+                withContext(Dispatchers.IO) { db.drafts().active() }
+            }.getOrNull()
+            draftSkinName = draft?.skinName ?: draft?.gabaritId
+            draftEtape = draft?.etape
+            val uid = merchantId
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    exportsReussis = db.journal().countSucceeded(uid)
+                    dernierExportTs = db.journal().lastSucceededTs(uid) ?: 0L
+                }
+            }
+            render()
+        }
     }
 
     /**
@@ -91,7 +128,7 @@ class DashboardActivity : VitrineActivity() {
     private fun relancerSync() {
         synced = false
         syncEtat = SyncState.EN_COURS
-        render()
+        relireDonneesProjet()
         synchroniser()
     }
 
@@ -200,8 +237,44 @@ class DashboardActivity : VitrineActivity() {
             onCreateVideo = { finishWithCreate() },
             onCopyCode = { copierCode() },
             onShareWhatsApp = { share() },
-            onViewFilleuls = { view = "referral"; render() }
+            onViewFilleuls = { view = "referral"; render() },
+            ongletActif = ongletActif,
+            surOnglet = { index -> surOnglet(index) },
+            draftSkinName = draftSkinName,
+            draftEtape = draftEtape,
+            onReprendre = { relancerReprise() },
+            exportsReussis = exportsReussis,
+            dernierExportTs = dernierExportTs
         )
+    }
+
+    /** §9.3.6 : navigation par onglets — vues REELLES existantes. */
+    private fun surOnglet(index: Int) {
+        ongletActif = index
+        when (index) {
+            0 -> { view = "dashboard"; relireDonneesProjet() }
+            1 -> { view = "paywall"; render() }
+            2 -> { view = "referral"; render() }
+            3 -> { view = "settings"; render() }
+        }
+    }
+
+    /**
+     * §9.3.4 : « Reprendre » — relance MainActivity avec l'entree explicite
+     * vv_reprise : le dialogue D42.27 valide propose Reprendre (retour exact
+     * a l'etape, rushs restaures) ou Nouvelle video (brouillon efface sur
+     * decision explicite). Retour normal ensuite vers le dashboard.
+     */
+    private fun relancerReprise() {
+        // MainActivity restaure seul sa session (restaurerSession) et lit
+        // uniquement l'extra vv_reprise — aucun extra mort.
+        runCatching { Class.forName("video.vitrine.app.MainActivity") }
+            .getOrNull()
+            ?.let { classe ->
+                startActivity(
+                    Intent(this, classe).putExtra("vv_reprise", true)
+                )
+            }
     }
 
     @androidx.compose.runtime.Composable

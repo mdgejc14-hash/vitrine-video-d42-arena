@@ -77,4 +77,18 @@
     <string name="ref2_history_show">Show history (%1$d)</string>
     <string name="ref2_history_hide">Hide history</string>
     <string name="dash_plan_active">Active plan · exports included</string>
+    <!-- D42.33 §9.3 dashboard -->
+    <string name="dash_hello_sans_nom">Hello</string>
+    <string name="dash_offerts">free</string>
+    <string name="dash_tab_home">Home</string>
+    <string name="dash_tab_plans">Plans</string>
+    <string name="dash_tab_create">Create</string>
+    <string name="dash_reprendre">Resume</string>
+    <string name="dash_reprendre_brief">Brief in progress</string>
+    <string name="dash_reprendre_camera">Recording in progress</string>
+    <string name="dash_exports_recents">Recent exports</string>
+    <string name="dash_exports_n">%1$d videos exported</string>
+    <string name="dash_exports_derniere">Last: %1$s</string>
+    <string name="dash_badge_essai">Free trial</string>
+    <string name="dash_badge_formules">Plans ›</string>
 </resources>

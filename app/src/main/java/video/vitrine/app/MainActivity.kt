@@ -80,6 +80,15 @@ class MainActivity : VitrineActivity() {
         // d'intervalle), l'ecran deja a l'ecran ne doit pas etre relance :
         // l'instance en double restait sur la pile et cassait la navigation.
         if (savedInstanceState == null) {
+            // D42.33 (§9.3 « Reprendre » du dashboard) : entrée EXPLICITE de
+            // reprise — réutilise le dialogue D42.27 validé (Reprendre = retour
+            // exact à l'étape en cours, rushs restaurés ; Nouvelle vidéo =
+            // brouillon effacé sur décision explicite). Extra absent =
+            // démarrage normal inchangé ; deep-link ci-dessus déjà traité.
+            if (intent?.getBooleanExtra("vv_reprise", false) == true) {
+                peutProposerReprise()
+                return
+            }
             if (VitrineLocale.saved(this) == null) {
                 lancerUneSeuleFois(Intent(this, LanguageActivity::class.java), REQ_LANGUAGE)
             } else {

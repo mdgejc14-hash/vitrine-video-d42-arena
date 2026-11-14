@@ -98,3 +98,16 @@ le rendu 700/800 doit être garanti sur les appareils économiques API 24-25 du 
 - **Famille 07 caméra** : §7.15 intégral (navy 55 %, OverlayViseur, consigne
   floutée, rouge = arrêt uniquement), labels techniques « visages détectés /
   (R4) » supprimés de l'UI, moteur ConsentGate/dialogue/e2e intacts.
+
+- **Famille 08 montage/export** (1d1eb6b) : E7 vignette navy héro SANS glyph ▶
+  (faux bouton lecture supprimé), bannière sous-titres 0xCC022358 r14, tuile
+  vérif blanche r22 ; E8 XML padding/typo/ProgressBar 8 dp #F95C0F, boutons
+  56/48 dp, bg_card r22 blanc. ExportActivity AUCUNE modification. **CI verte
+  (43603381967)** — 0000c9b (07) aussi verte (43603190662).
+- **Famille 09 dashboard/parrainage** : §7.12/§9.3 intégral — header avatar
+  (initiale réelle/insigne), héros navy r26 + CTA soudé, Reprendre (brouillon
+  Room réel, dialogue D42.27 réutilisé via extra vv_reprise), parrainage tuile
+  blanche (code OrangeDeep/OrangeVoile, copie = secondaire doux), derniers
+  exports (comptage Room réel), tab BarreOnglets centrale. Paywall INTACT
+  (famille 10). DAO +2 requêtes lecture seule. Test dash_app_name retiré
+  (header), +dash_tab_create/home. Détails : 09_DASHBOARD_PARRAINAGE.md.

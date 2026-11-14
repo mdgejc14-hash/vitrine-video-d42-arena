@@ -77,4 +77,18 @@
     <string name="ref2_history_show">Afficher l\'historique (%1$d)</string>
     <string name="ref2_history_hide">Masquer l\'historique</string>
     <string name="dash_plan_active">Formule active · exports inclus</string>
+    <!-- D42.33 §9.3 dashboard -->
+    <string name="dash_hello_sans_nom">Bonjour</string>
+    <string name="dash_offerts">offerts</string>
+    <string name="dash_tab_home">Accueil</string>
+    <string name="dash_tab_plans">Formules</string>
+    <string name="dash_tab_create">Créer</string>
+    <string name="dash_reprendre">Reprendre</string>
+    <string name="dash_reprendre_brief">Brief en cours</string>
+    <string name="dash_reprendre_camera">Tournage en cours</string>
+    <string name="dash_exports_recents">Derniers exports</string>
+    <string name="dash_exports_n">%1$d vidéos exportées</string>
+    <string name="dash_exports_derniere">Dernière : %1$s</string>
+    <string name="dash_badge_essai">Essai gratuit</string>
+    <string name="dash_badge_formules">Formules ›</string>
 </resources>

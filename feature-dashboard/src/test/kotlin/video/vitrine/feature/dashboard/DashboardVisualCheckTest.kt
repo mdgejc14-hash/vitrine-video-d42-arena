@@ -92,8 +92,9 @@ class DashboardVisualCheckTest {
         // Lot 5 : badge « COMPTE » supprime (plus jamais de mot empile)
         compose.onAllNodesWithText("COMPTE").assertCountEquals(0)
         compose.onAllNodesWithText("ACCOUNT").assertCountEquals(0)
-        // en-tete pro : identite + bienvenue nommee + secteur
-        compose.onNodeWithText(ctx.getString(R.string.dash_app_name)).assertExists()
+        // en-tete §9.3.1 : bienvenue nommee (un seul noeud, deux tons) + secteur.
+        // D42.33 : le nom d'app quitte le header (avatar a la place) — la marque
+        // reste portee par l'insigne/avatar et les autres ecrans.
         compose.onNodeWithText(ctx.getString(R.string.dash_hello, "Boutique Fatou")).assertExists()
         compose.onNodeWithText("Restauration").assertExists()
         // carte credits : exports restants + details reels + sync prouvee
@@ -105,6 +106,9 @@ class DashboardVisualCheckTest {
         compose.onNodeWithText(ctx.getString(R.string.sync_synced)).assertExists()
         // action principale
         compose.onNodeWithText(ctx.getString(R.string.dash_create_video)).assertExists()
+        // §9.3.6 : tab bar avec action centrale « Creer »
+        compose.onNodeWithText(ctx.getString(R.string.dash_tab_create)).assertExists()
+        compose.onNodeWithText(ctx.getString(R.string.dash_tab_home)).assertExists()
         // Lot 6 : code personnel visible sans defilement + copie + partage
         compose.onNodeWithText("SHALOM-842").assertExists()
         compose.onNodeWithText(ctx.getString(R.string.ref_copy_mine)).assertExists()
