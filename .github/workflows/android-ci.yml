@@ -106,6 +106,7 @@ jobs:
             feature-camera/build/visual-check/*.png
             feature-brief/build/visual-check/*.png
             feature-export/build/visual-check/*.png
+            feature-dashboard/build/visual-check/*.png
           retention-days: 30
           if-no-files-found: ignore
 
