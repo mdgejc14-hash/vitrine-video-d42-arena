@@ -15,7 +15,20 @@
     <string name="sector_title">Ton activité principale</string>
     <string name="sector_hint">Choisis ton activité, puis continue.</string>
     <string name="action_continue">Continuer</string>
-    <string name="welcome_title">Bienvenue</string>
+    <!-- D42.33 (spec §9.4, mission : titre générique, JAMAIS de prénom démo) -->
+    <string name="welcome_title">Félicitations !</string>
+    <string name="welcome_sub_gift">%1$d exports offerts pour tes %1$d premières vidéos</string>
+    <string name="welcome_solde_titre">Ton solde de bienvenue</string>
+    <string name="welcome_badge_confirme">Confirmé</string>
+    <string name="welcome_badge_attente">En attente</string>
+    <string name="welcome_video_n">Vidéo %1$d</string>
+    <string name="welcome_reassur_1">Full HD 1080p</string>
+    <string name="welcome_reassur_2">Sans filigrane</string>
+    <string name="welcome_reassur_3">Sans limite de temps</string>
+    <string name="welcome_cta">Créer ma première vidéo</string>
+    <string name="welcome_plus_tard">Plus tard</string>
+    <string name="welcome_no_card">Aucune carte bancaire demandée</string>
+    <string name="welcome_badge_compte">Compte créé</string>
     <string name="welcome_credits">Nous t\'offrons %1$d crédits. Bon tournage !</string>
     <string name="welcome_credits_pending">On prépare tes crédits de bienvenue…</string>
     <!-- welcome_error conservé pour l'historique ; D42.30 : la taxonomie

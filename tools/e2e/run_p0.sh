@@ -403,16 +403,22 @@ $UI probe | sed 's/^/E2E_AFTER_REF /' >> "$OUT/probe_after_ref.txt"
 # --- Suite du parcours : catalogue / brief / caméra ----------------------------
 # D42.26-16 : contrôle d'EFFET — le PASS exige que le catalogue soit atteint
 # (tap texte, sinon bouton réel par bande orange tant que l'écran affiche
-# encore « Continuer »).
-$UI tap --text "Continuer" --timeout 12 >/dev/null 2>&1
+# encore un bouton d'action).
+# D42.33 : le CTA de bienvenue s'appelle désormais « Créer ma première vidéo »
+# (spec §9.4) — même action, même contrôle d'effet ; repli sur l'ancien
+# libellé pour les APK antérieurs à la refonte.
+$UI tap --text "Créer ma première vidéo" --timeout 12 >/dev/null 2>&1 \
+  || $UI tap --text "Continuer" --timeout 6 >/dev/null 2>&1 \
+  || $UI taporange >/dev/null 2>&1
 sleep 2
 if ! $UI wait --text "modèle de vidéo" --timeout 8 >/dev/null 2>&1 \
-   && $UI wait --text "Continuer" --exact --timeout 4 >/dev/null 2>&1; then
+   && { $UI wait --text "Continuer" --exact --timeout 4 >/dev/null 2>&1 \
+        || $UI wait --text "Créer ma première vidéo" --timeout 4 >/dev/null 2>&1; }; then
   $UI taporange >/dev/null 2>&1
   sleep 2
 fi
 if $UI wait --text "modèle de vidéo" --timeout 10 >/dev/null 2>&1; then
-  record PASS S16_bienvenue_continue "bouton Continuer de l'accueil actionné — catalogue atteint (effet vérifié)"
+  record PASS S16_bienvenue_continue "bouton d'action de l'accueil actionné — catalogue atteint (effet vérifié ; libellé D42.33 « Créer ma première vidéo »)"
 fi
 sleep 3; shot 12_apres_bienvenue; dump 12_apres_bienvenue
 if $UI wait --text "modèle de vidéo" --timeout 25 >/dev/null 2>&1 || $UI wait --text "model" --timeout 3 >/dev/null 2>&1 || $UI wait --text "モデル" --timeout 3 >/dev/null 2>&1 || $UI wait --text "modelo" --timeout 3 >/dev/null 2>&1; then

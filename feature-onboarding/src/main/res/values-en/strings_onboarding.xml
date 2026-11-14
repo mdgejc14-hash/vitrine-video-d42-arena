@@ -12,7 +12,19 @@
     <string name="sector_title">Your main business</string>
     <string name="sector_hint">Pick your trade, then continue.</string>
     <string name="action_continue">Continue</string>
-    <string name="welcome_title">Welcome</string>
+    <string name="welcome_title">Congratulations!</string>
+    <string name="welcome_sub_gift">%1$d free exports for your first %1$d videos</string>
+    <string name="welcome_solde_titre">Your welcome balance</string>
+    <string name="welcome_badge_confirme">Confirmed</string>
+    <string name="welcome_badge_attente">Pending</string>
+    <string name="welcome_video_n">Video %1$d</string>
+    <string name="welcome_reassur_1">Full HD 1080p</string>
+    <string name="welcome_reassur_2">No watermark</string>
+    <string name="welcome_reassur_3">No time limit</string>
+    <string name="welcome_cta">Create my first video</string>
+    <string name="welcome_plus_tard">Later</string>
+    <string name="welcome_no_card">No bank card required</string>
+    <string name="welcome_badge_compte">Account created</string>
     <string name="welcome_credits">We\'ve given you %1$d credits. Happy filming!</string>
     <string name="welcome_credits_pending">Getting your welcome credits ready…</string>
     <!-- welcome_error kept for history; D42.30: the exact taxonomy below

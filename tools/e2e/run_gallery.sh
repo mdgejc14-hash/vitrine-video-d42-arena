@@ -334,7 +334,7 @@ case "$LANGUE" in
   fr) CARTE="Français"; ATTENDU_AUTH="Continuer avec Google"; S1="Filme. Vends. C'est tout."
       S2="Filme tes produits, on te guide"; S3="Une vidéo prête à publier en 30 secondes"
       SUIVANT="Suivant"; DEMARRER="Commencer"; SECTEUR_TITRE="Ton activité principale"
-      CONTINUER="Continuer"; SANS_CODE="Je n'ai pas de code"; CATALOGUE="Choisissez un modèle de vidéo"
+      CONTINUER="Continuer"; SANS_CODE="Je n'ai pas de code"; CATALOGUE="Choisissez un modèle de vidéo"; CTA_BIENVENUE="Créer ma première vidéo"
       CHANGE_SECTEUR="Changer de secteur"
       AVANT="Avant de commencer"; OK_COMMENCE="OK, je commence"
       FILME="Filme ta prise"; APERCU="Aperçu de ta vidéo"; CREER="Créer ma vidéo"
@@ -352,7 +352,7 @@ case "$LANGUE" in
   en) CARTE="English"; ATTENDU_AUTH="Continue with Google"; S1="Shoot. Sell. Done."
       S2="Film your products, we guide you"; S3="A video ready to post in 30 seconds"
       SUIVANT="Next"; DEMARRER="Get started"; SECTEUR_TITRE="Your main business"
-      CONTINUER="Continue"; SANS_CODE="I don't have a code"; CATALOGUE="Pick a video template"
+      CONTINUER="Continue"; SANS_CODE="I don't have a code"; CATALOGUE="Pick a video template"; CTA_BIENVENUE="Create my first video"
       CHANGE_SECTEUR="Change sector"
       AVANT="Before you start"; OK_COMMENCE="OK, I start"
       FILME="Film your take"; APERCU="Preview of your video"; CREER="Create my video"
@@ -491,15 +491,16 @@ fi
 
 # 05_credits
 sleep 2
-if attendre "Bienvenue" "Welcome" "crédits" "credits"; then
+if attendre "Bienvenue" "Welcome" "crédits" "credits" "Félicitations" "Congratulations"; then
   galshot "credits_bienvenue" "Bienvenue — confirmation des crédits" "credits" "connecté-local"
-  taper "$CONTINUER" exact
+  # D42.33 : CTA « Créer ma première vidéo » (§9.4), repli ancien libellé.
+  taper "$CTA_BIENVENUE" exact || taper "$CONTINUER" exact
   sleep 2
 fi
 okcat=0
 for _ in 1 2 3; do
   if attendre "$CATALOGUE"; then okcat=1; break; fi
-  taper "$CONTINUER" exact; sleep 2
+  taper "$CTA_BIENVENUE" exact || taper "$CONTINUER" exact; sleep 2
 done
 
 # =====================================================================

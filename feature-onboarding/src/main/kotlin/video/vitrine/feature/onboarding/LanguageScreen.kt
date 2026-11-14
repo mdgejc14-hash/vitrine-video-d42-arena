@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +31,6 @@ import video.vitrine.core.designsystem.FormeCarte
 import video.vitrine.core.designsystem.FormeIcone
 import video.vitrine.core.designsystem.IconeVitrine
 import video.vitrine.core.designsystem.Jakarta
-import video.vitrine.core.designsystem.Line
 import video.vitrine.core.designsystem.Muted
 import video.vitrine.core.designsystem.Navy
 import video.vitrine.core.designsystem.OrangeStore

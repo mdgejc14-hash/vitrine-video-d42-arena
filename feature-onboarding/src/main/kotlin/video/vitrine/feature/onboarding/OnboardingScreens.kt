@@ -1,6 +1,17 @@
 package video.vitrine.feature.onboarding
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.border
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.unit.sp
+import video.vitrine.core.designsystem.BlancPur
+import video.vitrine.core.designsystem.OrangeHi
+import video.vitrine.core.designsystem.OrangeStore
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -12,7 +23,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -20,29 +30,28 @@ import androidx.compose.material3.Text
 import androidx.compose.foundation.Image
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextButton
 import androidx.compose.ui.res.painterResource
 import video.vitrine.core.designsystem.BleuNuit
-import video.vitrine.core.designsystem.BleuVoile
 import video.vitrine.core.designsystem.OrangeVoile
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import video.vitrine.core.designsystem.SectorCard3D
-import video.vitrine.core.designsystem.VitrineLogoHeader
 import video.vitrine.core.designsystem.VitrineTheme
+import video.vitrine.core.designsystem.VitrineLogoHeader
 import video.vitrine.core.designsystem.sectorIcon
 import video.vitrine.core.designsystem.sectorIllustration
 import video.vitrine.core.designsystem.sectorLabel
@@ -104,12 +113,13 @@ fun OnboardingScreen(onDone: (Sector) -> Unit) {
             }
             Text(
                 stringResource(R.string.sector_title),
-                style = MaterialTheme.typography.headlineSmall
+                style = video.vitrine.core.designsystem.VitrineText.H2,
+                color = BleuNuit
             )
             Text(
                 stringResource(R.string.sector_hint),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = video.vitrine.core.designsystem.VitrineText.Sub,
+                color = video.vitrine.core.designsystem.Muted
             )
             secteurs.chunked(2).forEach { ligne ->
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -148,16 +158,13 @@ fun OnboardingScreen(onDone: (Sector) -> Unit) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .padding(horizontal = 20.dp, vertical = 12.dp)
             ) {
-                Button(
+                video.vitrine.core.designsystem.BoutonPrimaire(
+                    libelle = stringResource(R.string.action_continue),
                     onClick = { onDone(selected) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 56.dp)
-                ) {
-                    Text(stringResource(R.string.action_continue))
-                }
+                    testTag = "sector_continue"
+                )
             }
         }
     }
@@ -180,19 +187,12 @@ private fun EtapeBadge(etape: Int, total: Int) {
 }
 
 /**
- * Ecran accueil : generosite d'accueil verrouillee par empreinte appareil.
- *
- * D42.9 : trois etats explicites. Auparavant, un `GrantState` nul — serveur pas
- * encore repondu, ou en echec — s'affichait « Nous vous offrons 0 credits ».
- * Le client lisait donc un solde FAUX, sans savoir s'il devait attendre. Il est
- * toujours possible de continuer : l'absence de reponse serveur ne bloque pas
- * l'acces a l'application, et les credits sont credites des le retour du reseau.
- *
- * D42.30 (retour terrain) : taxonomie EXACTE — « hors ligne » (rattrapage
- * automatique honnete) n'est plus confondu avec « refuse par le serveur »
- * (401 session / 403 compte inactif / 404 profil / 5xx serveur). Le message
- * historique « Ils seront ajoutes des que la connexion reviendra » ne s'affiche
- * plus JAMAIS pour un refus serveur.
+ * D42.33 — §9.4 Bienvenue / crédits offerts (écran signature, famille A) :
+ * fond navy + halo orange, marque + badge, tuile cadeau, H1 « Félicitations ! »
+ * (titre générique — JAMAIS de prénom inventé), carte de solde avec 3 tuiles
+ * quand le solde confirmé est 3, réassurances, CTA pilule + « Plus tard ».
+ * Les 4 états honnêtes D42.30 (attente / ok / hors ligne / refus serveur)
+ * sont conservés À L'IDENTIQUE — seule la peinture change.
  */
 @Composable
 fun WelcomeScreen(
@@ -202,22 +202,18 @@ fun WelcomeScreen(
     refusCode: String,
     onContinue: () -> Unit,
 ) {
-    // D42.32 (Lot 9) : équilibre visuel — même patron que les étapes 1/3 et
-    // 2/3 (logo + badge d'étape, contenu défilant, action ÉPINGLÉE). Avant :
-    // texte nu sans logo ni badge « 3 / 3 », bouton non épinglé, crédits
-    // confirmés noyés dans un Text simple. Aucune chaîne nouvelle (FR/EN
-    // existants, assertions e2e « Bienvenue »/« crédits »/« Continuer »
-    // préservées à l'identique).
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.safeDrawing)
+            .background(BleuNuit)
+            .androidxHaloAccueil()
     ) {
         Column(
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
+                .padding(horizontal = 20.dp)
+                .padding(top = 46.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Row(
@@ -225,41 +221,150 @@ fun WelcomeScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                VitrineLogoHeader(modifier = Modifier.weight(1f))
-                EtapeBadge(etape = 3, total = 3)
+                MarqueBienvenue()
+                BadgeCompteCree()
             }
-            Text(stringResource(R.string.welcome_title), style = MaterialTheme.typography.headlineSmall)
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                TuileCadeau()
+            }
+            Text(
+                stringResource(R.string.welcome_title),
+                style = video.vitrine.core.designsystem.VitrineText.H1,
+                color = BlancPur,
+                modifier = Modifier.padding(top = 6.dp)
+            )
+            if (statut == "ok" && credits > 0) {
+                Text(
+                    stringResource(R.string.welcome_sub_gift, credits, credits),
+                    style = video.vitrine.core.designsystem.VitrineText.Sub,
+                    color = video.vitrine.core.designsystem.Blanc70
+                )
+            }
             ContenuCredits(credits, statut, refusStatut, refusCode)
+            ReassurancesBienvenue()
             Box(modifier = Modifier.padding(bottom = 4.dp))
         }
-        // Jamais bloquant : le client entre dans l'application dans tous les cas.
-        // D42.32 (Lot 9) : barre d'action épinglée, bouton 56 dp (police 130 %).
-        Surface(
-            tonalElevation = 3.dp,
-            color = MaterialTheme.colorScheme.surface
-        ) {
-            Row(
+        // Barre d'action épinglée (56 dp, police 130 %).
+        Surface(color = Color.Transparent, tonalElevation = 0.dp) {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 12.dp)
+                    .padding(horizontal = 20.dp, vertical = 12.dp)
             ) {
-                Button(
+                video.vitrine.core.designsystem.BoutonPrimaire(
+                    libelle = stringResource(R.string.welcome_cta),
                     onClick = onContinue,
+                    testTag = "welcome_cta"
+                )
+                Text(
+                    stringResource(R.string.welcome_plus_tard),
+                    style = video.vitrine.core.designsystem.VitrineText.Tiny.copy(
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.W600
+                    ),
+                    color = video.vitrine.core.designsystem.Blanc70,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 56.dp)
-                ) {
-                    Text(stringResource(R.string.action_continue))
-                }
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 6.dp, bottom = 2.dp)
+                        .clip(RoundedCornerShape(50))
+                        .clickable { onContinue() }
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
             }
         }
     }
 }
 
+/** Halo d'accueil (§5) : orange en haut à droite, navy doux en bas à gauche. */
+private fun Modifier.androidxHaloAccueil(): Modifier = this.then(
+    Modifier.drawBehind {
+        drawCircle(
+            color = Color(0x4DF95C0F),
+            radius = size.width * 0.55f,
+            center = Offset(size.width * 1.05f, size.height * 0.02f)
+        )
+        drawCircle(
+            color = Color(0x6623467F),
+            radius = size.width * 0.65f,
+            center = Offset(-size.width * 0.05f, size.height * 1.05f)
+        )
+    }
+)
+
+/** Marque : insigne dans une tuile blanche rayon 14 (§9.4). */
+@Composable
+private fun MarqueBienvenue() {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(44.dp)
+                .clip(RoundedCornerShape(14.dp))
+                .background(Color.White),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(video.vitrine.core.designsystem.R.drawable.vitrine_logo),
+                contentDescription = null,
+                modifier = Modifier.size(30.dp)
+            )
+        }
+    }
+}
+
+/** Badge « Compte créé » (blanc 18 %, §7.6 sur sombre). */
+@Composable
+private fun BadgeCompteCree() {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(50))
+            .background(Color(0x2EFFFFFF))
+            .padding(horizontal = 12.dp, vertical = 5.dp)
+    ) {
+        Text(
+            stringResource(R.string.welcome_badge_compte),
+            style = video.vitrine.core.designsystem.VitrineText.Badge,
+            color = Color.White
+        )
+    }
+}
+
+/** Tuile cadeau 96 dp : orange, rayon 30, double anneau (§9.4). */
+@Composable
+private fun TuileCadeau() {
+    Box(modifier = Modifier.size(116.dp), contentAlignment = Alignment.Center) {
+        Canvas(modifier = Modifier.size(116.dp)) {
+            val r = size.minDimension / 2f
+            drawCircle(
+                color = OrangeStore.copy(alpha = 0.22f),
+                radius = r,
+                style = Stroke(width = 2.dp.toPx())
+            )
+            drawCircle(
+                color = OrangeStore.copy(alpha = 0.45f),
+                radius = r - 6.dp.toPx(),
+                style = Stroke(width = 2.dp.toPx())
+            )
+        }
+        Box(
+            modifier = Modifier
+                .size(96.dp)
+                .clip(RoundedCornerShape(30.dp))
+                .background(
+                    Brush.verticalGradient(listOf(OrangeHi, OrangeStore))
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            video.vitrine.core.designsystem.IconeVitrine(
+                icone = painterResource(video.vitrine.core.designsystem.R.drawable.ic_gift),
+                taille = 42.dp,
+                teinte = Color.White
+            )
+        }
+    }
+}
+
 /**
- * D42.32 (Lot 9) : état des crédits de bienvenue — les 4 cas typés D42.30
- * (attente / confirmé / hors ligne / refus serveur), extraits de
- * WelcomeScreen (detekt LongMethod).
+ * D42.30/D42.32 : état des crédits de bienvenue — les 4 cas typés, extraits
+ * (detekt LongMethod). D42.33 : rendus sur fond navy (famille A).
  */
 @Composable
 private fun ContenuCredits(
@@ -272,89 +377,166 @@ private fun ContenuCredits(
         "attente" -> AttenteCredits()
         "ok" -> {
             if (credits > 0) {
-                CarteCreditsConfirmes(credits)
+                CarteSoldeBienvenue(credits)
             } else {
-                // D42.32 (Lot 9) : argument %1$d ENFIN passé — avant, le texte
-                // affichait littéralement « Ton solde actuel : %1$d. ».
                 Text(
                     stringResource(R.string.welcome_credits_zero, credits),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = video.vitrine.core.designsystem.VitrineText.Body,
+                    color = video.vitrine.core.designsystem.Blanc80
                 )
             }
         }
         "horsligne" -> Text(
             stringResource(R.string.welcome_offline),
-            style = MaterialTheme.typography.bodyMedium
+            style = video.vitrine.core.designsystem.VitrineText.Body,
+            color = video.vitrine.core.designsystem.Blanc80
         )
         "refuse" -> Text(
             messageRefus(refusStatut, refusCode),
-            style = MaterialTheme.typography.bodyMedium
+            style = video.vitrine.core.designsystem.VitrineText.Body,
+            color = video.vitrine.core.designsystem.Blanc80
         )
         else -> AttenteCredits()
     }
 }
 
-/** D42.32 (Lot 9) : attente serveur — spinner + message, jamais bloquant. */
+/** Attente serveur — spinner + message, jamais bloquant (D42.9). */
 @Composable
 private fun AttenteCredits() {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        CircularProgressIndicator(modifier = Modifier.size(20.dp))
-        Text(stringResource(R.string.welcome_credits_pending))
+        CircularProgressIndicator(
+            modifier = Modifier.size(20.dp),
+            strokeWidth = 2.dp,
+            color = OrangeStore
+        )
+        Text(
+            stringResource(R.string.welcome_credits_pending),
+            style = video.vitrine.core.designsystem.VitrineText.Body,
+            color = video.vitrine.core.designsystem.Blanc80
+        )
     }
 }
 
 /**
- * D42.32 (Lot 9) : crédits de bienvenue CONFIRMÉS par le serveur — le montant
- * réel dans une carte BleuVoile avec le chiffre en grand : le client voit le
- * don d'un coup d'œil (avant : phrase noyée dans un Text simple).
+ * §9.4 carte de solde : fond blanc 6 %, rayon 26, titre « Ton solde de
+ * bienvenue », badge Confirmé (preuve serveur), et le solde MAtérialisé :
+ * 3 tuiles « Vidéo 1 / 2 / 3 » quand le solde confirmé est 3 ; sinon le
+ * chiffre réel en Num (jamais un chiffre inventé).
  */
 @Composable
-private fun CarteCreditsConfirmes(credits: Int) {
-    Box(
+private fun CarteSoldeBienvenue(credits: Int) {
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(BleuVoile, RoundedCornerShape(12.dp))
-            .padding(16.dp)
+            .clip(RoundedCornerShape(26.dp))
+            .background(Color(0x0FFFFFFF))
+            .border(1.dp, Color(0x14FFFFFF), RoundedCornerShape(26.dp))
+            .padding(20.dp)
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                credits.toString(),
-                style = MaterialTheme.typography.displaySmall,
-                color = BleuNuit
+                stringResource(R.string.welcome_solde_titre),
+                style = video.vitrine.core.designsystem.VitrineText.H3,
+                color = BlancPur
             )
-            Text(
-                stringResource(R.string.welcome_credits, credits),
-                style = MaterialTheme.typography.bodyLarge,
-                color = BleuNuit
+            video.vitrine.core.designsystem.BadgeVitrine(
+                texte = stringResource(R.string.welcome_badge_confirme),
+                teinte = video.vitrine.core.designsystem.TeinteBadge.Succes
             )
+        }
+        if (credits == 3) {
+            // Le chiffre 3 est matérialisé physiquement en 3 objets (§9.4).
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 14.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                repeat(credits) { index ->
+                    TuileVideoBienvenue(numero = index + 1)
+                }
+            }
+        } else {
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                modifier = Modifier.padding(top = 10.dp)
+            ) {
+                Text(
+                    credits.toString(),
+                    style = video.vitrine.core.designsystem.VitrineText.Num,
+                    color = BlancPur
+                )
+                Text(
+                    stringResource(R.string.welcome_credits, credits),
+                    style = video.vitrine.core.designsystem.VitrineText.Body.copy(fontSize = 13.sp),
+                    color = video.vitrine.core.designsystem.Blanc70,
+                    modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
+                )
+            }
         }
     }
 }
 
-/** Message EXACT par cause de refus (mission D42.30 : jamais « connexion
- *  perdue » quand le serveur a répondu non). */
+/** Tuile « Vidéo n » : rayon 18, filet blanc 8 %, icône video orange (§9.4). */
 @Composable
-private fun messageRefus(statut: Int, code: String): String = when {
-    statut == 401 -> stringResource(R.string.welcome_err_session)
-    statut == 403 || code == "account_inactive" ->
-        stringResource(R.string.welcome_err_inactive)
-    statut == 404 || code == "profile_not_initialized" ->
-        stringResource(R.string.welcome_err_profil)
-    statut >= 500 || code == "database_unavailable" ->
-        stringResource(R.string.welcome_err_serveur)
-    else -> stringResource(R.string.welcome_err_autre, statut)
+private fun TuileVideoBienvenue(numero: Int) {
+    Column(
+        modifier = Modifier
+            .weight(1f)
+            .clip(RoundedCornerShape(18.dp))
+            .border(1.dp, Color(0x14FFFFFF), RoundedCornerShape(18.dp))
+            .padding(vertical = 14.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        video.vitrine.core.designsystem.IconeVitrine(
+            icone = painterResource(video.vitrine.core.designsystem.R.drawable.ic_video),
+            taille = 20.dp,
+            teinte = OrangeStore
+        )
+        Text(
+            stringResource(R.string.welcome_video_n, numero),
+            style = video.vitrine.core.designsystem.VitrineText.Tiny,
+            color = video.vitrine.core.designsystem.Blanc80,
+            modifier = Modifier.padding(top = 6.dp)
+        )
+    }
 }
 
-@Preview(showBackground = true)
+/** Réassurances réelles du produit (§9.4) : 1080p · sans filigrane · sans limite. */
 @Composable
-private fun SectorPreview() {
-    VitrineTheme { OnboardingScreen { } }
+private fun ReassurancesBienvenue() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Reassurance(stringResource(R.string.welcome_reassur_1))
+        Reassurance(stringResource(R.string.welcome_reassur_2))
+        Reassurance(stringResource(R.string.welcome_reassur_3))
+    }
+}
+
+@Composable
+private fun Reassurance(texte: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        video.vitrine.core.designsystem.IconeVitrine(
+            icone = painterResource(video.vitrine.core.designsystem.R.drawable.ic_check),
+            taille = 14.dp,
+            teinte = video.vitrine.core.designsystem.VertSucces
+        )
+        Text(
+            texte,
+            style = video.vitrine.core.designsystem.VitrineText.Tiny,
+            color = video.vitrine.core.designsystem.Blanc80,
+            modifier = Modifier.padding(start = 4.dp)
+        )
+    }
 }
 
 /**
@@ -371,25 +553,33 @@ fun ReferralCodeScreen(
     initial: String = "",
     onDone: (String?) -> Unit
 ) {
+    // D42.33 : famille B repeinte (marge 20, badge étape, champ §7.9,
+    // CTA pilule) — logique de validation D41 inchangée.
     var code by remember { mutableStateOf(initial) }
     var invalid by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 20.dp)
+            .padding(top = 16.dp, bottom = 26.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(stringResource(R.string.refcode_title), style = MaterialTheme.typography.headlineSmall)
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    stringResource(R.string.refcode_title),
+                    style = video.vitrine.core.designsystem.VitrineText.H2,
+                    color = BleuNuit
+                )
                 Text(
                     stringResource(R.string.refcode_subtitle),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = video.vitrine.core.designsystem.VitrineText.Sub,
+                    color = video.vitrine.core.designsystem.Muted
                 )
             }
             Box(
@@ -401,26 +591,16 @@ fun ReferralCodeScreen(
             }
         }
         SecteurChoisiCard(sector)
-        Text(stringResource(R.string.refcode_label), style = MaterialTheme.typography.titleSmall, color = BleuNuit)
-        OutlinedTextField(
-            value = code,
-            onValueChange = { code = it; invalid = false },
-            placeholder = { Text(stringResource(R.string.refcode_hint)) },
-            modifier = Modifier.fillMaxWidth(),
-            isError = invalid,
-            singleLine = true
+        video.vitrine.core.designsystem.ChampFormulaire(
+            valeur = code,
+            surChangement = { code = it; invalid = false },
+            label = stringResource(R.string.refcode_label),
+            placeholder = stringResource(R.string.refcode_hint),
+            erreur = if (invalid) stringResource(R.string.refcode_invalid) else null,
+            testTag = "refcode_field"
         )
-        // D41 : format du code verifie cote client (MOTIF-123) — avant, un code
-        // mal saisi partait au serveur et echouait EN SILENCE (l'utilisateur
-        // croyait son parrain enregistre).
-        if (invalid) {
-            Text(
-                stringResource(R.string.refcode_invalid),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error
-            )
-        }
-        Button(
+        video.vitrine.core.designsystem.BoutonPrimaire(
+            libelle = stringResource(R.string.refcode_continue),
             onClick = {
                 val normalise = video.vitrine.feature.onboarding.auth.RefCodeParser.fromManualEntry(code)
                 if (code.isNotBlank() && normalise == null) {
@@ -429,9 +609,20 @@ fun ReferralCodeScreen(
                     onDone(normalise)
                 }
             },
-            modifier = Modifier.fillMaxWidth()
-        ) { Text(stringResource(R.string.refcode_continue)) }
-        TextButton(onClick = { onDone(null) }) { Text(stringResource(R.string.refcode_skip)) }
+            testTag = "refcode_continue"
+        )
+        Text(
+            stringResource(R.string.refcode_skip),
+            style = video.vitrine.core.designsystem.VitrineText.Tiny.copy(
+                fontWeight = androidx.compose.ui.text.font.FontWeight.W600
+            ),
+            color = video.vitrine.core.designsystem.Muted,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .clip(RoundedCornerShape(50))
+                .clickable { onDone(null) }
+                .padding(horizontal = 16.dp, vertical = 10.dp)
+        )
     }
 }
 
@@ -461,4 +652,24 @@ private fun SecteurChoisiCard(sector: Sector) {
             }
         }
     }
+}
+
+/** Message EXACT par cause de refus (mission D42.30 : jamais « connexion
+ *  perdue » quand le serveur a répondu non). */
+@Composable
+private fun messageRefus(statut: Int, code: String): String = when {
+    statut == 401 -> stringResource(R.string.welcome_err_session)
+    statut == 403 || code == "account_inactive" ->
+        stringResource(R.string.welcome_err_inactive)
+    statut == 404 || code == "profile_not_initialized" ->
+        stringResource(R.string.welcome_err_profil)
+    statut >= 500 || code == "database_unavailable" ->
+        stringResource(R.string.welcome_err_serveur)
+    else -> stringResource(R.string.welcome_err_autre, statut)
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SectorPreview() {
+    VitrineTheme { OnboardingScreen { } }
 }

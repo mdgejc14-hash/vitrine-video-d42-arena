@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -75,67 +74,78 @@ fun CarouselScreen(onDone: () -> Unit) {
                     )
                 )
         )
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .haloSombre()
-                .padding(horizontal = 20.dp)
-                .padding(top = 46.dp, bottom = 26.dp)
-        ) {
-            MarqueCarrousel()
-            Spacer(Modifier.weight(1f))
-            val (titre, sousTitre) = when (pager.currentPage) {
-                0 -> stringResource(R.string.slide1_slogan) to stringResource(R.string.slide1_sub)
-                1 -> stringResource(R.string.slide2_title) to stringResource(R.string.slide2_sub)
-                else -> stringResource(R.string.slide3_slogan) to stringResource(R.string.slide3_sub)
-            }
-            Text(
-                titre,
-                style = video.vitrine.core.designsystem.VitrineText.H1,
-                color = Color.White,
-                maxLines = 2
-            )
-            Text(
-                sousTitre,
-                style = video.vitrine.core.designsystem.VitrineText.Sub,
-                color = Blanc80,
-                maxLines = 2,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-            PaginationCarrousel(
-                actif = pager.currentPage,
-                modifier = Modifier.padding(top = 20.dp)
-            )
-            BoutonPrimaire(
-                libelle = if (pager.currentPage < 2) {
-                    stringResource(R.string.carousel_next)
+        ContenuCarrousel(
+            page = pager.currentPage,
+            surAvancer = {
+                if (pager.currentPage < 2) {
+                    scope.launch { pager.animateScrollToPage(pager.currentPage + 1) }
                 } else {
-                    stringResource(R.string.carousel_start)
-                },
-                onClick = {
-                    if (pager.currentPage < 2) {
-                        scope.launch { pager.animateScrollToPage(pager.currentPage + 1) }
-                    } else {
-                        onDone()
-                    }
-                },
-                modifier = Modifier.padding(top = 18.dp),
-                testTag = "carousel_cta"
-            )
-            Text(
-                stringResource(R.string.carousel_skip),
-                style = video.vitrine.core.designsystem.VitrineText.Tiny.copy(
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.W600
-                ),
-                color = Blanc80,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 10.dp, bottom = 6.dp)
-                    .clip(RoundedCornerShape(50))
-                    .clickable { onDone() }
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            )
+                    onDone()
+                }
+            },
+            surPasser = onDone
+        )
+    }
+}
+
+/** Texte + pagination + CTA du carrousel (extraction, detekt LongMethod). */
+@Composable
+private fun ContenuCarrousel(
+    page: Int,
+    surAvancer: () -> Unit,
+    surPasser: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .haloSombre()
+            .padding(horizontal = 20.dp)
+            .padding(top = 46.dp, bottom = 26.dp)
+    ) {
+        MarqueCarrousel()
+        Spacer(Modifier.weight(1f))
+        val (titre, sousTitre) = when (page) {
+            0 -> stringResource(R.string.slide1_slogan) to stringResource(R.string.slide1_sub)
+            1 -> stringResource(R.string.slide2_title) to stringResource(R.string.slide2_sub)
+            else -> stringResource(R.string.slide3_slogan) to stringResource(R.string.slide3_sub)
         }
+        Text(
+            titre,
+            style = video.vitrine.core.designsystem.VitrineText.H1,
+            color = Color.White,
+            maxLines = 2
+        )
+        Text(
+            sousTitre,
+            style = video.vitrine.core.designsystem.VitrineText.Sub,
+            color = Blanc80,
+            maxLines = 2,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        PaginationCarrousel(actif = page, modifier = Modifier.padding(top = 20.dp))
+        BoutonPrimaire(
+            libelle = if (page < 2) {
+                stringResource(R.string.carousel_next)
+            } else {
+                stringResource(R.string.carousel_start)
+            },
+            onClick = surAvancer,
+            modifier = Modifier.padding(top = 18.dp),
+            testTag = "carousel_cta"
+        )
+        Text(
+            stringResource(R.string.carousel_skip),
+            style = video.vitrine.core.designsystem.VitrineText.Tiny.copy(
+                fontWeight = androidx.compose.ui.text.font.FontWeight.W600
+            ),
+            color = Blanc80,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 10.dp, bottom = 6.dp)
+                .clip(RoundedCornerShape(50))
+                .clickable { surPasser() }
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        )
     }
 }
 

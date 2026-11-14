@@ -60,6 +60,7 @@ fun ChampFormulaire(
         SaisieChamp(
             valeur = valeur,
             surChangement = surChangement,
+            focusActif = focus,
             surFocusChange = { f -> focus = f },
             erreur = erreur,
             placeholder = placeholder,
@@ -76,6 +77,7 @@ fun ChampFormulaire(
 private fun SaisieChamp(
     valeur: String,
     surChangement: (String) -> Unit,
+    focusActif: Boolean,
     surFocusChange: (Boolean) -> Unit,
     erreur: String?,
     placeholder: String?,
@@ -84,7 +86,7 @@ private fun SaisieChamp(
     testTag: String?
 ) {
     val forme = FormeTuile
-    val actif = focus && erreur == null
+    val actif = focusActif && erreur == null
     val couleurFilet = if (erreur != null) AmbreAlerte else if (actif) OrangeStore else Line
     Row(
         modifier = Modifier
