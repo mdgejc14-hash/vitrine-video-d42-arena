@@ -158,6 +158,7 @@ fun BoutonIcone(
 ) {
     val interaction = remember { MutableInteractionSource() }
     val presse by interaction.collectIsPressedAsState()
+    val (fond, teinte) = parametresVariante(variante)
     Box(
         modifier = modifier
             .size(Dims.CibleTactile)
@@ -170,28 +171,21 @@ fun BoutonIcone(
             modifier = Modifier
                 .size(Dims.BoutonIcone)
                 .clip(forme)
-                .background(
-                    when (variante) {
-                        VarianteIcone.Clair -> Blanc
-                        VarianteIcone.Voile -> OrangeVoile
-                        VarianteIcone.Verre -> BlancVoile
-                    }
-                )
+                .background(fond)
                 .let { if (variante == VarianteIcone.Clair && !presse) it.ombreSm(forme) else it }
                 .let { if (presse) it.border(1.dp, Line, forme) else it },
             contentAlignment = Alignment.Center
         ) {
-            IconeVitrine(
-                icone,
-                taille = tailleGlyph,
-                teinte = when (variante) {
-                    VarianteIcone.Clair -> Navy
-                    VarianteIcone.Voile -> OrangeStore
-                    VarianteIcone.Verre -> Blanc
-                }
-            )
+            IconeVitrine(icone, taille = tailleGlyph, teinte = teinte)
         }
     }
+}
+
+/** Résolution fond/teinte du bouton icône (§7.3) — extraite (detekt D42.33). */
+private fun parametresVariante(variante: VarianteIcone): Pair<Color, Color> = when (variante) {
+    VarianteIcone.Clair -> Blanc to Navy
+    VarianteIcone.Voile -> OrangeVoile to OrangeStore
+    VarianteIcone.Verre -> BlancVoile to Blanc
 }
 
 /** Rendu d'icône unifié du design system (teinte + taille, null → rien). */

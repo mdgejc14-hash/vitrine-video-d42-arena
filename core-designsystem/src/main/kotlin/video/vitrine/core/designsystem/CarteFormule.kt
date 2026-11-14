@@ -70,37 +70,66 @@ fun CarteFormule(
             color = if (recommandee) Blanc else Navy,
             modifier = Modifier.padding(top = 4.dp)
         )
-        Column(
-            modifier = Modifier.padding(top = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            avantages.forEach { avantage ->
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconeVitrine(
-                        icone = painterResource(R.drawable.ic_check),
-                        taille = 16.dp,
-                        teinte = if (recommandee) VertSucces else VertSucces
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        avantage,
-                        style = VitrineText.Sub,
-                        color = if (recommandee) Blanc80 else NavySoft
-                    )
-                }
+        AvantagesFormule(avantages = avantages, recommandee = recommandee)
+        Spacer(Modifier.height(14.dp))
+        BoutonFormule(
+            libelleBouton = libelleBouton,
+            surChoix = surChoix,
+            recommandee = recommandee,
+            boutonActif = boutonActif,
+            testTag = testTag
+        )
+    }
+}
+
+/** Ligne d'avantages (chaînes du dépôt, grille tarifaire officielle). */
+@Composable
+private fun AvantagesFormule(avantages: List<String>, recommandee: Boolean) {
+    Column(
+        modifier = Modifier.padding(top = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        avantages.forEach { avantage ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconeVitrine(
+                    icone = painterResource(R.drawable.ic_check),
+                    taille = 16.dp,
+                    teinte = VertSucces
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    avantage,
+                    style = VitrineText.Sub,
+                    color = if (recommandee) Blanc80 else NavySoft
+                )
             }
         }
-        Spacer(Modifier.height(14.dp))
-        if (recommandee) {
-            BoutonPrimaire(libelle = libelleBouton, onClick = surChoix, enabled = boutonActif, testTag = testTag?.let { "$it-btn" })
-        } else {
-            BoutonSecondaire(
-                libelle = libelleBouton,
-                onClick = surChoix,
-                enabled = boutonActif,
-                pleineLargeur = true,
-                testTag = testTag?.let { "$it-btn" }
-            )
-        }
+    }
+}
+
+/** CTA de la formule — honnête : inactif tant que le paiement n'est pas branché. */
+@Composable
+private fun BoutonFormule(
+    libelleBouton: String,
+    surChoix: () -> Unit,
+    recommandee: Boolean,
+    boutonActif: Boolean,
+    testTag: String?
+) {
+    if (recommandee) {
+        BoutonPrimaire(
+            libelle = libelleBouton,
+            onClick = surChoix,
+            enabled = boutonActif,
+            testTag = testTag?.let { "$it-btn" }
+        )
+    } else {
+        BoutonSecondaire(
+            libelle = libelleBouton,
+            onClick = surChoix,
+            enabled = boutonActif,
+            pleineLargeur = true,
+            testTag = testTag?.let { "$it-btn" }
+        )
     }
 }
