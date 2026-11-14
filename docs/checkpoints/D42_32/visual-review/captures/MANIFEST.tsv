@@ -1,0 +1,87 @@
+section	fichier	description	provenance (run)	octets
+01_accueil	splash_fr.png	Splash (lancement)	visual-gallery-d42 43582523983 (a799c50) job fr	97378
+01_accueil	carrousel_1_fr.png	Carrousel — Filme. Vends. C'est tout.	visual-gallery-d42 43582523983 (a799c50) job fr	290715
+01_accueil	carrousel_2_fr.png	Carrousel — slide 2	visual-gallery-d42 43582523983 (a799c50) job fr	299559
+01_accueil	carrousel_3_fr.png	Carrousel — slide 3	visual-gallery-d42 43582523983 (a799c50) job fr	249302
+01_accueil	splash_en.png	Splash EN	visual-gallery-d42 43582523983 (a799c50) job en	97363
+01_accueil	carrousel_1_en.png	Carrousel EN — slide 1	visual-gallery-d42 43582523983 (a799c50) job en	284117
+02_langues	langue_fr.png	Choix de langue (FR/EN seuls)	visual-gallery-d42 43582523983 (a799c50) job fr	82812
+02_langues	langue_en.png	Language choice (FR/EN only)	visual-gallery-d42 43582523983 (a799c50) job en	82894
+02_langues	langue_en_e2e.png	Choix EN (job e2e langues)	e2e-lab 43582492529 (a799c50)	82248
+03_authentification	auth_fr.png	Connexion — bouton Google	visual-gallery-d42 43582523983 (a799c50) job fr	121933
+03_authentification	auth_en.png	Sign-in EN	visual-gallery-d42 43582523983 (a799c50) job en	116618
+03_authentification	auth_offline.png	Connexion hors réseau	e2e-lab 43582492529 (a799c50)	121995
+04_parrainage	etape_code_fr.png	Étape parrainage — saisie du code	visual-gallery-d42 43582523983 (a799c50) job fr	109461
+04_parrainage	dashboard_parrainage_fr.png	Parrainage depuis le dashboard — jauge et code (Lot 6)	visual-gallery-d42 43582523983 (a799c50) job fr	103029
+04_parrainage	dashboard_parrainage_en.png	Referral from dashboard EN	visual-gallery-d42 43582523983 (a799c50) job en	158961
+05_credits	credits_bienvenue_fr.png	Bienvenue — confirmation des crédits (Lot 9)	visual-gallery-d42 43582523983 (a799c50) job fr	71522
+05_credits	paywall_fr.png	Formules — Pass 500 / Pro 3000 / Boutique 7500 (Lot 7)	visual-gallery-d42 43582523983 (a799c50) job fr	156897
+05_credits	paywall_bas_fr.png	Formules — bas, badge Recommandé	visual-gallery-d42 43582523983 (a799c50) job fr	153035
+05_credits	paywall_suite_fr.png	Paywall (screenrecord repli, profil suite)	visual-gallery-d42 43582523983 (a799c50) job suite	170796
+05_credits	paywall_en.png	Plans EN	visual-gallery-d42 43582523983 (a799c50) job en	158053
+06_secteurs	secteurs_fr.png	Choix du secteur (6 cartes 3D)	visual-gallery-d42 43582523983 (a799c50) job fr	433456
+06_secteurs	secteurs_bas_fr.png	Secteurs — bas de liste	visual-gallery-d42 43582523983 (a799c50) job fr	443221
+06_secteurs	secteurs_en.png	Sectors EN	visual-gallery-d42 43582523983 (a799c50) job en	391539
+07_catalogue	catalogue_haut_fr.png	Catalogue — 5 gabarits du secteur (Lots 1+2)	visual-gallery-d42 43582523983 (a799c50) job fr	216979
+07_catalogue	catalogue_scroll_fr.png	Catalogue — défilé	visual-gallery-d42 43582523983 (a799c50) job fr	216979
+07_catalogue	catalogue_p1.png	Catalogue (job p1, parcours principal)	e2e-lab 43582492529 (a799c50)	217209
+07_catalogue	catalogue_en.png	Catalog EN	visual-gallery-d42 43582523983 (a799c50) job en	223089
+07_catalogue	catalogue_offline.png	Catalogue hors réseau	e2e-lab 43582492529 (a799c50)	223992
+08_gabarits	vignettes_scroll_fr.png	Vignettes gabarits — gradients sectoriels (réf. GABARITS_INVENTAIRE.csv)	visual-gallery-d42 43582523983 (a799c50) job fr	216979
+08_gabarits	vignette_p1.png	Vignettes (p1)	e2e-lab 43582492529 (a799c50)	217209
+09_brief	brief_vide_fr.png	Brief vide — Continuer désactivé	visual-gallery-d42 43582523983 (a799c50) job fr	154464
+09_brief	brief_rempli_fr.png	Brief rempli (valeurs fictives)	visual-gallery-d42 43582523983 (a799c50) job fr	121740
+09_brief	brief_final_fr.png	Brief — état final avant validation (PiedContinuer 52 dp, Lot 10)	visual-gallery-d42 43582523983 (a799c50) job fr	122217
+09_brief	brief_etape1_fr.png	Brief multi-étapes — étape 1	visual-gallery-d42 43582523983 (a799c50) job fr	122521
+09_brief	brief_etape8_fr.png	Brief multi-étapes — étape 8	visual-gallery-d42 43582523983 (a799c50) job fr	122071
+09_brief	brief_p1.png	Brief (job p1)	e2e-lab 43582492529 (a799c50)	155105
+09_brief	brief_bas_p1.png	Brief — bas (bouton épinglé visible)	e2e-lab 43582492529 (a799c50)	140941
+09_brief	brief_drafts_reprise.png	Brouillon repris (persistance saisie)	e2e-lab 43582492529 (a799c50)	161824
+09_brief	brief_drafts_partiel.png	Saisie partielle sauvegardée	e2e-lab 43582492529 (a799c50)	141081
+10_formulaires	whatsapp_clavier_fr.png	Champ WhatsApp — clavier ouvert (Lot 8)	visual-gallery-d42 43582523983 (a799c50) job suite	158440
+10_formulaires	whatsapp_clavier_en.png	WhatsApp field — keyboard open EN	visual-gallery-d42 43582523983 (a799c50) job en	160845
+11_verification	verification_fr.png	Vérification avant tournage	visual-gallery-d42 43582523983 (a799c50) job suite	145636
+11_verification	verification_bas_fr.png	Vérification — bas	visual-gallery-d42 43582523983 (a799c50) job suite	145636
+11_verification	ready_p1.png	ReadyCheck (job p1)	e2e-lab 43582492529 (a799c50)	143186
+12_camera	camera_guide_fr.png	Guide de tournage — consignes	visual-gallery-d42 43582523983 (a799c50) job suite	144891
+12_camera	camera_preview_en.png	Viseur (flux ÉMULÉ)	visual-gallery-d42 43582523983 (a799c50) job en	136869
+12_camera	camera_p1.png	Caméra guidée (job p1)	e2e-lab 43582492529 (a799c50)	179319
+12_camera	camera_ecran_p1.png	Écran caméra (job p1)	e2e-lab 43582492529 (a799c50)	179468
+12_camera	camera_permission_camerap.png	Dialogue permission caméra (job camerap)	e2e-lab 43582492529 (a799c50)	141992
+13_prises	countdown_a_en.png	Compte à rebours 3-2-1 (VÉRITABLE)	visual-gallery-d42 43582523983 (a799c50) job en	142254
+13_prises	countdown_b_en.png	Compte à rebours — suite	visual-gallery-d42 43582523983 (a799c50) job en	140762
+13_prises	rec_en.png	Enregistrement — badge REC + HUD	visual-gallery-d42 43582523983 (a799c50) job en	135023
+13_prises	arret_en.png	Arrêt de prise	visual-gallery-d42 43582523983 (a799c50) job en	131939
+13_prises	avant_en.png	Bascule caméra avant	visual-gallery-d42 43582523983 (a799c50) job en	160960
+13_prises	arriere_en.png	Bascule caméra arrière	visual-gallery-d42 43582523983 (a799c50) job en	165157
+13_prises	refaire_en.png	Refaire une prise	visual-gallery-d42 43582523983 (a799c50) job en	165599
+13_prises	scene2_en.png	Scène 2 du guide	visual-gallery-d42 43582523983 (a799c50) job en	155386
+13_prises	prise_rec_p1.png	Prise 1 — enregistrement (job p1)	e2e-lab 43582492529 (a799c50)	171587
+13_prises	prise_faite_p1.png	Prise 1 faite (job p1)	e2e-lab 43582492529 (a799c50)	161250
+13_prises	prise2_rec_p1.png	Prise 2 — enregistrement (job p1)	e2e-lab 43582492529 (a799c50)	153262
+13_prises	refaire_camerap.png	Après Refaire (job camerap)	e2e-lab 43582492529 (a799c50)	160916
+17_historique	dashboard_fr.png	Mon espace — tableau de bord (Lot 5)	visual-gallery-d42 43582523983 (a799c50) job fr	159621
+17_historique	dashboard_bas_fr.png	Dashboard — bas de page	visual-gallery-d42 43582523983 (a799c50) job fr	155655
+17_historique	dashboard_suite_fr.png	Dashboard (profil suite, screenrecord repli)	visual-gallery-d42 43582523983 (a799c50) job suite	169509
+17_historique	dashboard_en.png	Dashboard EN	visual-gallery-d42 43582523983 (a799c50) job en	158961
+19_profil	profil_reglages_fr.png	Réglages (langue, nettoyage, déconnexion)	visual-gallery-d42 43582523983 (a799c50) job fr	126390
+19_profil	profil_reglages_en.png	Settings EN	visual-gallery-d42 43582523983 (a799c50) job en	124630
+20_hors_connexion	offline_langue.png	Hors réseau — écran langue	e2e-lab 43582492529 (a799c50)	83021
+20_hors_connexion	offline_carrousel.png	Hors réseau — carrousel	e2e-lab 43582492529 (a799c50)	292412
+20_hors_connexion	offline_bienvenue.png	Hors réseau — bienvenue	e2e-lab 43582492529 (a799c50)	72970
+20_hors_connexion	offline_redemarrage.png	Hors réseau — redémarrage	e2e-lab 43582492529 (a799c50)	122340
+20_hors_connexion	offline_retour_reseau.png	Retour réseau — resynchronisation	e2e-lab 43582492529 (a799c50)	122021
+21_conditions	petit_ecran_base.png	Petit écran 540×960 — secteurs	e2e-lab 43582492529 (a799c50)	83411
+21_conditions	petit_ecran_bienvenue.png	Petit écran — bienvenue (bouton 56 dp visible)	e2e-lab 43582492529 (a799c50)	31883
+21_conditions	petit_ecran_catalogue.png	Petit écran — catalogue 5 gabarits	e2e-lab 43582492529 (a799c50)	76282
+21_conditions	font130_langue.png	Police 130 % — langue	e2e-lab 43582492529 (a799c50)	88255
+21_conditions	font130_bienvenue.png	Police 130 % — bienvenue	e2e-lab 43582492529 (a799c50)	79380
+21_conditions	font130_catalogue.png	Police 130 % — catalogue	e2e-lab 43582492529 (a799c50)	216512
+21_conditions	rot90_carrousel.png	Rotation paysage — carrousel	e2e-lab 43582492529 (a799c50)	298175
+21_conditions	rot90_bienvenue.png	Rotation paysage — bienvenue	e2e-lab 43582492529 (a799c50)	70786
+16_export	export-tire-candidat.mp4	VIDÉO RÉELLEMENT EXPORTÉE par le candidat (MP4 tiré du device, profil suite — contient aussi la musique BGM automatique)	visual-gallery-d42 43582523983 (a799c50) job suite	4414370
+16_export	dump_export_termine.xml	PREUVE dump (écran FLAG_SECURE : capture pixel impossible par conception — protection produit, jamais contournée)	e2e-lab 43582492529 (a799c50)	12770
+16_export	dump_partage_feuille.xml	PREUVE dump (écran FLAG_SECURE : capture pixel impossible par conception — protection produit, jamais contournée)	e2e-lab 43582492529 (a799c50)	9524
+16_export	dump_e7_apercu.xml	PREUVE dump (écran FLAG_SECURE : capture pixel impossible par conception — protection produit, jamais contournée)	e2e-lab 43582492529 (a799c50)	7104
+05_credits	preuve_room_export_journal.db	PREUVE quota app : base Room tirée du device — export_journal 1 ligne CONFIRMED, balanceAfter=2 (1 crédit bienvenue débité, eventId UUID)	e2e-lab 43582492529 (a799c50)	1708032
+18_partage	dump_partage_feuille.xml	PREUVE dump : feuille de partage OUVERTE (Share, export-0.mp4, Bluetooth, Messaging) — écran système sur FLAG_SECURE, capture pixel impossible	e2e-lab 43582492529 (a799c50)	9524

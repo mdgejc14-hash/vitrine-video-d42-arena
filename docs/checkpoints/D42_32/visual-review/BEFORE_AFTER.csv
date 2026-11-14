@@ -1,13 +1,13 @@
 n,correction,lot_commit,capture_avant,ecrans_apres
-1,Catalogue : secteur → 5 gabarits seulement (plus de filtre intégré),Lot 1 (90f1ac5),,CatalogScreen
-2,"Catalogue : cartes premium, hiérarchie, 5 gabarits identifiables",Lot 2 (095d645),,CatalogScreen + VignetteCatalogue
-3,Caméra : présentation écran + diagnostic différentiel (outil),Lot 3 (b0a988b),,PriseGuideScreen + CameraDiagnosticScreen
-4,Localisation FR/EN complète (parcours + 30 gabarits),Lot 4 (316bb80),,tous écrans du parcours (lang_en)
-5,"Dashboard : en-tête pro, carte crédits, action principale, sync honnête",Lot 5 (f07ae5c),,DashboardScreen
-6,"Parrainage : code immédiatement visible, copier/partager, paliers",Lot 6 (f07ae5c),,ReferralScreen + ReferralCodeScreen
-7,"Tarifs : 3 formules exactes, fin « illimité », 501 honnête",Lot 7 (e47262a),,PaywallScreen
-8,"Formulaires : WhatsApp international, prix stable, tutoiement, ImeAction",Lot 8 (6d1ad6a),,GabaritBriefScreen (clavier ouvert)
-9,"Bienvenue : patron étapes 1-2, crédits confirmés, bouton épinglé",Lot 9 (d88dbbf),,WelcomeScreen
-10,"Design system : PiedContinuer 52 dp, barre d'action standard",Lot 10 (1b42df4),,GabaritBriefScreen
-11,"Quota réel : Pro 90/30 j appliqué côté serveur, restes exposés",§4 (79e4b14),,PaywallScreen + DashboardScreen (affichage)
-12,Harmonisation design system transverse (§6),§6 (e7ffe5b),,dashboard/catalogue/brief/paywall/bienvenue/caméra
+1,Catalogue : secteur → 5 gabarits seulement (plus de filtre intégré),Lot 1 (90f1ac5),https://github.com/mdgejc14-hash/vitrine-video-d42-arena/tree/main/docs/checkpoints/D42_31/visual-review/07_catalogue,captures/07_catalogue/ + 21_conditions/petit_ecran_catalogue.png
+2,"Catalogue : cartes premium, hiérarchie, 5 gabarits identifiables",Lot 2 (095d645),https://github.com/mdgejc14-hash/vitrine-video-d42-arena/tree/main/docs/checkpoints/D42_31/visual-review/07_catalogue,captures/07_catalogue/catalogue_haut_fr.png + 08_gabarits/
+3,Caméra : présentation écran + diagnostic différentiel (outil),Lot 3 (b0a988b),https://github.com/mdgejc14-hash/vitrine-video-d42-arena/tree/main/docs/checkpoints/D42_31/visual-review/12_camera,captures/12_camera/ + 13_prises/ + camera-preuves/ (conclusion scène AVD)
+4,Localisation FR/EN complète (parcours + 30 gabarits),Lot 4 (316bb80),https://github.com/mdgejc14-hash/vitrine-video-d42-arena/tree/main/docs/checkpoints/D42_31/visual-review/02_langues,captures/02_langues/langue_en*.png + run e2e-langue-en
+5,"Dashboard : en-tête pro, carte crédits, action principale, sync honnête",Lot 5 (f07ae5c),https://github.com/mdgejc14-hash/vitrine-video-d42-arena/tree/main/docs/checkpoints/D42_31/visual-review/05_credits,captures/17_historique/dashboard_fr.png + 05_credits/
+6,"Parrainage : code immédiatement visible, copier/partager, paliers",Lot 6 (f07ae5c),https://github.com/mdgejc14-hash/vitrine-video-d42-arena/tree/main/docs/checkpoints/D42_31/visual-review/04_parrainage,captures/04_parrainage/dashboard_parrainage_fr.png
+7,"Tarifs : 3 formules exactes, fin « illimité », 501 honnête",Lot 7 (e47262a),https://github.com/mdgejc14-hash/vitrine-video-d42-arena/tree/main/docs/checkpoints/D42_31/visual-review/05_credits,captures/05_credits/paywall_fr.png + preuve_room_export_journal.db + RUNS.md (quota)
+8,"Formulaires : WhatsApp international, prix stable, tutoiement, ImeAction",Lot 8 (6d1ad6a),https://github.com/mdgejc14-hash/vitrine-video-d42-arena/tree/main/docs/checkpoints/D42_31/visual-review/10_formulaires,captures/10_formulaires/whatsapp_clavier_fr.png
+9,"Bienvenue : patron étapes 1-2, crédits confirmés, bouton épinglé",Lot 9 (d88dbbf),https://github.com/mdgejc14-hash/vitrine-video-d42-arena/tree/main/docs/checkpoints/D42_31/visual-review/04_parrainage,captures/05_credits/credits_bienvenue_fr.png + 21_conditions/font130_bienvenue.png
+10,"Design system : PiedContinuer 52 dp, barre d'action standard",Lot 10 (1b42df4),https://github.com/mdgejc14-hash/vitrine-video-d42-arena/tree/main/docs/checkpoints/D42_31/visual-review/09_brief,captures/09_brief/brief_final_fr.png (PiedContinuer 52 dp)
+11,"Quota réel : Pro 90/30 j appliqué côté serveur, restes exposés",§4 (79e4b14),https://github.com/mdgejc14-hash/vitrine-video-d42-arena/tree/main/docs/checkpoints/D42_31/visual-review/05_credits,captures/05_credits/ (paywall) + RUNS.md (quota serveur 21/21)
+12,Harmonisation design system transverse (§6),§6 (e7ffe5b),https://github.com/mdgejc14-hash/vitrine-video-d42-arena/tree/main/docs/checkpoints/D42_31/visual-review/07_catalogue,captures/21_conditions/ + 10_DESIGN_SYSTEM.md §3bis

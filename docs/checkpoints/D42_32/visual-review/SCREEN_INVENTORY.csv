@@ -1,19 +1,22 @@
-n,slug,composable,module,contenu,campagnes_e2e_existantes
-01,langue,LanguageScreen,feature-onboarding,Choix FR/EN au premier lancement,"petit-ecran,lang_en"
-02,carrousel,CarouselScreen,feature-onboarding,Présentation du service (intro),"petit-ecran,lang_en"
-03,secteur,OnboardingScreen,feature-onboarding,Choix du secteur (cartes 3D),"petit-ecran,lang_en"
-04,bienvenue,WelcomeScreen,feature-onboarding,"Bienvenue + crédits 3/3, bouton épinglé 56 dp (Lot 9)","bienvenue,petit-ecran,lang_en"
-05,parrainage_inscription,ReferralCodeScreen,feature-onboarding,Saisie code parrain à l'inscription,"petit-ecran,lang_en"
-06,auth,AuthScreen,feature-onboarding/auth,Connexion Google,e2e-auth
-07,dashboard,DashboardScreen,feature-dashboard,"Accueil commerçant : en-tête pro, carte crédits, sync honnête (Lot 5)","pixel5,petit-ecran,lang_en"
-08,tarifs,PaywallScreen,feature-dashboard,"3 formules exactes 500/3000/7500, 501 honnête (Lot 7 + §4)","pixel5,petit-ecran,lang_en"
-09,parrainage,ReferralScreen,feature-dashboard,"Code visible, copier/partager, paliers (Lot 6)","pixel5,petit-ecran,lang_en"
-10,reglages,SettingsScreen,feature-dashboard,Réglages compte/langue,petit-ecran
-11,catalogue,CatalogScreen,feature-catalog,"5 gabarits du secteur, cartes premium (Lots 1+2)","pixel5,petit-ecran,lang_en"
-12,brief_gabarit,GabaritBriefScreen,feature-brief,"Brief guidé par gabarit, PiedContinuer 52 dp (Lot 10)","pixel5,petit-ecran,clavier,lang_en"
-13,brief_simple,BriefScreen,feature-brief,Brief simple (parcours démo),petit-ecran
-14,ready_check,ReadyCheckScreen,feature-brief,Vérification avant tournage,"petit-ecran,lang_en"
-15,camera,PriseGuideScreen,feature-camera,"Caméra guidée HUD, statuts lisibles (Lot 3 outil + §5)","camerap,pixel5"
-16,apercu_export,VideoPreviewScreen,feature-export,Aperçu vidéo + export/partage,"pixel5,petit-ecran,offline-export"
-17,diagnostic_camera,CameraDiagnosticScreen,feature-camera,Outil diagnostic différentiel (outil interne),camera-diagnostic
-18,vignette_gabarit,VignetteCatalogue,feature-catalog,Vignette gabarit dans le catalogue (composant),"pixel5,petit-ecran,lang_en"
+n,slug,composable,module,contenu,sources_de_capture
+01,accueil,MainActivity+CarouselScreen,app+feature-onboarding,"Splash, carrousel 3 slides (FR/EN) ","gallery-d32-fr/en,e2e-pixel5"
+02,langues,LanguageScreen,feature-onboarding,Choix FR/EN seuls (D42.30),"gallery,e2e-pixel5,e2e-langue-en,offline"
+03,authentification,AuthScreen,feature-onboarding/auth,Connexion Google + repli session locale,"gallery,e2e-pixel5,e2e-auth,offline"
+04,parrainage_inscription,ReferralCodeScreen,feature-onboarding,Code parrain facultatif à l'inscription (deep-link AKWABA-100),"gallery,e2e-pixel5,e2e-deeplink"
+05,credits,PaywallScreen+DashboardCreditsCard,feature-dashboard,"Crédits, formules, états sync honnêtes (Lots 5/7 + §4)","gallery suite,pixel5"
+06,secteurs,OnboardingScreen,feature-onboarding,Cartes 3D des 6 secteurs,"gallery fr base (6 secteurs),pixel5"
+07,catalogue,CatalogScreen,feature-catalog,"5 gabarits du secteur, cartes premium (Lots 1+2)","gallery,p1 (20_catalogue),lang_en"
+08,gabarits,VignetteCatalogue,feature-catalog,30 gabarits (GABARITS_INVENTAIRE.csv) — vignettes gradients sectoriels,gallery fr base (6 secteurs)
+09,brief,GabaritBriefScreen,feature-brief,"Brief guidé, PiedContinuer 52 dp (Lot 10), persistance saisie","gallery,p1 (21/22b),drafts"
+10,formulaires,TelephoneField+champs brief,feature-brief,"WhatsApp E.164, prix stable clavier, erreur 130 % (Lot 8)","gallery,p1 (22b clavier)"
+11,verification,ReadyCheckScreen,feature-brief,Contrôle avant tournage (scènes/prises),"gallery,p1 (22c_ready)"
+12,camera,PriseGuideScreen,feature-camera,Viseur PreviewView + HUD + commandes (Lot 3 outil diagnostic),"gallery,camerap,p1 (23-27)"
+13,prises,GuidedShootingOverlay+compte à rebours,feature-camera,"Enregistrement guidé, refaire, bascule avant/arrière","gallery,camerap (B01-B04,C01),p1 (25-26)"
+14,audio,BgmSelection (logique PURE),data,"Choix AUTOMATIQUE parmi 600 compositions — PAS d'écran dédié (by design), preuve = code+tests+audio-audit","gabarits-audit,matrice audio (aucune capture — gap documenté)"
+15,montage,VideoPreviewScreen+ExportPreviewPanel,feature-export,"Montage AUTOMATIQUE (étapes gabarit), aperçu, mot-clé OrangeStore (§6)","gallery,p1 (28_apercu) — FLAG_SECURE: dumps+preuves"
+16,export,ExportActivity+ExportWorker,feature-export,"Export MP4, notification, file d'attente offline","gallery,p1 (29_export_termine),offline-export — FLAG_SECURE documenté"
+17,historique,DashboardScreen+ReferralHistoriqueRepliable,feature-dashboard,"Espace commerçant, historique parrainage, brouillons (reprise)","gallery suite,drafts (S01-S03)"
+18,partage,feuille de partage Android,système,Partage export-0.mp4 (feuille système) + WhatsApp,gallery (partage_feuille)
+19,profil,SettingsScreen,feature-dashboard,"Réglages : langue, nettoyage, déconnexion",gallery suite (profil_reglages)
+20,hors_connexion,états offline transverses,transverse,Langue/connexion/carrousel/secteur/bienvenue/catalogue hors réseau + retour réseau,e2e-offline (9 PNG)
+21,diagnostic_camera,CameraDiagnosticActivity,feature-camera,"OUTIL interne (pas produit) — 4 sources × 2 modes, preuves camera-preuves/",camera-diagnostic (v4: + MP4)

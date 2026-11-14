@@ -64,37 +64,36 @@
 - Captures authentiques non retouchées, identifiées émulateur ; FLAG_SECURE documenté
   jamais contourné. FR/EN seuls sur le parcours commercial.
 
-## État courant
+## État courant — PHASE B LIVRÉE, ARRÊT À LA PORTE
 
-- **HEAD local = distant = `2a9ad15`** (rollback sandbox n°2 réparé : fetch +
-  stash débris D42.28/29 + reset — protocole d'incident, rien de perdu).
-- **Chaîne D42.32 sur main** : `2a19d49` → `ae64aa1` §4 quota serveur 90/30 j
-  (ex-79e4b14, SHAs API) → `95d0734` Lot 10 (ex-1b42df4) → `765c841` squelette
-  Phase B (ex-2adc79f) → `905a4f6` caméra v2 (ex-43eaff3) → `ac29fdd` §6
-  harmonisation (ex-e7ffe5b) → `33abc37` état réconcilié → `2a9ad15` fix 403
-  empreinte + caméra v3.
-- **Run 43578603832 (2a9ad15) = 14/15 SUCCESS** : auth-local 22/22 (fix 403
-  validé), backend-http (quota 21/21 en CI), pixel5, p1, drafts, auth, offline,
-  deeplink, langues EN, offline-export, gabarits-audit, security-local,
-  selftest, camerap — TOUT SUCCESS. **Seul camera-diagnostic FAILURE, sur le
-  script de vérification** (heredoc exécuté ligne à ligne par `sh -c`) :
-  la RÉCUPÉRATION elle-même a réussi (12 fichiers, artefact 14106994681,
-  conservés dans `visual-review/camera-preuves/`).
-- **v4 en working tree (à committer)** : vérificateur
-  `tools/e2e/verify_camera_artifacts.py` invoqué en une ligne + copie du MP4
-  dans le dossier de preuve (l'activité diagnostic le laissait en cacheDir).
-  Conclusion caméra documentée (06) : écart luminance Preview/MP4 0,1/1,0 →
-  scène virtuelle AVD, AUCUNE modif CameraX, physique = fondateur.
-- Porte d'approbation : **FERMÉE** (galerie avant/après pas encore produite).
+- **HEAD local = distant = `a799c50`** + commit galerie (ce push). Chaîne
+  complète D42.32 : `2a19d49` → ae64aa1 (§4) → 95d0734 (Lot 10) → 765c841
+  (squelette) → 905a4f6 (caméra v2) → ac29fdd (§6) → 33abc37 → 2a9ad15 (403 +
+  v3) → 163e215 (caméra v4 + preuves) → a799c50 (workflow galerie + harnais
+  adapté) → **commit galerie §8**.
+- **Laboratoire VERT sur le candidat** : e2e-lab **43582492529 (a799c50) =
+  SUCCESS 15/15** — camera-diagnostic v4 PASS (2 rapports 4 sources,
+  emulateur=true, 10 PNG, **2 MP4 réels 443/430 Ko**), auth-local 22/22,
+  backend-http (quota 21/21), pixel5 23 PASS, camerap, offline, offline-export
+  (41 PASS + export.mp4 + vitrine-local.db), drafts, langues EN, petit-écran
+  (60 PNG), security, gabarits-audit, selftest. android-ci SUCCESS.
+- **Galerie §8 LIVRÉE** (`visual-review/`) : README illustré **80 images**,
+  86 entrées de manifeste (FR base 31 + suite 26 + EN 50 + e2e-lab, toutes du
+  candidat a799c50), 21 sections miroir D42.31, BEFORE_AFTER 12 corrections
+  (liens avant RC15 ↔ après candidat), UX_AUDIT 7/7 CORRIGÉ+CAPTURÉ, RUNS.md
+  (runs + artefacts + RCA caméra 4 runs), gaps documentés (FLAG_SECURE,
+  PNG vides swiftshader, audio automatique, scène AVD), preuves quota
+  (Room CONFIRMED balanceAfter=2), export-tire-candidat.mp4 (4,4 Mo).
+- **Réserves portées au fondateur** : capteur physique (toutes captures
+  caméra ÉMULÉES), FLAG_SECURE (dumps + MP4 réel), RC15 immuable.
+- **PORTE D'APPROBATION : EN ATTENTE DU FONDATEUR** (§12). Aucune RC16
+  construite. Après accord : Phase C (APK signée, checksum, E2E sur l'APK
+  exacte, release GitHub, test capteur physique fondateur).
 
-## Prochain travail (ordre)
+## Prochain travail
 
-1. Commit v4 caméra (+ preuves + docs + checkpoint) → push → e2e-lab sur le
-   commit candidat (justifié : la galerie §8 exige les captures DU commit
-   candidat — ce n'est pas une relance gratuite d'un run vert).
-2. Run vert attendu : camera-diagnostic PASS (vérificateur + 2 MP4 réels).
-3. Télécharger les artefacts du run candidat → captures authentiques →
-   compléter la galerie §8 (README illustré, BEFORE_AFTER rempli, inventaires,
-   preuves tests, gaps documentés).
-4. Checkpoint final → **ARRÊT à la porte d'approbation fondateur** (avant
-   toute RC16/Phase C).
+1. ~~Phase A (Lots 1-10 + §4 + §6)~~ ✓ · ~~non-régression groupée 15/15~~ ✓ ·
+   ~~galerie §8~~ ✓ · ~~checkpoint final~~ ✓.
+2. **ARRÊT** : attendre l'approbation visuelle du fondateur sur la galerie.
+3. Après accord : Phase C (signature officielle, E2E APK exacte, release,
+   capteur physique) — jamais avant.
