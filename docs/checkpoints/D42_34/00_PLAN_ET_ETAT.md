@@ -21,6 +21,37 @@ défauts démontrés par le fondateur (ordre D42.34 + addendum « couteau suisse
 
 ## Journal des opérations (ajouts récents d'abord)
 
+- **17/11 — PROTOCOLE DE RÉCUPÉRATION WORKSPACE (quota 128 Mo dépassé)** :
+  - **GitHub d'abord** : HEAD distant `2dfd907` = local, `git status` 0
+    modification, `git fsck` OK — RIEN à réconcilier, mission déjà livrée ;
+  - **Mémoire mesurée** : RAM 1982 Mo (1736 disponibles, aucun process
+    Java/Gradle actif) ; disque 12 Go libres ; workspace 3,3 Go comptés
+    dont **~2,75 Go = ~/.gradle** (caches/dist réproductibles) ;
+  - **Nettoyage** (3,3 Go → **221 Mo comptés**) — supprimé, provenance
+    vérifiée : `~/.gradle` (re-téléchargeable), copies scratch de sessions
+    closes (rc13/14/15, p1official, vvprod*, galv8, v8check, camfix,
+    expfix, suitefix, filtres, apk12, sauve_d423017), doublon
+    `android-build-tools` (toolchain vérifié à `/opt/toolchain`),
+    `google_drive/` (originaux sur Drive, assets finaux commités),
+    `assets_carrousel` (supplanté), zips/tarballs/diffs/logs/captures
+    d'époque (preuves durables dans les checkpoints GitHub) ;
+    *vvprod (ère D42.24) : diff des 8 fichiers modifiés préservé dans
+    `sauvegardes_local/` (4 Ko) avant suppression* ;
+  - **Conservé** : `lab23/` complet (copie unique : sources, 30 gabarits,
+    docs/ 90 Mo avec galerie D42.33, .git 86 Mo — tout aussi sur GitHub),
+    `keystores/` (13 Ko, non reproductibles), `uploads/` (captures
+    fondateur), rapports .md racine (petits, historiques), PAT ;
+  - **Limite honnête** : 221 Mo restants > cap snapshot 128 Mo — le dépôt
+    de travail seul (galerie + historique protégés) dépasse le cap ;
+    snapshot best-effort, **GitHub = mémoire durable** (doctrine respectée) ;
+  - **Config mémoire** : repo `gradle.properties` INCHANGÉ (2048m pour
+    runners CI 7 Go) ; builds locaux = sed 1024m/640m + swap 2 Go
+    (empiriquement : 384m de metaspace tue le daemon — cf. § erreurs) ;
+    plus de build local requis — CI Actions pour les validations lourdes ;
+  - **Lot repris : aucun** — D42.34 est LIVRÉ (2dfd907, CI SUCCESS
+    43704975984) ; prochaine action = décision fondateur (checklist
+    téléphone dans 09_RAPPORT_LIVRAISON.md).
+
 - **Lot 6 — non-régression + livraison TERMINÉ** : validation locale
   COMPLÈTE (commande CI exacte, sans daemon, 1 worker) BUILD SUCCESSFUL —
   **360 tests / 0 échec** (12 modules) + ktlint + detekt + checkModuleGraph
