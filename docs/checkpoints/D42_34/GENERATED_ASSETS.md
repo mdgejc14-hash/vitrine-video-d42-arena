@@ -8,15 +8,15 @@ projet. Ce registre trace la provenance de chaque ressource intégrée.
 
 | Ressource app | Fichier source généré | Contenu | Licence |
 |---|---|---|---|
-| carrousel_1_boutique.webp | assets_gen/carrousel_1_marchande.png | Commerçante ouest-africaine dans sa boutique (Cotonou) | Originale générée IA — projet VITRINE VIDÉO |
-| carrousel_2_tournage.webp | assets_gen/carrousel_2_restauration.png | Cheffe de maquis dressant une assiette | Originale générée IA |
-| carrousel_3_resultat.webp | assets_gen/carrousel_3_mode.png | Vendeur mode rangeant des vêtements wax | Originale générée IA |
-| sector_batiment_travaux.webp | assets_gen/sector_batiment_travaux.png | Maçon sur chantier | Originale générée IA |
-| sector_coiffure_beaute.webp | assets_gen/sector_coiffure_beaute.png | Salon de coiffure, tresses | Originale générée IA |
-| sector_immo_auto.webp | assets_gen/sector_immo_auto.png | Remise de clés en concession | Originale générée IA |
-| sector_restaurants_maquis.webp | assets_gen/sector_restaurants_maquis.png | Assiette maquis (poulet braisé) | Originale générée IA |
-| sector_shops_small_business.webp | assets_gen/sector_shops_small_business.png | Épicerie de quartier rangée | Originale générée IA |
-| sector_vetements_mode.webp | assets_gen/sector_vetements_mode.png | Portants de vêtements wax | Originale générée IA |
+| carrousel_1_boutique.webp | assets_gen/carrousel_1_marchande.jpg | Commerçante ouest-africaine dans sa boutique (Cotonou) | Originale générée IA — projet VITRINE VIDÉO |
+| carrousel_2_tournage.webp | assets_gen/carrousel_2_restauration.jpg | Cheffe de maquis dressant une assiette | Originale générée IA |
+| carrousel_3_resultat.webp | assets_gen/carrousel_3_mode.jpg | Vendeur mode rangeant des vêtements wax | Originale générée IA |
+| sector_batiment_travaux.webp | assets_gen/sector_batiment_travaux.jpg | Maçon sur chantier | Originale générée IA |
+| sector_coiffure_beaute.webp | assets_gen/sector_coiffure_beaute.jpg | Salon de coiffure, tresses | Originale générée IA |
+| sector_immo_auto.webp | assets_gen/sector_immo_auto.jpg | Remise de clés en concession | Originale générée IA |
+| sector_restaurants_maquis.webp | assets_gen/sector_restaurants_maquis.jpg | Assiette maquis (poulet braisé) | Originale générée IA |
+| sector_shops_small_business.webp | assets_gen/sector_shops_small_business.jpg | Épicerie de quartier rangée | Originale générée IA |
+| sector_vetements_mode.webp | assets_gen/sector_vetements_mode.jpg | Portants de vêtements wax | Originale générée IA |
 | apercu_batiment_travaux_t1.webp | assets_gen/apercu_batiment_T1.png | Arrivage matériaux (T1 BTP) | Originale générée IA |
 
 ## Aperçus catalogue — lot 1 (15/11, ordre final §2)
