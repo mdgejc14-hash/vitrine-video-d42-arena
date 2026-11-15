@@ -111,6 +111,102 @@ class D34Lot6CatalogApercuVisualCheckTest {
         compose.onAllNodesWithText(metaFormatte(coiffure.first())).onFirst().assertIsDisplayed()
         compose.onRoot().save("D34-17_catalogue-coiffure-apercus_APRES.png")
     }
+
+    // ---- D34-29 : catalogue Immo/Auto — 5 aperçus photographiques rendus ----
+    @Test
+    fun catalogue_immo_rend_les_apercus_integres() {
+        val immo = gabaritsDuSecteur("immo_auto")
+        check(immo.size == 5) { "attendu 5 gabarits Immo/Auto, trouvé ${immo.size}" }
+        immo.forEach { g ->
+            check(ApercuGabarit.resPour(g.id) != null) {
+                "aperçu manquant dans ApercuGabarit pour ${g.id}"
+            }
+        }
+        compose.setContent {
+            VitrineTheme {
+                CatalogScreen(
+                    manifest = null,
+                    offline = false,
+                    initialSector = Sector.IMMO_AUTO,
+                    gabarits = immo,
+                )
+            }
+        }
+        compose.onAllNodesWithText(metaFormatte(immo.first())).onFirst().assertIsDisplayed()
+        compose.onRoot().save("D34-29_catalogue-immo-apercus_APRES.png")
+    }
+
+    // ---- D34-30 : catalogue Restauration — 5 aperçus photographiques rendus ----
+    @Test
+    fun catalogue_restauration_rend_les_apercus_integres() {
+        val resto = gabaritsDuSecteur("restaurants_maquis")
+        check(resto.size == 5) { "attendu 5 gabarits Restauration, trouvé ${resto.size}" }
+        resto.forEach { g ->
+            check(ApercuGabarit.resPour(g.id) != null) {
+                "aperçu manquant dans ApercuGabarit pour ${g.id}"
+            }
+        }
+        compose.setContent {
+            VitrineTheme {
+                CatalogScreen(
+                    manifest = null,
+                    offline = false,
+                    initialSector = Sector.RESTAURATION,
+                    gabarits = resto,
+                )
+            }
+        }
+        compose.onAllNodesWithText(metaFormatte(resto.first())).onFirst().assertIsDisplayed()
+        compose.onRoot().save("D34-30_catalogue-restauration-apercus_APRES.png")
+    }
+
+    // ---- D34-31 : catalogue Shops — 5 aperçus photographiques rendus ----
+    @Test
+    fun catalogue_shops_rend_les_apercus_integres() {
+        val shops = gabaritsDuSecteur("shops_small_business")
+        check(shops.size == 5) { "attendu 5 gabarits Shops, trouvé ${shops.size}" }
+        shops.forEach { g ->
+            check(ApercuGabarit.resPour(g.id) != null) {
+                "aperçu manquant dans ApercuGabarit pour ${g.id}"
+            }
+        }
+        compose.setContent {
+            VitrineTheme {
+                CatalogScreen(
+                    manifest = null,
+                    offline = false,
+                    initialSector = Sector.COMMERCE,
+                    gabarits = shops,
+                )
+            }
+        }
+        compose.onAllNodesWithText(metaFormatte(shops.first())).onFirst().assertIsDisplayed()
+        compose.onRoot().save("D34-31_catalogue-shops-apercus_APRES.png")
+    }
+
+    // ---- D34-32 : catalogue Mode — 5 aperçus photographiques rendus ----
+    @Test
+    fun catalogue_mode_rend_les_apercus_integres() {
+        val mode = gabaritsDuSecteur("vetements_mode")
+        check(mode.size == 5) { "attendu 5 gabarits Mode, trouvé ${mode.size}" }
+        mode.forEach { g ->
+            check(ApercuGabarit.resPour(g.id) != null) {
+                "aperçu manquant dans ApercuGabarit pour ${g.id}"
+            }
+        }
+        compose.setContent {
+            VitrineTheme {
+                CatalogScreen(
+                    manifest = null,
+                    offline = false,
+                    initialSector = Sector.MODE,
+                    gabarits = mode,
+                )
+            }
+        }
+        compose.onAllNodesWithText(metaFormatte(mode.first())).onFirst().assertIsDisplayed()
+        compose.onRoot().save("D34-32_catalogue-mode-apercus_APRES.png")
+    }
 }
 
 private fun SemanticsNodeInteraction.save(name: String) {
