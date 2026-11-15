@@ -11,7 +11,7 @@ package video.vitrine.feature.catalog
  * un bloc gris, jamais une photo répétée pour tromper).
  *
  * Généré par scripts/process_catalog_asset_queue.py (emit-map) —
- * 11 entrées intégrées / 30.
+ * 21 entrées intégrées / 30.
  */
 internal object ApercuGabarit {
 
@@ -27,6 +27,16 @@ internal object ApercuGabarit {
         "coiffure_beaute_T4" to R.drawable.apercu_coiffure_beaute_t4,
         "coiffure_beaute_T5" to R.drawable.apercu_coiffure_beaute_t5,
         "immo_auto_T1" to R.drawable.apercu_immo_auto_t1,
+        "immo_auto_T2" to R.drawable.apercu_immo_auto_t2,
+        "immo_auto_T3" to R.drawable.apercu_immo_auto_t3,
+        "immo_auto_T4" to R.drawable.apercu_immo_auto_t4,
+        "immo_auto_T5" to R.drawable.apercu_immo_auto_t5,
+        "restaurants_maquis_T1" to R.drawable.apercu_restaurants_maquis_t1,
+        "restaurants_maquis_T2" to R.drawable.apercu_restaurants_maquis_t2,
+        "restaurants_maquis_T3" to R.drawable.apercu_restaurants_maquis_t3,
+        "restaurants_maquis_T4" to R.drawable.apercu_restaurants_maquis_t4,
+        "restaurants_maquis_T5" to R.drawable.apercu_restaurants_maquis_t5,
+        "shops_small_business_T1" to R.drawable.apercu_shops_small_business_t1,
     )
 
     fun resPour(gabaritId: String?): Int? = gabaritId?.let { map[it] }

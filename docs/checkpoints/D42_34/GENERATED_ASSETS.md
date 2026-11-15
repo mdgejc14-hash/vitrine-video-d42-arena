@@ -4,7 +4,7 @@ Décision fondateur (ordre finalisation visuelle §6) : les images sans droits
 vérifiables sont remplacées par des visuels originaux générés pour le
 projet. Ce registre trace la provenance de chaque ressource intégrée.
 
-## Statut : EN COURS (21/39 — lot 1 des 29 aperçus intégrés, voir ASSET_GENERATION_QUEUE.csv)
+## Statut : EN COURS (31/39 — lots 1+2 des aperçus intégrés, voir ASSET_GENERATION_QUEUE.csv)
 
 | Ressource app | Fichier source généré | Contenu | Licence |
 |---|---|---|---|
@@ -31,6 +31,19 @@ projet. Ce registre trace la provenance de chaque ressource intégrée.
 | apercu_coiffure_beaute_t4.webp | assets_gen/apercu_coiffure_beaute_T4.png | Promotion — Coiffure & Beauté (Le résultat du soin ; Un détail du résultat…) | Originale générée IA · sha256 bded2310e77b8db7… |
 | apercu_coiffure_beaute_t5.webp | assets_gen/apercu_coiffure_beaute_T5.png | Un client raconte — Coiffure & Beauté (Le client qui parle ; Le résultat du soin…) | Originale générée IA · sha256 37efc77e60b69f7d… |
 | apercu_immo_auto_t1.webp | assets_gen/apercu_immo_auto_T1.png | Nouvel arrivage — Immo & Auto (L’extérieur du bien ou de la voiture ; L’intérieur ; Une inf…) | Originale générée IA · sha256 68aba72c3d9fe60f… |
+
+## Aperçus catalogue — lot 2 (15/11, ordre final §2)
+
+| apercu_immo_auto_t2.webp | assets_gen/apercu_immo_auto_T2.png | Avant et après — Immo & Auto | Originale générée IA · sha256 f8243bf2c333bde0… |
+| apercu_immo_auto_t3.webp | assets_gen/apercu_immo_auto_T3.png | Montrer un produit — Immo & Auto | Originale générée IA · sha256 7d9c3c3ce0ffb8c3… |
+| apercu_immo_auto_t4.webp | assets_gen/apercu_immo_auto_T4.png | Promotion — Immo & Auto | Originale générée IA · sha256 54596d8c233f6e16… |
+| apercu_immo_auto_t5.webp | assets_gen/apercu_immo_auto_T5.png | Un client raconte — Immo & Auto | Originale générée IA · sha256 52da1da334e2c4bc… |
+| apercu_restaurants_maquis_t1.webp | assets_gen/apercu_restaurants_maquis_T1.png | Nouvel arrivage — Restaurants & Maquis | Originale générée IA · sha256 ca0d73b60c069494… |
+| apercu_restaurants_maquis_t2.webp | assets_gen/apercu_restaurants_maquis_T2.png | Avant et après — Restaurants & Maquis | Originale générée IA · sha256 8fa81053cf991b78… |
+| apercu_restaurants_maquis_t3.webp | assets_gen/apercu_restaurants_maquis_T3.png | Montrer un produit — Restaurants & Maquis | Originale générée IA · sha256 ab4305573a2f9ede… |
+| apercu_restaurants_maquis_t4.webp | assets_gen/apercu_restaurants_maquis_T4.png | Promotion — Restaurants & Maquis | Originale générée IA · sha256 745000d0e8f3eded… |
+| apercu_restaurants_maquis_t5.webp | assets_gen/apercu_restaurants_maquis_T5.png | Un client raconte — Restaurants & Maquis | Originale générée IA · sha256 41f54dff802a85b3… |
+| apercu_shops_small_business_t1.webp | assets_gen/apercu_shops_small_business_T1.png | Nouvel arrivage — Shops & Small Business | Originale générée IA · sha256 3b60283ee22f9179… |
 
 ## Recaptures effectuées (15/11, Robolectric NATIVE, toolchain locale)
 
