@@ -12,14 +12,24 @@ défauts démontrés par le fondateur (ordre D42.34 + addendum « couteau suisse
 | Branche active | `d42.34-founder-acceptance-fixes` (créée depuis 85bb823, aucun reset) |
 | main | `bb759f8` — intouché, vérifié |
 | Dernier HEAD distant sauvegardé | `60ab918` (diagnostic CR-1 + matrice 30 gabarits) |
-| Lot actif | **Lot 4 — Identité/abos/montage (corrections appliquées, commit en préparation)** |
-| Lots terminés | Lot 0 · Lot 1 (420d697) · Lot 2 (f586678) · Lot 3 (80b0cf8) |
-| Lots en cours | Lot 4 : CR-4 corrigé (identité réelle, CTA actifs, phases worker), 44 tests verts |
-| Lots non commencés | 5 Visuel · 6 Non-régression |
+| Lot actif | **Lot 6 — Non-régression et livraison (en cours)** |
+| Lots terminés | Lot 0 · Lot 1 (420d697) · Lot 2 (f586678) · Lot 3 (80b0cf8) · Lot 4 (c83e884) · seed fix (01f1044, CI SUCCESS) · Lot 5 (commit en cours) |
+| Lots en cours | Lot 5 : CR-5 corrigé (carrousel 3 métiers Drive D, logo/splash officiels), 31/31 onboarding |
+| Lots non commencés | (Lot 6 = non-régression + rapport 09, en cours) |
 | CI | locale : feature-catalog 18 tests/0 échec, ktlint+detekt verts ; distante D42.34 : à venir (1er run après push Lot 1) |
 | Éléments locaux non poussés | corrections Lot 1 (5 fichiers) + test D34Lot1 + checkpoints |
 
 ## Journal des opérations (ajouts récents d'abord)
+
+- **CI 01f1044 = SUCCESS** (run 43703917910) : Lots 1→4 + correctif seed
+  tous validés par la CI distante.
+- **Lot 5 — carrousel/logo/splash APPLIQUÉ** (CR-5, détail dans
+  `07_DESIGN_VISUEL.md`) : 3 slides = 3 métiers (photo-merchant/food/mode
+  Drive D, textes inchangés) ; vitrine_logo + splash reconstruits depuis
+  le mark officiel (silhouette mesurée : les anciens badges n'étaient PAS
+  l'insigne fondateur) ; rayon tuile 55 px préservé, aucune animation ;
+  CREDITS_PHOTOS.md commité ; captures D34-01→12 copiées dans
+  visual-review/ (12 preuves visuelles).
 
 - **Lot 4 — identité/abos/montage APPLIQUÉ** (CR-4, détail dans
   `05_IDENTITE_MARCHAND.md`) : nom Google réel persisté (vv_session/
