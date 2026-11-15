@@ -1,56 +1,61 @@
-# NEXT_ACTION — D42.34 ordre final (génération en chaîne, échéance 18/11)
+# NEXT_ACTION — D42.34 ordre final (reprise au prochain tour)
 
-Base : 2dfd907 (fonctionnel, immuable) → … → c03159b (HEAD).
-Chaîne de ce tour : e645e46 (file+scripts) → 2c69d77 (LOT 1) → 82c2402
-(VERIFIED) → 8930838 (blocage lot 2 consigné) → c03159b (preuves rendu + test).
+Base : 2dfd907 (immuable) → … → fe2ab0d (HEAD). Échéance projet : 18/11/2026.
+Date réelle de référence : 15/11/2026 (jamais de date future dans les documents).
 
-## REPRISE IMMÉDIATE (prochain tour) — LOT 2/3
+## PREMIER GESTE DU PROCHAIN TOUR — LOT 3/3 (9 images)
 
-**Limite plateforme : 10 images générées par tour (stricte, vérifiée).**
-Le lot 1 a consommé le quota de ce tour ; le lot 2 a été refusé
-(« Image generation limit of 10 reached for this turn ») et remis PENDING.
+La limite stricte est de 10 images générées par tour : le lot 2 l'a consommée
+ce tour. Au prochain tour, le quota est réinitialisé.
 
 ```
 cd /home/user/lab23
-python3 scripts/process_catalog_asset_queue.py next 10   # réserve lot 2
-# → générer les 10 images via l'outil (prompts affichés par next)
-#    fichiers : /home/user/assets_gen/apercu_<secteur>_T<n>.png
-python3 scripts/process_catalog_asset_queue.py integrate <ids...>
-python3 scripts/process_catalog_asset_queue.py emit-map && ... verify
-git add -A && git commit && git push   (+ git checkout gradle.properties avant)
-# vérifier fichiers distants (API contents 200) puis mark-verified <ids...>
+# 0. réparer le remote (perdu à chaque reset sandbox) :
+#    git remote add origin https://x-access-token:$(cat ~/.d42_secrets/gh_pat_fondateur.txt)@github.com/mdgejc14-hash/vitrine-video-d42-arena.git
+#    git config user.name d42-agent && git config user.email d42-agent@users.noreply.github.com
+#    git checkout -- .   (bits exécutables)
+python3 scripts/process_catalog_asset_queue.py next 9    # réserve le lot 3
+# → 9 generate_image avec les prompts affichés (shops T2-T5, vetements T1-T5)
+#    fichiers /home/user/assets_gen/apercu_<secteur>_T<n>.png
+python3 scripts/process_catalog_asset_queue.py integrate shops_small_business_T2 shops_small_business_T3 shops_small_business_T4 shops_small_business_T5 vetements_mode_T1 vetements_mode_T2 vetements_mode_T3 vetements_mode_T4 vetements_mode_T5
+python3 scripts/process_catalog_asset_queue.py emit-map
+python3 scripts/process_catalog_asset_queue.py verify       # 30/30, 0 doublon
+git checkout gradle.properties ; git add -A ; git diff --cached --stat gradle.properties  # DOIT être vide
+git commit -m "LOT 3/3 …" && git push origin d42.34-founder-acceptance-fixes
+# vérifier les 9 fichiers distants (API contents 200) puis :
+python3 scripts/process_catalog_asset_queue.py mark-verified <les 9 ids>
+git add … commit … push
 ```
 
-Lot 2 : immo_auto T2-T5, restaurants_maquis T1-T5, shops_small_business T1.
-Lot 3 (ensuite) : shops T2-T5, vetements_mode T1-T5 (9 images).
+## PUIS (même tour que le lot 3)
 
-## Après les 30/30 (même tour que le lot 3 si quota partagé sinon suivant)
+1. Recapture catalogue définitif : étendre D34Lot6 aux 6 secteurs (tests
+   Robolectric), remplacer D34-01/02/03, régénérer la galerie.
+2. Captures dialogues VR-074→078 + VR-062 si reproductibles (AlertDialog
+   dashboard via clics UI ; DialogueChoixPays brief).
+3. Régénérer galerie + manifeste : extraire d'abord /tmp/maquettes +
+   /tmp/apres33 (raw.githubusercontent + PAT — le clone est blob:none,
+   sparse-checkout échoue sur les blobs D31) ; `python3 scripts/galerie_lotf.py`.
+4. Mettre à jour 13_RAPPORT_CONFORMITE_VISUELLE.md à la complétude 30/30.
 
-1. `verify` final : 30 fichiers, 0 doublon, map complète.
-2. Recaptures (§6) : remplacer D34-01/02/03 (catalogue définitif : étendre
-   D34Lot6 aux 6 secteurs), carrousels D34-11/13/14 + secteurs D34-15 déjà
-   faits, montage phases, dashboard Bonjour {prénom}, paywall FR/EN CTA,
-   consentement R4, dialogue reprise, export prêt. Tests Robolectric,
-   copie build/visual-check → visual-review/.
-3. Inventaire (§7) : vérifier exhaustivité vs code (73 = minimum).
-4. Galerie (§8) : régénérer scripts/galerie_lotf.py (extraire avant
-   /tmp/apres33 + /tmp/maquettes : raw.githubusercontent + PAT, le clone est
-   blob:none). Ajouter section « 30 gabarits et leurs aperçus ».
-5. Lot G (§13) : 13_RAPPORT_CONFORMITE_VISUELLE.md.
+## ÉTAT (15/11 soir)
 
-## Pièges connus (ce tour)
+- Aperçus : **21/30** (batiment T1-T5, coiffure T1-T5, immo T1-T5,
+  restaurants T1-T5, shops T1) — 20 VERIFIED file + T1 préexistant.
+- Images originales : 31/39 (3 carrousels + 6 secteurs + 21 aperçus + batiment
+  T1 ancien → compter 30 aperçus cible).
+- Inventaire : 78 états. Galerie : 123 entrées / 118 images. Rapport 13 écrit.
+- CI : e8494dc SUCCESS ; runs du jour vérifiés au push (fe2ab0d dernier).
 
-- **Remote git perdu à chaque reset sandbox** (.git/config non persisté) :
-  `git remote add origin https://x-access-token:$(cat ~/.d42_secrets/gh_pat_fondateur.txt)@github.com/mdgejc14-hash/vitrine-video-d42-arena.git`
-  — sinon push échoue en silence (« and the repository exists »).
-- Identité git à refaire après reset : user.name d42-agent / email noreply.
+## PIÈGES (tous rencontrés ce tour)
+
+- Remote git + identité perdus à chaque reset sandbox (.git/config non
+  persisté) — à réparer AVANT tout push, sinon échec silencieux.
+- gradle.properties : JAMAIS committer la valeur locale (1024m) — contrôle
+  `git diff --cached --stat gradle.properties` avant chaque push.
+- Limite 10 images/tour stricte — 1 lot par tour maximum.
+- Builds Robolectric lourds : UN module à la fois (daemon sinon tué, OOM).
 - Toolchain : JDK /opt/toolchain/jdk-17.0.21+9, cmdline-tools 15859902,
-  platforms;android-37.0, build-tools 37.0.0 — swap 2G à recréer si reset
-  (sudo fallocate …/mkswap/swapon).
-- gradle.properties local 1024m/640m JAMAIS committé.
-- git archive sur blobs D33 échoue (clone filtré) : utiliser raw.githubusercontent + PAT.
-- build/visual-check/*.png : copier les captures vouluables avant rm -rf build.
-
-## Statut file
-
-10/29 VERIFIED (lot 1) + batiment T1 préexistant = **11/30 aperçus intégrés**.
+  platforms;android-37.0, build-tools 37.0.0 ; swap 2G à recréer si reset.
+- git archive/sparse-checkout impossibles (clone blob:none) : raw API + PAT.
+- WorkManager progress non observable sous Robolectric (VR-051 documenté).
