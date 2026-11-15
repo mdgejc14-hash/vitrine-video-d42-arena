@@ -59,3 +59,28 @@
 - Incident résolu : remote git perdu au reset sandbox (.git/config non
   persisté) → pushes e645e46/2c69d77 d'abord échoués silencieusement,
   remote reconfiguré, tout repoussé et vérifié (200).
+
+## 15/11 (soir) — LOT 2/3 livré, dates réelles, inventaire 78, galerie 123, rapport 13
+
+- **Dates corrigées** (exigence fondateur) : horloge sandbox + horodatages
+  GitHub concordants = 15/11/2026 ; toutes les dates d'exécution futures
+  (17/11, 18/11) remplacées par la date réelle ; échéance projet 18/11
+  conservée (future réelle).
+- **LOT 2/3 LIVRÉ** : immo T2-T5, restaurants T1-T5, shops T1 — 10 WebP,
+  SHA-256, 10 fichiers confirmés distants (200), VERIFIED. **21/30 aperçus.**
+- **LOT 3 BLOQUÉ** : limite stricte 10 images/tour reconfirmée (refus
+  immédiat après le lot 2) — PENDING + note, curseur sauvegardé.
+- **Recaptures §6** : D34-18 (paywall FR CTA, diff 6,3 %), D34-19 (paywall
+  EN CTA, nouvelle). Relances 5 modules SUCCESS. P07-02/P10-02 identiques
+  (code inchangé). VR-059 résolu par découverte : la capture « Bonjour,
+  {nom} » existait déjà (P10-02). VR-051 : 2 tentatives Robolectric des
+  phases infructueuses (progress WorkManager→LiveData non propagé) —
+  position honnête consignée, work-testing retiré, aucune dépendance
+  résiduelle.
+- **Inventaire 73 → 78** : 5 dialogues réels découverts (VR-074 langue,
+  VR-075 secteur, VR-076 accords, VR-077 nettoyage, VR-078 choix pays).
+- **Galerie** : 123 entrées / 118 images + section 8 bis « Aperçus des
+  gabarits » (21 webp, chemin direct) + sommaire étendu ; manifeste 123
+  lignes cohérent.
+- **13_RAPPORT_CONFORMITE_VISUELLE.md** créé — état réel complet, restes
+  explicités, aucune complétion simulée.
