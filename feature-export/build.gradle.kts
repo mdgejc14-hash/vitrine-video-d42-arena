@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.activity.compose)
     implementation(project(":data"))
     testImplementation(libs.junit)
+    testImplementation(libs.work.testing)
     testImplementation(libs.robolectric)
     testImplementation(libs.compose.ui.test.junit4)
     testImplementation(libs.compose.ui.test.manifest)
