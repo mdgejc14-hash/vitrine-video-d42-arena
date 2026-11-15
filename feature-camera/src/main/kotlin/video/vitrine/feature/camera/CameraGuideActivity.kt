@@ -80,6 +80,11 @@ class CameraGuideActivity : VitrineActivity() {
     private var priseIdx by mutableStateOf(0)
     private var guideMode by mutableStateOf(false)
     private var guideSummary: GabaritSummary? = null
+    // D42.34 (CR-3) : états explicites du mode gabarit — chargement async
+    // (écran honnête, pas un faux guide) et erreur récupérable (JSON
+    // impossible ou 0 prises : caméra guidée interdite, retour proposé).
+    private var guideChargement by mutableStateOf(true)
+    private var guideErreur by mutableStateOf(false)
     // Audit D40 (B11) : E6 guide = n fichiers (2 a 4 prises, D23), plus un seul.
     // Audit D41 (F55) : slots ALIGNES sur l'index de prise ("" = prise sautee) —
     // avant, un saut compactait la liste et DECALAIT tout le montage sur les
@@ -119,11 +124,21 @@ class CameraGuideActivity : VitrineActivity() {
         executor = Executors.newSingleThreadExecutor()
         restaurerBrouillon()
         val gabaritId = intent.getStringExtra("gabarit_id")
-        if (gabaritId != null) chargerGabarit(gabaritId) else masquerBoutonsGabarit()
-        guides = buildSceneGuides(
-            intent.getStringExtra("script").orEmpty(),
-            intent.getIntExtra("duration_s", 30),
-        )
+        // D42.34 (CR-3, P0 ③) : le parcours générique buildSceneGuides()
+        // n'est construit QU'en vrai mode libre (gabaritId null). En mode
+        // gabarit, AUCUN double parcours : pendant le chargement asynchrone
+        // ou en cas d'échec, on affiche un état explicite (chargement /
+        // erreur récupérable), JAMAIS le guide scène par scène (« Scène
+        // 1/26 », « 1,2 s ») qui faisait croire à un découpage de montage.
+        if (gabaritId != null) {
+            chargerGabarit(gabaritId)
+        } else {
+            masquerBoutonsGabarit()
+            guides = buildSceneGuides(
+                intent.getStringExtra("script").orEmpty(),
+                intent.getIntExtra("duration_s", 30),
+            )
+        }
         installerOverlayCompose()
         observerFluxCamera()
         brancherCommandes()
@@ -163,8 +178,21 @@ class CameraGuideActivity : VitrineActivity() {
                 )
                 prises = runCatching { GabaritJson.parsePrises(raw, t) }.getOrDefault(emptyList())
                 guideSummary = runCatching { GabaritJson.parse(raw, t) }.getOrNull()
-                majVisibiliteBoutonsGabarit()
             }
+            guideChargement = false
+            // D42.34 (CR-3) : erreur récupérable — JSON impossible OU gabarit
+            // sans prises : la caméra guidée est interdite (ordre P0 ③), on
+            // propose le retour au lieu du repli silencieux sur le parcours
+            // générique (ancien comportement = défaut fondateur « Scène 1/26 »).
+            if (raw == null || prises.isEmpty()) {
+                guideErreur = true
+                Log.e(
+                    TAG_E2E,
+                    "gabarit illisible (rawLisible=${raw != null}) ou 0 prises " +
+                        "— caméra guidée interdite, état d'erreur affiché"
+                )
+            }
+            majVisibiliteBoutonsGabarit()
         }
     }
 
@@ -184,17 +212,29 @@ class CameraGuideActivity : VitrineActivity() {
     private fun installerOverlayCompose() {
         findViewById<ComposeView>(R.id.camera_overlay).setContent {
             VitrineTheme {
-                if (guideMode && prises.isNotEmpty()) {
-                    PriseGuideScreen(
-                        prises = prises,
-                        priseIdx = priseIdx,
-                        sectorLabel = guideSummary?.secteurLibelle.orEmpty(),
-                        formatLabel = guideSummary?.nomFormatAffiche.orEmpty(),
-                        streaming = fluxStreamState,
-                        recording = overlayRecording,
-                        countdown = compteARebours,
-                        priseValidee = priseValideeMsg,
-                    )
+                if (guideMode) {
+                    // D42.34 (CR-3) : en mode gabarit, SEUL le HUD par prise
+                    // existe. Chargement/erreur = états explicites, jamais le
+                    // parcours générique (fin du double parcours).
+                    when {
+                        guideErreur -> ErreurGabaritScreen(
+                            onRetour = {
+                                setResult(RESULT_CANCELED)
+                                finish()
+                            },
+                        )
+                        prises.isNotEmpty() -> PriseGuideScreen(
+                            prises = prises,
+                            priseIdx = priseIdx,
+                            sectorLabel = guideSummary?.secteurLibelle.orEmpty(),
+                            formatLabel = guideSummary?.nomFormatAffiche.orEmpty(),
+                            streaming = fluxStreamState,
+                            recording = overlayRecording,
+                            countdown = compteARebours,
+                            priseValidee = priseValideeMsg,
+                        )
+                        else -> EcranChargementGabarit()
+                    }
                 } else {
                     GuidedShootingOverlay(
                         scenes = guides,
@@ -360,6 +400,13 @@ class CameraGuideActivity : VitrineActivity() {
             TAG_E2E,
             "onRecord finalisation=$priseEnCoursDeFinalisation enregistrement=${recording != null} decision=$decision",
         )
+        // D42.34 (CR-3, ordre P0 ③) : caméra guidée INTERDITE si le gabarit
+        // n'a pas ses prises (chargement en cours ou erreur). Aucune fausse
+        // prise guidée — l'écran d'état explicite propose le retour.
+        if (guideMode && prises.isEmpty()) {
+            Log.i(TAG_E2E, "onRecord bloqué : mode gabarit sans prises chargées")
+            return
+        }
         if (priseEnCoursDeFinalisation) return          // D41 : attente du fichier finalise
         // D42.30 : second tap pendant le décompte = ANNULATION (aucun
         // enregistrement démarré) — le recorder ne démarre JAMAIS avant la fin.

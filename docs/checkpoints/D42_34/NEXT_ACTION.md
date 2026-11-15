@@ -1,21 +1,23 @@
 # PROCHAINE ACTION — D42.34
 
-**Lot 2 TERMINÉ (import rushs T5, fusion par slot, 36 tests verts)** — commit
-en cours de push. Si interruption : vérifier `git log` distant ; si le commit
-Lot 2 est présent, passer directement au **Lot 3**.
+**Lot 3 TERMINÉ (fin du double parcours caméra, 16/16 tests)** — commit en
+cours de push. Si interruption : vérifier `git log` distant ; si le commit
+Lot 3 est présent, passer directement au **Lot 4**.
 
-**Lot 3 — caméra guidée par les prises du gabarit** (CR-3, P0 ③) :
+**Lot 4 — identité marchand / abonnements / montage** (CR-4) :
 
-1. Re-auditer `CameraGuideActivity` : cause racine connue = parcours générique
-   `buildSceneGuides(script, durationS)` affiché quand le mode gabarit/données
-   ne se charge pas (« Scène 1/26 », écran noir « Scène 1/0 », nom de package,
-   « 1,2 s »). Réparer le BRANCHEMENT, pas masquer le texte.
-2. HUD gabarit = uniquement `PRISE n/prises.size` ; « Caméra prête » seulement
-   après flux réel ; erreur récupérable si JSON impossible (retour
-   brief/catalogue) ; interdit caméra guidée si prises.size == 0 ; consignes
-   par prise (label/cameraInstruction/targetS/segments show/tell/example).
-3. Countdown : vérifier alignement réel du décompte avec l'enregistrement.
-4. Écrire `04_CAMERA_GUIDEE.md` (cause racine démontrée AVANT correction).
+1. **Identité** : audit `GoogleSsoClient`, `FirebaseAuthGateway`,
+   `BackendSync.bootstrap`, `DashboardActivity/Screen` — plus de « Bonjour
+   boutique »/noms déduits d'emails/Awa Koffi ; nom = profil Google/Firebase
+   RÉEL ou nom de commerce renseigné, sinon « Bonjour » seul.
+2. **Abonnements** : `PaywallScreen` — CTA actifs (Pass 24 h 500 / Pro
+   3 000 / Boutique 7 500 FCFA, badge Recommandé sur Pro), checkout réel,
+   501 `billing_not_configured` = message discret honnête (CinetPay inchangé).
+3. **Montage** : phases métier réelles du Worker (assemblage, musique,
+   sous-titres, rendu, vérif) — aucun % / ETA inventé ; indéterminé si non
+   mesurable.
+4. Écrire `05_IDENTITE_MARCHAND.md` (causes racines démontrées AVANT
+   correction).
 5. Corrections + tests + captures, commit + push + CI.
 
 Rappel RAM sandbox (si reboot) : recréer le swap 2 Go (commande dans

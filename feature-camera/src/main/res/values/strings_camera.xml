@@ -29,4 +29,8 @@
     <string name="camera_take_validated">✓ Prise %1$d enregistrée</string>
     <string name="camera_countdown_status">Prépare-toi… l\'enregistrement démarre dans un instant</string>
     <string name="camera_countdown_cancel">Annuler le décompte</string>
+    <string name="camera_gabarit_chargement">Chargement du modèle…</string>
+    <string name="camera_gabarit_erreur_titre">Modèle indisponible</string>
+    <string name="camera_gabarit_erreur_texte">Ce modèle de vidéo n\'a pas pu être chargé. Retournez en arrière pour le choisir à nouveau.</string>
+    <string name="camera_gabarit_erreur_retour">Retour</string>
 </resources>

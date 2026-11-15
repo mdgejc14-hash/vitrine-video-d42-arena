@@ -29,4 +29,8 @@
     <string name="camera_take_validated">✓ Take %1$d saved</string>
     <string name="camera_countdown_status">Get ready… recording starts in a moment</string>
     <string name="camera_countdown_cancel">Cancel countdown</string>
+    <string name="camera_gabarit_chargement">Loading template…</string>
+    <string name="camera_gabarit_erreur_titre">Template unavailable</string>
+    <string name="camera_gabarit_erreur_texte">This video template could not be loaded. Go back to pick it again.</string>
+    <string name="camera_gabarit_erreur_retour">Go back</string>
 </resources>

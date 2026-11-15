@@ -82,7 +82,12 @@ fun GuidedShootingOverlay(
     val scene = scenes.getOrNull(currentIdx)
     Box(modifier = modifier.fillMaxSize()) {
         FramingBox()
-        TopHud(scene, scenes.size, progress, streaming)
+        // D42.34 (CR-3) : compteur « Scène n/N » UNIQUEMENT s'il y a de vraies
+        // scènes guidées — jamais « Scène 1/0 » sur un parcours sans script
+        // (tournage libre honnête, sans compteur inventé).
+        if (scenes.isNotEmpty()) {
+            TopHud(scene, scenes.size, progress, streaming)
+        }
         BottomHud(scene, recording)
         if (countdown != null) CompteurGeant(countdown)
     }
