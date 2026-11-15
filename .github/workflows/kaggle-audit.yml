@@ -1,0 +1,174 @@
+name: kaggle-audit
+
+# D42.34-D (ordre fondateur) — audit automatisé sur notebook Kaggle.
+# Utilise UNIQUEMENT les secrets KAGGLE_USERNAME et KAGGLE_KEY (présence
+# vérifiée sans jamais afficher les valeurs). Le notebook
+# <username>/vitrine-video-d42-34-validation clone le miroir PUBLIC au SHA
+# exact du commit audité, installe JDK 17 + Android SDK, exécute les tests
+# JVM/Robolectric, ktlintCheck, detekt, checkModuleGraph, valide la matrice
+# 30 gabarits / 81 prises, audite les deux manifests audio (600 compositions
+# déclarées), ressources/boutons/routes/références, crédits/quotas app +
+# Worker, parrainage avec/sans code (JVM) — verdicts exclusifs COMPLET /
+# CASSÉ / NON JUGEABLE PAR LECTURE SEULE, citations fichiers et lignes.
+# Produit : REPORT_D42_34.md (commité sur la branche) + sorties en artefact.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kaggle-audit
+  cancel-in-progress: false
+
+jobs:
+  kaggle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Pré-vol secrets Kaggle (échec clair si absents)
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          set -u
+          if [ -z "${KAGGLE_USERNAME:-}" ] || [ -z "${KAGGLE_KEY:-}" ]; then
+            echo "::error::Secrets KAGGLE_USERNAME / KAGGLE_KEY manquants (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+          echo "PASS : secrets Kaggle présents (valeurs jamais affichées)."
+
+      - name: Installation du client Kaggle + identifiants locaux
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          set -euo pipefail
+          pip install --quiet kaggle
+          mkdir -p ~/.kaggle
+          printf '{"username":"%s","key":"%s"}\n' "$KAGGLE_USERNAME" "$KAGGLE_KEY" > ~/.kaggle/kaggle.json
+          chmod 600 ~/.kaggle/kaggle.json
+          kaggle --version
+
+      - name: Préparation du notebook au SHA exact
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+        run: |
+          set -euo pipefail
+          SHA=$(git rev-parse HEAD)
+          echo "SHA audité : $SHA"
+          mkdir -p pushdir
+          sed "s/__SHA_EXACT__/$SHA/" tools/kaggle/vitrine_video_d42_34_validation.py > pushdir/script.py
+          cat > pushdir/kernel-metadata.json <<EOF
+          {
+            "id": "$KAGGLE_USERNAME/vitrine-video-d42-34-validation",
+            "language": "python",
+            "kernel_type": "script",
+            "is_private": true,
+            "enable_gpu": false,
+            "enable_internet": true,
+            "code_file": "script.py",
+            "dataset_sources": [],
+            "kernel_sources": [],
+            "competition_sources": []
+          }
+          EOF
+          python3 -c "import json; json.load(open('pushdir/kernel-metadata.json')); print('metadata JSON OK')"
+
+      - name: Envoi du notebook (kaggle kernels push)
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+        run: |
+          set -euo pipefail
+          kaggle kernels push -p pushdir | tee push_result.txt
+          grep -oE "version [0-9]+" push_result.txt | head -1 > notebook_version.txt || echo "version ?" > notebook_version.txt
+          cat notebook_version.txt
+
+      - name: Attente de la fin d'exécution du notebook
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+        run: |
+          set -u
+          SLUG="$KAGGLE_USERNAME/vitrine-video-d42-34-validation"
+          echo "Suivi de $SLUG"
+          limite=$(( $(date +%s) + 30000 ))   # ~8 h 20 max (dans la fenêtre du job)
+          etat_precedent=""
+          while [ "$(date +%s)" -lt "$limite" ]; do
+            etat=$(kaggle kernels status "$SLUG" 2>&1 | tail -1) || true
+            if [ "$etat" != "$etat_precedent" ]; then
+              echo "$(date -u +%H:%M:%S) $etat"
+              etat_precedent="$etat"
+            fi
+            case "$etat" in
+              *COMPLETE*|*complete*) echo "NOTEBOOK TERMINÉ (complete)"; exit 0 ;;
+              *ERROR*|*error*|*CANCEL*|*cancel*) echo "NOTEBOOK EN ERREUR/ANNULÉ : $etat"; exit 2 ;;
+            esac
+            sleep 60
+          done
+          echo "::error::Timeout d'attente du notebook Kaggle."
+          exit 1
+
+      - name: Récupération des sorties du notebook
+        if: always()
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+        run: |
+          set -uo pipefail
+          SLUG="$KAGGLE_USERNAME/vitrine-video-d42-34-validation"
+          mkdir -p kaggle-output
+          kaggle kernels output "$SLUG" -p kaggle-output/ 2>&1 | tail -5 || true
+          ls -la kaggle-output/ || true
+          [ -f kaggle-output/REPORT_D42_34.md ] && echo "REPORT présent" || echo "REPORT ABSENT (notebook en échec ?)"
+
+      - name: Artefact des sorties Kaggle (30 jours)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-audit-output
+          path: |
+            kaggle-output/**
+            notebook_version.txt
+            push_result.txt
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Commit du rapport + checkpoint (branche uniquement)
+        if: always() && hashFiles('kaggle-output/REPORT_D42_34.md') != ''
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin d42.34-founder-acceptance-fixes
+          cp kaggle-output/REPORT_D42_34.md REPORT_D42_34.md
+          SHA=$(git rev-parse HEAD)
+          NOTEBOOK=$(cat notebook_version.txt 2>/dev/null || echo "version ?")
+          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          export SHA NOTEBOOK RUN_URL
+          python3 - <<'PYV'
+          import os, re
+          sha = os.environ["SHA"]; notebook = os.environ["NOTEBOOK"]; url = os.environ["RUN_URL"]
+          lignes = [
+              "<!--D:AUDIT-->",
+              "Dernier audit Kaggle : commit `" + sha + "`, notebook `vitrine-video-d42-34-validation` (" + notebook + "),",
+              "sorties et rapport : " + url + " — `REPORT_D42_34.md` à la racine du dépôt, verdicts COMPLET / CASSÉ /",
+              "NON JUGEABLE PAR LECTURE SEULE avec citations fichiers et lignes.",
+              "<!--/D:AUDIT-->",
+          ]
+          bloc = chr(10).join(lignes)
+          p = "CHECKPOINT_D42_34_VALIDATION.md"
+          s = open(p, encoding="utf-8").read()
+          if "<!--D:AUDIT-->" in s:
+              s = re.sub(r"<!--D:AUDIT-->.*?<!--/D:AUDIT-->", bloc, s, flags=re.S)
+          else:
+              s += chr(10) + bloc + chr(10)
+          open(p, "w", encoding="utf-8").write(s)
+          PYV
+          git add REPORT_D42_34.md CHECKPOINT_D42_34_VALIDATION.md
+          git commit -m "D42.34-D : audit Kaggle — REPORT_D42_34.md + checkpoint"
+          git push origin HEAD:d42.34-founder-acceptance-fixes

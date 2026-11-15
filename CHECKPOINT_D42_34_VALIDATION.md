@@ -10,8 +10,8 @@
 |---|---|---|---|---|
 | A. Verrouillage caméra | **TERMINÉ** | 0cd7ac3 | à poller | 6 correctifs + 5 tests verts, module 22/22 |
 | B. Labo Android (e2e) | **TERMINÉ (code) — runs EN COURS** | c0e4125 | lab 43762868411 + CI 43762868387 | branche ajoutée + preuves renforcées |
-| C. APK update signée | **BLOQUÉ (secrets absents)** | (commit C) | workflow créé | VV_KEYSTORE_B64 / VV_STORE_PASSWORD manquants |
-| D. Audit Kaggle | EN COURS | — | — | notebook à créer |
+| C. APK update signée | **BLOQUÉ (secrets absents)** | 290781a | workflow créé | VV_KEYSTORE_B64 / VV_STORE_PASSWORD manquants |
+| D. Audit Kaggle | **TERMINÉ (code) — exécution lancée** | (commit D) | à poller | notebook + workflow créés |
 | E. Checkpoint | ACTIF | — | — | ce fichier |
 
 ## A — Verrouillage caméra (TERMINÉ)
@@ -62,6 +62,19 @@ Conformément à l'ordre : **statut BLOQUÉ**, aucune APK produite, aucune clé 
 
 **Déblocage** : ajouter `VV_KEYSTORE_B64` (keystore du 8 novembre en base64) et `VV_STORE_PASSWORD` dans Settings → Secrets and variables → Actions, puis relancer `release-update-apk` (workflow_dispatch).
 
+## D — Audit Kaggle (code TERMINÉ, exécution via workflow_dispatch)
+
+- `tools/kaggle/vitrine_video_d42_34_validation.py` : notebook/script poussé sur Kaggle comme `KAGGLE_USERNAME/vitrine-video-d42-34-validation` (privé, Internet activé). Pré-vol : Internet, clone du miroir public `mdgejc14-hash/vitrine-video-d42-arena` au SHA EXACT (vérifié après clonage), JDK 17 Temurin, Android SDK (platforms;android-37.0, build-tools;37.0.0, ndk;28.2.13676358).
+- Exécute dans le notebook : tests JVM/Robolectric (compte exact consigné), `ktlintCheck`, `detekt`, `checkModuleGraph`.
+- Valide/audite : matrice 30 gabarits / 81 prises (2-4 par modèle, lecture des JSON) ; les DEUX manifests audio `scripts/audio/bgm_lib_manifest_v2.json` et `bgm_r2_manifest.json` (600 compositions déclarées chacun, identifiants uniques) ; ressources R.string (android.R exclu) ; boutons findViewById↔layouts ; routes Activities ::class ↔ manifests (noms relatifs et qualifiés) ; références gabarits ↔ assets JSON ; crédits/quotas application (StorageGate, + tests exécutés) et Worker (`src/index.js`, decideQuota/credits) ; parrainage sans code (tests onboarding exécutés) et avec code (RefCodeParserTest exécuté).
+- **Verdicts exclusifs** : COMPLET / CASSÉ / NON JUGEABLE PAR LECTURE SEULE, avec citations fichiers et lignes. Aucun contrôle statique n'est présenté comme preuve d'exécution.
+- **Parrainage sur comptes de test dédiés** : NON exécuté dans le notebook (l'ordre n'autorise que KAGGLE_USERNAME/KAGGLE_KEY — aucun autre secret transmis à Kaggle) ; la qualification est exécutée côté GitHub par le workflow existant `referral-qualification` (comptes A/B), déclenché séparément.
+- `.github/workflows/kaggle-audit.yml` (workflow_dispatch) : pré-vol secrets (valeurs jamais affichées) → push notebook → attente (≤ ~8 h) → sorties récupérées → **artefact 30 jours** → commit de `REPORT_D42_34.md` + mise à jour de ce checkpoint (bloc ci-dessous), branche uniquement.
+
+<!--D:AUDIT-->
+Dernier audit Kaggle : en attente du premier déclenchement du workflow `kaggle-audit`.
+<!--/D:AUDIT-->
+
 ## Prochaine action exacte
 
-Volet D : workflow d'audit Kaggle (secrets `KAGGLE_USERNAME`/`KAGGLE_KEY` présents) — notebook `vitrine-video-d42-34-validation` clonant le miroir public au SHA exact, exécution des 360 tests + ktlint/detekt/checkModuleGraph + validation matrice 30/81 + audits manifests audio 600 compositions + crédits/quotas + parrainage (comptes de test dédiés), verdicts COMPLET / CASSÉ / NON JUGEABLE PAR LECTURE SEULE.
+Déclencher `kaggle-audit` (workflow_dispatch) + `referral-qualification` (workflow_dispatch, comptes de test A/B), suivre les runs, consigner les résultats au checkpoint puis produire le rapport final (logique vérifiée par le code vs éléments restant à confirmer sur le téléphone).
