@@ -12,14 +12,22 @@ défauts démontrés par le fondateur (ordre D42.34 + addendum « couteau suisse
 | Branche active | `d42.34-founder-acceptance-fixes` (créée depuis 85bb823, aucun reset) |
 | main | `bb759f8` — intouché, vérifié |
 | Dernier HEAD distant sauvegardé | `60ab918` (diagnostic CR-1 + matrice 30 gabarits) |
-| Lot actif | **Lot 6 — Non-régression et livraison (en cours)** |
+| Lot actif | **TERMINÉ — D42.34 livré, arrêt à la porte d'approbation fondateur** |
 | Lots terminés | Lot 0 · Lot 1 (420d697) · Lot 2 (f586678) · Lot 3 (80b0cf8) · Lot 4 (c83e884) · seed fix (01f1044, CI SUCCESS) · Lot 5 (commit en cours) |
-| Lots en cours | Lot 5 : CR-5 corrigé (carrousel 3 métiers Drive D, logo/splash officiels), 31/31 onboarding |
+| Lots en cours | aucun |
 | Lots non commencés | (Lot 6 = non-régression + rapport 09, en cours) |
 | CI | locale : feature-catalog 18 tests/0 échec, ktlint+detekt verts ; distante D42.34 : à venir (1er run après push Lot 1) |
 | Éléments locaux non poussés | corrections Lot 1 (5 fichiers) + test D34Lot1 + checkpoints |
 
 ## Journal des opérations (ajouts récents d'abord)
+
+- **Lot 6 — non-régression + livraison TERMINÉ** : validation locale
+  COMPLÈTE (commande CI exacte, sans daemon, 1 worker) BUILD SUCCESSFUL —
+  **360 tests / 0 échec** (12 modules) + ktlint + detekt + checkModuleGraph
+  + :app compilé (main + androidTest) ; `08_NON_REGRESSION.md` (résultats,
+  invariants, couverture CR-1→CR-5, limites honnêtes) ;
+  `09_RAPPORT_LIVRAISON.md` (résumé fondateur, checklist téléphone, limites,
+  gouvernance). **STOP porte d'approbation.**
 
 - **CI 01f1044 = SUCCESS** (run 43703917910) : Lots 1→4 + correctif seed
   tous validés par la CI distante.
