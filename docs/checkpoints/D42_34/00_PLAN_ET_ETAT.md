@@ -11,13 +11,34 @@ défauts démontrés par le fondateur (ordre D42.34 + addendum « couteau suisse
 | HEAD distant de départ | `85bb823` (d42.33-visual-redesign, vérifié par ls-remote) |
 | Branche active | `d42.34-founder-acceptance-fixes` (créée depuis 85bb823, aucun reset) |
 | main | `bb759f8` — intouché, vérifié |
-| Dernier HEAD distant sauvegardé | (aucun commit D42.34 pour l'instant) |
-| Lot actif | **Lot 0 — Reprise et diagnostic** |
-| Lots terminés | — |
-| Lots en cours | Lot 0 (diagnostic causes racines) |
-| Lots non commencés | 1 Catalogue · 2 Brief/rushs · 3 Caméra · 4 Identité/abos/montage · 5 Visuel · 6 Non-régression |
-| CI | aucune exécutée en D42.34 pour l'instant (dernière D42.33 : 43662646267 SUCCESS sur 85bb823) |
-| Éléments locaux non poussés | présents checkpoint initial uniquement (ce commit) |
+| Dernier HEAD distant sauvegardé | `60ab918` (diagnostic CR-1 + matrice 30 gabarits) |
+| Lot actif | **Lot 1 — Catalogue (corrections appliquées, en cours de validation CI)** |
+| Lots terminés | Lot 0 (reprise, diagnostic, sources C/D) |
+| Lots en cours | Lot 1 : CR-1.1 + CR-1.2 corrigés, 18/18 tests locaux, commit en préparation |
+| Lots non commencés | 2 Brief/rushs · 3 Caméra · 4 Identité/abos/montage · 5 Visuel · 6 Non-régression |
+| CI | locale : feature-catalog 18 tests/0 échec, ktlint+detekt verts ; distante D42.34 : à venir (1er run après push Lot 1) |
+| Éléments locaux non poussés | corrections Lot 1 (5 fichiers) + test D34Lot1 + checkpoints |
+
+## Journal des opérations (ajouts récents d'abord)
+
+- **Lot 1 — corrections catalogue APPLIQUÉES** (CR-1.1 + CR-1.2, détail et
+  preuves dans `01_AUDIT_CAUSES_RACINES.md`) :
+  - `MainActivity.restaurerSession()` relit `"sector"` de `vv_session` ;
+  - `CatalogScreen` : état explicite « secteur perdu » (bandeau ErreurDouce,
+    récupérable par la rangée de filtres) — jamais 30 gabarits en silence ;
+    `Sector.TOUS` explicite conservé (harnais/repli documenté) ;
+  - libellé carte : `%1$d s · %3$d prises guidées` (FR/EN), plus « scènes » ;
+  - pellicule vignette = nombre de prises (JSON `nombre_scenes` intact) ;
+  - nouveau `D34Lot1CatalogVisualCheckTest` (3 preuves + PNG D34-01/02/03).
+- **Incident infrastructure (résolu)** : sandbox 2 Go → daemon Gradle tué par
+  OOM kernel (2 runs), puis Metaspace 384 Mo insuffisant (daemon expiré en
+  cours de build). Remèdes : swap 2 Go activé (recréer après tout reboot :
+  `sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile && sudo mkswap
+  /swapfile && sudo swapon /swapfile`), heap local 1024m + metaspace 640m en
+  gradle.properties **NON commité** (le dépôt garde 2048m/900m pour les
+  runners CI 7 Go — `git checkout gradle.properties` avant chaque commit),
+  `--max-workers=1 --no-daemon`, monitoring suspendu pendant les builds.
+  Aucun test désactivé, aucun contrôle contourné.
 
 ## Intégrité vérifiée au départ (Lot 0)
 

@@ -107,6 +107,16 @@ class MainActivity : VitrineActivity() {
         val prefs = getSharedPreferences("vv_session", MODE_PRIVATE)
         authToken = prefs.getString("token", null)
         authUid = prefs.getString("uid", null)
+        // D42.34 (CR-1.1, défaut « modèles répétés ») : OnboardingActivity
+        // .saveSession() persiste "sector" dans vv_session, mais il n'était
+        // JAMAIS relu ici. Tout parcours atteignant le catalogue sans
+        // repasser par l'onboarding (entrée dashboard « Reprendre »,
+        // refus de reprise de brouillon, relance d'app) partait avec
+        // sectorCode null → repli silencieux Sector.TOUS → les 30 gabarits
+        // mélangés. On relit donc le secteur persisté ; garde ?.let pour ne
+        // jamais écraser une valeur plus fraîche (résultat onboarding en
+        // cours de vie, bundle de recréation).
+        prefs.getString("sector", null)?.let { sectorCode = it }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

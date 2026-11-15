@@ -48,15 +48,20 @@ gabarits** s'affichent : les titres similaires inter-secteurs (ex. témoignages 
 présents dans les 6 secteurs — voulu par le catalogue canonique) deviennent des
 « répétitions » à l'écran. C'est exactement le défaut photographié (capture 015013).
 
-**Correction racine (Lot 1)** : `restaurerSession()` relit aussi `"sector"` →
-`sectorCode`. Le secteur persisté par l'onboarding accompagne ainsi TOUT parcours,
-y compris la reprise dashboard. Aucune donnée nouvelle, aucun contrat modifié.
+**Correction racine (Lot 1) — APPLIQUÉE et testée (v. commit Lot 1)** :
+`restaurerSession()` relit aussi `"sector"` → `sectorCode` (garde `?.let`
+pour ne jamais écraser une valeur plus fraîche). Le secteur persisté par
+l'onboarding accompagne ainsi TOUT parcours, y compris la reprise dashboard.
+Aucune donnée nouvelle, aucun contrat modifié.
 
-**Défense en profondeur (exigence « jamais Sector.TOUS silencieux »)** :
-`CatalogScreen` ne doit plus masquer l'anomalie — si `initialSector == null` après
-la correction (état réellement anormal), afficher un état visible « choisir un
-métier » (rangée de filtres ouverte, aucun gabarit affiché en mode TOUS implicite),
-jamais la grille des 30 en silence.
+**Défense en profondeur (exigence « jamais Sector.TOUS silencieux ») —
+APPLIQUÉE et testée** : `CatalogScreen` n'affiche plus la grille des 30 quand
+`initialSector == null` (anomalie réelle après correction ci-dessus) : il
+affiche l'état explicite `catalog_secteur_perdu_titre`/`_texte` (bandeau
+design system `BandeauEtat` niveau `ErreurDouce`, icône `ic_warning`),
+récupérable via la rangée de filtres ouverte. Un `Sector.TOUS` EXPLICITE
+(harnais de captures, repli hors-ligne documenté) conserve l'ancien
+comportement — distinction testée (`D34Lot1CatalogVisualCheckTest`).
 
 ### Cause racine CR-1.2 (démontrée) — libellé « X s · N scènes · M prises »
 
@@ -74,15 +79,29 @@ affiche « 15 s · 15 scènes · 3 prises » — le « 15 scènes » interdit pa
 est bien calculé du JSON chargé ; `nombreScenes` et `dureeTotaleS` proviennent du
 JSON canonique (non modifiés — conforme P0 ②).
 
-**Correction racine (Lot 1)** : libellé → `%1$d s · %3$d prises guidées` (FR) /
+**Correction racine (Lot 1) — APPLIQUÉE et testée** : libellé → `%1$d s · %3$d prises guidées` (FR) /
 `%1$d s · %3$d guided takes` (EN) ; appel `stringResource` inchangé (les 3 args
 restent passés, seul le gabarit de chaîne change — `%2$d` disparaît du texte).
 
-**Décision visuelle associée** : `VignetteCatalogue.dessinerDecorVignette(scenes)`
-dessine une cellule de pellicule **par scène** (15 cellules) — rappel visuel du
-« 15 scènes » interdit. Cohérence métier : la pellicule représente désormais le
-**nombre de prises** (3 cellules), aligné sur « N prises guidées ». Le champ JSON
-`nombre_scenes` n'est PAS touché (P0 ② respecté).
+**Décision visuelle associée — APPLIQUÉE et testée** : `VignetteCatalogue.dessinerDecorVignette`
+dessine désormais une cellule de pellicule **par prise guidée** (paramètre
+`prises`), aligné sur « N prises guidées ». Le champ JSON `nombre_scenes`
+n'est PAS touché (P0 ② respecté) ; les 4 sites d'appel passent
+`g.nombrePrises` (le repli skins passe `null` = pas de pellicule, inchangé).
+
+**Preuves Lot 1** (Robolectric, `D34Lot1CatalogVisualCheckTest`, sdk 34,
+qualifiers fr-w360dp-h820dp, GraphicsMode NATIVE) :
+- `secteur_perdu_etat_explicite_sans_grille_silencieuse` PASS — état
+  explicite affiché, AUCUNE carte gabarit quand `initialSector == null` ;
+- `secteur_perdu_recuperable_par_choix_du_metier` PASS — clic secteur Mode
+  → les 5 modèles du secteur s'affichent ;
+- `libelle_carte_prises_guidees_sans_mot_scenes` PASS — méta T1 Mode
+  (35 s, 3 prises réels du JSON) affichée, plus aucune occurrence du
+  libellé fautif ;
+- captures : `D34-01/02/03_*.png` (build/visual-check, intégrées à la
+  galerie au Lot non-régression).
+- Module complet : 18 tests / 0 échec ; `:app:compileDebugKotlin`,
+  ktlint et detekt verts sur `:app` + `:feature-catalog`.
 
 ---
 

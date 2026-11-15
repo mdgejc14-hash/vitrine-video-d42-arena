@@ -70,9 +70,14 @@ fun CatalogScreen(
     // qui redémarre le catalogue avec le NOUVEAU secteur).
     val secteurFixe = initialSector != null
     var sector by remember { mutableStateOf(initialSector ?: Sector.TOUS) }
-    // Repli défensif : initialSector null = anomalie (l'onboarding garantit
-    // un choix) — on garde alors l'ancien comportement de sélection intégrée.
+    // D42.34 (CR-1.1) : PLUS de repli silencieux sur TOUS. initialSector
+    // null = anomalie réelle (secteur perdu — l'onboarding garantit un
+    // choix et restaurerSession() le relaît) : on affiche alors un état
+    // EXPLICITE « choisir un métier », jamais la grille des 30 mélangés.
+    // Un TOUS explicite (choix assumé du harnais de captures) conserve
+    // l'ancien comportement.
     var filtresOuverts by remember { mutableStateOf(!secteurFixe) }
+    val secteurPerdu = initialSector == null && sector == Sector.TOUS
     Column(modifier = Modifier.fillMaxSize()) {
         EnTeteCatalogue(
             offline = offline,
@@ -82,7 +87,9 @@ fun CatalogScreen(
             surSector = { sector = it },
             surToggleFiltres = { filtresOuverts = !filtresOuverts }
         )
-        if (gabarits.isNotEmpty()) {
+        if (secteurPerdu) {
+            EtatSecteurPerdu(Modifier.weight(1f))
+        } else if (gabarits.isNotEmpty()) {
             GabaritLayout(
                 GabaritCatalog.visible(gabarits, sector),
                 sector == Sector.TOUS,
@@ -93,6 +100,34 @@ fun CatalogScreen(
             val skins = manifest?.bySector(sector) ?: emptyList()
             SkinLayout(skins, sector == Sector.TOUS, onSkinClick, Modifier.weight(1f))
         }
+    }
+}
+
+/**
+ * D42.34 (CR-1.1) : état EXPLICITE « secteur perdu » — exigence fondateur :
+ * jamais de repli silencieux Sector.TOUS (les 30 gabarits mélangés
+ * paraissent « répétés »). Récupérable : la rangée de filtres est ouverte
+ * dans l'en-tête, le choix d'un métier réaffiche ses 5 modèles.
+ * Réutilise le bandeau du design system (niveau doux, non bloquant).
+ */
+@Composable
+private fun EtatSecteurPerdu(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+    ) {
+        video.vitrine.core.designsystem.BandeauEtat(
+            titre = stringResource(R.string.catalog_secteur_perdu_titre),
+            texte = stringResource(R.string.catalog_secteur_perdu_texte),
+            icone = video.vitrine.core.designsystem.R.drawable.ic_warning,
+            action = null,
+            surAction = null,
+            modifier = Modifier.fillMaxWidth(),
+            niveau = video.vitrine.core.designsystem.NiveauBandeau.ErreurDouce,
+        )
     }
 }
 
@@ -184,7 +219,7 @@ private fun EnTeteCatalogue(
 
 /**
  * E4 V2.0 : carte gabarit universel (maquette Drive E4_Catalogue) —
- * nom du format, secteur, duree/nb scenes, phrase courte benefice d'abord.
+ * nom du format, secteur, duree/prises guidees, phrase courte benefice d'abord.
  * 30 gabarits = liste directe scrollable (legere, amie hors-ligne).
  */
 @Composable
@@ -238,7 +273,7 @@ private fun GabaritHero(
         VignetteSecteur(
             secteur = sectorFromGabaritCode(g.secteur) ?: Sector.TOUS,
             dureeS = g.dureeTotaleS,
-            scenes = g.nombreScenes,
+            prises = g.nombrePrises,
             modifier = Modifier.fillMaxWidth(),
         )
         Text(
@@ -289,7 +324,7 @@ private fun GabaritTuile(
         VignetteSecteur(
             secteur = sectorFromGabaritCode(g.secteur) ?: Sector.TOUS,
             dureeS = g.dureeTotaleS,
-            scenes = g.nombreScenes,
+            prises = g.nombrePrises,
             modifier = Modifier.fillMaxWidth(),
         )
         Text(
@@ -345,7 +380,7 @@ private fun GabaritCard(
                     VignetteSecteur(
                         secteur = sectorFromGabaritCode(g.secteur) ?: Sector.TOUS,
                         dureeS = g.dureeTotaleS,
-                        scenes = g.nombreScenes,
+                        prises = g.nombrePrises,
                         modifier = Modifier.width(112.dp),
                     )
                     Column(
@@ -490,7 +525,7 @@ private fun SkinCard(skin: Skin, showSector: Boolean, compact: Boolean = false, 
                     secteur = skin.sector,
                     libelle = SkinDisplayName.label(skin),
                     dureeS = null,
-                    scenes = null,
+                    prises = null,
                     modifier = Modifier.padding(10.dp),
                 )
             }

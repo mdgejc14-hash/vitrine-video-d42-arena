@@ -32,14 +32,14 @@ import video.vitrine.core.model.Sector
  * D42.30 (retour terrain : « catalogue peu pro ») — vignette sectorielle
  * DESSINÉE pour chaque carte gabarit. Contractuelle : jamais une icône
  * générique ni un faux aperçu vidéo — un visuel de marque honnête qui
- * parle le langage métier (cadrage caméra, pellicule des scènes, durée).
+ * parle le langage métier (cadrage caméra, pellicule des prises, durée).
  * Zéro dépendance (Compose Canvas pur), marche hors-ligne.
  */
 @Composable
 internal fun VignetteSecteur(
     secteur: Sector,
     dureeS: Int?,
-    scenes: Int?,
+    prises: Int?,
     modifier: Modifier = Modifier,
 ) {
     val (teinteHaute, teinteBasse) = paletteSecteur(secteur)
@@ -50,7 +50,7 @@ internal fun VignetteSecteur(
             .background(Brush.verticalGradient(listOf(teinteHaute, teinteBasse)))
     ) {
         Canvas(modifier = Modifier.matchParentSize()) {
-            dessinerDecorVignette(scenes)
+            dessinerDecorVignette(prises)
         }
         // icône métier du secteur (haut-gauche)
         Canvas(
@@ -86,11 +86,11 @@ internal fun VignetteSecteurAvecLibelle(
     secteur: Sector,
     libelle: String,
     dureeS: Int?,
-    scenes: Int?,
+    prises: Int?,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        VignetteSecteur(secteur, dureeS, scenes, Modifier.fillMaxWidth())
+        VignetteSecteur(secteur, dureeS, prises, Modifier.fillMaxWidth())
         Row(
             modifier = Modifier.padding(top = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -112,7 +112,7 @@ internal fun VignetteSecteurAvecLibelle(
 
 
 /** Décor dessiné de la vignette : viseur caméra, pastille lecture, pellicule. */
-private fun DrawScope.dessinerDecorVignette(scenes: Int?) {
+private fun DrawScope.dessinerDecorVignette(prises: Int?) {
     val w = size.width
     val h = size.height
     val encrage = Color.White.copy(alpha = 0.5f)
@@ -130,16 +130,19 @@ private fun DrawScope.dessinerDecorVignette(scenes: Int?) {
     // 2) D42.32 (Lot 2) : PLUS de pastille LECTURE centrale — un bouton Play
     // sans prévisualisation réelle est un faux lecteur vidéo (exigence
     // fondateur). Le visuel reste honnête : cadrage caméra + pellicule des
-    // scènes (info réelle) + icône métier + badge durée.
-    // 3) pellicule bas : une cellule par scène (info réelle du gabarit)
-    val nScenes = (scenes ?: 0).coerceIn(0, 12)
-    if (nScenes > 0) {
+    // prises (info réelle) + icône métier + badge durée.
+    // 3) pellicule bas : une cellule par PRISE GUIDÉE (D42.34 CR-1.2 —
+    // aligné sur le libellé « N prises guidées » ; le champ JSON
+    // nombre_scènes n'est pas touché, c'est un choix de présentation
+    // tournage, pas un compteur de montage)
+    val nPrises = (prises ?: 0).coerceIn(0, 12)
+    if (nPrises > 0) {
         val cellW = w * 0.052f
         val pas = cellW * 1.45f
-        var x = (w - (nScenes * cellW + (nScenes - 1) * (pas - cellW))) / 2f
+        var x = (w - (nPrises * cellW + (nPrises - 1) * (pas - cellW))) / 2f
         val y = h * 0.86f
         val cellH = h * 0.065f
-        repeat(nScenes) {
+        repeat(nPrises) {
             drawRoundRect(
                 Color.White.copy(alpha = 0.7f),
                 topLeft = Offset(x, y),
