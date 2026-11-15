@@ -2,34 +2,86 @@ fichier	ecran	langue	resolution	pixels	etat	provenance
 BEFORE/01_langue_fr_w360_AVANT_selection-langue.png	01_langue	fr	w360	360x820	selection langue	run 43586092209 (b5a1462, D42.32) — LANGUE RÉELLE : en (défaut Robolectric, harnais v0 sans qualifier — écart documenté Lot 2)
 BEFORE/02_carrousel_fr_defaut_AVANT_slide-1-slogan.png	02_carrousel	fr	defaut	320x470	slide 1 slogan	run 43586092209 (b5a1462, D42.32) — LANGUE RÉELLE : en (défaut Robolectric, harnais v0 sans qualifier — écart documenté Lot 2)
 BEFORE/03_secteurs_fr_w360_AVANT_grille-secteurs-3D.png	03_secteurs	fr	w360	360x820	grille secteurs 3D	run 43586092209 (b5a1462, D42.32) — LANGUE RÉELLE : en (défaut Robolectric, harnais v0 sans qualifier — écart documenté Lot 2)
-BEFORE/10_marque_fr_defaut_AVANT_header-logo-officiel.png	10_marque	fr	defaut	320x92	header logo officiel	run 43586092209 (b5a1462, D42.32)
-BEFORE/04_catalogue_fr_w360_AVANT_secteur-choisi-sans-filtres.png	04_catalogue	fr	w360	360x820	secteur choisi, sans filtres	run 43586092209 (b5a1462, D42.32)
 BEFORE/04_catalogue_fr_w360_AVANT_filtre-Mode-actif.png	04_catalogue	fr	w360	360x820	filtre Mode actif	run 43586092209 (b5a1462, D42.32)
+BEFORE/04_catalogue_fr_w360_AVANT_secteur-choisi,-sans-filtres.png	?	?	?	?	?	provenance inconnue (à compléter)
+BEFORE/04_catalogue_fr_w360_AVANT_secteur-choisi-sans-filtres.png	04_catalogue	fr	w360	360x820	secteur choisi, sans filtres	run 43586092209 (b5a1462, D42.32)
 BEFORE/05_camera_fr_w360_AVANT_guide-tournage-Mode.png	05_camera	fr	w360	360x820	guide tournage Mode	run 43586092209 (b5a1462, D42.32)
 BEFORE/06_camera_fr_w360_AVANT_guide-tournage-Coiffure.png	06_camera	fr	w360	360x820	guide tournage Coiffure	run 43586092209 (b5a1462, D42.32)
 BEFORE/07_camera_fr_w360_AVANT_guide-tournage-Restauration.png	07_camera	fr	w360	360x820	guide tournage Restauration	run 43586092209 (b5a1462, D42.32)
 BEFORE/08_brief_fr_w360_AVANT_etape-import-des-rushs.png	08_brief	fr	w360	360x552	etape import des rushs	run 43586092209 (b5a1462, D42.32)
 BEFORE/09_export_fr_w360_AVANT_apercu-avant-export.png	09_export	fr	w360	360x250	apercu avant export	run 43586092209 (b5a1462, D42.32)
-AFTER/01_langue_fr_w360_APRES_selection-langue.png	01_langue	fr	w360	360x820	selection langue	Lot 2 D42.33 v2 — CORRECTION écart : rendu v1 en EN (harnais sans locale) remplacé par rendu FR authentique
-AFTER/03_secteurs_fr_w360_APRES_grille-secteurs-3D.png	03_secteurs	fr	w360	360x820	grille secteurs 3D	Lot 2 D42.33 v2 — CORRECTION écart : rendu v1 en EN (harnais sans locale) remplacé par rendu FR authentique
-AFTER/10_marque_fr_defaut_APRES_header-logo-officiel.png	10_marque	fr	defaut	320x92	header logo officiel	run 43610784376 (0a114ce, D42.33)
-AFTER/04_catalogue_fr_w360_APRES_secteur-choisi-sans-filtres.png	04_catalogue	fr	w360	360x820	secteur choisi, sans filtres	run 43610784376 (0a114ce, D42.33)
-AFTER/04_catalogue_fr_w360_APRES_filtre-Mode-actif.png	04_catalogue	fr	w360	360x820	filtre Mode actif	run 43610784376 (0a114ce, D42.33)
-AFTER/05_camera_fr_w360_APRES_guide-tournage-Mode.png	05_camera	fr	w360	360x820	guide tournage Mode	run 43610784376 (0a114ce, D42.33)
-AFTER/06_camera_fr_w360_APRES_guide-tournage-Coiffure.png	06_camera	fr	w360	360x820	guide tournage Coiffure	run 43610784376 (0a114ce, D42.33)
-AFTER/07_camera_fr_w360_APRES_guide-tournage-Restauration.png	07_camera	fr	w360	360x820	guide tournage Restauration	run 43610784376 (0a114ce, D42.33)
-AFTER/08_brief_fr_w360_APRES_etape-import-des-rushs.png	08_brief	fr	w360	360x704	etape import des rushs	run 43610784376 (0a114ce, D42.33)
-AFTER/12_dashboard_fr_w360_APRES_synchrone-credits-6.png	12_dashboard	fr	w360	360x820	synchrone, credits 6	run 43610784376 (0a114ce, D42.33)
-AFTER/12_dashboard_en_w360_APRES_hors-connexion-code-en-attente.png	12_dashboard	en	w360	360x820	hors connexion, code en attente	run 43610784376 (0a114ce, D42.33)
-AFTER/13_dashboard_fr_w360_APRES_formule-active-(pas-de-compteur-invente).png	13_dashboard	fr	w360	360x820	formule active (pas de compteur invente)	run 43610784376 (0a114ce, D42.33)
-AFTER/14_parrainage_fr_w360_APRES_historique-replie.png	14_parrainage	fr	w360	360x562	historique replie	run 43610784376 (0a114ce, D42.33)
-AFTER/15_paywall_fr_w360_APRES_quota-epuise-3-formules-Pro-recommandee.png	15_paywall	fr	w360	360x820	quota epuise, 3 formules, Pro recommandee	run 43610784376 (0a114ce, D42.33)
-AFTER/15_paywall_fr_w360_APRES_l10n-FR.png	15_paywall	fr	w360	360x820	l10n FR	run 43610784376 (0a114ce, D42.33)
-AFTER/15_paywall_en_w360_APRES_l10n-EN.png	15_paywall	en	w360	360x820	l10n EN	run 43610784376 (0a114ce, D42.33)
-AFTER/14_parrainage_en_w360_APRES_l10n-EN.png	14_parrainage	en	w360	360x680	l10n EN	run 43610784376 (0a114ce, D42.33)
-AFTER/16_reglages_fr_w360_APRES_l10n-FR-7-lignes.png	16_reglages	fr	w360	360x668	l10n FR, 7 lignes	run 43610784376 (0a114ce, D42.33)
-AFTER/20_dashboard_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png	20_dashboard	fr	w360x640	360x640	fontScale 1.3 petit ecran	run 43610784376 (0a114ce, D42.33)
-AFTER/21_paywall_en_w360x640_APRES_petit-ecran-(famille-11).png	21_paywall	en	w360x640	360x640	petit ecran (famille 11)	run 43610784376 (0a114ce, D42.33)
-AFTER/22_dashboard_fr_w640x360_APRES_rotation-paysage.png	22_dashboard	fr	w640x360	640x360	rotation paysage	run 43610784376 (0a114ce, D42.33)
-AFTER/23_parrainage_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png	23_parrainage	fr	w360x640	360x640	fontScale 1.3 petit ecran	run 43610784376 (0a114ce, D42.33)
-AFTER/24_reglages_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png	24_reglages	fr	w360x640	360x640	fontScale 1.3 petit ecran	run 43610784376 (0a114ce, D42.33)
+BEFORE/10_marque_fr_defaut_AVANT_header-logo-officiel.png	10_marque	fr	defaut	320x92	header logo officiel	run 43586092209 (b5a1462, D42.32)
+AFTER/01_langue_fr_w360_APRES_selection-langue.png	Sélection de la langue	fr	w360dp-h820dp		écran de choix	Lot 2 D42.33 v2 — CORRECTION écart : rendu FR authentique (v1 = EN par défaut Robolectric)
+AFTER/03_secteurs_fr_w360_APRES_grille-secteurs-3D.png	Choix du secteur	fr	w360dp-h820dp		6 cartes-options	Lot 2 D42.33 v2 — CORRECTION écart : rendu FR authentique (v1 = EN par défaut Robolectric)
+AFTER/04_catalogue_fr_w360_APRES_filtre-Mode-actif.png	Catalogue	fr	w360dp-h820dp		secteur choisi — sans filtres — variante de remplissage réelle	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/04_catalogue_fr_w360_APRES_secteur-choisi-sans-filtres.png	Catalogue	fr	w360dp-h820dp		secteur choisi — sans filtres	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/05_camera_fr_w360_APRES_guide-tournage-Mode.png	Guide de tournage	fr	w360dp-h820dp		overlay Mode (scène 1/3 enregistrement)	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/06_camera_fr_w360_APRES_guide-tournage-Coiffure.png	Guide de tournage	fr	w360dp-h820dp		overlay Coiffure (scène 2/3)	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/07_camera_fr_w360_APRES_guide-tournage-Restauration.png	Guide de tournage	fr	w360dp-h820dp		overlay Restauration (scène 3/3 pause)	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/08_brief_fr_w360_APRES_etape-import-des-rushs.png	Import des rushs client	fr	w360dp-h820dp		étape optionnelle	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/10_marque_fr_defaut_APRES_header-logo-officiel.png	Choix du secteur	fr	w360dp-h820dp		6 cartes-options — variante de remplissage réelle	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/12_dashboard_en_w360_APRES_hors-connexion-code-en-attente.png	Dashboard	en	w360dp-h820dp		hors connexion — code en attente	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/12_dashboard_fr_w360_APRES_synchrone-credits-6.png	Retour réseau	fr	1080x2340 (émul.)		re-synchronisation	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/13_dashboard_fr_w360_APRES_formule-active-pas-de-compteur-invente.png	Dashboard	fr	w360dp-h820dp		formule active (pas de compteur inventé)	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/14_parrainage_en_w360_APRES_l10n-EN.png	Parrainage	en	w360dp-h820dp		l10n EN	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/14_parrainage_fr_w360_APRES_historique-replie.png	Parrainage	fr	w360dp-h820dp		code + jauge 2/5 + historique	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/15_paywall_en_w360_APRES_l10n-EN.png	Formules / paywall	en	w360dp-h820dp		l10n EN	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/15_paywall_fr_w360_APRES_quota-epuise-3-formules-Pro-recommandee.png	Formules / paywall	fr	w360dp-h820dp		l10n FR	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/16_reglages_fr_w360_APRES_l10n-FR-7-lignes.png	Réglages	fr	w360dp-h820dp		7 lignes-tuiles	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/20_dashboard_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png	fontScale 1,3	fr	w360dp-h820dp (fs 1.3)		dashboard	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/21_paywall_en_w360x640_APRES_petit-ecran-famille-11.png	Petit écran 360x640	en	360x640		paywall	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/22_dashboard_fr_w640x360_APRES_rotation-paysage.png	Rotation paysage	fr	w640dp-h360dp		dashboard	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/23_parrainage_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png	fontScale 1,3	fr	w360dp-h820dp (fs 1.3)		parrainage	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/24_reglages_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png	fontScale 1,3	fr	w360dp-h820dp (fs 1.3)		réglages	run android-ci 43610784376 (0a114ce, D42.33 v1)
+AFTER/P01-04_langue-en_APRES.png	Sélection de la langue	en	w360dp-h820dp		écran de choix	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P01-05_connexion-fr_APRES.png	Connexion Google	fr	1080x2340 (émul.)		écran d'authentification	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P01-06_connexion-en_APRES.png	Connexion Google	en	1080x2340 (émul.)		écran d'authentification	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P01-08_code-parrain-deep-link-prefilled_APRES.png	Étape code parrain	fr	1080x2340 (émul.)		code détecté (deep-link /r/CODE)	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P01-08_code-parrain-saisie-manuelle_APRES.png	Étape code parrain	fr	1080x2340 (émul.)		code détecté (deep-link /r/CODE) — variante de remplissage réelle	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P01-08_connexion-code-parrain-detected_APRES.png	Étape code parrain	fr	1080x2340 (émul.)		code détecté (deep-link /r/CODE) — variante de remplissage réelle	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P01-09_bienvenue-credits-confirmes_APRES.png	Bienvenue / crédits offerts	fr	1080x2340 (émul.)		compte créé + 3 crédits	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P01-10_bienvenue-solde-en-attente_APRES.png	Bienvenue / crédits offerts	fr	w360dp-h820dp		solde en attente de synchronisation	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P02-01_carrousel-slide-1_APRES.png	Carrousel onboarding	fr	defaut (320x470)		slide 1 — ce que l'app fait	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P02-02_carrousel-slide-2_APRES.png	Carrousel onboarding	fr	1080x2340 (émul.)		slide 2 — combien de temps	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P02-03_carrousel-slide-3_APRES.png	Carrousel onboarding	fr	1080x2340 (émul.)		slide 3 — combien ça rapporte (CTA d'entrée)	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P02-04_carrousel-slide-1-en_APRES.png	Carrousel onboarding	en	1080x2340 (émul.)		slide 1	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P02-08_secteurs-en_APRES.png	Choix du secteur	en	1080x2340 (émul.)		6 cartes-options	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P03-02_catalogue-tuiles-peuplees_APRES.png	Catalogue	fr	1080x2340 (émul.)		tuiles de gabarits peuplées	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P03-03_catalogue-scroll-bas_APRES.png	Catalogue	fr	1080x2340 (émul.)		scroll (bas)	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P03-04_catalogue-en_APRES.png	Catalogue	fr	1080x2340 (émul.)		en	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P03-05_catalogue-hors-connexion_APRES.png	Catalogue	fr	1080x2340 (émul.)		hors connexion	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P04-01_brief-haut_APRES.png	Brief multi-étapes	fr	w360dp-h820dp		étape 1 sur 8	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P04-02_brief-derniere-section_APRES.png	Brief multi-étapes	fr	w360dp-h820dp		étape 8 sur 8	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P04-03_brief-vide_APRES.png	Brief multi-étapes	fr	w360dp-h820dp		vide (aucun champ rempli)	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P04-04_brief-rempli_APRES.png	Brief multi-étapes	fr	w360dp-h820dp		rempli	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P04-05_brief-final-rempli_APRES.png	Brief multi-étapes	fr	w360dp-h820dp		récapitulatif final	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P04-06_brief-reprise-brouillon_APRES.png	Brief multi-étapes	fr	w360dp-h820dp		reprise de brouillon (persistance)	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P04-07_brief-options-depliees_APRES.png	Brief multi-étapes	fr	w360dp-h820dp		bas de l'écran — CTA épinglé	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P04-09_whatsapp-champ-fr_APRES.png	Champ WhatsApp	fr	1080x2340 (émul.)		international + clavier	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P04-10_whatsapp-champ-en_APRES.png	Champ WhatsApp	en	1080x2340 (émul.)		international + clavier	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P04-11_preparation-camera_APRES.png	Contrôle avant tournage (§9.6)	fr	w360dp-h820dp		liste de tests + score + CTA conditionnel	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P04-12_controle-bas_APRES.png	Contrôle avant tournage	fr	1080x2340 (émul.)		bas + CTA débloqué	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P05-04_viseur-prise_APRES.png	Viseur plein cadre (prise guide)	fr	w360dp-h820dp		HUD informatif	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P05-05_flux-streaming_APRES.png	Viseur plein cadre	en	1080x2340 (émul.)		flux streaming actif	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P05-06_compte-a-rebours_APRES.png	Compte à rebours	fr	w360dp-h820dp		3-2-1	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P05-07_rec_APRES.png	Enregistrement (REC)	fr	w360dp-h820dp		badge REC actif	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P05-08_prise-validee_APRES.png	Arrêt de prise	fr	w360dp-h820dp		prise validée (retour visuel)	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P05-09_ecran-complet-commandes_APRES.png	Navigation avant/arrière entre prise	fr	w360dp-h820dp		choix prendre/avancer	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P05-11_scene-2_APRES.png	Scène suivante	fr	w360dp-h820dp		scène 2 sur N	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P05-13_diagnostic-permission-refusee_APRES.png	Diagnostic caméra	fr	w360dp-h820dp		cas matériels	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P07-01_apercu-E7-complet_APRES.png	Aperçu du montage (E7)	fr	w360dp-h820dp		récap avant création	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P07-02_montage-E8-en-cours_APRES.png	Montage en cours (E8)	fr	w360dp-h820dp		progression + étapes	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P10-02_dashboard-bas_APRES.png	Dashboard	fr	1080x2340 (émul.)		bas de l'écran (scroll)	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P10-03_dashboard-suite-parrainage_APRES.png	Dashboard	fr	1080x2340 (émul.)		suite (parrainage intégré)	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P10-04_dashboard-en-synchrone_APRES.png	Dashboard	en	w360dp-h820dp		synchrone	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P10-08_reglages-en_APRES.png	Réglages	en	w360dp-h820dp		lignes-tuiles	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P11-04_paywall-bas_APRES.png	Formules / paywall	fr	1080x2340 (émul.)		bas (scroll)	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P12-01_bienvenue-fontScale-1.3_APRES.png	fontScale 1,3	fr	1080x2340 (émul.)		bienvenue	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P12-02_langue-fontScale-1.3_APRES.png	fontScale 1,3	fr	1080x2340 (émul.)		langue	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P12-03_catalogue-fontScale-1.3_APRES.png	fontScale 1,3	fr	1080x2340 (émul.)		catalogue	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P12-07_langue-petit-ecran_APRES.png	Petit écran 360x640	fr	360x640		base (langue)	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P12-08_bienvenue-petit-ecran_APRES.png	Petit écran 360x640	fr	360x640		bienvenue	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P12-09_catalogue-petit-ecran_APRES.png	Petit écran 360x640	fr	360x640		catalogue	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P12-12_bienvenue-rotation_APRES.png	Rotation paysage	fr	1080x2340 (émul. rot.)		bienvenue	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P12-13_carrousel-rotation_APRES.png	Rotation paysage	fr	1080x2340 (émul. rot.)		carrousel	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
+AFTER/P12-15_bienvenue-hors-connexion_APRES.png	Hors connexion	fr	1080x2340 (émul.)		bienvenue	Lot 2 D42.33 v2 (c110c46, CI 43626981859 SUCCESS) — tests Lot2*VisualCheckTest
