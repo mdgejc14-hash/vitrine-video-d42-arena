@@ -5,16 +5,20 @@ l'application. Chaque ligne montre la **maquette fondateur** à gauche et la
 **capture réelle de l'application** à droite (composants Android authentiques :
 tests Robolectric `@GraphicsMode(NATIVE)`, émulateur D42.31, ou écrans système).
 
-> **Statut au 17/11/2026 (soir) — travaux en cours, rien de simulé :**
-> - Lots d'aperçus **1 et 2 livrés** (15/11) : **21/30 gabarits** ont leur
+> **Statut au 15/11/2026 — travaux en cours, rien de simulé :**
+> - Aperçus **30/30 livrés** (lots 1, 2 et 3, 15/11) : chaque gabarit a son
 >   aperçu photographique original intégré et vérifié sur GitHub (file
->   ASSET_GENERATION_QUEUE.csv — SHA-256, doublons contrôlés). Lot 3 (9
->   restants) en attente : limite stricte de la plateforme (10 images/tour).
->   La capture catalogue définitive suivra la complétude 30/30.
-> - Captures carrousels/secteurs **déjà refaites** avec les images originales
->   (D34-11/13/14/15).
-> - Recaptures restantes planifiées (Lot F) : montage phases, dashboard « Bonjour,
->   {prénom} », paywall CTA FR/EN, consentement, dialogue reprise, export.
+>   ASSET_GENERATION_QUEUE.csv — 29/29 VERIFIED, SHA-256, zéro doublon exact
+>   ou perceptuel). L'aperçu shops T2 a été **régénéré sur signalement
+>   fondateur** (prompt corrigé, sha 9b6249e98b25…, note au registre).
+> - Captures carrousels/secteurs **refaites** avec les images originales
+>   (D34-11/13/14/15), paywall CTA FR/EN (D34-18/19).
+> - **Lot 8 livré (15/11)** : phases métier du montage E8 (D34-20 assemblage,
+>   D34-21 rendu) et écran « export prêt » (D34-22) — chemin utilisateur
+>   complet sous Robolectric, test `D34Lot8ExportStatesVisualCheckTest` 3/3.
+> - Restent à produire : dialogues réglages/pays (VR-074→078), dialogue
+>   reprise (VR-062), consentement client R4, et les captures catalogue
+>   définitives 30/30 (remplacement des captures pré-mécanisme).
 > - Les états système (splash, flux viseur, feuille de partage) exigent le
 >   **téléphone fondateur** — marqués NON PROUVÉ, jamais simulés.
 
@@ -32,8 +36,8 @@ NON APPLICABLE = hors périmètre (décision fondateur ou UI système).
 6. [Bienvenue & crédits](#f-bienvenue--crédits)
 7. [Choix du secteur](#g-choix-du-secteur)
 8. [Catalogue de gabarits](#h-catalogue-de-gabarits)
-9. [Aperçus des gabarits (8 bis)](#h2-aperçus-des-gabarits)
-10. [Brief](#i-brief)
+8 bis. [Aperçus des gabarits](#h2-aperçus-des-gabarits)
+9. [Brief](#i-brief)
 10. [Caméra guidée](#j-caméra-guidée)
 11. [Validation des prises](#k-validation-des-prises)
 12. [Montage](#l-montage)
@@ -150,7 +154,7 @@ Maquette PIL : blanc 86 %, tuiles discrètes — respecté.
 | Font scale 1,3 | — | <img src="../../D42_33/visual-review/AFTER/P12-03_catalogue-fontScale-1.3_APRES.png" width="180"/> | CONFORME |
 | Petit écran | — | <img src="../../D42_33/visual-review/AFTER/P12-09_catalogue-petit-ecran_APRES.png" width="180"/> | CONFORME |
 
-**Mécanisme aperçu (Lot D) :** `ApercuGabarit.resPour(gabaritId)` → drawable `apercu_<secteur>_t<n>.webp`, fallback dessiné D42.30 conservé. 10/39 committés (57e720f), 29 en file (limite de génération par session). Les captures actuelles prédatent le mécanisme — remplacées à la complétude, pas avant (aucune capture trompeuse intermédiaire).
+**Mécanisme aperçu (Lot D) :** `ApercuGabarit.resPour(gabaritId)` → drawable `apercu_<secteur>_t<n>.webp`, fallback dessiné D42.30 conservé. **30/30 intégrés et vérifiés** (lots 1-3, 15/11 — file 29/29 VERIFIED, zéro doublon, shops T2 régénérée sur signalement fondateur). Les captures d'écran de cette section prédatent le mécanisme — remplacées par les captures définitives 30/30 (Lot F), pas avant (aucune capture trompeuse intermédiaire).
 
 [↑ Retour au sommaire](#sommaire)
 
@@ -184,10 +188,22 @@ Rendu prouvé dans l'application : corrélations template-matching 0,982/0,988
 | restaurants maquis t4 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t4.webp" width="240"/> | Intégré · vérifié |
 | restaurants maquis t5 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t5.webp" width="240"/> | Intégré · vérifié |
 | shops small business t1 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_shops_small_business_t1.webp" width="240"/> | Intégré · vérifié |
+| shops small business t2 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_shops_small_business_t2.webp" width="240"/> | Intégré · vérifié · régénéré (signalement fondateur, sha 9b6249e98b25…) |
+| shops small business t3 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_shops_small_business_t3.webp" width="240"/> | Intégré · vérifié |
+| shops small business t4 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_shops_small_business_t4.webp" width="240"/> | Intégré · vérifié |
+| shops small business t5 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_shops_small_business_t5.webp" width="240"/> | Intégré · vérifié |
+| vetements mode t1 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_vetements_mode_t1.webp" width="240"/> | Intégré · vérifié |
+| vetements mode t2 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_vetements_mode_t2.webp" width="240"/> | Intégré · vérifié |
+| vetements mode t3 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_vetements_mode_t3.webp" width="240"/> | Intégré · vérifié |
+| vetements mode t4 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_vetements_mode_t4.webp" width="240"/> | Intégré · vérifié |
+| vetements mode t5 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_vetements_mode_t5.webp" width="240"/> | Intégré · vérifié |
 
-**8 aperçus restants** (shops T2-T5, vêtements T1-T5) : lot 3 en file
-(ASSET_GENERATION_QUEUE.csv) — limite stricte de génération par tour de
-session ; capture catalogue définitive après complétude 30/30.
+**30/30 intégrés** (lots 1-3 livrés le 15/11) : file
+ASSET_GENERATION_QUEUE.csv 29/29 VERIFIED — SHA-256 consignés, zéro doublon
+exact ou perceptuel, distant GitHub vérifié à 200 pour chacun. L'aperçu
+shops T2 a été régénéré sur signalement fondateur (image dénoncée corrigée
+avant de poursuivre — identification par corrélation template 0,962,
+régénération prompt corrigé, note de régénération au registre).
 
 [↑ Retour au sommaire](#sommaire)
 
@@ -248,9 +264,14 @@ Maquette 17 (écran galerie « revue ») : forme **distribuée** dans l'app — 
 | Écran / état | Référence fondateur | APRÈS (capture réelle) | Statut |
 |---|---|---|---|
 | Aperçu E7 (montage complet) | <img src="../../D42_33/SOURCES/maquettes/18_apercu_montage.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/P07-01_apercu-E7-complet_APRES.png" width="180"/> | CONFORME |
-| Montage E8 en cours (phases métier) | <img src="../../D42_33/SOURCES/maquettes/19_montage_en_cours.png" width="180"/> | <img src="../../D42_31/visual-review/16_export/base-fr-058_export_en_cours.png" width="180"/> | NON PROUVÉ |
+| E8 phase « Assemblage des plans et des textes » | <img src="../../D42_33/SOURCES/maquettes/19_montage_en_cours.png" width="180"/> | <img src="D34-20_montage-phases-assemblage_APRES.png" width="180"/> | CONFORME |
+| E8 phase « Rendu final de la vidéo » | — | <img src="D34-21_montage-phases-rendu_APRES.png" width="180"/> | CONFORME |
 
-VR-051 : la correction de code est **faite** (D42.34 CR-4) — reste la capture.
+VR-051 **prouvé** (Lot 8) : `D34Lot8ExportStatesVisualCheckTest` — worker de
+test occupant le nom unique réel `vv-export`, phase publiée par `setProgress`
+authentique, **tap réel sur « Exporter »** (porte crédits complète), observer
+`observeExport()` attaché, émission LiveData → TextView. Phases métier réelles
+de l'app, barre indéterminée, aucun % inventé (CR-4 respecté).
 
 [↑ Retour au sommaire](#sommaire)
 
@@ -258,9 +279,13 @@ VR-051 : la correction de code est **faite** (D42.34 CR-4) — reste la capture.
 
 | Écran / état | Référence fondateur | APRÈS (capture réelle) | Statut |
 |---|---|---|---|
-| Export prêt | <img src="../../D42_33/SOURCES/maquettes/20_export_pret.png" width="180"/> | <img src="../../D42_31/visual-review/16_export/base-fr-057_export_pret.png" width="180"/> | NON PROUVÉ |
+| Export prêt | <img src="../../D42_33/SOURCES/maquettes/20_export_pret.png" width="180"/> | <img src="D34-22_export-pret_APRES.png" width="180"/> | CONFORME |
 
-Écrans D42.31 (émulateur) donnés en référence honnête, marqués NON PROUVÉ pour D42.34 tant que la recapture n'est pas faite.
+VR-052 **prouvé** (Lot 8) : le worker de test aboutit à `Result.success`
+avec `KEY_OUTPUT` (contrat réel du `ExportWorker`), **sur signal fichier créé
+après l'attachement de l'observer** — l'activité affiche `export_done` et rend
+les boutons **partage** et **espace** visibles (chemin `observeExport()` réel,
+aucun flux fabriqué). L'ancienne référence émulateur D42.31 est remplacée.
 
 [↑ Retour au sommaire](#sommaire)
 
@@ -329,7 +354,7 @@ Checkout : CinetPay renvoie 501 `billing_not_configured` (budget 0 FCFA, aucune 
 | Dialogue accords de diffusion | — | **à produire — indiqué honnêtement** | NON PROUVÉ |
 | Dialogue nettoyage espace | — | **à produire — indiqué honnêtement** | NON PROUVÉ |
 
-Le **dialogue de reprise** (VR-062, D42.27) et les **accords de diffusion** (consentements enregistrés) sont listés pour capture au Lot F.
+Le **dialogue de reprise** (VR-062, D42.27) et les **accords de diffusion** (consentements enregistrés) sont les dernières captures dialogue à produire (Lot F). Les dialogues VR-074→078 sont codés et réels — capture Robolectric à produire, aucune simulation.
 
 [↑ Retour au sommaire](#sommaire)
 
@@ -371,7 +396,7 @@ Vue regroupée par contrainte (fontScale / petit écran / rotation / hors-connex
 
 - Registre des images originales : `../GENERATED_ASSETS.md` (provenance de chaque
   ressource générée — aucune image à licence inconnue conservée).
-- Inventaire exhaustif des 73 écrans/états : `../11_INVENTAIRE_COMPLET_ECRANS.csv`.
+- Inventaire exhaustif des 78 écrans/états : `../11_INVENTAIRE_COMPLET_ECRANS.csv`.
 - Audit fidélité des 34 maquettes : `../10_AUDIT_FIDELITE_DESIGN.md`.
 - Manifeste vérifiable de cette galerie : `../12_MANIFEST_GALERIE.csv`
   (chemin → statut → note, une ligne par image référencée).

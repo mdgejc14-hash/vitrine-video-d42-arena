@@ -1,61 +1,61 @@
 # NEXT_ACTION — D42.34 ordre final (reprise au prochain tour)
 
-Base : 2dfd907 (immuable) → … → fe2ab0d (HEAD). Échéance projet : 18/11/2026.
+Base : 2dfd907 (immuable) → … → 93fa450 → d711223 (HEAD, Lot 8) → P2 docs.
+Échéance projet : 18/11/2026.
 Date réelle de référence : 15/11/2026 (jamais de date future dans les documents).
 
-## PREMIER GESTE DU PROCHAIN TOUR — LOT 3/3 (9 images)
+## ÉTAT (15/11 soir, après Lot 8 + P2 docs)
 
-La limite stricte est de 10 images générées par tour : le lot 2 l'a consommée
-ce tour. Au prochain tour, le quota est réinitialisé.
+- **P1 FAITE** : aperçus **30/30** (lots 1-3, file 29/29 VERIFIED, distant 200,
+  zéro doublon) + image fondateur corrigée (shops T2 régénérée, sha
+  9b6249e98b25…, aed849d→93fa450).
+- **P3 (partie) FAITE** : D34Lot8 **3/3 VERT** — D34-20/21/22 (phases montage
+  E8 + export prêt) via `D34Lot8ExportStatesVisualCheckTest` (d711223).
+- **P2 FAITE (commit en cours)** : README visual-review (30/30, Lot 8,
+  sommaire corrigé, 8 bis complet 30 lignes), 11_INVENTAIRE VR-051/VR-052 →
+  CONFORME, 12_MANIFEST 133 entrées.
+- CI : verte jusqu'à 93fa450 inclus ; d711223 (Lot 8) en cours au push.
+- Manifeste : 133 entrées. Restes NON PROUVÉ : 9 (splash/flux viseur/feuille
+  partage = téléphone fondateur ; hors connexion, consentement R4) + 6
+  dialogues (VR-074→078, VR-062) + 5 ÉCART captures catalogue pré-mécanisme.
 
-```
-cd /home/user/lab23
-# 0. réparer le remote (perdu à chaque reset sandbox) :
-#    git remote add origin https://x-access-token:$(cat ~/.d42_secrets/gh_pat_fondateur.txt)@github.com/mdgejc14-hash/vitrine-video-d42-arena.git
-#    git config user.name d42-agent && git config user.email d42-agent@users.noreply.github.com
-#    git checkout -- .   (bits exécutables)
-python3 scripts/process_catalog_asset_queue.py next 9    # réserve le lot 3
-# → 9 generate_image avec les prompts affichés (shops T2-T5, vetements T1-T5)
-#    fichiers /home/user/assets_gen/apercu_<secteur>_T<n>.png
-python3 scripts/process_catalog_asset_queue.py integrate shops_small_business_T2 shops_small_business_T3 shops_small_business_T4 shops_small_business_T5 vetements_mode_T1 vetements_mode_T2 vetements_mode_T3 vetements_mode_T4 vetements_mode_T5
-python3 scripts/process_catalog_asset_queue.py emit-map
-python3 scripts/process_catalog_asset_queue.py verify       # 30/30, 0 doublon
-git checkout gradle.properties ; git add -A ; git diff --cached --stat gradle.properties  # DOIT être vide
-git commit -m "LOT 3/3 …" && git push origin d42.34-founder-acceptance-fixes
-# vérifier les 9 fichiers distants (API contents 200) puis :
-python3 scripts/process_catalog_asset_queue.py mark-verified <les 9 ids>
-git add … commit … push
-```
+## PROCHAIN TOUR — ORDRE
 
-## PUIS (même tour que le lot 3)
+1. **Recapture catalogue définitif 30/30** (P3) : étendre le test D34Lot6 aux
+   6 secteurs (chaque tuile doit montrer l'aperçu webp réel), remplacer
+   D34-01/02/03 et les 5 lignes ÉCART de la section 8 du README (captures
+   pré-mécanisme), puis passer leur statut à CONFORME dans 11/12.
+2. **Captures dialogues** (P3) : VR-074→078 (AlertDialog dashboard :
+   langue/secteur/accords/nettoyage + DialogueChoixPays brief Compose) et
+   VR-062 (dialogue reprise D42.27). Méthode Robolectric éprouvée Lot 8 :
+   clics réels, poll `shadowOf(getMainLooper()).idle()`, capture decorView
+   NATIVE 360×820.
+3. **Régénérer la galerie** : extraire d'abord /tmp/maquettes + /tmp/apres33
+   (raw.githubusercontent + PAT — clone blob:none) ; `python3
+   scripts/galerie_lotf.py` ; chaque entrée = capture OU statut d'absence
+   explicite (78/78).
+4. **13_RAPPORT** à jour : 30/30, Lot 8, compteurs exacts, téléphone
+   fondateur = NON PROUVÉ explicite.
+5. **Rapport final + preuves GitHub** (runs CI, sha, contenus 200).
 
-1. Recapture catalogue définitif : étendre D34Lot6 aux 6 secteurs (tests
-   Robolectric), remplacer D34-01/02/03, régénérer la galerie.
-2. Captures dialogues VR-074→078 + VR-062 si reproductibles (AlertDialog
-   dashboard via clics UI ; DialogueChoixPays brief).
-3. Régénérer galerie + manifeste : extraire d'abord /tmp/maquettes +
-   /tmp/apres33 (raw.githubusercontent + PAT — le clone est blob:none,
-   sparse-checkout échoue sur les blobs D31) ; `python3 scripts/galerie_lotf.py`.
-4. Mettre à jour 13_RAPPORT_CONFORMITE_VISUELLE.md à la complétude 30/30.
-
-## ÉTAT (15/11 soir)
-
-- Aperçus : **21/30** (batiment T1-T5, coiffure T1-T5, immo T1-T5,
-  restaurants T1-T5, shops T1) — 20 VERIFIED file + T1 préexistant.
-- Images originales : 31/39 (3 carrousels + 6 secteurs + 21 aperçus + batiment
-  T1 ancien → compter 30 aperçus cible).
-- Inventaire : 78 états. Galerie : 123 entrées / 118 images. Rapport 13 écrit.
-- CI : e8494dc SUCCESS ; runs du jour vérifiés au push (fe2ab0d dernier).
-
-## PIÈGES (tous rencontrés ce tour)
+## PIÈGES (tous rencontrés — ne pas retenter les impasses)
 
 - Remote git + identité perdus à chaque reset sandbox (.git/config non
-  persisté) — à réparer AVANT tout push, sinon échec silencieux.
+  persisté) — réparer dans la MÊME commande que fetch/push.
 - gradle.properties : JAMAIS committer la valeur locale (1024m) — contrôle
-  `git diff --cached --stat gradle.properties` avant chaque push.
-- Limite 10 images/tour stricte — 1 lot par tour maximum.
-- Builds Robolectric lourds : UN module à la fois (daemon sinon tué, OOM).
+  `git diff --cached --stat gradle.properties` avant chaque push ; checkout
+  AVANT add.
+- Builds Robolectric lourds : UN test à la fois (daemon sinon tué, OOM) ;
+  runs individuels ~1-3 min chacun.
+- **WorkManager progress SOUS Robolectric : LA MÉTHODE QUI MARQUE (Lot 8)**
+  — worker de test occupant le nom unique réel (setProgress authentique,
+  phase tenue stable via inputData), poll `getWorkInfosForUniqueWork` AVANT
+  le launch, PUIS tap réel sur export_start avec : extra `input` non null
+  (sinon deny input_missing), `ShadowStatFs.registerStats(filesDir, …)`
+  (sinon porte stockage refusée à 0), et pour l'état prêt : réussite SUR
+  SIGNAL fichier créé après affichage de la phase (sinon KEEP ré-enqueue le
+  vrai worker, travail terminé = non bloqué).
 - Toolchain : JDK /opt/toolchain/jdk-17.0.21+9, cmdline-tools 15859902,
   platforms;android-37.0, build-tools 37.0.0 ; swap 2G à recréer si reset.
 - git archive/sparse-checkout impossibles (clone blob:none) : raw API + PAT.
-- WorkManager progress non observable sous Robolectric (VR-051 documenté).
+- Visualiser un PNG : corrélation template luminance (pas de vision).

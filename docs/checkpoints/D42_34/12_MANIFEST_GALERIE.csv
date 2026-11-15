@@ -56,6 +56,15 @@ section,ecran,reference_fondateur,capture_apres,statut,note
 8 bis. Aperçus des gabarits,restaurants_maquis_t4,-,feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t4.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
 8 bis. Aperçus des gabarits,restaurants_maquis_t5,-,feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t5.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
 8 bis. Aperçus des gabarits,shops_small_business_t1,-,feature-catalog/src/main/res/drawable-nodpi/apercu_shops_small_business_t1.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,shops_small_business_t2,-,feature-catalog/src/main/res/drawable-nodpi/apercu_shops_small_business_t2.webp,Intégré · vérifié,"aperçu original régénéré sur signalement fondateur (sha 9b6249e98b25…, note au registre) ; lot 3, distant 200"
+8 bis. Aperçus des gabarits,shops_small_business_t3,-,feature-catalog/src/main/res/drawable-nodpi/apercu_shops_small_business_t3.webp,Intégré · vérifié,"aperçu original généré (GENERATED_ASSETS) ; lot 3 (15/11), distant GitHub vérifié 200"
+8 bis. Aperçus des gabarits,shops_small_business_t4,-,feature-catalog/src/main/res/drawable-nodpi/apercu_shops_small_business_t4.webp,Intégré · vérifié,"aperçu original généré (GENERATED_ASSETS) ; lot 3 (15/11), distant GitHub vérifié 200"
+8 bis. Aperçus des gabarits,shops_small_business_t5,-,feature-catalog/src/main/res/drawable-nodpi/apercu_shops_small_business_t5.webp,Intégré · vérifié,"aperçu original généré (GENERATED_ASSETS) ; lot 3 (15/11), distant GitHub vérifié 200"
+8 bis. Aperçus des gabarits,vetements_mode_t1,-,feature-catalog/src/main/res/drawable-nodpi/apercu_vetements_mode_t1.webp,Intégré · vérifié,"aperçu original généré (GENERATED_ASSETS) ; lot 3 (15/11), distant GitHub vérifié 200"
+8 bis. Aperçus des gabarits,vetements_mode_t2,-,feature-catalog/src/main/res/drawable-nodpi/apercu_vetements_mode_t2.webp,Intégré · vérifié,"aperçu original généré (GENERATED_ASSETS) ; lot 3 (15/11), distant GitHub vérifié 200"
+8 bis. Aperçus des gabarits,vetements_mode_t3,-,feature-catalog/src/main/res/drawable-nodpi/apercu_vetements_mode_t3.webp,Intégré · vérifié,"aperçu original généré (GENERATED_ASSETS) ; lot 3 (15/11), distant GitHub vérifié 200"
+8 bis. Aperçus des gabarits,vetements_mode_t4,-,feature-catalog/src/main/res/drawable-nodpi/apercu_vetements_mode_t4.webp,Intégré · vérifié,"aperçu original généré (GENERATED_ASSETS) ; lot 3 (15/11), distant GitHub vérifié 200"
+8 bis. Aperçus des gabarits,vetements_mode_t5,-,feature-catalog/src/main/res/drawable-nodpi/apercu_vetements_mode_t5.webp,Intégré · vérifié,"aperçu original généré (GENERATED_ASSETS) ; lot 3 (15/11), distant GitHub vérifié 200"
 9. Brief,Brief — haut (étape 1),10_brief_etape1.png,../../D42_33/visual-review/AFTER/P04-01_brief-haut_APRES.png,CONFORME,
 9. Brief,Dernière section,11_brief_etape8.png,../../D42_33/visual-review/AFTER/P04-02_brief-derniere-section_APRES.png,CONFORME,import des rushs
 9. Brief,Import T5 — slot import (D42.34),-,D34-04_brief-t5-import_APRES.png,CONFORME,T5 témoignage
@@ -82,8 +91,9 @@ section,ecran,reference_fondateur,capture_apres,statut,note
 10. Caméra guidée,Consentement client (dialogue R4),16_consentement_client.png,-,NON PROUVÉ,"dialogue R4 codé (visage/mineur) — capture à produire (VR-048, Lot F)"
 11. Validation des prises,Prise validée,17_revue_des_prises.png,../../D42_33/visual-review/AFTER/P05-08_prise-validee_APRES.png,CONFORME,validation immédiate après chaque prise
 12. Montage,Aperçu E7 (montage complet),18_apercu_montage.png,../../D42_33/visual-review/AFTER/P07-01_apercu-E7-complet_APRES.png,CONFORME,
-12. Montage,Montage E8 en cours (phases métier),19_montage_en_cours.png,16_export/base-fr-058_export_en_cours.png,NON PROUVÉ,"code CONFORME (CR-4 : phase réelle KEY_PHASE du worker, barre indéterminée, zéro % inventé) ; référence émulateur D42.31 pré-phases ; le progress WorkManager→LiveData ne se propage pas sous Robolectric (2 tentatives) → capture d'EXÉCUTION = émulateur/téléphone fondateur"
-13. Export,Export prêt,20_export_pret.png,16_export/base-fr-057_export_pret.png,NON PROUVÉ,référence émulateur D42.31 ; capture D42.34 à produire (VR-052)
+12. Montage,E8 phase « Assemblage des plans et des textes »,19_montage_en_cours.png,D34-20_montage-phases-assemblage_APRES.png,CONFORME,"Lot 8 : D34Lot8ExportStatesVisualCheckTest — setProgress authentique du worker vv-export, tap réel export_start, observer LiveData, 360x820 NATIVE"
+12. Montage,E8 phase « Rendu final de la vidéo »,-,D34-21_montage-phases-rendu_APRES.png,CONFORME,"Lot 8 : même chemin déterministe, phase rendu tenue stable via inputData du worker de test"
+13. Export,Export prêt,20_export_pret.png,D34-22_export-pret_APRES.png,CONFORME,Lot 8 : worker réussit sur signal (KEY_OUTPUT contrat réel) → export_done + partage + espace visibles ; remplace la référence émulateur D42.31
 14. Partage,Feuille de partage système,21_partage.png,18_partage/suite-fr-026_partage_feuille.png,NON APPLICABLE,UI système Android — non contrôlée par l'app (VR-056)
 15. Dashboard,"Synchrone, crédits 6",24_dashboard.png,../../D42_33/visual-review/AFTER/12_dashboard_fr_w360_APRES_synchrone-credits-6.png,CONFORME,« Bonjour » seul si pas de prénom réel (jamais inventé)
 15. Dashboard,Bas de page,-,../../D42_33/visual-review/AFTER/P10-02_dashboard-bas_APRES.png,CONFORME,
