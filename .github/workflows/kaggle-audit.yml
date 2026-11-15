@@ -10,7 +10,7 @@ name: kaggle-audit
 # déclarées), ressources/boutons/routes/références, crédits/quotas app +
 # Worker, parrainage avec/sans code (JVM) — verdicts exclusifs COMPLET /
 # CASSÉ / NON JUGEABLE PAR LECTURE SEULE, citations fichiers et lignes.
-# Produit : REPORT_D42_34.md (commité sur la branche) + sorties en artefact.
+# Produit : REPORT_KAGGLE_D42_34.md (commité sur la branche) + sorties en artefact.
 on:
   workflow_dispatch:
   # Fallback : la branche par défaut (main) ne doit pas être poussée ; un
@@ -129,6 +129,10 @@ jobs:
           set -u
           SLUG="$KAGGLE_USERNAME/vitrine-video-d42-34-validation"
           echo "Suivi de $SLUG"
+          # Laisser le temps à la nouvelle version du kernel d'être prise en
+          # compte (éviter de lire un « complete » résiduel de la version
+          # précédente du même kernel).
+          sleep 180
           limite=$(( $(date +%s) + 30000 ))   # ~8 h 20 max (dans la fenêtre du job)
           etat_precedent=""
           while [ "$(date +%s)" -lt "$limite" ]; do
@@ -156,7 +160,7 @@ jobs:
           mkdir -p kaggle-output
           kaggle kernels output "$SLUG" -p kaggle-output/ 2>&1 | tail -5 || true
           ls -la kaggle-output/ || true
-          [ -f kaggle-output/REPORT_D42_34.md ] && echo "REPORT présent" || echo "REPORT ABSENT (notebook en échec ?)"
+          [ -f kaggle-output/REPORT_KAGGLE_D42_34.md ] && echo "REPORT_KAGGLE présent" || echo "REPORT_KAGGLE ABSENT (notebook en échec ?)"
 
       - name: Artefact des sorties Kaggle (30 jours)
         if: always()
@@ -171,13 +175,13 @@ jobs:
           if-no-files-found: warn
 
       - name: Commit du rapport + checkpoint (branche uniquement)
-        if: always() && hashFiles('kaggle-output/REPORT_D42_34.md') != ''
+        if: always() && hashFiles('kaggle-output/REPORT_KAGGLE_D42_34.md') != ''
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase origin d42.34-founder-acceptance-fixes
-          cp kaggle-output/REPORT_D42_34.md REPORT_D42_34.md
+          cp kaggle-output/REPORT_KAGGLE_D42_34.md REPORT_KAGGLE_D42_34.md
           SHA=$(git rev-parse HEAD)
           NOTEBOOK=$(cat notebook_version.txt 2>/dev/null || echo "version ?")
           RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
@@ -188,7 +192,7 @@ jobs:
           lignes = [
               "<!--D:AUDIT-->",
               "Dernier audit Kaggle : commit `" + sha + "`, notebook `vitrine-video-d42-34-validation` (" + notebook + "),",
-              "sorties et rapport : " + url + " — `REPORT_D42_34.md` à la racine du dépôt, verdicts COMPLET / CASSÉ /",
+              "sorties et rapport : " + url + " — `REPORT_KAGGLE_D42_34.md` à la racine du dépôt, verdicts COMPLET / CASSÉ /",
               "NON JUGEABLE PAR LECTURE SEULE avec citations fichiers et lignes.",
               "<!--/D:AUDIT-->",
           ]
@@ -201,6 +205,6 @@ jobs:
               s += chr(10) + bloc + chr(10)
           open(p, "w", encoding="utf-8").write(s)
           PYV
-          git add REPORT_D42_34.md CHECKPOINT_D42_34_VALIDATION.md
-          git commit -m "D42.34-D : audit Kaggle — REPORT_D42_34.md + checkpoint"
+          git add REPORT_KAGGLE_D42_34.md CHECKPOINT_D42_34_VALIDATION.md
+          git commit -m "D42.34-D : audit Kaggle — REPORT_KAGGLE_D42_34.md + checkpoint"
           git push origin HEAD:d42.34-founder-acceptance-fixes

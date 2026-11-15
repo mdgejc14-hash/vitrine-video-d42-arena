@@ -23,7 +23,7 @@ présenté comme une preuve d'exécution — les éléments « exécutés » son
 explicitement marqués comme tels.
 
 Sorties (récupérées par `kaggle kernels output`) :
-  REPORT_D42_34.md, preflight.txt, tests_*.log, verdicts.json
+  REPORT_KAGGLE_D42_34.md, preflight.txt, tests_*.log, verdicts.json
 """
 
 import json
@@ -503,12 +503,12 @@ lignes_rapport += [
     "",
     f"*Généré automatiquement par le notebook — {time.strftime('%Y-%m-%d %H:%M:%S')} UTC.*",
 ]
-with open(os.path.join(REPERTOIRE_TRAVAIL, "REPORT_D42_34.md"), "w", encoding="utf-8") as f:
+with open(os.path.join(REPERTOIRE_TRAVAIL, "REPORT_KAGGLE_D42_34.md"), "w", encoding="utf-8") as f:
     f.write("\n".join(lignes_rapport) + "\n")
 with open(os.path.join(REPERTOIRE_TRAVAIL, "verdicts.json"), "w", encoding="utf-8") as f:
     json.dump({"sha": SHA_ATTENDU, "verdicts": VERDICTS,
                "tests": {"total": total, "echecs": echecs, "sautes": sautes}},
               f, ensure_ascii=False, indent=2)
-print("=== RAPPORT écrit : REPORT_D42_34.md ===")
+print("=== RAPPORT écrit : REPORT_KAGGLE_D42_34.md ===")
 for elem, v in VERDICTS.items():
     print(f"  {elem} :: {v['verdict']}")
