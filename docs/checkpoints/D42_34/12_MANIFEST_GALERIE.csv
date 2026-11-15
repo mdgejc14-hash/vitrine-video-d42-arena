@@ -1,0 +1,98 @@
+section,ecran,reference_fondateur,capture_apres,statut,note
+1. Ouverture & marque,"Splash (logo officiel, tuile navy)",01_ouverture.png,-,NON PROUVÉ,durée/rendu système → téléphone fondateur ; asset splash_logo_tuile.png vérifié PIL
+1. Ouverture & marque,Marque officiale (tuile blanche + insigne),-,D34-12_marque-officielle_APRES.png,CONFORME,insigne mark.png reconstruit (Lot 5 D42.34)
+2. Carrousel d'introduction,Slide 1 — commerçante boutique,02_carrousel.png,D34-11_carrousel-slide1-marchande_APRES.png,CONFORME,"image ORIGINALE générée (registre GENERATED_ASSETS) ; diff PIL 68,1 % vs ancienne"
+2. Carrousel d'introduction,Slide 2 — cheffe de maquis,-,D34-13_carrousel-slide-2_APRES.png,CONFORME,image originale générée (tournage restauration)
+2. Carrousel d'introduction,Slide 3 — vendeur mode wax,-,D34-14_carrousel-slide-3_APRES.png,CONFORME,image originale générée (mode)
+2. Carrousel d'introduction,Slide 1 EN (l10n),-,../../D42_33/visual-review/AFTER/P02-04_carrousel-slide-1-en_APRES.png,CONFORME (pré-images),l10n EN ; recapture légère post-images programmée
+2. Carrousel d'introduction,Rotation (paysage),-,../../D42_33/visual-review/AFTER/P12-13_carrousel-rotation_APRES.png,CONFORME (pré-images),rotation w640×360
+3. Langue,Sélection langue FR,03_langue.png,../../D42_33/visual-review/AFTER/01_langue_fr_w360_APRES_selection-langue.png,CONFORME,"structure blanche + CTA orange, textes identiques"
+3. Langue,Sélection langue EN,-,../../D42_33/visual-review/AFTER/P01-04_langue-en_APRES.png,CONFORME,l10n EN
+3. Langue,"Font scale 1,3",-,../../D42_33/visual-review/AFTER/P12-02_langue-fontScale-1.3_APRES.png,CONFORME,accessibilité
+3. Langue,Petit écran w360×640,-,../../D42_33/visual-review/AFTER/P12-07_langue-petit-ecran_APRES.png,CONFORME,petit écran
+4. Connexion,Connexion FR (bouton Google unique),04_connexion.png,../../D42_33/visual-review/AFTER/P01-05_connexion-fr_APRES.png,CONFORME,carte Google + « Utiliser sans Internet »
+4. Connexion,Connexion EN,-,../../D42_33/visual-review/AFTER/P01-06_connexion-en_APRES.png,CONFORME,l10n EN
+4. Connexion,Hors-ligne (erreur réseau),05_connexion_hors_ligne.png,-,NON PROUVÉ,texte auth_error_network codé ; état réseau réel à capturer (Lot F)
+5. Code parrain,Saisie manuelle,06_code_parrain.png,../../D42_33/visual-review/AFTER/P01-08_code-parrain-saisie-manuelle_APRES.png,CONFORME,CTA « Je n'ai pas de code »
+5. Code parrain,Deep-link pré-rempli,-,../../D42_33/visual-review/AFTER/P01-08_code-parrain-deep-link-prefilled_APRES.png,CONFORME,pré-remplissage par lien
+5. Code parrain,Code détecté (bandeau),-,../../D42_33/visual-review/AFTER/P01-08_connexion-code-parrain-detected_APRES.png,CONFORME,bandeau auth_ref_detected
+6. Bienvenue & crédits,Crédits confirmés,27_bienvenue.png,../../D42_33/visual-review/AFTER/P01-09_bienvenue-credits-confirmes_APRES.png,CONFORME,"plein écran navy conformément à la maquette (PIL 73,5 % navy)"
+6. Bienvenue & crédits,Solde en attente,-,../../D42_33/visual-review/AFTER/P01-10_bienvenue-solde-en-attente_APRES.png,CONFORME,badge En attente
+6. Bienvenue & crédits,"Font scale 1,3",-,../../D42_33/visual-review/AFTER/P12-01_bienvenue-fontScale-1.3_APRES.png,CONFORME,accessibilité
+6. Bienvenue & crédits,Petit écran,-,../../D42_33/visual-review/AFTER/P12-08_bienvenue-petit-ecran_APRES.png,CONFORME,w360×640
+6. Bienvenue & crédits,Rotation,-,../../D42_33/visual-review/AFTER/P12-12_bienvenue-rotation_APRES.png,CONFORME,paysage
+6. Bienvenue & crédits,Hors-connexion (crédits différés),-,../../D42_33/visual-review/AFTER/P12-15_bienvenue-hors-connexion_APRES.png,CONFORME,"message offline honnête, crédits attribués au retour réseau"
+7. Choix du secteur,Grille 6 secteurs (images originales),07_secteur.png,D34-15_secteurs-grille_APRES.png,CONFORME,"6 images ORIGINALES générées ; chromatisme mesuré 10,8 → 14,4 %"
+7. Choix du secteur,Secteurs EN,-,../../D42_33/visual-review/AFTER/P02-08_secteurs-en_APRES.png,CONFORME (pré-images),recapture légère programmée
+8. Catalogue de gabarits,Catalogue secteur choisi,08_catalogue.png,../../D42_33/visual-review/AFTER/04_catalogue_fr_w360_APRES_secteur-choisi-sans-filtres.png,ÉCART (recapture en attente),aperçus 10/39 intégrés — capture définitive après Lot D complet
+8. Catalogue de gabarits,Catalogue filtre Mode actif,-,../../D42_33/visual-review/AFTER/04_catalogue_fr_w360_APRES_filtre-Mode-actif.png,ÉCART (recapture en attente),idem
+8. Catalogue de gabarits,Tuiles peuplées (scroll),-,../../D42_33/visual-review/AFTER/P03-02_catalogue-tuiles-peuplees_APRES.png,ÉCART (recapture en attente),idem
+8. Catalogue de gabarits,Scroll bas,-,../../D42_33/visual-review/AFTER/P03-03_catalogue-scroll-bas_APRES.png,ÉCART (recapture en attente),idem
+8. Catalogue de gabarits,Catalogue EN,-,../../D42_33/visual-review/AFTER/P03-04_catalogue-en_APRES.png,ÉCART (recapture en attente),idem
+8. Catalogue de gabarits,Catalogue hors connexion,-,../../D42_33/visual-review/AFTER/P03-05_catalogue-hors-connexion_APRES.png,CONFORME,VR-020 : repli cache honnête
+8. Catalogue de gabarits,Secteur perdu → récupéré (D42.34),-,D34-02_catalogue-secteur-perdu-recupere_APRES.png,CONFORME,CR-1.1 : jamais de mélange des 30 gabarits
+8. Catalogue de gabarits,Secteur perdu (D42.34),-,D34-01_catalogue-secteur-perdu_APRES.png,CONFORME,CR-1.1
+8. Catalogue de gabarits,Libellé prises guidées (D42.34),-,D34-03_catalogue-libelle-prises-guidees_APRES.png,CONFORME,"CR-1.2 : « N prises guidées », jamais « N scènes »"
+8. Catalogue de gabarits,"Font scale 1,3",-,../../D42_33/visual-review/AFTER/P12-03_catalogue-fontScale-1.3_APRES.png,CONFORME,accessibilité
+8. Catalogue de gabarits,Petit écran,-,../../D42_33/visual-review/AFTER/P12-09_catalogue-petit-ecran_APRES.png,CONFORME,w360×640
+9. Brief,Brief — haut (étape 1),10_brief_etape1.png,../../D42_33/visual-review/AFTER/P04-01_brief-haut_APRES.png,CONFORME,
+9. Brief,Dernière section,11_brief_etape8.png,../../D42_33/visual-review/AFTER/P04-02_brief-derniere-section_APRES.png,CONFORME,import des rushs
+9. Brief,Import T5 — slot import (D42.34),-,D34-04_brief-t5-import_APRES.png,CONFORME,T5 témoignage
+9. Brief,Import T5 — slot rempli (D42.34),-,D34-05_brief-t5-slot-rempli_APRES.png,CONFORME,
+9. Brief,T1 sans import (D42.34),-,D34-06_brief-t1-sans-import_APRES.png,CONFORME,
+9. Brief,Reprise de brouillon,-,../../D42_33/visual-review/AFTER/P04-06_brief-reprise-brouillon_APRES.png,CONFORME,D42.27
+9. Brief,Options dépliées,-,../../D42_33/visual-review/AFTER/P04-07_brief-options-depliees_APRES.png,CONFORME,
+9. Brief,Champ WhatsApp FR,-,../../D42_33/visual-review/AFTER/P04-09_whatsapp-champ-fr_APRES.png,CONFORME,
+9. Brief,Champ WhatsApp EN,-,../../D42_33/visual-review/AFTER/P04-10_whatsapp-champ-en_APRES.png,CONFORME,
+9. Brief,Préparation caméra,33_preparation_camera.png,../../D42_33/visual-review/AFTER/P04-11_preparation-camera_APRES.png,CONFORME,écran sombre conforme (PIL 88 % navy)
+9. Brief,Contrôle (bas),12_controle.png,../../D42_33/visual-review/AFTER/P04-12_controle-bas_APRES.png,CONFORME,ReadyCheckScreen
+10. Caméra guidée,Viseur + prise guidée,13_camera.png,../../D42_33/visual-review/AFTER/P05-04_viseur-prise_APRES.png,CONFORME (guide),scrim navy OverlayCamera
+10. Caméra guidée,Flux streaming,-,../../D42_33/visual-review/AFTER/P05-05_flux-streaming_APRES.png,NON PROUVÉ,flux viseur réel → téléphone fondateur (VR-037) ; aucune simulation
+10. Caméra guidée,Compte à rebours,14_camera_compte_a_rebours.png,../../D42_33/visual-review/AFTER/P05-06_compte-a-rebours_APRES.png,CONFORME,
+10. Caméra guidée,Enregistrement (badge REC),15_camera_rec.png,../../D42_33/visual-review/AFTER/P05-07_rec_APRES.png,CONFORME,
+10. Caméra guidée,HUD prise T5 (D42.34),-,D34-10_camera-hud-prise-t5_APRES.png,CONFORME,
+10. Caméra guidée,Chargement gabarit (D42.34),-,D34-08_camera-chargement-gabarit_APRES.png,CONFORME,
+10. Caméra guidée,"Libre, sans scène, sur zéro (D42.34)",-,D34-09_camera-libre-sans-scene-sur-zero_APRES.png,CONFORME,
+10. Caméra guidée,Erreur gabarit (D42.34),-,D34-07_camera-erreur-gabarit_APRES.png,CONFORME,
+10. Caméra guidée,Écran complet + commandes,-,../../D42_33/visual-review/AFTER/P05-09_ecran-complet-commandes_APRES.png,CONFORME,
+10. Caméra guidée,Scène 2 du gabarit,-,../../D42_33/visual-review/AFTER/P05-11_scene-2_APRES.png,CONFORME,
+10. Caméra guidée,Permission refusée (diagnostic),-,../../D42_33/visual-review/AFTER/P05-13_diagnostic-permission-refusee_APRES.png,CONFORME,diagnostic honnête
+10. Caméra guidée,Consentement client (dialogue R4),16_consentement_client.png,-,NON PROUVÉ,"dialogue R4 codé (visage/mineur) — capture à produire (VR-048, Lot F)"
+11. Validation des prises,Prise validée,17_revue_des_prises.png,../../D42_33/visual-review/AFTER/P05-08_prise-validee_APRES.png,CONFORME,validation immédiate après chaque prise
+12. Montage,Aperçu E7 (montage complet),18_apercu_montage.png,../../D42_33/visual-review/AFTER/P07-01_apercu-E7-complet_APRES.png,CONFORME,
+12. Montage,Montage E8 en cours (phases),19_montage_en_cours.png,-,ÉCART (recapture en attente),"code CONFORME : phase métier réelle KEY_PHASE, barre indéterminée, zéro % inventé (CR-4) ; capture P07-02 obsolète (pré-phases) → recapture Lot F"
+13. Export,Export prêt,20_export_pret.png,16_export/base-fr-057_export_pret.png,NON PROUVÉ,référence émulateur D42.31 ; capture D42.34 à produire (VR-052)
+14. Partage,Feuille de partage système,21_partage.png,18_partage/suite-fr-026_partage_feuille.png,NON APPLICABLE,UI système Android — non contrôlée par l'app (VR-056)
+15. Dashboard,"Synchrone, crédits 6",24_dashboard.png,../../D42_33/visual-review/AFTER/12_dashboard_fr_w360_APRES_synchrone-credits-6.png,CONFORME,« Bonjour » seul si pas de prénom réel (jamais inventé)
+15. Dashboard,Bas de page,-,../../D42_33/visual-review/AFTER/P10-02_dashboard-bas_APRES.png,CONFORME,
+15. Dashboard,Suite parrainage,-,../../D42_33/visual-review/AFTER/P10-03_dashboard-suite-parrainage_APRES.png,CONFORME,
+15. Dashboard,Dashboard EN synchrone,32_dashboard_en.png,../../D42_33/visual-review/AFTER/P10-04_dashboard-en-synchrone_APRES.png,CONFORME,l10n EN
+15. Dashboard,Hors connexion (code en attente),22_hors_connexion.png,../../D42_33/visual-review/AFTER/12_dashboard_en_w360_APRES_hors-connexion-code-en-attente.png,CONFORME,
+15. Dashboard,"Bonjour, {prénom} (variante)",-,-,ÉCART (recapture en attente),"code CONFORME (TexteBonjour) ; capture de la variante à produire (VR-059, Lot F)"
+15. Dashboard,Petit écran w360×640,-,../../D42_33/visual-review/AFTER/20_dashboard_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png,CONFORME,
+15. Dashboard,Rotation paysage w640×360,-,../../D42_33/visual-review/AFTER/22_dashboard_fr_w640x360_APRES_rotation-paysage.png,CONFORME,
+16. Formules & paywall,Formule active (pas de compteur inventé),26_formules.png,../../D42_33/visual-review/AFTER/13_dashboard_fr_w360_APRES_formule-active-pas-de-compteur-invente.png,CONFORME,
+16. Formules & paywall,"Paywall FR (3 formules, Pro recommandée)",23_quota_epuise.png,../../D42_33/visual-review/AFTER/15_paywall_fr_w360_APRES_quota-epuise-3-formules-Pro-recommandee.png,ÉCART (recapture en attente),"code CONFORME : CTA « Choisir … » actifs (CR-4, strings_billing) ; capture antérieure aux CTA → recapture Lot F"
+16. Formules & paywall,Paywall EN,-,../../D42_33/visual-review/AFTER/15_paywall_en_w360_APRES_l10n-EN.png,ÉCART (recapture en attente),idem (VR-064)
+16. Formules & paywall,Paywall bas,-,../../D42_33/visual-review/AFTER/P11-04_paywall-bas_APRES.png,ÉCART (recapture en attente),idem
+16. Formules & paywall,Petit écran famille 11,-,../../D42_33/visual-review/AFTER/21_paywall_en_w360x640_APRES_petit-ecran-famille-11.png,CONFORME,petit écran
+17. Parrainage,Historique replié,28_parrainage.png,../../D42_33/visual-review/AFTER/14_parrainage_fr_w360_APRES_historique-replie.png,CONFORME,
+17. Parrainage,Parrainage EN,-,../../D42_33/visual-review/AFTER/14_parrainage_en_w360_APRES_l10n-EN.png,CONFORME,l10n EN
+17. Parrainage,Petit écran,-,../../D42_33/visual-review/AFTER/23_parrainage_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png,CONFORME,
+18. Réglages,Réglages FR (7 lignes),29_reglages.png,../../D42_33/visual-review/AFTER/16_reglages_fr_w360_APRES_l10n-FR-7-lignes.png,CONFORME,
+18. Réglages,Réglages EN,-,../../D42_33/visual-review/AFTER/P10-08_reglages-en_APRES.png,CONFORME,l10n EN
+18. Réglages,Petit écran,-,../../D42_33/visual-review/AFTER/24_reglages_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png,CONFORME,
+19. Écrans hors périmètre,Conditions d'utilisation (navigateur),30_conditions.png,-,NON APPLICABLE,lien sortant navigateur système (VR-071)
+19. Écrans hors périmètre,Aide,31_aide.png,-,NON APPLICABLE,écran interdit par décision fondateur (VR-073)
+19. Écrans hors périmètre,Aide & contact,34_aide_contact.png,-,NON APPLICABLE,interdit (VR-073)
+19. Écrans hors périmètre,Mes vidéos (bibliothèque),25_mes_videos.png,-,NON APPLICABLE,aucun écran « Mes vidéos » dans l'app — exports vers partage/dossier appareil ; à arbitrer par le fondateur pour une version ultérieure
+19. Écrans hors périmètre,Marque (bandeau header),-,../../D42_33/visual-review/AFTER/10_marque_fr_defaut_APRES_header-logo-officiel.png,CONFORME,header officiel
+20. États adaptatifs,"Font scale 1,3 (langue)",-,../../D42_33/visual-review/AFTER/P12-02_langue-fontScale-1.3_APRES.png,CONFORME,
+20. États adaptatifs,"Font scale 1,3 (bienvenue)",-,../../D42_33/visual-review/AFTER/P12-01_bienvenue-fontScale-1.3_APRES.png,CONFORME,
+20. États adaptatifs,"Font scale 1,3 (catalogue)",-,../../D42_33/visual-review/AFTER/P12-03_catalogue-fontScale-1.3_APRES.png,CONFORME,
+20. États adaptatifs,Petit écran (langue),-,../../D42_33/visual-review/AFTER/P12-07_langue-petit-ecran_APRES.png,CONFORME,
+20. États adaptatifs,Petit écran (bienvenue),-,../../D42_33/visual-review/AFTER/P12-08_bienvenue-petit-ecran_APRES.png,CONFORME,
+20. États adaptatifs,Petit écran (catalogue),-,../../D42_33/visual-review/AFTER/P12-09_catalogue-petit-ecran_APRES.png,CONFORME,
+20. États adaptatifs,Rotation (bienvenue),-,../../D42_33/visual-review/AFTER/P12-12_bienvenue-rotation_APRES.png,CONFORME,
+20. États adaptatifs,Rotation (carrousel),-,../../D42_33/visual-review/AFTER/P12-13_carrousel-rotation_APRES.png,CONFORME,
+20. États adaptatifs,Hors-connexion (bienvenue),-,../../D42_33/visual-review/AFTER/P12-15_bienvenue-hors-connexion_APRES.png,CONFORME,
