@@ -35,6 +35,27 @@ section,ecran,reference_fondateur,capture_apres,statut,note
 8. Catalogue de gabarits,Libellé prises guidées (D42.34),-,D34-03_catalogue-libelle-prises-guidees_APRES.png,CONFORME,"CR-1.2 : « N prises guidées », jamais « N scènes »"
 8. Catalogue de gabarits,"Font scale 1,3",-,../../D42_33/visual-review/AFTER/P12-03_catalogue-fontScale-1.3_APRES.png,CONFORME,accessibilité
 8. Catalogue de gabarits,Petit écran,-,../../D42_33/visual-review/AFTER/P12-09_catalogue-petit-ecran_APRES.png,CONFORME,w360×640
+8 bis. Aperçus des gabarits,batiment_travaux_t1,-,feature-catalog/src/main/res/drawable-nodpi/apercu_batiment_travaux_t1.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,batiment_travaux_t2,-,feature-catalog/src/main/res/drawable-nodpi/apercu_batiment_travaux_t2.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,batiment_travaux_t3,-,feature-catalog/src/main/res/drawable-nodpi/apercu_batiment_travaux_t3.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,batiment_travaux_t4,-,feature-catalog/src/main/res/drawable-nodpi/apercu_batiment_travaux_t4.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,batiment_travaux_t5,-,feature-catalog/src/main/res/drawable-nodpi/apercu_batiment_travaux_t5.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,coiffure_beaute_t1,-,feature-catalog/src/main/res/drawable-nodpi/apercu_coiffure_beaute_t1.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,coiffure_beaute_t2,-,feature-catalog/src/main/res/drawable-nodpi/apercu_coiffure_beaute_t2.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,coiffure_beaute_t3,-,feature-catalog/src/main/res/drawable-nodpi/apercu_coiffure_beaute_t3.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,coiffure_beaute_t4,-,feature-catalog/src/main/res/drawable-nodpi/apercu_coiffure_beaute_t4.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,coiffure_beaute_t5,-,feature-catalog/src/main/res/drawable-nodpi/apercu_coiffure_beaute_t5.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,immo_auto_t1,-,feature-catalog/src/main/res/drawable-nodpi/apercu_immo_auto_t1.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,immo_auto_t2,-,feature-catalog/src/main/res/drawable-nodpi/apercu_immo_auto_t2.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,immo_auto_t3,-,feature-catalog/src/main/res/drawable-nodpi/apercu_immo_auto_t3.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,immo_auto_t4,-,feature-catalog/src/main/res/drawable-nodpi/apercu_immo_auto_t4.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,immo_auto_t5,-,feature-catalog/src/main/res/drawable-nodpi/apercu_immo_auto_t5.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,restaurants_maquis_t1,-,feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t1.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,restaurants_maquis_t2,-,feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t2.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,restaurants_maquis_t3,-,feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t3.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,restaurants_maquis_t4,-,feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t4.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,restaurants_maquis_t5,-,feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t5.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
+8 bis. Aperçus des gabarits,shops_small_business_t1,-,feature-catalog/src/main/res/drawable-nodpi/apercu_shops_small_business_t1.webp,Intégré · vérifié,aperçu original généré (GENERATED_ASSETS)
 9. Brief,Brief — haut (étape 1),10_brief_etape1.png,../../D42_33/visual-review/AFTER/P04-01_brief-haut_APRES.png,CONFORME,
 9. Brief,Dernière section,11_brief_etape8.png,../../D42_33/visual-review/AFTER/P04-02_brief-derniere-section_APRES.png,CONFORME,import des rushs
 9. Brief,Import T5 — slot import (D42.34),-,D34-04_brief-t5-import_APRES.png,CONFORME,T5 témoignage
@@ -46,6 +67,7 @@ section,ecran,reference_fondateur,capture_apres,statut,note
 9. Brief,Champ WhatsApp EN,-,../../D42_33/visual-review/AFTER/P04-10_whatsapp-champ-en_APRES.png,CONFORME,
 9. Brief,Préparation caméra,33_preparation_camera.png,../../D42_33/visual-review/AFTER/P04-11_preparation-camera_APRES.png,CONFORME,écran sombre conforme (PIL 88 % navy)
 9. Brief,Contrôle (bas),12_controle.png,../../D42_33/visual-review/AFTER/P04-12_controle-bas_APRES.png,CONFORME,ReadyCheckScreen
+9. Brief,Dialogue choix pays (indicatif),-,-,NON PROUVÉ,"dialogue Compose réel codé (DialogueChoixPays, brief_phone_pick_country) — capture à produire (VR-078)"
 10. Caméra guidée,Viseur + prise guidée,13_camera.png,../../D42_33/visual-review/AFTER/P05-04_viseur-prise_APRES.png,CONFORME (guide),scrim navy OverlayCamera
 10. Caméra guidée,Flux streaming,-,../../D42_33/visual-review/AFTER/P05-05_flux-streaming_APRES.png,NON PROUVÉ,flux viseur réel → téléphone fondateur (VR-037) ; aucune simulation
 10. Caméra guidée,Compte à rebours,14_camera_compte_a_rebours.png,../../D42_33/visual-review/AFTER/P05-06_compte-a-rebours_APRES.png,CONFORME,
@@ -60,7 +82,7 @@ section,ecran,reference_fondateur,capture_apres,statut,note
 10. Caméra guidée,Consentement client (dialogue R4),16_consentement_client.png,-,NON PROUVÉ,"dialogue R4 codé (visage/mineur) — capture à produire (VR-048, Lot F)"
 11. Validation des prises,Prise validée,17_revue_des_prises.png,../../D42_33/visual-review/AFTER/P05-08_prise-validee_APRES.png,CONFORME,validation immédiate après chaque prise
 12. Montage,Aperçu E7 (montage complet),18_apercu_montage.png,../../D42_33/visual-review/AFTER/P07-01_apercu-E7-complet_APRES.png,CONFORME,
-12. Montage,Montage E8 en cours (phases),19_montage_en_cours.png,-,ÉCART (recapture en attente),"code CONFORME : phase métier réelle KEY_PHASE, barre indéterminée, zéro % inventé (CR-4) ; capture P07-02 obsolète (pré-phases) → recapture Lot F"
+12. Montage,Montage E8 en cours (phases métier),19_montage_en_cours.png,16_export/base-fr-058_export_en_cours.png,NON PROUVÉ,"code CONFORME (CR-4 : phase réelle KEY_PHASE du worker, barre indéterminée, zéro % inventé) ; référence émulateur D42.31 pré-phases ; le progress WorkManager→LiveData ne se propage pas sous Robolectric (2 tentatives) → capture d'EXÉCUTION = émulateur/téléphone fondateur"
 13. Export,Export prêt,20_export_pret.png,16_export/base-fr-057_export_pret.png,NON PROUVÉ,référence émulateur D42.31 ; capture D42.34 à produire (VR-052)
 14. Partage,Feuille de partage système,21_partage.png,18_partage/suite-fr-026_partage_feuille.png,NON APPLICABLE,UI système Android — non contrôlée par l'app (VR-056)
 15. Dashboard,"Synchrone, crédits 6",24_dashboard.png,../../D42_33/visual-review/AFTER/12_dashboard_fr_w360_APRES_synchrone-credits-6.png,CONFORME,« Bonjour » seul si pas de prénom réel (jamais inventé)
@@ -68,13 +90,13 @@ section,ecran,reference_fondateur,capture_apres,statut,note
 15. Dashboard,Suite parrainage,-,../../D42_33/visual-review/AFTER/P10-03_dashboard-suite-parrainage_APRES.png,CONFORME,
 15. Dashboard,Dashboard EN synchrone,32_dashboard_en.png,../../D42_33/visual-review/AFTER/P10-04_dashboard-en-synchrone_APRES.png,CONFORME,l10n EN
 15. Dashboard,Hors connexion (code en attente),22_hors_connexion.png,../../D42_33/visual-review/AFTER/12_dashboard_en_w360_APRES_hors-connexion-code-en-attente.png,CONFORME,
-15. Dashboard,"Bonjour, {prénom} (variante)",-,-,ÉCART (recapture en attente),"code CONFORME (TexteBonjour) ; capture de la variante à produire (VR-059, Lot F)"
+15. Dashboard,"Bonjour, {prénom} (variante nom réel)",-,../../D42_33/visual-review/AFTER/P10-02_dashboard-bas_APRES.png,CONFORME,"le test passe merchantName réel → « Bonjour, Boutique Fatou » rendu (dash_hello) ; « Bonjour » seul si absence (jamais inventé)"
 15. Dashboard,Petit écran w360×640,-,../../D42_33/visual-review/AFTER/20_dashboard_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png,CONFORME,
 15. Dashboard,Rotation paysage w640×360,-,../../D42_33/visual-review/AFTER/22_dashboard_fr_w640x360_APRES_rotation-paysage.png,CONFORME,
 16. Formules & paywall,Formule active (pas de compteur inventé),26_formules.png,../../D42_33/visual-review/AFTER/13_dashboard_fr_w360_APRES_formule-active-pas-de-compteur-invente.png,CONFORME,
-16. Formules & paywall,"Paywall FR (3 formules, Pro recommandée)",23_quota_epuise.png,../../D42_33/visual-review/AFTER/15_paywall_fr_w360_APRES_quota-epuise-3-formules-Pro-recommandee.png,ÉCART (recapture en attente),"code CONFORME : CTA « Choisir … » actifs (CR-4, strings_billing) ; capture antérieure aux CTA → recapture Lot F"
-16. Formules & paywall,Paywall EN,-,../../D42_33/visual-review/AFTER/15_paywall_en_w360_APRES_l10n-EN.png,ÉCART (recapture en attente),idem (VR-064)
-16. Formules & paywall,Paywall bas,-,../../D42_33/visual-review/AFTER/P11-04_paywall-bas_APRES.png,ÉCART (recapture en attente),idem
+16. Formules & paywall,"Paywall FR (3 formules, CTA « Choisir … » actifs)",23_quota_epuise.png,D34-18_paywall-cta-fr_APRES.png,CONFORME,"recapture post-CTA (diff PIL 6,3 % vs D42.33 — CR-4 rendu)"
+16. Formules & paywall,Paywall EN (CTA « Choose … »),-,D34-19_paywall-cta-en_APRES.png,CONFORME,recapture post-CTA (DashboardL10nCheckTest — capture absente de D42.33)
+16. Formules & paywall,Paywall bas (scroll),-,../../D42_33/visual-review/AFTER/P11-04_paywall-bas_APRES.png,CONFORME (identique D42.33),régénéré à l'identique près des CTA
 16. Formules & paywall,Petit écran famille 11,-,../../D42_33/visual-review/AFTER/21_paywall_en_w360x640_APRES_petit-ecran-famille-11.png,CONFORME,petit écran
 17. Parrainage,Historique replié,28_parrainage.png,../../D42_33/visual-review/AFTER/14_parrainage_fr_w360_APRES_historique-replie.png,CONFORME,
 17. Parrainage,Parrainage EN,-,../../D42_33/visual-review/AFTER/14_parrainage_en_w360_APRES_l10n-EN.png,CONFORME,l10n EN
@@ -82,6 +104,10 @@ section,ecran,reference_fondateur,capture_apres,statut,note
 18. Réglages,Réglages FR (7 lignes),29_reglages.png,../../D42_33/visual-review/AFTER/16_reglages_fr_w360_APRES_l10n-FR-7-lignes.png,CONFORME,
 18. Réglages,Réglages EN,-,../../D42_33/visual-review/AFTER/P10-08_reglages-en_APRES.png,CONFORME,l10n EN
 18. Réglages,Petit écran,-,../../D42_33/visual-review/AFTER/24_reglages_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png,CONFORME,
+18. Réglages,Dialogue changement langue (FR/EN),-,-,NON PROUVÉ,AlertDialog réel codé (montrerDialogLangue) — capture à produire (VR-074)
+18. Réglages,Dialogue changement secteur,-,-,NON PROUVÉ,AlertDialog réel codé (montrerDialogSecteur) — capture à produire (VR-075)
+18. Réglages,Dialogue accords de diffusion,-,-,NON PROUVÉ,AlertDialog réel codé (montrerDialogAccords) — capture à produire (VR-076)
+18. Réglages,Dialogue nettoyage espace,-,-,NON PROUVÉ,AlertDialog réel codé (confirmerNettoyageEspace) — capture à produire (VR-077)
 19. Écrans hors périmètre,Conditions d'utilisation (navigateur),30_conditions.png,-,NON APPLICABLE,lien sortant navigateur système (VR-071)
 19. Écrans hors périmètre,Aide,31_aide.png,-,NON APPLICABLE,écran interdit par décision fondateur (VR-073)
 19. Écrans hors périmètre,Aide & contact,34_aide_contact.png,-,NON APPLICABLE,interdit (VR-073)

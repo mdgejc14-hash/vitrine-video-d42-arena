@@ -6,9 +6,11 @@ l'application. Chaque ligne montre la **maquette fondateur** à gauche et la
 tests Robolectric `@GraphicsMode(NATIVE)`, émulateur D42.31, ou écrans système).
 
 > **Statut au 17/11/2026 (soir) — travaux en cours, rien de simulé :**
-> - Lot D : **10/39 aperçus catalogue** générés et intégrés (3 carrousels + 6
->   secteurs + aperçu batiment T1) ; 29 en attente (limite de génération par
->   session). La capture catalogue définitive suivra la complétude.
+> - Lots d'aperçus **1 et 2 livrés** (15/11) : **21/30 gabarits** ont leur
+>   aperçu photographique original intégré et vérifié sur GitHub (file
+>   ASSET_GENERATION_QUEUE.csv — SHA-256, doublons contrôlés). Lot 3 (9
+>   restants) en attente : limite stricte de la plateforme (10 images/tour).
+>   La capture catalogue définitive suivra la complétude 30/30.
 > - Captures carrousels/secteurs **déjà refaites** avec les images originales
 >   (D34-11/13/14/15).
 > - Recaptures restantes planifiées (Lot F) : montage phases, dashboard « Bonjour,
@@ -30,7 +32,8 @@ NON APPLICABLE = hors périmètre (décision fondateur ou UI système).
 6. [Bienvenue & crédits](#f-bienvenue--crédits)
 7. [Choix du secteur](#g-choix-du-secteur)
 8. [Catalogue de gabarits](#h-catalogue-de-gabarits)
-9. [Brief](#i-brief)
+9. [Aperçus des gabarits (8 bis)](#h2-aperçus-des-gabarits)
+10. [Brief](#i-brief)
 10. [Caméra guidée](#j-caméra-guidée)
 11. [Validation des prises](#k-validation-des-prises)
 12. [Montage](#l-montage)
@@ -151,6 +154,43 @@ Maquette PIL : blanc 86 %, tuiles discrètes — respecté.
 
 [↑ Retour au sommaire](#sommaire)
 
+### <a id="h2-aperçus-des-gabarits"></a>8 bis. Aperçus des gabarits (originaux générés)
+
+Chaque gabarit du catalogue dispose d'un aperçu photographique **original
+généré** (640×360 WebP, registre GENERATED_ASSETS.md — aucune licence tierce).
+Rendu prouvé dans l'application : corrélations template-matching 0,982/0,988
+(D34-16/D34-17).
+
+| Gabarit | Aperçu intégré | Statut |
+|---|---|---|
+| batiment travaux t1 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_batiment_travaux_t1.webp" width="240"/> | Intégré · vérifié |
+| batiment travaux t2 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_batiment_travaux_t2.webp" width="240"/> | Intégré · vérifié |
+| batiment travaux t3 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_batiment_travaux_t3.webp" width="240"/> | Intégré · vérifié |
+| batiment travaux t4 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_batiment_travaux_t4.webp" width="240"/> | Intégré · vérifié |
+| batiment travaux t5 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_batiment_travaux_t5.webp" width="240"/> | Intégré · vérifié |
+| coiffure beaute t1 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_coiffure_beaute_t1.webp" width="240"/> | Intégré · vérifié |
+| coiffure beaute t2 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_coiffure_beaute_t2.webp" width="240"/> | Intégré · vérifié |
+| coiffure beaute t3 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_coiffure_beaute_t3.webp" width="240"/> | Intégré · vérifié |
+| coiffure beaute t4 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_coiffure_beaute_t4.webp" width="240"/> | Intégré · vérifié |
+| coiffure beaute t5 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_coiffure_beaute_t5.webp" width="240"/> | Intégré · vérifié |
+| immo auto t1 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_immo_auto_t1.webp" width="240"/> | Intégré · vérifié |
+| immo auto t2 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_immo_auto_t2.webp" width="240"/> | Intégré · vérifié |
+| immo auto t3 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_immo_auto_t3.webp" width="240"/> | Intégré · vérifié |
+| immo auto t4 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_immo_auto_t4.webp" width="240"/> | Intégré · vérifié |
+| immo auto t5 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_immo_auto_t5.webp" width="240"/> | Intégré · vérifié |
+| restaurants maquis t1 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t1.webp" width="240"/> | Intégré · vérifié |
+| restaurants maquis t2 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t2.webp" width="240"/> | Intégré · vérifié |
+| restaurants maquis t3 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t3.webp" width="240"/> | Intégré · vérifié |
+| restaurants maquis t4 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t4.webp" width="240"/> | Intégré · vérifié |
+| restaurants maquis t5 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_restaurants_maquis_t5.webp" width="240"/> | Intégré · vérifié |
+| shops small business t1 | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/apercu_shops_small_business_t1.webp" width="240"/> | Intégré · vérifié |
+
+**8 aperçus restants** (shops T2-T5, vêtements T1-T5) : lot 3 en file
+(ASSET_GENERATION_QUEUE.csv) — limite stricte de génération par tour de
+session ; capture catalogue définitive après complétude 30/30.
+
+[↑ Retour au sommaire](#sommaire)
+
 ### <a id="i-brief"></a>9. Brief
 
 | Écran / état | Référence fondateur | APRÈS (capture réelle) | Statut |
@@ -166,6 +206,7 @@ Maquette PIL : blanc 86 %, tuiles discrètes — respecté.
 | Champ WhatsApp EN | — | <img src="../../D42_33/visual-review/AFTER/P04-10_whatsapp-champ-en_APRES.png" width="180"/> | CONFORME |
 | Préparation caméra | <img src="../../D42_33/SOURCES/maquettes/33_preparation_camera.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/P04-11_preparation-camera_APRES.png" width="180"/> | CONFORME |
 | Contrôle (bas) | <img src="../../D42_33/SOURCES/maquettes/12_controle.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/P04-12_controle-bas_APRES.png" width="180"/> | CONFORME |
+| Dialogue choix pays (indicatif) | — | **à produire — indiqué honnêtement** | NON PROUVÉ |
 
 Maquette 09 (fiche détail gabarit) : **NON APPLICABLE** — le catalogue renvoie directement au brief (`pickGabarit()` → setResult), pas d'écran intermédiaire (choix produit D42.3x).
 
@@ -207,7 +248,7 @@ Maquette 17 (écran galerie « revue ») : forme **distribuée** dans l'app — 
 | Écran / état | Référence fondateur | APRÈS (capture réelle) | Statut |
 |---|---|---|---|
 | Aperçu E7 (montage complet) | <img src="../../D42_33/SOURCES/maquettes/18_apercu_montage.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/P07-01_apercu-E7-complet_APRES.png" width="180"/> | CONFORME |
-| Montage E8 en cours (phases) | <img src="../../D42_33/SOURCES/maquettes/19_montage_en_cours.png" width="180"/> | **à produire — indiqué honnêtement** | ÉCART (recapture en attente) |
+| Montage E8 en cours (phases métier) | <img src="../../D42_33/SOURCES/maquettes/19_montage_en_cours.png" width="180"/> | <img src="../../D42_31/visual-review/16_export/base-fr-058_export_en_cours.png" width="180"/> | NON PROUVÉ |
 
 VR-051 : la correction de code est **faite** (D42.34 CR-4) — reste la capture.
 
@@ -242,7 +283,7 @@ La feuille de partage appartient au système : capture émulateur en référence
 | Suite parrainage | — | <img src="../../D42_33/visual-review/AFTER/P10-03_dashboard-suite-parrainage_APRES.png" width="180"/> | CONFORME |
 | Dashboard EN synchrone | <img src="../../D42_33/SOURCES/maquettes/32_dashboard_en.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/P10-04_dashboard-en-synchrone_APRES.png" width="180"/> | CONFORME |
 | Hors connexion (code en attente) | <img src="../../D42_33/SOURCES/maquettes/22_hors_connexion.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/12_dashboard_en_w360_APRES_hors-connexion-code-en-attente.png" width="180"/> | CONFORME |
-| Bonjour, {prénom} (variante) | — | **à produire — indiqué honnêtement** | ÉCART (recapture en attente) |
+| Bonjour, {prénom} (variante nom réel) | — | <img src="../../D42_33/visual-review/AFTER/P10-02_dashboard-bas_APRES.png" width="180"/> | CONFORME |
 | Petit écran w360×640 | — | <img src="../../D42_33/visual-review/AFTER/20_dashboard_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png" width="180"/> | CONFORME |
 | Rotation paysage w640×360 | — | <img src="../../D42_33/visual-review/AFTER/22_dashboard_fr_w640x360_APRES_rotation-paysage.png" width="180"/> | CONFORME |
 
@@ -255,9 +296,9 @@ La feuille de partage appartient au système : capture émulateur en référence
 | Écran / état | Référence fondateur | APRÈS (capture réelle) | Statut |
 |---|---|---|---|
 | Formule active (pas de compteur inventé) | <img src="../../D42_33/SOURCES/maquettes/26_formules.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/13_dashboard_fr_w360_APRES_formule-active-pas-de-compteur-invente.png" width="180"/> | CONFORME |
-| Paywall FR (3 formules, Pro recommandée) | <img src="../../D42_33/SOURCES/maquettes/23_quota_epuise.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/15_paywall_fr_w360_APRES_quota-epuise-3-formules-Pro-recommandee.png" width="180"/> | ÉCART (recapture en attente) |
-| Paywall EN | — | <img src="../../D42_33/visual-review/AFTER/15_paywall_en_w360_APRES_l10n-EN.png" width="180"/> | ÉCART (recapture en attente) |
-| Paywall bas | — | <img src="../../D42_33/visual-review/AFTER/P11-04_paywall-bas_APRES.png" width="180"/> | ÉCART (recapture en attente) |
+| Paywall FR (3 formules, CTA « Choisir … » actifs) | <img src="../../D42_33/SOURCES/maquettes/23_quota_epuise.png" width="180"/> | <img src="D34-18_paywall-cta-fr_APRES.png" width="180"/> | CONFORME |
+| Paywall EN (CTA « Choose … ») | — | <img src="D34-19_paywall-cta-en_APRES.png" width="180"/> | CONFORME |
+| Paywall bas (scroll) | — | <img src="../../D42_33/visual-review/AFTER/P11-04_paywall-bas_APRES.png" width="180"/> | CONFORME (identique D42.33) |
 | Petit écran famille 11 | — | <img src="../../D42_33/visual-review/AFTER/21_paywall_en_w360x640_APRES_petit-ecran-famille-11.png" width="180"/> | CONFORME |
 
 Checkout : CinetPay renvoie 501 `billing_not_configured` (budget 0 FCFA, aucune transaction fictive) — comportement d'erreur réel déjà couvert par les tests.
@@ -283,6 +324,10 @@ Checkout : CinetPay renvoie 501 `billing_not_configured` (budget 0 FCFA, aucune 
 | Réglages FR (7 lignes) | <img src="../../D42_33/SOURCES/maquettes/29_reglages.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/16_reglages_fr_w360_APRES_l10n-FR-7-lignes.png" width="180"/> | CONFORME |
 | Réglages EN | — | <img src="../../D42_33/visual-review/AFTER/P10-08_reglages-en_APRES.png" width="180"/> | CONFORME |
 | Petit écran | — | <img src="../../D42_33/visual-review/AFTER/24_reglages_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png" width="180"/> | CONFORME |
+| Dialogue changement langue (FR/EN) | — | **à produire — indiqué honnêtement** | NON PROUVÉ |
+| Dialogue changement secteur | — | **à produire — indiqué honnêtement** | NON PROUVÉ |
+| Dialogue accords de diffusion | — | **à produire — indiqué honnêtement** | NON PROUVÉ |
+| Dialogue nettoyage espace | — | **à produire — indiqué honnêtement** | NON PROUVÉ |
 
 Le **dialogue de reprise** (VR-062, D42.27) et les **accords de diffusion** (consentements enregistrés) sont listés pour capture au Lot F.
 

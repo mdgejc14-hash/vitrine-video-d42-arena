@@ -89,9 +89,11 @@ l'application. Chaque ligne montre la **maquette fondateur** à gauche et la
 tests Robolectric `@GraphicsMode(NATIVE)`, émulateur D42.31, ou écrans système).
 
 > **Statut au 17/11/2026 (soir) — travaux en cours, rien de simulé :**
-> - Lot D : **10/39 aperçus catalogue** générés et intégrés (3 carrousels + 6
->   secteurs + aperçu batiment T1) ; 29 en attente (limite de génération par
->   session). La capture catalogue définitive suivra la complétude.
+> - Lots d'aperçus **1 et 2 livrés** (15/11) : **21/30 gabarits** ont leur
+>   aperçu photographique original intégré et vérifié sur GitHub (file
+>   ASSET_GENERATION_QUEUE.csv — SHA-256, doublons contrôlés). Lot 3 (9
+>   restants) en attente : limite stricte de la plateforme (10 images/tour).
+>   La capture catalogue définitive suivra la complétude 30/30.
 > - Captures carrousels/secteurs **déjà refaites** avec les images originales
 >   (D34-11/13/14/15).
 > - Recaptures restantes planifiées (Lot F) : montage phases, dashboard « Bonjour,
@@ -113,7 +115,8 @@ NON APPLICABLE = hors périmètre (décision fondateur ou UI système).
 6. [Bienvenue & crédits](#f-bienvenue--crédits)
 7. [Choix du secteur](#g-choix-du-secteur)
 8. [Catalogue de gabarits](#h-catalogue-de-gabarits)
-9. [Brief](#i-brief)
+9. [Aperçus des gabarits (8 bis)](#h2-aperçus-des-gabarits)
+10. [Brief](#i-brief)
 10. [Caméra guidée](#j-caméra-guidée)
 11. [Validation des prises](#k-validation-des-prises)
 12. [Montage](#l-montage)
@@ -228,6 +231,36 @@ b, c = sec("h-catalogue-de-gabarits", "8. Catalogue de gabarits", [
    "trompeuse intermédiaire).")
 body.append(b); n += c
 
+# --- Section H2 : aperçus des 30 gabarits (ressources originales intégrées) ---
+import glob as _glob, os as _os
+_ap = sorted(_glob.glob("feature-catalog/src/main/res/drawable-nodpi/apercu_*.webp"))
+_rows_ap = []
+for _f in _ap:
+    _nom = _os.path.basename(_f)[:-5]
+    _rows_ap.append(f'| {_nom.replace("apercu_", "").replace("_", " ")} | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/{_os.path.basename(_f)}" width="240"/> | Intégré · vérifié |')
+    man.append({"section": "8 bis. Aperçus des gabarits", "ecran": _nom.replace("apercu_", ""),
+                "reference_fondateur": "-", "capture_apres": f"feature-catalog/src/main/res/drawable-nodpi/{_os.path.basename(_f)}",
+                "statut": "Intégré · vérifié", "note": "aperçu original généré (GENERATED_ASSETS)"})
+_manq = 30 - 1 - len(_rows_ap)  # 30 gabarits - T1 déjà compté - intégrés restants
+_body_h2 = f"""### <a id="h2-aperçus-des-gabarits"></a>8 bis. Aperçus des gabarits (originaux générés)
+
+Chaque gabarit du catalogue dispose d'un aperçu photographique **original
+généré** (640×360 WebP, registre GENERATED_ASSETS.md — aucune licence tierce).
+Rendu prouvé dans l'application : corrélations template-matching 0,982/0,988
+(D34-16/D34-17).
+
+| Gabarit | Aperçu intégré | Statut |
+|---|---|---|
+{chr(10).join(_rows_ap)}
+
+**{_manq} aperçus restants** (shops T2-T5, vêtements T1-T5) : lot 3 en file
+(ASSET_GENERATION_QUEUE.csv) — limite stricte de génération par tour de
+session ; capture catalogue définitive après complétude 30/30.
+
+[↑ Retour au sommaire](#sommaire)
+"""
+body.append(_body_h2); n += len(_rows_ap)
+
 b, c = sec("i-brief", "9. Brief", [
     ("Brief — haut (étape 1)", "10_brief_etape1.png", "P04-01_brief-haut_APRES.png", "CONFORME", ""),
     ("Dernière section", "11_brief_etape8.png", "P04-02_brief-derniere-section_APRES.png",
@@ -242,6 +275,8 @@ b, c = sec("i-brief", "9. Brief", [
     ("Préparation caméra", "33_preparation_camera.png", "P04-11_preparation-camera_APRES.png",
      "CONFORME", "écran sombre conforme (PIL 88 % navy)"),
     ("Contrôle (bas)", "12_controle.png", "P04-12_controle-bas_APRES.png", "CONFORME", "ReadyCheckScreen"),
+    ("Dialogue choix pays (indicatif)", None, None, "NON PROUVÉ",
+     "dialogue Compose réel codé (DialogueChoixPays, brief_phone_pick_country) — capture à produire (VR-078)"),
 ], "Maquette 09 (fiche détail gabarit) : **NON APPLICABLE** — le catalogue renvoie "
    "directement au brief (`pickGabarit()` → setResult), pas d'écran intermédiaire "
    "(choix produit D42.3x).")
@@ -280,9 +315,10 @@ body.append(b); n += c
 b, c = sec("l-montage", "12. Montage", [
     ("Aperçu E7 (montage complet)", "18_apercu_montage.png", "P07-01_apercu-E7-complet_APRES.png",
      "CONFORME", ""),
-    ("Montage E8 en cours (phases)", "19_montage_en_cours.png", None, "ÉCART (recapture en attente)",
-     "code CONFORME : phase métier réelle KEY_PHASE, barre indéterminée, zéro % inventé (CR-4) ; "
-     "capture P07-02 obsolète (pré-phases) → recapture Lot F"),
+    ("Montage E8 en cours (phases métier)", "19_montage_en_cours.png", "16_export/base-fr-058_export_en_cours.png", "NON PROUVÉ",
+     "code CONFORME (CR-4 : phase réelle KEY_PHASE du worker, barre indéterminée, zéro % inventé) ; "
+     "référence émulateur D42.31 pré-phases ; le progress WorkManager→LiveData ne se propage pas "
+     "sous Robolectric (2 tentatives) → capture d'EXÉCUTION = émulateur/téléphone fondateur"),
 ], "VR-051 : la correction de code est **faite** (D42.34 CR-4) — reste la capture.")
 body.append(b); n += c
 
@@ -308,8 +344,9 @@ b, c = sec("o-dashboard", "15. Dashboard", [
      "CONFORME", "l10n EN"),
     ("Hors connexion (code en attente)", "22_hors_connexion.png",
      "12_dashboard_en_w360_APRES_hors-connexion-code-en-attente.png", "CONFORME", ""),
-    ("Bonjour, {prénom} (variante)", None, None, "ÉCART (recapture en attente)",
-     "code CONFORME (TexteBonjour) ; capture de la variante à produire (VR-059, Lot F)"),
+    ("Bonjour, {prénom} (variante nom réel)", None, "P10-02_dashboard-bas_APRES.png", "CONFORME",
+     "le test passe merchantName réel → « Bonjour, Boutique Fatou » rendu (dash_hello) ; "
+     "« Bonjour » seul si absence (jamais inventé)"),
     ("Petit écran w360×640", None, "20_dashboard_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png",
      "CONFORME", ""),
     ("Rotation paysage w640×360", None, "22_dashboard_fr_w640x360_APRES_rotation-paysage.png",
@@ -320,13 +357,13 @@ body.append(b); n += c
 b, c = sec("p-formules--paywall", "16. Formules & paywall", [
     ("Formule active (pas de compteur inventé)", "26_formules.png",
      "13_dashboard_fr_w360_APRES_formule-active-pas-de-compteur-invente.png", "CONFORME", ""),
-    ("Paywall FR (3 formules, Pro recommandée)", "23_quota_epuise.png",
-     "15_paywall_fr_w360_APRES_quota-epuise-3-formules-Pro-recommandee.png",
-     "ÉCART (recapture en attente)", "code CONFORME : CTA « Choisir … » actifs (CR-4, strings_billing) ; "
-     "capture antérieure aux CTA → recapture Lot F"),
-    ("Paywall EN", None, "15_paywall_en_w360_APRES_l10n-EN.png", "ÉCART (recapture en attente)",
-     "idem (VR-064)"),
-    ("Paywall bas", None, "P11-04_paywall-bas_APRES.png", "ÉCART (recapture en attente)", "idem"),
+    ("Paywall FR (3 formules, CTA « Choisir … » actifs)", "23_quota_epuise.png",
+     "D34-18_paywall-cta-fr_APRES.png",
+     "CONFORME", "recapture post-CTA (diff PIL 6,3 % vs D42.33 — CR-4 rendu)"),
+    ("Paywall EN (CTA « Choose … »)", None, "D34-19_paywall-cta-en_APRES.png", "CONFORME",
+     "recapture post-CTA (DashboardL10nCheckTest — capture absente de D42.33)"),
+    ("Paywall bas (scroll)", None, "P11-04_paywall-bas_APRES.png", "CONFORME (identique D42.33)",
+     "régénéré à l'identique près des CTA"),
     ("Petit écran famille 11", None, "21_paywall_en_w360x640_APRES_petit-ecran-famille-11.png",
      "CONFORME", "petit écran"),
 ], "Checkout : CinetPay renvoie 501 `billing_not_configured` (budget 0 FCFA, aucune "
@@ -346,6 +383,14 @@ b, c = sec("r-réglages", "18. Réglages", [
      "CONFORME", ""),
     ("Réglages EN", None, "P10-08_reglages-en_APRES.png", "CONFORME", "l10n EN"),
     ("Petit écran", None, "24_reglages_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png", "CONFORME", ""),
+    ("Dialogue changement langue (FR/EN)", None, None, "NON PROUVÉ",
+     "AlertDialog réel codé (montrerDialogLangue) — capture à produire (VR-074)"),
+    ("Dialogue changement secteur", None, None, "NON PROUVÉ",
+     "AlertDialog réel codé (montrerDialogSecteur) — capture à produire (VR-075)"),
+    ("Dialogue accords de diffusion", None, None, "NON PROUVÉ",
+     "AlertDialog réel codé (montrerDialogAccords) — capture à produire (VR-076)"),
+    ("Dialogue nettoyage espace", None, None, "NON PROUVÉ",
+     "AlertDialog réel codé (confirmerNettoyageEspace) — capture à produire (VR-077)"),
 ], "Le **dialogue de reprise** (VR-062, D42.27) et les **accords de diffusion**"
    " (consentements enregistrés) sont listés pour capture au Lot F.")
 body.append(b); n += c
