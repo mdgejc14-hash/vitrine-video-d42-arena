@@ -46,3 +46,47 @@ les VRAIS composants Android (Robolectric/émulateur).
 
 Les sources PNG générées restent hors dépôt (assets_gen/, reproductibles) ;
 seules les versions WebP optimisées sont commitées.
+
+## Prompts prêts — 29 aperçus restants (à générer au prochain tour, 10 max/tour)
+
+Ordre prioritaire : batiment T2–T5 (4), coiffure T1–T5 (5), immo_auto T1 (1) = lot 1 ;
+puis immo_auto T2–T5 (4), restaurants T1–T5 (5), shops T1 (1) = lot 2 ;
+puis shops T2–T5 (4), vetements T1–T5 (5) = lot 3.
+Style commun : « Realistic documentary photo, West Africa Benin/Cotonou, 16:9,
+professional photography, warm natural light, no text, no watermark, no logos ».
+
+- batiment T2 : maçon finissant un enduit, mur moitié brut/moitié fini (avant/après)
+- batiment T3 : mains + truelle et niveau sur carrelage soigné, mur peint derrière
+- batiment T4 : entrepreneur fier devant maison neuve finie (murs orangés, portail)
+- batiment T5 : cliente heureuse + artisan devant façade rénovée
+- coiffure T1 : coiffeuse tressant, cheveux en cours, salon lumineux
+- coiffure T2 : femme aux tresses fraîches terminées (résultat)
+- coiffure T3 : soin capillaire, geste produit, salon
+- coiffure T4 : coiffure finie mise en valeur, salon
+- coiffure T5 : cliente souriante au salon, résultat visible
+- immo_auto T1 : voiture en concession, remise de clés
+- immo_auto T2 : voiture avant/après préparation (nettoyage)
+- immo_auto T3 : visite intérieur véhicule, détails tableau de bord
+- immo_auto T4 : maison/villa propre avec cour, jour
+- immo_auto T5 : client racontant sa visite devant le bien
+- restaurants T1 : assiette maquis servie (poulet braisé, attiéké)
+- restaurants T2 : cuisson au feu, gestes cuisine de maquis
+- restaurants T3 : plat vu de plusieurs angles, détails
+- restaurants T4 : plat chaud dressé, table de maquis
+- restaurants T5 : client dégustant, salle de maquis
+- shops T1 : ouverture de colis arrivage, épicerie
+- shops T2 : mise en rayon de produits neufs
+- shops T3 : produit de face/côté/près sur étagère
+- shops T4 : produit mis en avant en boutique
+- shops T5 : client avec son achat dans la boutique
+- vetements T1 : portants de vêtements wax nouvellement arrivés
+- vetements T2 : tenue avant/après relooking (même lieu)
+- vetements T3 : vêtement de face/côté/près, tissu détaillé
+- vetements T4 : article mis en avant, cintre, boutique
+- vetements T5 : cliente portant le vêtement, boutique
+
+Intégration : PIL 640×360 webp q86 LANCZOS →
+`feature-catalog/src/main/res/drawable-nodpi/apercu_<secteur>_t<n>.webp`
+(secteur = batiment_travaux|coiffure_beaute|immo_auto|restaurants_maquis|
+shops_small_business|vetements_mode) + entrée `ApercuGabarit.map`
+(clé = id JSON ex. `coiffure_beaute_T3`), fallback dessiné conservé.

@@ -21,3 +21,16 @@
 - **Limite generate_image atteinte ce tour** : 29 aperçus restants reportés
   au prochain tour (batiment T2-T5, coiffure, immo_auto, restaurants, shops,
   vetements T1-T5 — prompts prêts dans GENERATED_ASSETS.md).
+
+## 17/11 soir (suite) — Lot F V1 : galerie unique créée
+
+- `visual-review/README.md` : porte d'entrée unique, 20 sections dans l'ordre
+  du parcours réel, sommaire + ancres + retours, réf. fondateur vs APRÈS
+  côte à côte, 97 entrées / 96 images intégrées (toutes vérifiées par
+  assertions d'existence — zéro lien mort), absences indiquées honnêtement.
+- `12_MANIFEST_GALERIE.csv` : manifeste vérifiable (97 lignes).
+- `scripts/galerie_lotf.py` : régénération contrôlée (aucun chemin inventé).
+- Images D42_33/D42_31 référencées par chemin relatif — dépôt léger.
+- 29 prompts d'aperçus consignés dans GENERATED_ASSETS.md pour le prochain
+  tour (limite de génération 10/tour atteinte deux fois).
+- Push 18f8f21. CI en cours : bdee8f7, e4f23e3, 18f8f21 (docs seuls).
