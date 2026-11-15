@@ -4,7 +4,8 @@
 conformité visuelle intégrale, galerie unique. Échéance projet : 18/11/2026.
 **Ce rapport décrit l'état RÉEL au 15/11 soir — aucune complétion simulée.**
 **Aperçus 30/30 LIVRÉS** (lots 1-3) ; montage E8 et export prêt **prouvés**
-(Lot 8) ; image fondateur dénoncée **corrigée** avant poursuite.
+(Lot 8) ; les 6 dialogues réels **prouvés** (Lots 9/10/11) ; image fondateur
+dénoncée **corrigée** avant poursuite.
 
 ## 1. Corrections fonctionnelles préservées
 
@@ -82,13 +83,17 @@ aucune capture intermédiaire présentée comme finale).
 - ~~VR-052 export prêt~~ **CONFORME (Lot 8, D34-22)** : réussite sur signal
   fichier après attachement de l'observer (aucun ré-enqueue du vrai worker),
   `KEY_OUTPUT` contrat réel → `export_done` + partage + espace.
-- VR-053→055 export (états post-worker restants), VR-062 dialogue reprise,
-  VR-065 checkout 501 : à produire.
-- VR-074→078 : 5 dialogues réels codés, captures à produire.
+- VR-053→055 export (états post-worker restants), VR-065 checkout 501 :
+  à produire.
+- ~~VR-074→078, VR-062~~ **CONFORMES (Lots 9/10/11, D34-23..28)** : tous
+  capturés par clics réels sur la VRAIE activité/composable — dashboard
+  (langue/secteur/accords/nettoyage), TelephoneField (choix pays, VR-078),
+  MainActivity + brouillon réel (reprise, VR-062). Aucun dialogue fabriqué.
 
 ## 7. Galerie unique
 
-`visual-review/README.md` : **133 entrées manifestées / 111 fichiers d'image uniques**, 21
+`visual-review/README.md` : **134 entrées manifestées / 117 fichiers d'image
+uniques** (6 nouveaux PNG dialogue), 21
 sections dans l'ordre du parcours réel + section « Aperçus des gabarits »,
 sommaire cliquable + ancres + retours, réf. fondateur ↔ APRÈS côte à côte,
 absences indiquées honnêtement. Manifeste `12_MANIFEST_GALERIE.csv` : chaque
@@ -114,8 +119,8 @@ lien mort). Images D42_33/D42_31 référencées par chemin relatif GitHub.
 2. Recapture catalogue définitive (6 secteurs, vedette, scroll, FR/EN) —
    les 5 lignes ÉCART de la section 8 du README datent d'avant le mécanisme
    + régénération galerie.
-3. Captures Robolectric des dialogues VR-074→078 + VR-062 (méthode Lot 8
-   éprouvée : clics réels + poll idle + capture NATIVE).
+3. ~~Captures dialogues VR-074→078 + VR-062~~ **FAIT** (Lots 9/10/11,
+   9e83e7f) : D34-23..28.
 4. Captures téléphone fondateur : splash, viseur, partage (NON PROUVÉ
    permanent ici — jamais simulés).
 5. Régénération galerie 78 états (capture OU statut d'absence par entrée)

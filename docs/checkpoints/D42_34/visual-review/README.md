@@ -13,12 +13,12 @@ tests Robolectric `@GraphicsMode(NATIVE)`, émulateur D42.31, ou écrans systèm
 >   fondateur** (prompt corrigé, sha 9b6249e98b25…, note au registre).
 > - Captures carrousels/secteurs **refaites** avec les images originales
 >   (D34-11/13/14/15), paywall CTA FR/EN (D34-18/19).
-> - **Lot 8 livré (15/11)** : phases métier du montage E8 (D34-20 assemblage,
->   D34-21 rendu) et écran « export prêt » (D34-22) — chemin utilisateur
->   complet sous Robolectric, test `D34Lot8ExportStatesVisualCheckTest` 3/3.
-> - Restent à produire : dialogues réglages/pays (VR-074→078), dialogue
->   reprise (VR-062), consentement client R4, et les captures catalogue
->   définitives 30/30 (remplacement des captures pré-mécanisme).
+> - **Lots 8/9/10/11 livrés (15/11)** : phases métier du montage E8
+>   (D34-20/21), écran « export prêt » (D34-22), les 6 dialogues réels
+>   (D34-23..28 : langue, secteur, accords, nettoyage, choix pays, reprise)
+>   — chemins utilisateur complets sous Robolectric, tests 10/10.
+> - Restent à produire : consentement client R4 (téléphone), et les captures
+>   catalogue définitives 30/30 (remplacement des captures pré-mécanisme).
 > - Les états système (splash, flux viseur, feuille de partage) exigent le
 >   **téléphone fondateur** — marqués NON PROUVÉ, jamais simulés.
 
@@ -222,7 +222,7 @@ régénération prompt corrigé, note de régénération au registre).
 | Champ WhatsApp EN | — | <img src="../../D42_33/visual-review/AFTER/P04-10_whatsapp-champ-en_APRES.png" width="180"/> | CONFORME |
 | Préparation caméra | <img src="../../D42_33/SOURCES/maquettes/33_preparation_camera.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/P04-11_preparation-camera_APRES.png" width="180"/> | CONFORME |
 | Contrôle (bas) | <img src="../../D42_33/SOURCES/maquettes/12_controle.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/P04-12_controle-bas_APRES.png" width="180"/> | CONFORME |
-| Dialogue choix pays (indicatif) | — | **à produire — indiqué honnêtement** | NON PROUVÉ |
+| Dialogue choix pays (indicatif) | — | <img src="D34-27_dialogue-choix-pays_APRES.png" width="180"/> | CONFORME |
 
 Maquette 09 (fiche détail gabarit) : **NON APPLICABLE** — le catalogue renvoie directement au brief (`pickGabarit()` → setResult), pas d'écran intermédiaire (choix produit D42.3x).
 
@@ -309,6 +309,7 @@ La feuille de partage appartient au système : capture émulateur en référence
 | Dashboard EN synchrone | <img src="../../D42_33/SOURCES/maquettes/32_dashboard_en.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/P10-04_dashboard-en-synchrone_APRES.png" width="180"/> | CONFORME |
 | Hors connexion (code en attente) | <img src="../../D42_33/SOURCES/maquettes/22_hors_connexion.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/12_dashboard_en_w360_APRES_hors-connexion-code-en-attente.png" width="180"/> | CONFORME |
 | Bonjour, {prénom} (variante nom réel) | — | <img src="../../D42_33/visual-review/AFTER/P10-02_dashboard-bas_APRES.png" width="180"/> | CONFORME |
+| Dialogue reprise (D42.27, VR-062) | — | <img src="D34-28_dialogue-reprise_APRES.png" width="180"/> | CONFORME |
 | Petit écran w360×640 | — | <img src="../../D42_33/visual-review/AFTER/20_dashboard_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png" width="180"/> | CONFORME |
 | Rotation paysage w640×360 | — | <img src="../../D42_33/visual-review/AFTER/22_dashboard_fr_w640x360_APRES_rotation-paysage.png" width="180"/> | CONFORME |
 
@@ -349,12 +350,18 @@ Checkout : CinetPay renvoie 501 `billing_not_configured` (budget 0 FCFA, aucune 
 | Réglages FR (7 lignes) | <img src="../../D42_33/SOURCES/maquettes/29_reglages.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/16_reglages_fr_w360_APRES_l10n-FR-7-lignes.png" width="180"/> | CONFORME |
 | Réglages EN | — | <img src="../../D42_33/visual-review/AFTER/P10-08_reglages-en_APRES.png" width="180"/> | CONFORME |
 | Petit écran | — | <img src="../../D42_33/visual-review/AFTER/24_reglages_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png" width="180"/> | CONFORME |
-| Dialogue changement langue (FR/EN) | — | **à produire — indiqué honnêtement** | NON PROUVÉ |
-| Dialogue changement secteur | — | **à produire — indiqué honnêtement** | NON PROUVÉ |
-| Dialogue accords de diffusion | — | **à produire — indiqué honnêtement** | NON PROUVÉ |
-| Dialogue nettoyage espace | — | **à produire — indiqué honnêtement** | NON PROUVÉ |
+| Dialogue changement langue (FR/EN) | — | <img src="D34-23_dialogue-langue_APRES.png" width="180"/> | CONFORME |
+| Dialogue changement secteur | — | <img src="D34-24_dialogue-secteur_APRES.png" width="180"/> | CONFORME |
+| Dialogue accords de diffusion | — | <img src="D34-25_dialogue-accords_APRES.png" width="180"/> | CONFORME |
+| Dialogue nettoyage espace | — | <img src="D34-26_dialogue-nettoyage_APRES.png" width="180"/> | CONFORME |
 
-Le **dialogue de reprise** (VR-062, D42.27) et les **accords de diffusion** (consentements enregistrés) sont les dernières captures dialogue à produire (Lot F). Les dialogues VR-074→078 sont codés et réels — capture Robolectric à produire, aucune simulation.
+**Dialogues prouvés (Lots 9/10/11, 15/11)** : la VRAIE `DashboardActivity`
+est lancée, l'icône réglages est cliquée, chaque ligne-tuile déclenche son
+`AlertDialog` authentique — capturé depuis la fenêtre du dialogue (chemin
+utilisateur complet, aucun dialogue invoqué directement). Le dialogue de
+choix du pays (VR-078) est ouvert par un clic réel sur le bouton pays du
+`TelephoneField` ; le dialogue de reprise (VR-062) par l'entrée « Reprendre »
+du dashboard avec un brouillon réel persisté.
 
 [↑ Retour au sommaire](#sommaire)
 

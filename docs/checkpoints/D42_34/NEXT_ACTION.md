@@ -11,13 +11,17 @@ Date réelle de référence : 15/11/2026 (jamais de date future dans les documen
   9b6249e98b25…, aed849d→93fa450).
 - **P3 (partie) FAITE** : D34Lot8 **3/3 VERT** — D34-20/21/22 (phases montage
   E8 + export prêt) via `D34Lot8ExportStatesVisualCheckTest` (d711223).
+- **P3 dialogues FAITS (9e83e7f)** : Lots 9/10/11 **6/6** — D34-23..28
+  (langue, secteur, accords, nettoyage, choix pays VR-078, reprise VR-062).
+  CI d711223 + e59d82d SUCCESS.
 - **P2 FAITE (commit en cours)** : README visual-review (30/30, Lot 8,
   sommaire corrigé, 8 bis complet 30 lignes), 11_INVENTAIRE VR-051/VR-052 →
   CONFORME, 12_MANIFEST 133 entrées.
 - CI : verte jusqu'à 93fa450 inclus ; d711223 (Lot 8) en cours au push.
-- Manifeste : 133 entrées. Restes NON PROUVÉ : 9 (splash/flux viseur/feuille
-  partage = téléphone fondateur ; hors connexion, consentement R4) + 6
-  dialogues (VR-074→078, VR-062) + 5 ÉCART captures catalogue pré-mécanisme.
+- Manifeste : 134 entrées / 111 fichiers. Restes NON PROUVÉ : 4 (splash,
+  flux viseur, feuille partage = téléphone fondateur ; hors connexion) +
+  consentement R4 + 5 ÉCART captures catalogue pré-mécanisme (D34-01..03
+  et captures D42.33 du §8).
 
 ## PROCHAIN TOUR — ORDRE
 
@@ -25,11 +29,8 @@ Date réelle de référence : 15/11/2026 (jamais de date future dans les documen
    6 secteurs (chaque tuile doit montrer l'aperçu webp réel), remplacer
    D34-01/02/03 et les 5 lignes ÉCART de la section 8 du README (captures
    pré-mécanisme), puis passer leur statut à CONFORME dans 11/12.
-2. **Captures dialogues** (P3) : VR-074→078 (AlertDialog dashboard :
-   langue/secteur/accords/nettoyage + DialogueChoixPays brief Compose) et
-   VR-062 (dialogue reprise D42.27). Méthode Robolectric éprouvée Lot 8 :
-   clics réels, poll `shadowOf(getMainLooper()).idle()`, capture decorView
-   NATIVE 360×820.
+2. ~~Captures dialogues VR-074→078 + VR-062~~ **FAIT** (9e83e7f) — les 6
+   dialogues sont capturés par clics réels (Lots 9/10/11).
 3. **Régénérer la galerie** : extraire d'abord /tmp/maquettes + /tmp/apres33
    (raw.githubusercontent + PAT — clone blob:none) ; `python3
    scripts/galerie_lotf.py` ; chaque entrée = capture OU statut d'absence
@@ -59,3 +60,14 @@ Date réelle de référence : 15/11/2026 (jamais de date future dans les documen
   platforms;android-37.0, build-tools 37.0.0 ; swap 2G à recréer si reset.
 - git archive/sparse-checkout impossibles (clone blob:none) : raw API + PAT.
 - Visualiser un PNG : corrélation template luminance (pas de vision).
+- **Builds locaux : LANG=C.utf8 obligatoire** — sans locale UTF-8, kotlinc
+  mangle les noms de classes synthétiques issus d'identifiants accentués
+  (ex. `paysTriés` → `paysTri?s` → NoClassDefFoundError au runtime).
+- **Compose Dialog + curseur clignotant** : le champ qui prend le focus au
+  show rend Espresso perpétuellement busy (AppNotIdleException 60 s) — ne
+  JAMAIS attendre l'idle après l'ouverture : boucle bornée
+  `mainClock.advanceTimeBy(100) + looper.idle()` en pollant la fenêtre.
+- **Module app : premier test unitaire** — nécessite
+  `testOptions.unitTests.isIncludeAndroidResources = true` (résolution du
+  manifest) + junit/robolectric/test-core en testImplementation. Premier
+  run ~15 min (instrumentation du classpath complet), suivants ~40 s.
