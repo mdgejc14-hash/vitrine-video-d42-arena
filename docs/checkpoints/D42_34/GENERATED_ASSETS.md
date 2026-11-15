@@ -4,7 +4,7 @@ Décision fondateur (ordre finalisation visuelle §6) : les images sans droits
 vérifiables sont remplacées par des visuels originaux générés pour le
 projet. Ce registre trace la provenance de chaque ressource intégrée.
 
-## Statut : EN COURS (31/39 — lots 1+2 des aperçus intégrés, voir ASSET_GENERATION_QUEUE.csv)
+## Statut : COMPLET (39/39 ressources du périmètre générées et intégrées le 15/11)
 
 | Ressource app | Fichier source généré | Contenu | Licence |
 |---|---|---|---|
@@ -44,6 +44,18 @@ projet. Ce registre trace la provenance de chaque ressource intégrée.
 | apercu_restaurants_maquis_t4.webp | assets_gen/apercu_restaurants_maquis_T4.png | Promotion — Restaurants & Maquis | Originale générée IA · sha256 745000d0e8f3eded… |
 | apercu_restaurants_maquis_t5.webp | assets_gen/apercu_restaurants_maquis_T5.png | Un client raconte — Restaurants & Maquis | Originale générée IA · sha256 41f54dff802a85b3… |
 | apercu_shops_small_business_t1.webp | assets_gen/apercu_shops_small_business_T1.png | Nouvel arrivage — Shops & Small Business | Originale générée IA · sha256 3b60283ee22f9179… |
+
+## Aperçus catalogue — lot 3 (15/11, ordre final §2)
+
+| apercu_shops_small_business_t2.webp | assets_gen/apercu_shops_small_business_T2.jpg | Avant et après — Shops & Small Business | Originale générée IA · sha256 87ce373e771db547… |
+| apercu_shops_small_business_t3.webp | assets_gen/apercu_shops_small_business_T3.jpg | Montrer un produit — Shops & Small Business | Originale générée IA · sha256 03c50ba420c07cde… |
+| apercu_shops_small_business_t4.webp | assets_gen/apercu_shops_small_business_T4.jpg | Promotion — Shops & Small Business | Originale générée IA · sha256 ee230a9f981df858… |
+| apercu_shops_small_business_t5.webp | assets_gen/apercu_shops_small_business_T5.jpg | Un client raconte — Shops & Small Business | Originale générée IA · sha256 45f1c289e0ab2be3… |
+| apercu_vetements_mode_t1.webp | assets_gen/apercu_vetements_mode_T1.jpg | Nouvel arrivage — Vêtements & Mode | Originale générée IA · sha256 94a836fbb366e76a… |
+| apercu_vetements_mode_t2.webp | assets_gen/apercu_vetements_mode_T2.jpg | Avant et après — Vêtements & Mode | Originale générée IA · sha256 a012d13ed2346b07… |
+| apercu_vetements_mode_t3.webp | assets_gen/apercu_vetements_mode_T3.jpg | Montrer un produit — Vêtements & Mode | Originale générée IA · sha256 e43df8057dbc831b… |
+| apercu_vetements_mode_t4.webp | assets_gen/apercu_vetements_mode_T4.jpg | Promotion — Vêtements & Mode | Originale générée IA · sha256 9edb1ce48a860052… |
+| apercu_vetements_mode_t5.webp | assets_gen/apercu_vetements_mode_T5.jpg | Un client raconte — Vêtements & Mode | Originale générée IA · sha256 0be1791944e9f0dd… |
 
 ## Recaptures effectuées (15/11, Robolectric NATIVE, toolchain locale)
 
