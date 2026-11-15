@@ -9,8 +9,8 @@
 | Volet | État | Commit | Run CI | Notes |
 |---|---|---|---|---|
 | A. Verrouillage caméra | **TERMINÉ** | 0cd7ac3 | à poller | 6 correctifs + 5 tests verts, module 22/22 |
-| B. Labo Android (e2e) | **TERMINÉ (code) — runs EN COURS** | (commit B) | à poller | branche ajoutée + preuves renforcées |
-| C. APK update signée | EN COURS | — | — | secrets à vérifier |
+| B. Labo Android (e2e) | **TERMINÉ (code) — runs EN COURS** | c0e4125 | lab 43762868411 + CI 43762868387 | branche ajoutée + preuves renforcées |
+| C. APK update signée | **BLOQUÉ (secrets absents)** | (commit C) | workflow créé | VV_KEYSTORE_B64 / VV_STORE_PASSWORD manquants |
 | D. Audit Kaggle | EN COURS | — | — | notebook à créer |
 | E. Checkpoint | ACTIF | — | — | ce fichier |
 
@@ -49,6 +49,19 @@ Aucun nombre de prises codé en dur (référence = `prises.size`, matrice 30 gab
 - `tools/e2e/run_camerap.sh` : mêmes contrôles de marqueurs en fin de phase B (CPB_preview_streaming / CPB_countdown_avant_recorder / CPB_finalize_sans_erreur), étiquettes « caméra virtuelle », commentaire B4 mis en cohérence avec le verrouillage A.3.
 - Mention « caméra virtuelle » explicite dans les summaries — les résultats d'émulateur ne sont jamais présentés comme une validation du capteur physique (validation fondateur sur téléphone réel).
 
+## C — APK de mise à jour signée (BLOQUÉ — secrets de signature absents)
+
+**Détermination (API GitHub, valeurs jamais affichées)** : le dépôt expose 16 secrets ; `FIREBASE_WEB_API_KEY` ✓, `KAGGLE_KEY` ✓, `KAGGLE_USERNAME` ✓, comptes de test Firebase A/B ✓ — mais **`VV_KEYSTORE_B64` et `VV_STORE_PASSWORD` sont ABSENTS**.
+
+Conformément à l'ordre : **statut BLOQUÉ**, aucune APK produite, aucune clé de substitution (une APK signée différemment ne mettrait PAS à jour l'installation précédente et ne sera jamais présentée comme telle).
+
+**Livré pour débloquer immédiatement quand le fondateur ajoute les secrets** :
+- `.github/workflows/release-update-apk.yml` (workflow_dispatch) : pré-vol des 3 secrets (arrêt BLOQUÉ explicite si absents) → décodage base64 du keystore + `signing.properties` dans `vv-signing/` (gitignoré) → `:app:assembleRelease` avec porte d'intégrité `-PvvApkSha256=758077eb…` → vérifications **SHA-256 APK, package `video.vitrine.app`, versionCode 3, empreinte certificat exacte `758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192`** (rejet sinon) → contrôle dex (clé Firebase réelle, factice absente) → **artefact Actions 30 jours uniquement** (aucun tag, aucune Release, aucun store).
+- `build-logic/.../vitrine.android-app.gradle.kts` : `versionCode = 3` (supérieur au 2 installé), package et versionName inchangés (RC15 — aucun RC16).
+- Alias de clé : découvert par `keytool` dans le keystore (ou secret optionnel `VV_KEY_ALIAS`) ; mot de passe de clé : `VV_STORE_PASSWORD` par défaut (ou secret optionnel `VV_KEY_PASSWORD`).
+
+**Déblocage** : ajouter `VV_KEYSTORE_B64` (keystore du 8 novembre en base64) et `VV_STORE_PASSWORD` dans Settings → Secrets and variables → Actions, puis relancer `release-update-apk` (workflow_dispatch).
+
 ## Prochaine action exacte
 
-Volet C : vérifier les secrets `VV_KEYSTORE_B64` / `VV_STORE_PASSWORD` / `FIREBASE_WEB_API_KEY` (présence, sans afficher les valeurs), puis workflow APK release versionCode 3 signée du keystore du 8 novembre (empreinte `758077eb…`) publiée en artefact 30 jours. Si secrets absents : statut BLOQUÉ consigné, poursuite vers D.
+Volet D : workflow d'audit Kaggle (secrets `KAGGLE_USERNAME`/`KAGGLE_KEY` présents) — notebook `vitrine-video-d42-34-validation` clonant le miroir public au SHA exact, exécution des 360 tests + ktlint/detekt/checkModuleGraph + validation matrice 30/81 + audits manifests audio 600 compositions + crédits/quotas + parrainage (comptes de test dédiés), verdicts COMPLET / CASSÉ / NON JUGEABLE PAR LECTURE SEULE.

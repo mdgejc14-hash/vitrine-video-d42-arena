@@ -1,0 +1,171 @@
+name: release-update-apk
+
+# D42.34-C (ordre fondateur) — APK de MISE À JOUR signée du keystore officiel
+# du 8 novembre, produite DANS CI à partir des secrets Actions :
+#   VV_KEYSTORE_B64     : keystore officiel encodé base64
+#   VV_STORE_PASSWORD   : mot de passe du keystore
+#   FIREBASE_WEB_API_KEY: clé Firebase réelle (injectée comme propriété Gradle)
+#
+# Portes (aucune ne peut être contournée) :
+#   1. Si un secret de signature est ABSENT → étape arrêtée avec le statut
+#      BLOQUÉ. JAMAIS d'APK signée d'une clé différente présentée comme
+#      mettant à jour l'installation précédente.
+#   2. Empreinte du certificat exigée : 758077eb… (contrôle apksigner).
+#   3. Porte d'intégrité V2.0 §22 active (-PvvApkSha256).
+#   4. Contrôle dex : clé Firebase réelle présente, factice absente.
+# Publication : ARTEFACT GitHub Actions UNIQUEMENT (30 jours). Aucun tag,
+# aucune GitHub Release, aucun store, aucun RC16.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: release-update-apk
+  cancel-in-progress: false
+
+jobs:
+  update-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      ORG_GRADLE_PROJECT_vvFirebaseApiKey: ${{ secrets.FIREBASE_WEB_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Pré-vol secrets (statut BLOQUÉ si signature absente)
+        env:
+          VV_KEYSTORE_B64: ${{ secrets.VV_KEYSTORE_B64 }}
+          VV_STORE_PASSWORD: ${{ secrets.VV_STORE_PASSWORD }}
+          FIREBASE_WEB_API_KEY: ${{ secrets.FIREBASE_WEB_API_KEY }}
+        run: |
+          set -u
+          bloquee=0
+          if [ -z "${VV_KEYSTORE_B64:-}" ]; then
+            echo "::error title=BLOQUÉ::Secret VV_KEYSTORE_B64 manquant (Settings → Secrets and variables → Actions)."
+            bloquee=1
+          fi
+          if [ -z "${VV_STORE_PASSWORD:-}" ]; then
+            echo "::error title=BLOQUÉ::Secret VV_STORE_PASSWORD manquant."
+            bloquee=1
+          fi
+          if [ -z "${FIREBASE_WEB_API_KEY:-}" ]; then
+            echo "::error::Secret FIREBASE_WEB_API_KEY manquant."
+            bloquee=1
+          fi
+          if [ "$bloquee" != "0" ]; then
+            echo "STATUT : BLOQUÉ — secrets de signature absents."
+            echo "Aucune APK de mise à jour n'est produite : une clé de substitution ne mettrait"
+            echo "PAS à jour l'installation précédente (signatures Android incompatibles) et ne"
+            echo "serait jamais présentée comme telle."
+            exit 1
+          fi
+          echo "PASS : secrets de signature présents (valeurs jamais affichées)."
+
+      - name: Décodage du keystore officiel + signing.properties
+        env:
+          VV_KEYSTORE_B64: ${{ secrets.VV_KEYSTORE_B64 }}
+          VV_STORE_PASSWORD: ${{ secrets.VV_STORE_PASSWORD }}
+          VV_KEY_ALIAS: ${{ secrets.VV_KEY_ALIAS }}
+          VV_KEY_PASSWORD: ${{ secrets.VV_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          mkdir -p vv-signing
+          printf '%s' "$VV_KEYSTORE_B64" | base64 -d > vv-signing/vitrine.keystore
+          ALIAS="${VV_KEY_ALIAS:-}"
+          if [ -z "$ALIAS" ]; then
+            # Alias découvert par keytool (identifiant, jamais affiché) :
+            # première entrée PrivateKeyEntry du keystore officiel.
+            ALIAS=$(keytool -list -keystore vv-signing/vitrine.keystore \
+              -storepass "$VV_STORE_PASSWORD" 2>/dev/null \
+              | awk -F, '/PrivateKeyEntry/ {print $1; exit}' | tr -d ' ')
+          fi
+          if [ -z "$ALIAS" ]; then
+            echo "::error::Aucune entrée PrivateKeyEntry lisible dans le keystore (mot de passe ou keystore invalide)."
+            exit 1
+          fi
+          KEY_PW="${VV_KEY_PASSWORD:-$VV_STORE_PASSWORD}"
+          {
+            printf 'storeFile=vitrine.keystore\n'
+            printf 'storePassword=%s\n' "$VV_STORE_PASSWORD"
+            printf 'keyAlias=%s\n' "$ALIAS"
+            printf 'keyPassword=%s\n' "$KEY_PW"
+          } > vv-signing/signing.properties
+          echo "signing.properties écrit (vv-signing/ est gitignoré ; aucune valeur affichée)."
+
+      - name: APK release signée (versionCode 3, porte d'intégrité active)
+        run: |
+          set -euo pipefail
+          ./gradlew :app:assembleRelease \
+            -PvvApkSha256=758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192 \
+            --stacktrace 2>&1 | tail -20
+          APK=$(ls app/build/outputs/apk/release/*.apk | head -1)
+          ls -la "$APK"
+
+      - name: Vérifications (SHA-256, package, version, certificat)
+        run: |
+          set -euo pipefail
+          APK=$(ls app/build/outputs/apk/release/*.apk | head -1)
+          {
+            echo "commit=$(git rev-parse HEAD)"
+            sha256sum "$APK"
+            BT=$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)
+            echo "--- aapt dump badging (extrait) ---"
+            "$ANDROID_HOME/build-tools/$BT/aapt" dump badging "$APK" | grep -E "^package:|sdkVersion|targetSdkVersion" || true
+            echo "--- apksigner verify --print-certs ---"
+            "$ANDROID_HOME/build-tools/$BT/apksigner" verify --print-certs "$APK"
+          } | tee apk_verification.txt
+          # Porte certificat : empreinte SHA-256 EXACTE du certificat officiel
+          # du 8 novembre (comparaison insensible à la casse).
+          EMPREINTE=$(grep -o '[0-9a-fA-F]\{64\}' apk_verification.txt | head -1 | tr 'A-F' 'a-f')
+          ATTENDU=758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192
+          if [ "$EMPREINTE" != "$ATTENDU" ]; then
+            echo "::error::Certificat NON conforme (trouvé ${EMPREINTE:-aucun}, attendu $ATTENDU) — APK rejetée : elle ne mettrait pas à jour l'installation précédente."
+            exit 1
+          fi
+          echo "PASS : certificat officiel confirmé ($ATTENDU)."
+          # Porte package/version : identifiant inchangé + versionCode 3.
+          "$ANDROID_HOME/build-tools/$BT/aapt" dump badging "$APK" | grep -q "name='video.vitrine.app'" \
+            || { echo "::error::Package différent de video.vitrine.app"; exit 1; }
+          "$ANDROID_HOME/build-tools/$BT/aapt" dump badging "$APK" | grep -q "versionCode='3'" \
+            || { echo "::error::versionCode != 3"; exit 1; }
+          echo "PASS : package video.vitrine.app inchangé, versionCode 3."
+
+      - name: Contrôle dex — clé Firebase réelle présente, factice absente
+        env:
+          FIREBASE_WEB_API_KEY_ENV: ${{ secrets.FIREBASE_WEB_API_KEY }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PYV'
+          import os, subprocess, tempfile, glob
+          key = os.environ.get('FIREBASE_WEB_API_KEY_ENV') or ''
+          assert key, 'secret absent'
+          with tempfile.TemporaryDirectory() as d:
+              subprocess.run(['unzip', '-q', '-o', 'app/build/outputs/apk/release/app-release.apk',
+                              'classes*.dex', '-d', d], check=True)
+              dexes = sorted(glob.glob(os.path.join(d, 'classes*.dex')))
+              real = dummy = 0
+              for dex in dexes:
+                  data = open(dex, 'rb').read()
+                  real += data.count(key.encode())
+                  dummy += data.count(b'AIzaSyD42LABDUMMYKEY')
+          assert real > 0 and dummy == 0, 'échec porte clé Firebase'
+          print('PASS: dex = clé Firebase réelle uniquement (comparaison binaire exacte)')
+          PYV
+
+      - name: Artefact APK de mise à jour (30 jours, aucune Release)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-update-apk
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/mapping/release/mapping.txt
+            apk_verification.txt
+          retention-days: 30
+          if-no-files-found: warn
