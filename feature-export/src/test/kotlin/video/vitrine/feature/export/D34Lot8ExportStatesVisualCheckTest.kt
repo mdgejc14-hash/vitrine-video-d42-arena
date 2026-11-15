@@ -111,6 +111,27 @@ class D34Lot8ExportStatesVisualCheckTest {
         }
     }
 
+    /** Échoue SUR SIGNAL (fichier sentinelle) — état d'échec réel du travail. */
+    class FailureOnSignalWorker(
+        appContext: Context,
+        params: WorkerParameters,
+    ) : CoroutineWorker(appContext, params) {
+        override suspend fun doWork(): Result {
+            setProgress(
+                workDataOf(
+                    ExportWorker.KEY_PHASE to
+                        applicationContext.getString(R.string.export_phase_assemblage),
+                ),
+            )
+            val sentinelle = File(applicationContext.filesDir, "d34lot8-signal-echec.txt")
+            val deadline = System.currentTimeMillis() + 60_000
+            while (!sentinelle.exists() && System.currentTimeMillis() < deadline) {
+                delay(200)
+            }
+            return Result.failure()
+        }
+    }
+
     /** Attend (poll, API synchronique) que le WorkInfo contienne la phase. */
     private fun attendrePhase(context: Context, phase: String) {
         val wm = WorkManager.getInstance(context)
@@ -278,6 +299,49 @@ class D34Lot8ExportStatesVisualCheckTest {
 
     private fun texteStatut(a: Activity): String =
         a.findViewById<TextView>(R.id.export_status).text.toString()
+
+    /**
+     * VR-055 : état d'ÉCHEC réel — le travail échoue (sur signal, après
+     * l'attachement de l'observer) : export_failed_ui affiché, barre masquée,
+     * bouton « Exporter » rendu (garde libérée, crédit compensé par le worker
+     * en production — ici worker de test, aucun crédit réel engagé).
+     */
+    @Test
+    fun export_echec_affiche_relance() {
+        val context: Context = ApplicationProvider.getApplicationContext()
+        WorkManagerTestInitHelper.initializeTestWorkManager(context)
+        val sentinelle = File(context.filesDir, "d34lot8-signal-echec.txt")
+        sentinelle.delete()
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            ExportWorker.UNIQUE_NAME,
+            ExistingWorkPolicy.REPLACE,
+            OneTimeWorkRequestBuilder<FailureOnSignalWorker>().build(),
+        )
+        attendrePhase(context, context.getString(R.string.export_phase_assemblage))
+        ActivityScenario.launch<ExportActivity>(intentExport()).use { sc ->
+            taperApresInit(sc)
+            val phase = context.getString(R.string.export_phase_assemblage)
+            check(sc.attendre { a -> texteStatut(a) == phase }) {
+                "observer non attaché ou phase absente"
+            }
+            // signal : le travail échoue MAINTENANT — émission LiveData FAILED
+            sentinelle.writeText("ko")
+            val attendu = context.getString(R.string.export_failed_ui)
+            check(
+                sc.attendre { a ->
+                    texteStatut(a) == attendu &&
+                        a.findViewById<Button>(R.id.export_start).isEnabled
+                },
+            ) { "état d'échec jamais atteint (relance non rendue)" }
+            sc.onActivity { a ->
+                checkTexte(a, attendu)
+                check(a.findViewById<Button>(R.id.export_start).isEnabled) {
+                    "bouton export_start non réactivé après échec"
+                }
+                capturerEcran(a, "D34-35_export-echec-relance_APRES.png")
+            }
+        }
+    }
 
     private fun checkTexte(a: Activity, attendu: String) {
         val affiche = a.findViewById<TextView>(R.id.export_status).text.toString()

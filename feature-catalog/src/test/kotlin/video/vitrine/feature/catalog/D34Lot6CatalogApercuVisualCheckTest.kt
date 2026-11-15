@@ -10,6 +10,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.core.app.ApplicationProvider
 import java.io.File
 import org.junit.Rule
@@ -206,6 +207,30 @@ class D34Lot6CatalogApercuVisualCheckTest {
         }
         compose.onAllNodesWithText(metaFormatte(mode.first())).onFirst().assertIsDisplayed()
         compose.onRoot().save("D34-32_catalogue-mode-apercus_APRES.png")
+    }
+
+    // ---- D34-33 : scroll bas — les dernières tuiles du secteur visibles ----
+    @Test
+    fun catalogue_scroll_bas_dernieres_tuiles() {
+        val shops = gabaritsDuSecteur("shops_small_business")
+        check(shops.size == 5) { "attendu 5 gabarits Shops, trouvé ${shops.size}" }
+        compose.setContent {
+            VitrineTheme {
+                CatalogScreen(
+                    manifest = null,
+                    offline = false,
+                    initialSector = Sector.COMMERCE,
+                    gabarits = shops,
+                )
+            }
+        }
+        // Défilement réel jusqu'à la DERNIÈRE tuile (méta du 5e gabarit) :
+        // l'état « scroll bas » montre les tuiles du bas avec leurs aperçus.
+        compose.onAllNodesWithText(metaFormatte(shops.last()))
+            .onFirst()
+            .performScrollTo()
+            .assertIsDisplayed()
+        compose.onRoot().save("D34-33_catalogue-scroll-bas_APRES.png")
     }
 }
 

@@ -88,16 +88,30 @@ l'application. Chaque ligne montre la **maquette fondateur** à gauche et la
 **capture réelle de l'application** à droite (composants Android authentiques :
 tests Robolectric `@GraphicsMode(NATIVE)`, émulateur D42.31, ou écrans système).
 
-> **Statut au 17/11/2026 (soir) — travaux en cours, rien de simulé :**
-> - Lots d'aperçus **1 et 2 livrés** (15/11) : **21/30 gabarits** ont leur
+> **Statut au 15/11/2026 (soir) — clôture des preuves, rien de simulé :**
+> - Aperçus **30/30 livrés** (lots 1, 2 et 3, 15/11) : chaque gabarit a son
 >   aperçu photographique original intégré et vérifié sur GitHub (file
->   ASSET_GENERATION_QUEUE.csv — SHA-256, doublons contrôlés). Lot 3 (9
->   restants) en attente : limite stricte de la plateforme (10 images/tour).
->   La capture catalogue définitive suivra la complétude 30/30.
-> - Captures carrousels/secteurs **déjà refaites** avec les images originales
->   (D34-11/13/14/15).
-> - Recaptures restantes planifiées (Lot F) : montage phases, dashboard « Bonjour,
->   {prénom} », paywall CTA FR/EN, consentement, dialogue reprise, export.
+>   ASSET_GENERATION_QUEUE.csv — 29/29 VERIFIED, SHA-256, zéro doublon exact
+>   ou perceptuel). L'aperçu shops T2 a été **régénéré sur signalement
+>   fondateur** (prompt corrigé, sha 9b6249e98b25…, note au registre).
+> - Captures carrousels/secteurs **refaites** avec les images originales
+>   (D34-11/13/14/15), paywall CTA FR/EN (D34-18/19).
+> - **Lots 8/9/10/11 livrés (15/11)** : phases métier du montage E8
+>   (D34-20/21), écran « export prêt » (D34-22), les 6 dialogues réels
+>   (D34-23..28 : langue, secteur, accords, nettoyage, choix pays, reprise)
+>   — chemins utilisateur complets sous Robolectric.
+> - **Captures catalogue définitives 30/30 livrées (Lot 6 étendu)** : les 6
+>   secteurs avec leurs aperçus photo (D34-16/17/29/30/31/32), scroll bas
+>   (D34-33), catalogue EN (D34-34) — les captures pré-mécanisme sont
+>   remplacées ; libellé « prises guidées » recapturé (D34-03).
+> - **Export en échec + bouton relance livré (D34-35, VR-055)** : échec réel
+>   du travail sur signal → écran d'échec honnête, bouton réactivé.
+> - Restent à produire : consentement client R4 (téléphone fondateur, caméra
+>   MLKit réelle), connexion hors-ligne (Google SSO réel), notification
+>   d'export (exécution réelle du worker), checkout 501 (service externe) —
+>   marqués NON PROUVÉ, jamais simulés.
+> - Bilan inventaire 78 états : **68 CONFORME · 6 NON PROUVÉ · 4 NON
+>   APPLICABLE** (11_INVENTAIRE_COMPLET_ECRANS.csv).
 > - Les états système (splash, flux viseur, feuille de partage) exigent le
 >   **téléphone fondateur** — marqués NON PROUVÉ, jamais simulés.
 
@@ -115,8 +129,8 @@ NON APPLICABLE = hors périmètre (décision fondateur ou UI système).
 6. [Bienvenue & crédits](#f-bienvenue--crédits)
 7. [Choix du secteur](#g-choix-du-secteur)
 8. [Catalogue de gabarits](#h-catalogue-de-gabarits)
-9. [Aperçus des gabarits (8 bis)](#h2-aperçus-des-gabarits)
-10. [Brief](#i-brief)
+8 bis. [Aperçus des gabarits](#h2-aperçus-des-gabarits)
+9. [Brief](#i-brief)
 10. [Caméra guidée](#j-caméra-guidée)
 11. [Validation des prises](#k-validation-des-prises)
 12. [Montage](#l-montage)
@@ -207,28 +221,38 @@ b, c = sec("g-choix-du-secteur", "7. Choix du secteur", [
 body.append(b); n += c
 
 b, c = sec("h-catalogue-de-gabarits", "8. Catalogue de gabarits", [
-    ("Catalogue secteur choisi", "08_catalogue.png", "04_catalogue_fr_w360_APRES_secteur-choisi-sans-filtres.png",
-     "ÉCART (recapture en attente)", "aperçus 10/39 intégrés — capture définitive après Lot D complet"),
-    ("Catalogue filtre Mode actif", None, "04_catalogue_fr_w360_APRES_filtre-Mode-actif.png",
-     "ÉCART (recapture en attente)", "idem"),
-    ("Tuiles peuplées (scroll)", None, "P03-02_catalogue-tuiles-peuplees_APRES.png",
-     "ÉCART (recapture en attente)", "idem"),
-    ("Scroll bas", None, "P03-03_catalogue-scroll-bas_APRES.png", "ÉCART (recapture en attente)", "idem"),
-    ("Catalogue EN", None, "P03-04_catalogue-en_APRES.png", "ÉCART (recapture en attente)", "idem"),
+    ("Catalogue secteur choisi (Shops)", "08_catalogue.png", "D34-31_catalogue-shops-apercus_APRES.png",
+     "CONFORME", "recapture définitive 30/30 (VR-016) — test D34Lot6 étendu aux 6 secteurs"),
+    ("Catalogue filtre Mode actif", None, "D34-32_catalogue-mode-apercus_APRES.png",
+     "CONFORME", "recapture définitive 30/30 (VR-016)"),
+    ("Catalogue Bâtiment", None, "D34-16_catalogue-batiment-apercus_APRES.png",
+     "CONFORME", "recapture 30/30, corrélation template 0,982"),
+    ("Catalogue Coiffure", None, "D34-17_catalogue-coiffure-apercus_APRES.png",
+     "CONFORME", "recapture 30/30, corrélation template 0,988"),
+    ("Catalogue Immo/Auto", None, "D34-29_catalogue-immo-apercus_APRES.png",
+     "CONFORME", "recapture 30/30"),
+    ("Catalogue Restauration (tuiles peuplées)", None, "D34-30_catalogue-restauration-apercus_APRES.png",
+     "CONFORME", "recapture 30/30 (VR-017) — tuiles peuplées d'aperçus photo réels"),
+    ("Scroll bas", None, "D34-33_catalogue-scroll-bas_APRES.png",
+     "CONFORME", "défilement réel performScrollTo jusqu'à la dernière tuile (VR-018, 15/11)"),
+    ("Catalogue EN", None, "D34-34_catalogue-en-apercus_APRES.png",
+     "CONFORME", "locale EN réelle « N s · N guided takes », test dédié D34Lot12 (VR-019, 15/11)"),
     ("Catalogue hors connexion", None, "P03-05_catalogue-hors-connexion_APRES.png",
      "CONFORME", "VR-020 : repli cache honnête"),
     ("Secteur perdu → récupéré (D42.34)", None, "D34-02_catalogue-secteur-perdu-recupere_APRES.png",
      "CONFORME", "CR-1.1 : jamais de mélange des 30 gabarits"),
     ("Secteur perdu (D42.34)", None, "D34-01_catalogue-secteur-perdu_APRES.png", "CONFORME", "CR-1.1"),
     ("Libellé prises guidées (D42.34)", None, "D34-03_catalogue-libelle-prises-guidees_APRES.png",
-     "CONFORME", "CR-1.2 : « N prises guidées », jamais « N scènes »"),
+     "CONFORME", "CR-1.2 : « N prises guidées », jamais « N scènes » — recapturé 15/11 post-images"),
     ("Font scale 1,3", None, "P12-03_catalogue-fontScale-1.3_APRES.png", "CONFORME", "accessibilité"),
     ("Petit écran", None, "P12-09_catalogue-petit-ecran_APRES.png", "CONFORME", "w360×640"),
 ], "**Mécanisme aperçu (Lot D) :** `ApercuGabarit.resPour(gabaritId)` → drawable "
-   "`apercu_<secteur>_t<n>.webp`, fallback dessiné D42.30 conservé. 10/39 committés "
-   "(57e720f), 29 en file (limite de génération par session). Les captures actuelles "
-   "prédatent le mécanisme — remplacées à la complétude, pas avant (aucune capture "
-   "trompeuse intermédiaire).")
+   "`apercu_<secteur>_t<n>.webp`, fallback dessiné D42.30 conservé. **30/30 intégrés et "
+   "vérifiés** (lots 1-3, 15/11 — file 29/29 VERIFIED, zéro doublon, shops T2 régénérée "
+   "sur signalement fondateur). **Captures définitives 30/30 faites (15/11)** : les 6 "
+   "secteurs + scroll bas + catalogue EN sont capturés AVEC le mécanisme actif (D34Lot6 "
+   "étendu, D34Lot12) — les anciennes captures pré-mécanisme sont retirées de cette "
+   "section, aucune capture trompeuse conservée.")
 body.append(b); n += c
 
 # --- Section H2 : aperçus des 30 gabarits (ressources originales intégrées) ---
@@ -237,11 +261,23 @@ _ap = sorted(_glob.glob("feature-catalog/src/main/res/drawable-nodpi/apercu_*.we
 _rows_ap = []
 for _f in _ap:
     _nom = _os.path.basename(_f)[:-5]
-    _rows_ap.append(f'| {_nom.replace("apercu_", "").replace("_", " ")} | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/{_os.path.basename(_f)}" width="240"/> | Intégré · vérifié |')
+    _lot3 = _nom.replace("apercu_", "") in {
+        "shops_small_business_t3", "shops_small_business_t4", "shops_small_business_t5",
+        "vetements_mode_t1", "vetements_mode_t2", "vetements_mode_t3", "vetements_mode_t4", "vetements_mode_t5"}
+    if _nom == "apercu_shops_small_business_t2":
+        _st = "Intégré · vérifié · régénéré (signalement fondateur, sha 9b6249e98b25…)"
+        _note = "aperçu original régénéré sur signalement fondateur (sha 9b6249e98b25…, note au registre) ; lot 3, distant 200"
+    elif _lot3:
+        _st = "Intégré · vérifié"
+        _note = "aperçu original généré (GENERATED_ASSETS) ; lot 3 (15/11), distant GitHub vérifié 200"
+    else:
+        _st = "Intégré · vérifié"
+        _note = "aperçu original généré (GENERATED_ASSETS)"
+    _rows_ap.append(f'| {_nom.replace("apercu_", "").replace("_", " ")} | <img src="../../../../feature-catalog/src/main/res/drawable-nodpi/{_os.path.basename(_f)}" width="240"/> | {_st} |')
     man.append({"section": "8 bis. Aperçus des gabarits", "ecran": _nom.replace("apercu_", ""),
                 "reference_fondateur": "-", "capture_apres": f"feature-catalog/src/main/res/drawable-nodpi/{_os.path.basename(_f)}",
-                "statut": "Intégré · vérifié", "note": "aperçu original généré (GENERATED_ASSETS)"})
-_manq = 30 - 1 - len(_rows_ap)  # 30 gabarits - T1 déjà compté - intégrés restants
+                "statut": _st, "note": _note})
+_manq = 30 - len(_rows_ap)  # gabarits sans aperçu intégré
 _body_h2 = f"""### <a id="h2-aperçus-des-gabarits"></a>8 bis. Aperçus des gabarits (originaux générés)
 
 Chaque gabarit du catalogue dispose d'un aperçu photographique **original
@@ -253,9 +289,12 @@ Rendu prouvé dans l'application : corrélations template-matching 0,982/0,988
 |---|---|---|
 {chr(10).join(_rows_ap)}
 
-**{_manq} aperçus restants** (shops T2-T5, vêtements T1-T5) : lot 3 en file
-(ASSET_GENERATION_QUEUE.csv) — limite stricte de génération par tour de
-session ; capture catalogue définitive après complétude 30/30.
+**30/30 intégrés** (lots 1-3 livrés le 15/11) : file
+ASSET_GENERATION_QUEUE.csv 29/29 VERIFIED — SHA-256 consignés, zéro doublon
+exact ou perceptuel. Shops T2 régénéré sur signalement fondateur
+(sha 9b6249e98b25…). Le rendu de ces aperçus dans l'écran catalogue est
+prouvé par les captures des 6 secteurs (D34-16/17/29/30/31/32), le scroll
+bas (D34-33) et le catalogue EN (D34-34).
 
 [↑ Retour au sommaire](#sommaire)
 """
@@ -275,8 +314,8 @@ b, c = sec("i-brief", "9. Brief", [
     ("Préparation caméra", "33_preparation_camera.png", "P04-11_preparation-camera_APRES.png",
      "CONFORME", "écran sombre conforme (PIL 88 % navy)"),
     ("Contrôle (bas)", "12_controle.png", "P04-12_controle-bas_APRES.png", "CONFORME", "ReadyCheckScreen"),
-    ("Dialogue choix pays (indicatif)", None, None, "NON PROUVÉ",
-     "dialogue Compose réel codé (DialogueChoixPays, brief_phone_pick_country) — capture à produire (VR-078)"),
+    ("Dialogue choix pays (indicatif)", None, "D34-27_dialogue-choix-pays_APRES.png", "CONFORME",
+     "Lot 10 : TelephoneField réel, clic bouton pays, DialogueChoixPays Compose authentique (360×461 wrap)"),
 ], "Maquette 09 (fiche détail gabarit) : **NON APPLICABLE** — le catalogue renvoie "
    "directement au brief (`pickGabarit()` → setResult), pas d'écran intermédiaire "
    "(choix produit D42.3x).")
@@ -315,18 +354,24 @@ body.append(b); n += c
 b, c = sec("l-montage", "12. Montage", [
     ("Aperçu E7 (montage complet)", "18_apercu_montage.png", "P07-01_apercu-E7-complet_APRES.png",
      "CONFORME", ""),
-    ("Montage E8 en cours (phases métier)", "19_montage_en_cours.png", "16_export/base-fr-058_export_en_cours.png", "NON PROUVÉ",
-     "code CONFORME (CR-4 : phase réelle KEY_PHASE du worker, barre indéterminée, zéro % inventé) ; "
-     "référence émulateur D42.31 pré-phases ; le progress WorkManager→LiveData ne se propage pas "
-     "sous Robolectric (2 tentatives) → capture d'EXÉCUTION = émulateur/téléphone fondateur"),
-], "VR-051 : la correction de code est **faite** (D42.34 CR-4) — reste la capture.")
+    ("E8 phase « Assemblage des plans et des textes »", "19_montage_en_cours.png",
+     "D34-20_montage-phases-assemblage_APRES.png", "CONFORME",
+     "Lot 8 : D34Lot8ExportStatesVisualCheckTest — setProgress authentique du worker vv-export, tap réel export_start, observer LiveData, 360×820 NATIVE"),
+    ("E8 phase « Rendu final de la vidéo »", None,
+     "D34-21_montage-phases-rendu_APRES.png", "CONFORME",
+     "Lot 8 : même chemin déterministe, phase rendu tenue stable via inputData du worker de test"),
+], "VR-051 résolu par le Lot 8 : phases métier réelles du worker (contrat KEY_PHASE), "
+   "chemin utilisateur complet (tap export_start → observer LiveData → phase affichée).")
 body.append(b); n += c
 
 b, c = sec("m-export", "13. Export", [
-    ("Export prêt", "20_export_pret.png", "16_export/base-fr-057_export_pret.png", "NON PROUVÉ",
-     "référence émulateur D42.31 ; capture D42.34 à produire (VR-052)"),
-], "Écrans D42.31 (émulateur) donnés en référence honnête, marqués NON PROUVÉ "
-   "pour D42.34 tant que la recapture n'est pas faite.")
+    ("Export prêt", "20_export_pret.png", "D34-22_export-pret_APRES.png", "CONFORME",
+     "Lot 8 : worker réussit sur signal (KEY_OUTPUT contrat réel) → export_done + partage + espace visibles (VR-054) ; remplace la référence émulateur D42.31"),
+    ("Export en échec — écran + bouton relance", None, "D34-35_export-echec-relance_APRES.png", "CONFORME",
+     "15/11 : échec RÉEL du travail sur signal (Result.failure après attachement de l'observer) → export_failed_ui, barre masquée, bouton export_start réactivé (VR-055)"),
+], "VR-053 (notification foreground « Export en cours… ») : NON PROUVÉ — rendu par "
+   "setForeground du VRAI ExportWorker en exécution (pipeline d'encodage complet), "
+   "non reproductible honnêtement sous Robolectric. Écrans E8 prouvés par D34-20/21/22/35.")
 body.append(b); n += c
 
 b, c = sec("n-partage", "14. Partage", [
@@ -340,6 +385,8 @@ b, c = sec("o-dashboard", "15. Dashboard", [
      "CONFORME", "« Bonjour » seul si pas de prénom réel (jamais inventé)"),
     ("Bas de page", None, "P10-02_dashboard-bas_APRES.png", "CONFORME", ""),
     ("Suite parrainage", None, "P10-03_dashboard-suite-parrainage_APRES.png", "CONFORME", ""),
+    ("Dialogue reprise (D42.27, VR-062)", None, "D34-28_dialogue-reprise_APRES.png", "CONFORME",
+     "Lot 11 : DraftStore réel + MainActivity vv_reprise, dialogue authentique Reprendre/Nouvelle vidéo"),
     ("Dashboard EN synchrone", "32_dashboard_en.png", "P10-04_dashboard-en-synchrone_APRES.png",
      "CONFORME", "l10n EN"),
     ("Hors connexion (code en attente)", "22_hors_connexion.png",
@@ -383,16 +430,17 @@ b, c = sec("r-réglages", "18. Réglages", [
      "CONFORME", ""),
     ("Réglages EN", None, "P10-08_reglages-en_APRES.png", "CONFORME", "l10n EN"),
     ("Petit écran", None, "24_reglages_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png", "CONFORME", ""),
-    ("Dialogue changement langue (FR/EN)", None, None, "NON PROUVÉ",
-     "AlertDialog réel codé (montrerDialogLangue) — capture à produire (VR-074)"),
-    ("Dialogue changement secteur", None, None, "NON PROUVÉ",
-     "AlertDialog réel codé (montrerDialogSecteur) — capture à produire (VR-075)"),
-    ("Dialogue accords de diffusion", None, None, "NON PROUVÉ",
-     "AlertDialog réel codé (montrerDialogAccords) — capture à produire (VR-076)"),
-    ("Dialogue nettoyage espace", None, None, "NON PROUVÉ",
-     "AlertDialog réel codé (confirmerNettoyageEspace) — capture à produire (VR-077)"),
-], "Le **dialogue de reprise** (VR-062, D42.27) et les **accords de diffusion**"
-   " (consentements enregistrés) sont listés pour capture au Lot F.")
+    ("Dialogue changement langue (FR/EN)", None, "D34-23_dialogue-langue_APRES.png", "CONFORME",
+     "Lot 9 : DashboardActivity réelle, clics réels, AlertDialog single choice authentique (VR-074)"),
+    ("Dialogue changement secteur", None, "D34-24_dialogue-secteur_APRES.png", "CONFORME",
+     "Lot 9 : chemin réel complet, AlertDialog 6 métiers authentique (VR-075)"),
+    ("Dialogue accords de diffusion", None, "D34-25_dialogue-accords_APRES.png", "CONFORME",
+     "Lot 9 : chemin réel complet, AlertDialog compteur réel (VR-076)"),
+    ("Dialogue nettoyage espace", None, "D34-26_dialogue-nettoyage_APRES.png", "CONFORME",
+     "Lot 9 : scroll + clic réel, AlertDialog confirmation authentique (VR-077)"),
+], "Les 4 dialogues de réglages sont **prouvés par le chemin réel** (Lot 9 : "
+   "DashboardActivity authentique, clics réels sur les lignes, AlertDialog système). "
+   "Le dialogue de reprise (VR-062) est prouvé au §15 (D34-28, Lot 11).")
 body.append(b); n += c
 
 b, c = sec("s-écrans-hors-périmètre", "19. Écrans hors périmètre", [
@@ -431,7 +479,7 @@ footer = """
 
 - Registre des images originales : `../GENERATED_ASSETS.md` (provenance de chaque
   ressource générée — aucune image à licence inconnue conservée).
-- Inventaire exhaustif des 73 écrans/états : `../11_INVENTAIRE_COMPLET_ECRANS.csv`.
+- Inventaire exhaustif des 78 écrans/états : `../11_INVENTAIRE_COMPLET_ECRANS.csv`.
 - Audit fidélité des 34 maquettes : `../10_AUDIT_FIDELITE_DESIGN.md`.
 - Manifeste vérifiable de cette galerie : `../12_MANIFEST_GALERIE.csv`
   (chemin → statut → note, une ligne par image référencée).

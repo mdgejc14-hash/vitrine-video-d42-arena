@@ -5,7 +5,7 @@ l'application. Chaque ligne montre la **maquette fondateur** à gauche et la
 **capture réelle de l'application** à droite (composants Android authentiques :
 tests Robolectric `@GraphicsMode(NATIVE)`, émulateur D42.31, ou écrans système).
 
-> **Statut au 15/11/2026 — travaux en cours, rien de simulé :**
+> **Statut au 15/11/2026 (soir) — clôture des preuves, rien de simulé :**
 > - Aperçus **30/30 livrés** (lots 1, 2 et 3, 15/11) : chaque gabarit a son
 >   aperçu photographique original intégré et vérifié sur GitHub (file
 >   ASSET_GENERATION_QUEUE.csv — 29/29 VERIFIED, SHA-256, zéro doublon exact
@@ -16,9 +16,19 @@ tests Robolectric `@GraphicsMode(NATIVE)`, émulateur D42.31, ou écrans systèm
 > - **Lots 8/9/10/11 livrés (15/11)** : phases métier du montage E8
 >   (D34-20/21), écran « export prêt » (D34-22), les 6 dialogues réels
 >   (D34-23..28 : langue, secteur, accords, nettoyage, choix pays, reprise)
->   — chemins utilisateur complets sous Robolectric, tests 10/10.
-> - Restent à produire : consentement client R4 (téléphone), et les captures
->   catalogue définitives 30/30 (remplacement des captures pré-mécanisme).
+>   — chemins utilisateur complets sous Robolectric.
+> - **Captures catalogue définitives 30/30 livrées (Lot 6 étendu)** : les 6
+>   secteurs avec leurs aperçus photo (D34-16/17/29/30/31/32), scroll bas
+>   (D34-33), catalogue EN (D34-34) — les captures pré-mécanisme sont
+>   remplacées ; libellé « prises guidées » recapturé (D34-03).
+> - **Export en échec + bouton relance livré (D34-35, VR-055)** : échec réel
+>   du travail sur signal → écran d'échec honnête, bouton réactivé.
+> - Restent à produire : consentement client R4 (téléphone fondateur, caméra
+>   MLKit réelle), connexion hors-ligne (Google SSO réel), notification
+>   d'export (exécution réelle du worker), checkout 501 (service externe) —
+>   marqués NON PROUVÉ, jamais simulés.
+> - Bilan inventaire 78 états : **68 CONFORME · 6 NON PROUVÉ · 4 NON
+>   APPLICABLE** (11_INVENTAIRE_COMPLET_ECRANS.csv).
 > - Les états système (splash, flux viseur, feuille de partage) exigent le
 >   **téléphone fondateur** — marqués NON PROUVÉ, jamais simulés.
 
@@ -142,11 +152,14 @@ Maquette PIL : blanc 86 %, tuiles discrètes — respecté.
 
 | Écran / état | Référence fondateur | APRÈS (capture réelle) | Statut |
 |---|---|---|---|
-| Catalogue secteur choisi | <img src="../../D42_33/SOURCES/maquettes/08_catalogue.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/04_catalogue_fr_w360_APRES_secteur-choisi-sans-filtres.png" width="180"/> | ÉCART (recapture en attente) |
-| Catalogue filtre Mode actif | — | <img src="../../D42_33/visual-review/AFTER/04_catalogue_fr_w360_APRES_filtre-Mode-actif.png" width="180"/> | ÉCART (recapture en attente) |
-| Tuiles peuplées (scroll) | — | <img src="../../D42_33/visual-review/AFTER/P03-02_catalogue-tuiles-peuplees_APRES.png" width="180"/> | ÉCART (recapture en attente) |
-| Scroll bas | — | <img src="../../D42_33/visual-review/AFTER/P03-03_catalogue-scroll-bas_APRES.png" width="180"/> | ÉCART (recapture en attente) |
-| Catalogue EN | — | <img src="../../D42_33/visual-review/AFTER/P03-04_catalogue-en_APRES.png" width="180"/> | ÉCART (recapture en attente) |
+| Catalogue secteur choisi (Shops) | <img src="../../D42_33/SOURCES/maquettes/08_catalogue.png" width="180"/> | <img src="D34-31_catalogue-shops-apercus_APRES.png" width="180"/> | CONFORME |
+| Catalogue filtre Mode actif | — | <img src="D34-32_catalogue-mode-apercus_APRES.png" width="180"/> | CONFORME |
+| Catalogue Bâtiment | — | <img src="D34-16_catalogue-batiment-apercus_APRES.png" width="180"/> | CONFORME |
+| Catalogue Coiffure | — | <img src="D34-17_catalogue-coiffure-apercus_APRES.png" width="180"/> | CONFORME |
+| Catalogue Immo/Auto | — | <img src="D34-29_catalogue-immo-apercus_APRES.png" width="180"/> | CONFORME |
+| Catalogue Restauration (tuiles peuplées) | — | <img src="D34-30_catalogue-restauration-apercus_APRES.png" width="180"/> | CONFORME |
+| Scroll bas | — | <img src="D34-33_catalogue-scroll-bas_APRES.png" width="180"/> | CONFORME |
+| Catalogue EN | — | <img src="D34-34_catalogue-en-apercus_APRES.png" width="180"/> | CONFORME |
 | Catalogue hors connexion | — | <img src="../../D42_33/visual-review/AFTER/P03-05_catalogue-hors-connexion_APRES.png" width="180"/> | CONFORME |
 | Secteur perdu → récupéré (D42.34) | — | <img src="D34-02_catalogue-secteur-perdu-recupere_APRES.png" width="180"/> | CONFORME |
 | Secteur perdu (D42.34) | — | <img src="D34-01_catalogue-secteur-perdu_APRES.png" width="180"/> | CONFORME |
@@ -154,7 +167,7 @@ Maquette PIL : blanc 86 %, tuiles discrètes — respecté.
 | Font scale 1,3 | — | <img src="../../D42_33/visual-review/AFTER/P12-03_catalogue-fontScale-1.3_APRES.png" width="180"/> | CONFORME |
 | Petit écran | — | <img src="../../D42_33/visual-review/AFTER/P12-09_catalogue-petit-ecran_APRES.png" width="180"/> | CONFORME |
 
-**Mécanisme aperçu (Lot D) :** `ApercuGabarit.resPour(gabaritId)` → drawable `apercu_<secteur>_t<n>.webp`, fallback dessiné D42.30 conservé. **30/30 intégrés et vérifiés** (lots 1-3, 15/11 — file 29/29 VERIFIED, zéro doublon, shops T2 régénérée sur signalement fondateur). Les captures d'écran de cette section prédatent le mécanisme — remplacées par les captures définitives 30/30 (Lot F), pas avant (aucune capture trompeuse intermédiaire).
+**Mécanisme aperçu (Lot D) :** `ApercuGabarit.resPour(gabaritId)` → drawable `apercu_<secteur>_t<n>.webp`, fallback dessiné D42.30 conservé. **30/30 intégrés et vérifiés** (lots 1-3, 15/11 — file 29/29 VERIFIED, zéro doublon, shops T2 régénérée sur signalement fondateur). **Captures définitives 30/30 faites (15/11)** : les 6 secteurs + scroll bas + catalogue EN sont capturés AVEC le mécanisme actif (D34Lot6 étendu, D34Lot12) — les anciennes captures pré-mécanisme sont retirées de cette section, aucune capture trompeuse conservée.
 
 [↑ Retour au sommaire](#sommaire)
 
@@ -200,10 +213,10 @@ Rendu prouvé dans l'application : corrélations template-matching 0,982/0,988
 
 **30/30 intégrés** (lots 1-3 livrés le 15/11) : file
 ASSET_GENERATION_QUEUE.csv 29/29 VERIFIED — SHA-256 consignés, zéro doublon
-exact ou perceptuel, distant GitHub vérifié à 200 pour chacun. L'aperçu
-shops T2 a été régénéré sur signalement fondateur (image dénoncée corrigée
-avant de poursuivre — identification par corrélation template 0,962,
-régénération prompt corrigé, note de régénération au registre).
+exact ou perceptuel. Shops T2 régénéré sur signalement fondateur
+(sha 9b6249e98b25…). Le rendu de ces aperçus dans l'écran catalogue est
+prouvé par les captures des 6 secteurs (D34-16/17/29/30/31/32), le scroll
+bas (D34-33) et le catalogue EN (D34-34).
 
 [↑ Retour au sommaire](#sommaire)
 
@@ -267,11 +280,7 @@ Maquette 17 (écran galerie « revue ») : forme **distribuée** dans l'app — 
 | E8 phase « Assemblage des plans et des textes » | <img src="../../D42_33/SOURCES/maquettes/19_montage_en_cours.png" width="180"/> | <img src="D34-20_montage-phases-assemblage_APRES.png" width="180"/> | CONFORME |
 | E8 phase « Rendu final de la vidéo » | — | <img src="D34-21_montage-phases-rendu_APRES.png" width="180"/> | CONFORME |
 
-VR-051 **prouvé** (Lot 8) : `D34Lot8ExportStatesVisualCheckTest` — worker de
-test occupant le nom unique réel `vv-export`, phase publiée par `setProgress`
-authentique, **tap réel sur « Exporter »** (porte crédits complète), observer
-`observeExport()` attaché, émission LiveData → TextView. Phases métier réelles
-de l'app, barre indéterminée, aucun % inventé (CR-4 respecté).
+VR-051 résolu par le Lot 8 : phases métier réelles du worker (contrat KEY_PHASE), chemin utilisateur complet (tap export_start → observer LiveData → phase affichée).
 
 [↑ Retour au sommaire](#sommaire)
 
@@ -280,12 +289,9 @@ de l'app, barre indéterminée, aucun % inventé (CR-4 respecté).
 | Écran / état | Référence fondateur | APRÈS (capture réelle) | Statut |
 |---|---|---|---|
 | Export prêt | <img src="../../D42_33/SOURCES/maquettes/20_export_pret.png" width="180"/> | <img src="D34-22_export-pret_APRES.png" width="180"/> | CONFORME |
+| Export en échec — écran + bouton relance | — | <img src="D34-35_export-echec-relance_APRES.png" width="180"/> | CONFORME |
 
-VR-052 **prouvé** (Lot 8) : le worker de test aboutit à `Result.success`
-avec `KEY_OUTPUT` (contrat réel du `ExportWorker`), **sur signal fichier créé
-après l'attachement de l'observer** — l'activité affiche `export_done` et rend
-les boutons **partage** et **espace** visibles (chemin `observeExport()` réel,
-aucun flux fabriqué). L'ancienne référence émulateur D42.31 est remplacée.
+VR-053 (notification foreground « Export en cours… ») : NON PROUVÉ — rendu par setForeground du VRAI ExportWorker en exécution (pipeline d'encodage complet), non reproductible honnêtement sous Robolectric. Écrans E8 prouvés par D34-20/21/22/35.
 
 [↑ Retour au sommaire](#sommaire)
 
@@ -306,10 +312,10 @@ La feuille de partage appartient au système : capture émulateur en référence
 | Synchrone, crédits 6 | <img src="../../D42_33/SOURCES/maquettes/24_dashboard.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/12_dashboard_fr_w360_APRES_synchrone-credits-6.png" width="180"/> | CONFORME |
 | Bas de page | — | <img src="../../D42_33/visual-review/AFTER/P10-02_dashboard-bas_APRES.png" width="180"/> | CONFORME |
 | Suite parrainage | — | <img src="../../D42_33/visual-review/AFTER/P10-03_dashboard-suite-parrainage_APRES.png" width="180"/> | CONFORME |
+| Dialogue reprise (D42.27, VR-062) | — | <img src="D34-28_dialogue-reprise_APRES.png" width="180"/> | CONFORME |
 | Dashboard EN synchrone | <img src="../../D42_33/SOURCES/maquettes/32_dashboard_en.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/P10-04_dashboard-en-synchrone_APRES.png" width="180"/> | CONFORME |
 | Hors connexion (code en attente) | <img src="../../D42_33/SOURCES/maquettes/22_hors_connexion.png" width="180"/> | <img src="../../D42_33/visual-review/AFTER/12_dashboard_en_w360_APRES_hors-connexion-code-en-attente.png" width="180"/> | CONFORME |
 | Bonjour, {prénom} (variante nom réel) | — | <img src="../../D42_33/visual-review/AFTER/P10-02_dashboard-bas_APRES.png" width="180"/> | CONFORME |
-| Dialogue reprise (D42.27, VR-062) | — | <img src="D34-28_dialogue-reprise_APRES.png" width="180"/> | CONFORME |
 | Petit écran w360×640 | — | <img src="../../D42_33/visual-review/AFTER/20_dashboard_fr_w360x640_APRES_fontScale-1.3-petit-ecran.png" width="180"/> | CONFORME |
 | Rotation paysage w640×360 | — | <img src="../../D42_33/visual-review/AFTER/22_dashboard_fr_w640x360_APRES_rotation-paysage.png" width="180"/> | CONFORME |
 
@@ -355,13 +361,7 @@ Checkout : CinetPay renvoie 501 `billing_not_configured` (budget 0 FCFA, aucune 
 | Dialogue accords de diffusion | — | <img src="D34-25_dialogue-accords_APRES.png" width="180"/> | CONFORME |
 | Dialogue nettoyage espace | — | <img src="D34-26_dialogue-nettoyage_APRES.png" width="180"/> | CONFORME |
 
-**Dialogues prouvés (Lots 9/10/11, 15/11)** : la VRAIE `DashboardActivity`
-est lancée, l'icône réglages est cliquée, chaque ligne-tuile déclenche son
-`AlertDialog` authentique — capturé depuis la fenêtre du dialogue (chemin
-utilisateur complet, aucun dialogue invoqué directement). Le dialogue de
-choix du pays (VR-078) est ouvert par un clic réel sur le bouton pays du
-`TelephoneField` ; le dialogue de reprise (VR-062) par l'entrée « Reprendre »
-du dashboard avec un brouillon réel persisté.
+Les 4 dialogues de réglages sont **prouvés par le chemin réel** (Lot 9 : DashboardActivity authentique, clics réels sur les lignes, AlertDialog système). Le dialogue de reprise (VR-062) est prouvé au §15 (D34-28, Lot 11).
 
 [↑ Retour au sommaire](#sommaire)
 

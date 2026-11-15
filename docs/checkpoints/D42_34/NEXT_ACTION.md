@@ -1,43 +1,40 @@
-# NEXT_ACTION — D42.34 ordre final (reprise au prochain tour)
+# NEXT_ACTION — D42.34 ordre final (CLÔTURÉ — attente acceptation fondateur)
 
-Base : 2dfd907 (immuable) → … → 93fa450 → d711223 (HEAD, Lot 8) → P2 docs.
+Chaîne : 2dfd907 (base immuable, CI SUCCESS) → … → 93fa450 → d711223 →
+e59d82d → 9e83e7f → 08d567f → 884e5c9 → <commit de clôture du 15/11 soir>.
 Échéance projet : 18/11/2026.
 Date réelle de référence : 15/11/2026 (jamais de date future dans les documents).
 
-## ÉTAT (15/11 soir, après Lot 8 + P2 docs)
+## ÉTAT FINAL (15/11 soir — ordre fondateur en 5 points EXÉCUTÉ)
 
-- **P1 FAITE** : aperçus **30/30** (lots 1-3, file 29/29 VERIFIED, distant 200,
-  zéro doublon) + image fondateur corrigée (shops T2 régénérée, sha
-  9b6249e98b25…, aed849d→93fa450).
-- **P3 (partie) FAITE** : D34Lot8 **3/3 VERT** — D34-20/21/22 (phases montage
-  E8 + export prêt) via `D34Lot8ExportStatesVisualCheckTest` (d711223).
-- **P3 dialogues FAITS (9e83e7f)** : Lots 9/10/11 **6/6** — D34-23..28
-  (langue, secteur, accords, nettoyage, choix pays VR-078, reprise VR-062).
-  CI d711223 + e59d82d SUCCESS.
-- **P2 FAITE (commit en cours)** : README visual-review (30/30, Lot 8,
-  sommaire corrigé, 8 bis complet 30 lignes), 11_INVENTAIRE VR-051/VR-052 →
-  CONFORME, 12_MANIFEST 133 entrées.
-- CI : verte jusqu'à 93fa450 inclus ; d711223 (Lot 8) en cours au push.
-- Manifeste : 134 entrées / 111 fichiers. Restes NON PROUVÉ : 4 (splash,
-  flux viseur, feuille partage = téléphone fondateur ; hors connexion) +
-  consentement R4 + 5 ÉCART captures catalogue pré-mécanisme (D34-01..03
-  et captures D42.33 du §8).
+- **(1) Travail préservé** : branche `d42.34-founder-acceptance-fixes`,
+  `main` inchangé, aucun reset destructif, aucun RC16, aucun APK signé,
+  aucun CinetPay, aucun écran Aide & Contact.
+- **(2) Sync doc terminée** : README galerie + 11_INVENTAIRE (78 états :
+  **68 CONFORME · 6 NON PROUVÉ · 4 NON APPLICABLE**) + 12_MANIFEST
+  (138 entrées / 122 fichiers) + 13_RAPPORT + NEXT_ACTION ; D34-01..03,
+  D34-29..35 intégrés ; VR-003/004/005/015 réconciliés (recaptures
+  post-images 15/11) ; VR-016..019 CONFORMES sur captures dédiées
+  (D34-31/32 + 6 secteurs, D34-33, D34-34) ; VR-054 CONFORME (D34-22) ;
+  VR-055 CONFORME (D34-35).
+- **(3) Preuves techniques** : VR-054/055 PROUVÉES par chemin utilisateur
+  réel (worker + LiveData) ; VR-053/VR-009/VR-048/VR-065 NON PROUVÉ avec
+  explication précise (notification = vrai ExportWorker en exécution ;
+  Google SSO externe ; MLKit caméra réelle ; CinetPay 501 service externe).
+- **(4) Galerie unique** via `scripts/galerie_lotf.py` (script = source) :
+  138 entrées, 78 états tous représentés (capture ou absence explicite),
+  zéro lien mort (assertions d'existence), dates réelles.
+- **(5) Tests + CI** : runs locaux du soir VERTS (D34-33/34/35) ; CI GitHub
+  runs 279→286 SUCCESS (jusqu'à 884e5c9 inclus) + commit de clôture.
 
-## PROCHAIN TOUR — ORDRE
+## PROCHAINE ACTION — UNE SEULE
 
-1. **Recapture catalogue définitif 30/30** (P3) : étendre le test D34Lot6 aux
-   6 secteurs (chaque tuile doit montrer l'aperçu webp réel), remplacer
-   D34-01/02/03 et les 5 lignes ÉCART de la section 8 du README (captures
-   pré-mécanisme), puis passer leur statut à CONFORME dans 11/12.
-2. ~~Captures dialogues VR-074→078 + VR-062~~ **FAIT** (9e83e7f) — les 6
-   dialogues sont capturés par clics réels (Lots 9/10/11).
-3. **Régénérer la galerie** : extraire d'abord /tmp/maquettes + /tmp/apres33
-   (raw.githubusercontent + PAT — clone blob:none) ; `python3
-   scripts/galerie_lotf.py` ; chaque entrée = capture OU statut d'absence
-   explicite (78/78).
-4. **13_RAPPORT** à jour : 30/30, Lot 8, compteurs exacts, téléphone
-   fondateur = NON PROUVÉ explicite.
-5. **Rapport final + preuves GitHub** (runs CI, sha, contenus 200).
+**ARRÊT COMPLET. Attendre l'acceptation explicite du fondateur.** Aucun
+changement non demandé après le rapport de clôture. À l'acceptation :
+suivre les instructions du fondateur (les états téléphone fondateur —
+splash, viseur, partage, consentement R4, connexion hors-ligne,
+notification export — et le checkout CinetPay restent à produire sur
+matériel/service réel, jamais simulés).
 
 ## PIÈGES (tous rencontrés — ne pas retenter les impasses)
 
