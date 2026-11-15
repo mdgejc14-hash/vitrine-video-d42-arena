@@ -1,6 +1,7 @@
 package video.vitrine.feature.catalog
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -41,6 +44,9 @@ internal fun VignetteSecteur(
     dureeS: Int?,
     prises: Int?,
     modifier: Modifier = Modifier,
+    // D42.34 (§5.1) : aperçu photographique réel du gabarit (généré original).
+    // Null = repli dessiné de marque D42.30 (inchangé).
+    apercuRes: Int? = null,
 ) {
     val (teinteHaute, teinteBasse) = paletteSecteur(secteur)
     Box(
@@ -49,8 +55,19 @@ internal fun VignetteSecteur(
             .clip(RoundedCornerShape(10.dp))
             .background(Brush.verticalGradient(listOf(teinteHaute, teinteBasse)))
     ) {
-        Canvas(modifier = Modifier.matchParentSize()) {
-            dessinerDecorVignette(prises)
+        if (apercuRes != null) {
+            // Aperçu réel : la photo remplace le décor dessiné ; l'icône métier
+            // et le badge durée (infos réelles) restent superposés.
+            Image(
+                painter = painterResource(apercuRes),
+                contentDescription = null, // décoratif : le titre porte l'information
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.matchParentSize(),
+            )
+        } else {
+            Canvas(modifier = Modifier.matchParentSize()) {
+                dessinerDecorVignette(prises)
+            }
         }
         // icône métier du secteur (haut-gauche)
         Canvas(
@@ -88,9 +105,10 @@ internal fun VignetteSecteurAvecLibelle(
     dureeS: Int?,
     prises: Int?,
     modifier: Modifier = Modifier,
+    apercuRes: Int? = null,
 ) {
     Column(modifier = modifier) {
-        VignetteSecteur(secteur, dureeS, prises, Modifier.fillMaxWidth())
+        VignetteSecteur(secteur, dureeS, prises, Modifier.fillMaxWidth(), apercuRes)
         Row(
             modifier = Modifier.padding(top = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp),

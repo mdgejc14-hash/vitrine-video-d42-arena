@@ -275,6 +275,7 @@ private fun GabaritHero(
             dureeS = g.dureeTotaleS,
             prises = g.nombrePrises,
             modifier = Modifier.fillMaxWidth(),
+            apercuRes = ApercuGabarit.resPour(g.id),
         )
         Text(
             g.nomFormatAffiche,
@@ -326,6 +327,7 @@ private fun GabaritTuile(
             dureeS = g.dureeTotaleS,
             prises = g.nombrePrises,
             modifier = Modifier.fillMaxWidth(),
+            apercuRes = ApercuGabarit.resPour(g.id),
         )
         Text(
             g.nomFormatAffiche,
@@ -382,6 +384,7 @@ private fun GabaritCard(
                         dureeS = g.dureeTotaleS,
                         prises = g.nombrePrises,
                         modifier = Modifier.width(112.dp),
+                        apercuRes = ApercuGabarit.resPour(g.id),
                     )
                     Column(
                         modifier = Modifier.weight(1f),
