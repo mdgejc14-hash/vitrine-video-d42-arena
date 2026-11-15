@@ -59,7 +59,9 @@ jobs:
           KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
         run: |
           set -euo pipefail
-          pip install --quiet kaggle six
+          # kaggle 2.x ignore kaggle.json (auth OAuth/API token uniquement) ;
+          # 1.7.4.5 lit ~/.kaggle/kaggle.json (username + key) — vérifié.
+          pip install --quiet "kaggle==1.7.4.5" six
           mkdir -p ~/.kaggle
           printf '{"username":"%s","key":"%s"}\n' "$KAGGLE_USERNAME" "$KAGGLE_KEY" > ~/.kaggle/kaggle.json
           chmod 600 ~/.kaggle/kaggle.json
