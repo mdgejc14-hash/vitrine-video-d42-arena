@@ -34,3 +34,28 @@
 - 29 prompts d'aperçus consignés dans GENERATED_ASSETS.md pour le prochain
   tour (limite de génération 10/tour atteinte deux fois).
 - Push 18f8f21. CI en cours : bdee8f7, e4f23e3, 18f8f21 (docs seuls).
+
+## 18/11 — ORDRE FINAL : chaîne de génération en place, LOT 1/3 livré
+
+- **File persistante** ASSET_GENERATION_QUEUE.csv (29 entrées, lots 10+10+9,
+  prompts enrichis des JSON réels) + scripts/build_asset_queue.py +
+  scripts/process_catalog_asset_queue.py (status/next/integrate/verify/
+  emit-map/mark-verified, détection doublons SHA-256 + perceptuels).
+- **LOT 1/3 LIVRÉ** : batiment T2-T5, coiffure T1-T5, immo_auto T1 —
+  10 WebP 640×360 q86 intégrés, ApercuGabarit 11/30, SHA-256 consignés,
+  fichiers confirmés présents sur GitHub (API 200), statut VERIFIED.
+- **Preuve de rendu quantitative** (template matching luminance) : corrélation
+  0,982 (D34-16 ↔ photo batiment_T1) et 0,988 (D34-17 ↔ photo coiffure_T1)
+  à la position exacte de la carte vedette (34,104,292×164) ; contre-épreuve
+  croisée 0,308. Captures D34-16/17 ajoutées (preuves intermédiaires — les
+  captures définitives du catalogue suivront à 30/30, ordre §6).
+- compileDebugKotlin :feature-catalog BUILD SUCCESSFUL local (4m42).
+- **BLOCAGE CONSIGNÉ (ordre §2.3)** : limite stricte de la plateforme —
+  10 images générées par tour. Les 10 tentatives du lot 2 ont été refusées
+  (« Image generation limit of 10 reached for this turn »). Lot 2 remis
+  PENDING avec note de blocage dans la file ; curseur sauvegardé ; reprise
+  au prochain tour par `process_catalog_asset_queue.py next 10`. AUCUNE
+  prétention que les 29 images sont lancées : 10/29 VERIFIED.
+- Incident résolu : remote git perdu au reset sandbox (.git/config non
+  persisté) → pushes e645e46/2c69d77 d'abord échoués silencieusement,
+  remote reconfiguré, tout repoussé et vérifié (200).
