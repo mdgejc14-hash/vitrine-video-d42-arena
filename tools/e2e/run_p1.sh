@@ -638,17 +638,20 @@ prises=0
 for n in 1 2; do
   prise "$n"; rc=$?
   case $rc in
-    0) prises=$((prises+1)); record PASS "P1_prise_$n" "caméra émulée : enregistrement démarré, arrêté, application reprise" ;;
+    0) prises=$((prises+1)); record PASS "P1_prise_$n" "caméra virtuelle (émulateur) : enregistrement démarré, arrêté, application reprise" ;;
     1) record BLOCKED "P1_prise_$n" "bouton d'enregistrement introuvable (dump 24)" ;;
     2) record FAIL "P1_prise_$n" "appui sur le bouton sans passage en enregistrement" ;;
     3) record FAIL "P1_prise_$n" "arrêt de l'enregistrement impossible" ;;
     *) record FAIL "P1_prise_$n" "application non revenue à l'écran de guidage après la prise" ;;
   esac
   shot "26_prise_${n}_faite"; dump "26_prise_${n}_faite"
+  # D42.34-A.3 : « Suivant » est désormais sans effet tant que la prise
+  # courante n'a pas de rush valide (verrouillage) — le tap est émis pour
+  # exercer le garde, son blocage est le comportement attendu.
   $UI tap --text "Suivant" --exact --timeout 10 >/dev/null 2>&1 || true
   sleep 3
 done
-[ "$prises" -ge 1 ] && record PASS P1_prises "$prises prise(s) enregistrée(s) sur caméra émulée" \
+[ "$prises" -ge 1 ] && record PASS P1_prises "$prises prise(s) enregistrée(s) sur caméra virtuelle (émulateur)" \
                     || record BLOCKED P1_prises "aucune prise enregistrée"
 sleep 3
 shot 27_apres_prises; dump 27_apres_prises
@@ -674,6 +677,24 @@ completer_guide() {
   requis=$($UI probe 2>/dev/null | grep -o 'PRISE [0-9]*/[0-9]*' | head -1 | sed 's|.*/||')
   case "$requis" in ''|*[!0-9]*) requis=3 ;; esac
   echo "E2E guide : $rush_count prise(s) en fichiers, $requis exigée(s) par le gabarit"
+  # D42.34-B (preuve du verrouillage A.3) : « Suivant » sans rush valide ne
+  # doit JAMAIS quitter le guide — message « obligatoire » + guide conservé,
+  # montage non lancé. Testé uniquement quand la prise courante manque.
+  if [ "$rush_count" -lt "$requis" ]; then
+    if $UI inside --text "Suivant" --exact --timeout 3 >/dev/null 2>&1 \
+       || { swipe_v 73 21 300 >/dev/null 2>&1; sleep 1; $UI inside --text "Suivant" --exact --timeout 3 >/dev/null 2>&1; }; then
+      $UI tap --text "Suivant" --exact --timeout 8 >/dev/null 2>&1
+      sleep 3
+      if $UI wait --text "Filme ta prise" --timeout 6 >/dev/null 2>&1 \
+         && $UI inside --text "obligatoire" --timeout 5 >/dev/null 2>&1; then
+        record PASS P1_verrouillage_prises "« Suivant » sans prise valide : guide conservé + message « obligatoire » — montage NON lancé (D42.34-A.3, caméra virtuelle)"
+        shot 26v_verrouillage; dump 26v_verrouillage
+      else
+        record FAIL P1_verrouillage_prises "« Suivant » a quitté le guide (ou message absent) alors qu'une prise manque"
+        shot 26v_verrouillage; dump 26v_verrouillage
+      fi
+    fi
+  fi
   # 3) filmer les prises manquantes (max 4 cycles), par le bouton classique
   cycle=0
   while [ "$rush_count" -lt "$requis" ] && [ "$cycle" -lt 4 ]; do
@@ -728,16 +749,63 @@ completer_guide() {
 }
 completer_guide
 
-# D42.16 : preuve FICHIER — un libellé qui bascule ne prouve pas un rush
+  # D42.16 : preuve FICHIER — un libellé qui bascule ne prouve pas un rush
 # exploitable. Debug : run-as (F50) ; release : adb root (émulateur AOSP).
 app_ls files/rushes -l > "$OUT/27_rushes.txt" 2>&1 || true
 if grep -q "rush-" "$OUT/27_rushes.txt" 2>/dev/null; then
-  record PASS P1_rushs_fichiers "fichiers rush-*.mp4 présents et non vides dans files/rushes (voir 27_rushes.txt)"
+  record PASS P1_rushs_fichiers "fichiers rush-*.mp4 présents et non vides dans files/rushes (voir 27_rushes.txt) — caméra virtuelle (émulateur)"
 else
   record FAIL P1_rushs_fichiers "aucun fichier rush dans files/rushes (voir 27_rushes.txt)"
 fi
+# D42.34-B : chaque rush doit être DÉCODABLE (ffprobe) — un fichier non vide
+# mais illisible n'atteindrait jamais un montage valide.
+if ! command -v ffprobe >/dev/null 2>&1; then
+  record BLOCKED P1_rushs_decodables "ffprobe indisponible sur le runner — décodabilité non vérifiée cette fois"
+else
+  rush_total=0; rush_ok=0
+  for r in $(app_ls files/rushes | tr -d '\r' | grep '^rush-' || true); do
+    rush_total=$((rush_total+1))
+    app_cat "files/rushes/$r" > "$OUT/rush_check.mp4" 2>/dev/null || true
+    if [ "$(stat -c%s "$OUT/rush_check.mp4" 2>/dev/null || echo 0)" -gt 0 ] \
+       && ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of csv=p=0 "$OUT/rush_check.mp4" >/dev/null 2>&1; then
+      rush_ok=$((rush_ok+1))
+    fi
+  done
+  rm -f "$OUT/rush_check.mp4"
+  if [ "$rush_total" -gt 0 ] && [ "$rush_ok" -eq "$rush_total" ]; then
+    record PASS P1_rushs_decodables "$rush_ok/$rush_total rush(s) non vides ET décodables (ffprobe) — caméra virtuelle"
+  else
+    record FAIL P1_rushs_decodables "$rush_ok/$rush_total rush(s) décodables — voir 27_rushes.txt"
+  fi
+fi
 # Chronologie observable laissée par l'app (tag VV_E2E, défaut D5).
 adb logcat -d -s VV_E2E > "$OUT/27_vv_e2e_markers.log" 2>&1 || true
+# --- D42.34-B : preuves caméra renforcées (CAMÉRA VIRTUELLE de l'émulateur) ---
+# La caméra est la CAMÉRA VIRTUELLE (-camera-back emulated) : la chaîne
+# CameraX -> MediaCodec -> MP4 est réelle, l'image est synthétique. Ces
+# contrôles prouvent le COMPORTEMENT de l'app sur cette chaîne — jamais la
+# qualité d'un capteur physique (validation fondateur sur téléphone réel).
+# 1) PreviewView réellement STREAMING (frames réelles de la caméra virtuelle)
+if grep -q "PREVIEW STREAMING" "$OUT/27_vv_e2e_markers.log" 2>/dev/null; then
+  record PASS P1_preview_streaming "PreviewView réellement STREAMING (marqueur VV_E2E) — caméra virtuelle"
+else
+  record FAIL P1_preview_streaming "aucun marqueur PREVIEW STREAMING (27_vv_e2e_markers.log)"
+fi
+# 2) compte à rebours 3-2-1 AVANT le démarrage du recorder (aucune prise ne
+#    démarre sans décompte complet — D42.30)
+if awk '/compte à rebours : 1/{cd=NR} /startRecording : start\(/{if(!cd){bad=1}} END{exit bad?1:0}' \
+     "$OUT/27_vv_e2e_markers.log" 2>/dev/null; then
+  record PASS P1_countdown_avant_recorder "compte à rebours 3-2-1 terminé AVANT chaque startRecording (ordre des marqueurs)"
+else
+  record FAIL P1_countdown_avant_recorder "un startRecording précède le premier décompte complet (27_vv_e2e_markers.log)"
+fi
+# 3) Finalize SANS erreur pour toutes les prises (fichiers non vides)
+if grep -q "Finalize : hasError=false" "$OUT/27_vv_e2e_markers.log" 2>/dev/null \
+   && ! grep -q "Finalize : hasError=true" "$OUT/27_vv_e2e_markers.log" 2>/dev/null; then
+  record PASS P1_finalize_sans_erreur "Finalize hasError=false pour toutes les prises, aucun hasError=true"
+else
+  record FAIL P1_finalize_sans_erreur "Finalize en erreur ou marqueurs absents (27_vv_e2e_markers.log)"
+fi
 
 # --- S25 export ----------------------------------------------------------------
 # E7 (« Aperçu de ta vidéo ») porte « Créer ma vidéo » (e7_create), en bas d'une
@@ -885,6 +953,7 @@ adb logcat -d > "$OUT/logcat.txt" 2>/dev/null
 adb shell dumpsys meminfo "$PKG" 2>/dev/null | head -12 > "$OUT/meminfo.txt"
 
 { echo "tag=$TAG"; echo "apk=$APK"; echo "sha256=$(sha256sum "$APK" | cut -d' ' -f1)"
+  echo "camera=virtuelle (émulateur, -camera-back emulated) — jamais un capteur physique"
   echo "PASS=$pass FAIL=$fail BLOCKED=$blocked"; } > "$OUT/summary.txt"
 cat "$OUT/summary.txt"
 echo "=========== FIN P1 $TAG : PASS=$pass FAIL=$fail BLOCKED=$blocked ==========="

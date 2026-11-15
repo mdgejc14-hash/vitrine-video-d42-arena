@@ -8,8 +8,8 @@
 
 | Volet | État | Commit | Run CI | Notes |
 |---|---|---|---|---|
-| A. Verrouillage caméra | **TERMINÉ** | (voir ci-dessous) | à venir | 6 correctifs + 5 tests verts |
-| B. Labo Android (e2e) | EN COURS | — | — | branches/workflows à ajouter |
+| A. Verrouillage caméra | **TERMINÉ** | 0cd7ac3 | à poller | 6 correctifs + 5 tests verts, module 22/22 |
+| B. Labo Android (e2e) | **TERMINÉ (code) — runs EN COURS** | (commit B) | à poller | branche ajoutée + preuves renforcées |
 | C. APK update signée | EN COURS | — | — | secrets à vérifier |
 | D. Audit Kaggle | EN COURS | — | — | notebook à créer |
 | E. Checkpoint | ACTIF | — | — | ce fichier |
@@ -36,6 +36,19 @@ Aucun nombre de prises codé en dur (référence = `prises.size`, matrice 30 gab
 
 **Résultats locaux** : `D34CameraVerrouillagePriseTest` **5/5 VERT** ; module `:feature-camera` complet **22/22 VERT** (aucune régression).
 
+## B — Labo Android (code TERMINÉ, runs lancés par le push)
+
+- `.github/workflows/android-e2e-lab.yml` : `d42.34-founder-acceptance-fixes` ajouté aux branches `push` → chaque push relance le laboratoire complet, dont `android-e2e-p1`, `android-e2e-camerap`, `camera-diagnostic`.
+- `tools/e2e/run_p1.sh` — preuves renforcées :
+  - **P1_verrouillage_prises** : « Suivant » sans rush valide → guide conservé + message « obligatoire » (D42.34-A.3 prouvé sur émulateur) ;
+  - **P1_preview_streaming** : marqueur VV_E2E `PREVIEW STREAMING` exigé ;
+  - **P1_countdown_avant_recorder** : décompte 3-2-1 complet AVANT chaque `startRecording` (ordre des marqueurs) ;
+  - **P1_finalize_sans_erreur** : `Finalize hasError=false` partout, aucun `hasError=true` ;
+  - **P1_rushs_decodables** : chaque rush non vide ET décodable (ffprobe) ;
+  - étiquettes « caméra virtuelle (émulateur) » sur les preuves de prise + `summary.txt`.
+- `tools/e2e/run_camerap.sh` : mêmes contrôles de marqueurs en fin de phase B (CPB_preview_streaming / CPB_countdown_avant_recorder / CPB_finalize_sans_erreur), étiquettes « caméra virtuelle », commentaire B4 mis en cohérence avec le verrouillage A.3.
+- Mention « caméra virtuelle » explicite dans les summaries — les résultats d'émulateur ne sont jamais présentés comme une validation du capteur physique (validation fondateur sur téléphone réel).
+
 ## Prochaine action exacte
 
-Volet B : ajouter `d42.34-founder-acceptance-fixes` aux branches de déclenchement de `.github/workflows/android-e2e-lab.yml`, relancer `android-e2e-p1` / `android-e2e-camerap` / `camera-diagnostic`, renforcer les preuves caméra avec la mention « caméra virtuelle ».
+Volet C : vérifier les secrets `VV_KEYSTORE_B64` / `VV_STORE_PASSWORD` / `FIREBASE_WEB_API_KEY` (présence, sans afficher les valeurs), puis workflow APK release versionCode 3 signée du keystore du 8 novembre (empreinte `758077eb…`) publiée en artefact 30 jours. Si secrets absents : statut BLOQUÉ consigné, poursuite vers D.

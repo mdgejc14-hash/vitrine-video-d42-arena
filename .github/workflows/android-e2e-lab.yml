@@ -11,7 +11,7 @@ name: android-e2e-lab
 on:
   workflow_dispatch:
   push:
-    branches: [d42.13-lab, main]
+    branches: [d42.13-lab, main, d42.34-founder-acceptance-fixes]
 
 # D42.28 (P0) : clé Firebase RÉELLE injectée dans les APK debug du lab
 # (identifiant client PUBLIC — embarqué dans toute APK distribuée ; la

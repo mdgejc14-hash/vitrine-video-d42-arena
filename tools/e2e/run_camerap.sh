@@ -662,7 +662,7 @@ if $UI wait --text "Filme ta prise" --timeout 30 >/dev/null 2>&1; then
     n1=$(compter_rushs)
     shot B01_prise1; dump B01_prise1
     if [ "$n1" -ge 1 ]; then
-      record PASS CPB_prise1 "$n1 fichier(s) rush enregistré(s) (preuve fichiers, pas seulement libellé)"
+      record PASS CPB_prise1 "$n1 fichier(s) rush enregistré(s) (preuve fichiers, pas seulement libellé) — caméra virtuelle (émulateur)"
     else
       record FAIL CPB_prise1 "retour au guide mais AUCUN fichier rush (voir B01)"
     fi
@@ -714,7 +714,9 @@ if $UI wait --text "Filme ta prise" --timeout 30 >/dev/null 2>&1; then
     # R4 éventuelle déjà gérée dans filmmer_une_prise ; l'app avance seule à la
     # dernière prise exigée (finishWithPrises).
     $UI wait --text "Filme ta prise" --timeout 6 >/dev/null 2>&1 || break
-    # « Suivant » sans filmer = prise sautée (slot vide toléré par le produit)
+    # D42.34-A.3 : « Suivant » est verrouillé tant que la prise courante n'a
+    # pas de rush valide — le tap est émis pour exercer le garde (blocage
+    # attendu si la prise vient d'échouer), puis le cycle re-filme.
     local_revele=0
     for _i in 1 2 3 4 5 6; do
       if $UI inside --text "Suivant" --exact --timeout 3 >/dev/null 2>&1; then local_revele=1; break; fi
@@ -824,7 +826,7 @@ if $UI wait --text "Filme ta prise" --timeout 30 >/dev/null 2>&1; then
     fi
     n1=$(compter_rushs)
     if [ "$n1" -gt "$n0" ] 2>/dev/null; then
-      record PASS CPC_prise_avant "prise ENREGISTRÉE depuis la caméra AVANT ($n0 → $n1 rush(s) — preuve fichier pendant lentille avant)"
+      record PASS CPC_prise_avant "prise ENREGISTRÉE depuis la caméra AVANT VIRTUELLE ($n0 → $n1 rush(s) — preuve fichier pendant lentille avant)"
     else
       record FAIL CPC_prise_avant "aucun rush créé depuis la caméra avant ($n0 → $n1 — voir C01)"
     fi
@@ -852,6 +854,7 @@ else
 fi
 
 echo "tag=$TAG"
+echo "camera=virtuelle (émulateur, -camera-back emulated) — jamais un capteur physique"
 echo "PASS=$pass FAIL=$fail BLOCKED=$blocked"
 echo "=========== FIN $TAG : PASS=$pass FAIL=$fail BLOCKED=$blocked ==========="
 # Le code de sortie du SCRIPT ne fait pas échouer le job : le verdict est lu
