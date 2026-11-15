@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,6 +43,65 @@ class BriefActivity : VitrineActivity() {
     private val verrouSauvegarde = Mutex()
 
     private val rushs = mutableListOf<Uri>()
+
+    // D42.34 (CR-2, P0 ④) : import de rushs existants dans le PARCOURS
+    // GABARIT (témoignages T5 en priorité). Slots alignés sur prises[] :
+    // 1 prise = 1 média, jamais de concaténation aveugle côté moteur.
+    private val rushSlotsImport = MutableStateFlow<List<String>>(emptyList())
+    private var prisesImport: List<video.vitrine.core.model.PriseGuide> = emptyList()
+
+    private val pickRushsGabarit = registerForActivityResult(
+        ActivityResultContracts.OpenMultipleDocuments()
+    ) { uris ->
+        if (uris.isNotEmpty()) {
+            uris.forEach { uri ->
+                runCatching {
+                    contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                }
+            }
+            ajouterRushsImportes(uris)
+        }
+    }
+
+    /** Chaque média choisi remplit le PREMIER slot libre (1 prise = 1 média). */
+    private fun ajouterRushsImportes(nouveaux: List<Uri>) {
+        if (prisesImport.isEmpty()) return
+        val slots = rushSlotsImport.value.toMutableList()
+        while (slots.size < prisesImport.size) slots.add("")
+        for (uri in nouveaux) {
+            val libre = slots.indexOfFirst { it.isBlank() }
+            if (libre < 0) break // tous les slots sont pleins : on ignore le surplus
+            slots[libre] = uri.toString()
+        }
+        rushSlotsImport.value = slots.take(prisesImport.size)
+        persisterSlotsImport()
+    }
+
+    /** « Retirer » : vide le slot (le guide caméra pourra re-filmer la prise). */
+    private fun viderSlotImport(index: Int) {
+        val slots = rushSlotsImport.value.toMutableList()
+        if (index in slots.indices) {
+            slots[index] = ""
+            rushSlotsImport.value = slots
+            persisterSlotsImport()
+        }
+    }
+
+    /**
+     * Persistance à l'étape BRIEF via la clé réservée du brouillon existant
+     * (aucune migration Room) — les slots survivent à une fermeture de l'app
+     * pendant la saisie, comme les champs.
+     */
+    private fun persisterSlotsImport() {
+        saisieFlow.value = (saisieFlow.value - video.vitrine.core.model.RushsImport.CLE_SLOTS) +
+            (
+                video.vitrine.core.model.RushsImport.CLE_SLOTS to
+                    video.vitrine.core.model.RushsImport.serialiser(rushSlotsImport.value)
+                )
+    }
 
     private val pickRushs = registerForActivityResult(
         ActivityResultContracts.OpenMultipleDocuments()
@@ -117,10 +177,27 @@ class BriefActivity : VitrineActivity() {
         t: org.json.JSONObject? = null
     ) {
         val summary = runCatching { GabaritJson.parse(raw, t) }.getOrNull()
-        val prisesCount = runCatching { GabaritJson.parsePrises(raw, t) }
-            .getOrDefault(emptyList()).size
+        val prises = runCatching { GabaritJson.parsePrises(raw, t) }
+            .getOrDefault(emptyList())
+        prisesImport = prises
+        // D42.34 (CR-2) : import proposé UNIQUEMENT pour les gabarits qui le
+        // demandent — témoignage client (T5, « Un client raconte », les 6
+        // secteurs). Les autres formats se tournent intégralement au guide
+        // (politique_saisie.mode = saisie_video).
+        val importAutorise = summary?.format?.startsWith("T5_") == true && prises.isNotEmpty()
+        // Restauration brouillon : slots importés persistés à l'étape BRIEF
+        // (clé réservée), champs saisis — la clé ne fuit jamais dans le
+        // formulaire (retirée avant affichage et avant le résultat).
+        val slotsRestaures = video.vitrine.core.model.RushsImport.deserialiser(
+            restore[video.vitrine.core.model.RushsImport.CLE_SLOTS],
+            prises.size
+        )
+        if (importAutorise) rushSlotsImport.value = slotsRestaures
+        val champsRestaures = restore - video.vitrine.core.model.RushsImport.CLE_SLOTS
+        val prisesCount = prises.size
         setContent {
             VitrineTheme {
+                val rushSlots by rushSlotsImport.collectAsState()
                 var ready by remember { mutableStateOf(false) }
                 var answers by remember { mutableStateOf<Map<String, String>>(emptyMap()) }
                 if (!ready) {
@@ -128,8 +205,19 @@ class BriefActivity : VitrineActivity() {
                     // la saisie à CHAQUE champ (étape BRIEF du brouillon).
                     GabaritBriefScreen(
                         brief = brief,
-                        initialValues = restore,
-                        onValuesChange = { valeurs -> saisieFlow.value = valeurs },
+                        initialValues = champsRestaures,
+                        onValuesChange = { valeurs ->
+                            saisieFlow.value = valeurs + (
+                                video.vitrine.core.model.RushsImport.CLE_SLOTS to
+                                    video.vitrine.core.model.RushsImport.serialiser(rushSlots)
+                                )
+                        },
+                        prisesPourImport = if (importAutorise) prises else emptyList(),
+                        rushSlots = rushSlots,
+                        onImportRush = {
+                            pickRushsGabarit.launch(arrayOf("video/*"))
+                        },
+                        onClearRush = { viderSlotImport(it) },
                         onSubmit = { values ->
                             answers = values
                             ready = true
@@ -142,9 +230,12 @@ class BriefActivity : VitrineActivity() {
                         prisesCount = prisesCount,
                         infos = answers.values.filter { it.isNotBlank() }.take(3).joinToString(" · "),
                         onOk = {
+                            // D42.34 (CR-2) : la clé réservée des slots ne fuit
+                            // jamais dans les extras brief_* du résultat.
+                            val reponse = answers - video.vitrine.core.model.RushsImport.CLE_SLOTS
                             val intent = Intent()
-                            answers.forEach { (k, v) -> intent.putExtra("brief_$k", v) }
-                            intent.putExtra("brief_keys", answers.keys.toTypedArray())
+                            reponse.forEach { (k, v) -> intent.putExtra("brief_$k", v) }
+                            intent.putExtra("brief_keys", reponse.keys.toTypedArray())
                             // D42.27-05d : le parcours gabarit ne renvoyait AUCUN
                             // « script » — le brouillon promu CAMÉRA gardait un
                             // script vide et la reprise retombait en BRIEF (run
@@ -156,6 +247,16 @@ class BriefActivity : VitrineActivity() {
                                 .getOrDefault(emptyList())
                             intent.putExtra("script", scenesGabarit.joinToString(" | ") { it.label })
                             intent.putExtra("duration_s", summary?.dureeTotaleS ?: 30)
+                            // D42.34 (CR-2) : rushs importés ALIGNÉS PAR SLOT
+                            // (taille = prises.size, "" sinon) — même contrat
+                            // que le résultat caméra (finishWithPrises). La
+                            // fusion filmée > importée se fait dans MainActivity.
+                            if (prisesImport.isNotEmpty()) {
+                                val slots = List(prisesImport.size) { i ->
+                                    rushSlotsImport.value.getOrNull(i).orEmpty()
+                                }
+                                intent.putExtra("client_rushes", slots.toTypedArray())
+                            }
                             setResult(RESULT_OK, intent)
                             finish()
                         },

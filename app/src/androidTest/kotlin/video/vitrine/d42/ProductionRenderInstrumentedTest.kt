@@ -284,7 +284,14 @@ class ProductionRenderInstrumentedTest {
         return mots to plans
     }
 
-    private fun rendre(gabaritId: String, secteur: String, tpl: String): Resultat {
+    private fun rendre(
+        gabaritId: String,
+        secteur: String,
+        tpl: String,
+        // D42.34 (CR-2) : E2E témoignage — slots alignés imposés (le cas
+        // normal reste la collecte des fixtures du banc).
+        rushesForces: List<String>? = null,
+    ): Resultat {
         val debut = System.currentTimeMillis()
         val raw = target.assets.open("gabarits/$secteur/$tpl.json")
             .bufferedReader().use { it.readText() }
@@ -296,8 +303,9 @@ class ProductionRenderInstrumentedTest {
         preparerBgm(categorie, secteur)
         alimenterCompteTest()
 
-        val rushes = File(target.filesDir, "d42/rushes").listFiles()
-            ?.sortedBy { it.name }?.map { it.absolutePath } ?: emptyList()
+        val rushes = rushesForces
+            ?: File(target.filesDir, "d42/rushes").listFiles()
+                ?.sortedBy { it.name }?.map { it.absolutePath } ?: emptyList()
         val values = valeursPour(raw)
 
         // D42-P3 : ExportActivity enfile un travail UNIQUE ("vv-export",
@@ -592,6 +600,38 @@ class ProductionRenderInstrumentedTest {
             "RENDUS EN ECHEC ${echecs.size}/${resultats.size} : " +
                 echecs.joinToString(" | ") { "${it.gabarit}=${it.workerState} ${it.erreur}" },
             echecs.isEmpty(),
+        )
+    }
+
+    /**
+     * D42.34 (CR-2, P0 ④) — E2E témoignage client (T5) avec contrat slots :
+     * un rush « importé au brief » occupe le slot de SA prise (index 0), la
+     * prise 2 reste un slot VIDE (ni filmée ni importée) — RushSlots doit la
+     * remplacer par la voisine (comportement D41 F55) et le rendu doit
+     * produire un MP4 vérifié (durée/résolution/bitrate/3 images) avec les
+     * logs moteur. REQUIERT émulateur/appareil (connectedAndroidTest) :
+     * exécutable sur le banc, pas en sandbox CI — à lancer avec les mêmes
+     * args que rendusDeProduction avant la porte d'approbation.
+     */
+    @Test
+    fun renduTemoignageSlotsImportes() {
+        appliquerLangue()
+        copierFixtures()
+        val disponibles = File(target.filesDir, "d42/rushes").listFiles()
+            ?.sortedBy { it.name }?.map { it.absolutePath } ?: emptyList()
+        assertTrue("fixtures rushs absentes (copierFixtures)", disponibles.isNotEmpty())
+        // T5 = 2 prises (« Le client qui parle », « Le vêtement porté ») :
+        // [importé, ""] — exactement la forme produite par le parcours corrigé.
+        val slots = listOf(disponibles.first(), "")
+        val r = rendre("vetements_mode_T5", "vetements_mode", "T5", rushesForces = slots)
+        Log.i(
+            TAG,
+            "  → ok=${r.ok} etat=${r.workerState} ${r.dureeMs}ms " +
+                "taille=${r.mp4?.length() ?: 0} ${r.erreur ?: ""}"
+        )
+        assertTrue(
+            "rendu T5 slots importés en échec : ${r.workerState} ${r.erreur}",
+            r.ok,
         )
     }
 

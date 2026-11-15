@@ -1,6 +1,8 @@
 package video.vitrine.feature.brief
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,11 +45,13 @@ import video.vitrine.core.designsystem.Muted
 import video.vitrine.core.designsystem.Navy
 import video.vitrine.core.designsystem.OrangeDeep
 import video.vitrine.core.designsystem.GrisLiserai
+import video.vitrine.core.designsystem.VertTexte
 import video.vitrine.core.designsystem.OrangeStore
 import video.vitrine.core.designsystem.OrangeVoile
 import video.vitrine.core.model.BriefField
 import video.vitrine.core.model.BriefSection
 import video.vitrine.core.model.GabaritBrief
+import video.vitrine.core.model.PriseGuide
 
 /**
  * Ecran E5 (maquettes E5_*_Brief) : formulaire 100 % pilote par le gabarit JSON
@@ -61,6 +65,14 @@ fun GabaritBriefScreen(
     // et callback à CHAQUE champ (persistance de la saisie en cours).
     initialValues: Map<String, String> = emptyMap(),
     onValuesChange: (Map<String, String>) -> Unit = {},
+    // D42.34 (CR-2, P0 ④) : import de rushs existants — proposé UNIQUEMENT
+    // pour les gabarits qui le demandent (T5 témoignage client). Liste non
+    // vide = section affichée ; 1 prise = 1 média (contrat slots explicite,
+    // jamais de concaténation aveugle côté moteur).
+    prisesPourImport: List<PriseGuide> = emptyList(),
+    rushSlots: List<String> = emptyList(),
+    onImportRush: () -> Unit = {},
+    onClearRush: (Int) -> Unit = {},
     onSubmit: (Map<String, String>) -> Unit
 ) {
     // Audit D40 (B10) : defauts du JSON pre-remplis (FCFA « deja choisi »),
@@ -124,6 +136,17 @@ fun GabaritBriefScreen(
                     onChoice = { id, c -> choiceByField = choiceByField + (id to c) }
                 )
             }
+            // D42.34 (CR-2) : section import rushs — uniquement si le gabarit
+            // le demande (T5 témoignage : le client existe souvent déjà en
+            // vidéo/photo). Facultatif : filmer au guide reste possible.
+            if (prisesPourImport.isNotEmpty()) {
+                SectionRushsImport(
+                    prises = prisesPourImport,
+                    slots = rushSlots,
+                    onImport = onImportRush,
+                    onClear = onClearRush,
+                )
+            }
         }
         val reponse = values + checks.mapValues { (id, checked) ->
             if (!checked) "false" else (choiceByField[id] ?: "true")
@@ -160,6 +183,124 @@ private fun PiedContinuer(enabled: Boolean, onContinue: () -> Unit) {
             )
         }
     }
+}
+
+/**
+ * D42.34 (CR-2, P0 ④) : section « Vidéos du client » — une ligne par PRISE
+ * du gabarit (contrat slots : 1 prise = 1 média, index aligné sur
+ * decoupage_prises du moteur). Facultative et honnête : le marchand peut
+ * tout filmer au guide caméra à la place.
+ */
+@Composable
+private fun SectionRushsImport(
+    prises: List<PriseGuide>,
+    slots: List<String>,
+    onImport: () -> Unit,
+    onClear: (Int) -> Unit,
+) {
+    val remplis = slots.count { it.isNotBlank() }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(BleuVoile, RoundedCornerShape(14.dp))
+            .padding(14.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            stringResource(R.string.brief_import_titre),
+            style = video.vitrine.core.designsystem.VitrineText.H3,
+            color = Navy,
+        )
+        Text(
+            stringResource(R.string.brief_import_note),
+            style = video.vitrine.core.designsystem.VitrineText.Sub,
+            color = Muted,
+        )
+        prises.forEachIndexed { index, prise ->
+            LignePriseImport(
+                numero = index + 1,
+                libelle = prise.label,
+                media = slots.getOrNull(index).orEmpty(),
+                onChoose = onImport,
+                onClear = { onClear(index) },
+            )
+        }
+        if (remplis < prises.size) {
+            video.vitrine.core.designsystem.BoutonSecondaire(
+                libelle = stringResource(R.string.brief_import_choisir),
+                onClick = onImport,
+                testTag = "brief_import_choisir",
+            )
+        }
+        Text(
+            stringResource(R.string.brief_import_ou_filmer),
+            style = video.vitrine.core.designsystem.VitrineText.Sub,
+            color = Muted,
+        )
+    }
+}
+
+/** Une ligne de prise : « Prise N · libellé » + média choisi ou bouton local. */
+@Composable
+private fun LignePriseImport(
+    numero: Int,
+    libelle: String,
+    media: String,
+    onChoose: () -> Unit,
+    onClear: () -> Unit,
+) {
+    Surface(
+        color = Blanc,
+        shape = RoundedCornerShape(10.dp),
+        border = androidx.compose.foundation.BorderStroke(1.dp, Line),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    stringResource(R.string.brief_import_prise, numero, libelle),
+                    style = video.vitrine.core.designsystem.VitrineText.Sub,
+                    color = Navy,
+                )
+                if (media.isNotBlank()) {
+                    Text(
+                        nomCourt(media),
+                        style = video.vitrine.core.designsystem.VitrineText.Tiny,
+                        color = VertTexte,
+                    )
+                }
+            }
+            if (media.isBlank()) {
+                Text(
+                    stringResource(R.string.brief_import_vide),
+                    style = video.vitrine.core.designsystem.VitrineText.Tiny,
+                    color = OrangeDeep,
+                    modifier = Modifier
+                        .clickable { onChoose() }
+                        .padding(6.dp),
+                )
+            } else {
+                Text(
+                    stringResource(R.string.brief_import_retirer),
+                    style = video.vitrine.core.designsystem.VitrineText.Tiny,
+                    color = OrangeDeep,
+                    modifier = Modifier
+                        .clickable { onClear() }
+                        .padding(6.dp),
+                )
+            }
+        }
+    }
+}
+
+/** Nom court honnête du média choisi (dernier segment de l'URI, borné). */
+private fun nomCourt(uri: String): String {
+    val brut = uri.substringAfterLast('/').ifBlank { uri }
+    return if (brut.length > 28) brut.take(25) + "…" else brut
 }
 
 @Composable

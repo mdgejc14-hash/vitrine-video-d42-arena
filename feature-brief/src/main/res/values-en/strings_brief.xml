@@ -27,4 +27,11 @@
     <string name="brief_badge_stock_limite">Limited stock</string>
     <string name="brief_badge_places_limitees">Limited spots</string>
     <string name="brief_badge_qualite_garantie">Guaranteed quality</string>
+    <string name="brief_import_titre">Customer videos</string>
+    <string name="brief_import_note">Already have a video of the customer? Add it to the matching take. One video per take.</string>
+    <string name="brief_import_choisir">Choose from gallery</string>
+    <string name="brief_import_prise">Take %1$d · %2$s</string>
+    <string name="brief_import_vide">Add</string>
+    <string name="brief_import_retirer">Remove</string>
+    <string name="brief_import_ou_filmer">You can also film these takes with the camera guide after Continue.</string>
 </resources>

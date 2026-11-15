@@ -252,15 +252,28 @@ class MainActivity : VitrineActivity() {
      * d'onActivityResult pour la complexite cyclomatique (detekt <= 15).
      */
     private fun launchExport(rush: String, camRushes: Array<String>?) {
-        val rushes = ((briefRushs ?: emptyArray()) + (camRushes ?: emptyArray()))
-            .takeIf { it.isNotEmpty() }
+        // D42.34 (CR-2, P0 ④) : contrat slots EXPLICITE — en parcours gabarit,
+        // brief (rushs importés) et caméra (prises filmées) sont tous deux
+        // alignés sur prises[] (index = prise, "" = sans média). La fusion est
+        // index par index, la prise FILMÉE prime sur l'importée — JAMAIS de
+        // concaténation aveugle (elle détachait les rushs de leurs prises).
+        // Le parcours générique (sans gabarit) garde la concat historique.
+        val rushes: List<String>? = if (gabaritId != null) {
+            video.vitrine.core.model.RushsImport.fusionParSlot(
+                briefRushs?.toList(),
+                camRushes?.toList(),
+            )
+        } else {
+            ((briefRushs ?: emptyArray()) + (camRushes ?: emptyArray()))
+                .takeIf { it.isNotEmpty() }?.toList()
+        }
         startActivity(
             Intent(ACTION_EXPORT)
                 .setPackage(packageName)
                 .putExtra("input", rush)
                 .putExtra("script", briefScript)
                 .putExtra("duration_s", briefDuration)
-                .putExtra("client_rushes", rushes)
+                .putExtra("client_rushes", rushes?.toTypedArray())
                 .putExtra("firebase_token", authToken)
                 .putExtra("gabarit_id", gabaritId)
                 .also { intent ->
@@ -313,7 +326,11 @@ class MainActivity : VitrineActivity() {
     /** Recueil des reponses brief (extras brief_*) pour apercu E7 et export. */
     private fun collectBriefValues(data: Intent?) {
         data?.getStringArrayExtra("brief_keys")?.forEach { k ->
-            briefValues[k] = data.getStringExtra("brief_$k").orEmpty()
+            // D42.34 (CR-2) : la clé réservée des slots importés ne fait pas
+            // partie des réponses métier (double défense, déjà filtrée en amont).
+            if (k != video.vitrine.core.model.RushsImport.CLE_SLOTS) {
+                briefValues[k] = data.getStringExtra("brief_$k").orEmpty()
+            }
         }
     }
 

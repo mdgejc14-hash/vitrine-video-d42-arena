@@ -27,4 +27,11 @@
     <string name="brief_badge_stock_limite">Stock limité</string>
     <string name="brief_badge_places_limitees">Places limitées</string>
     <string name="brief_badge_qualite_garantie">Qualité garantie</string>
+    <string name="brief_import_titre">Vidéos du client</string>
+    <string name="brief_import_note">Vous avez déjà une vidéo du client ? Ajoutez-la à la prise correspondante. Une seule vidéo par prise.</string>
+    <string name="brief_import_choisir">Choisir dans la galerie</string>
+    <string name="brief_import_prise">Prise %1$d · %2$s</string>
+    <string name="brief_import_vide">Ajouter</string>
+    <string name="brief_import_retirer">Retirer</string>
+    <string name="brief_import_ou_filmer">Vous pouvez aussi filmer ces prises avec le guide caméra après Continuer.</string>
 </resources>

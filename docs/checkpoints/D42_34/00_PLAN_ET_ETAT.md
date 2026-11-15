@@ -12,15 +12,29 @@ défauts démontrés par le fondateur (ordre D42.34 + addendum « couteau suisse
 | Branche active | `d42.34-founder-acceptance-fixes` (créée depuis 85bb823, aucun reset) |
 | main | `bb759f8` — intouché, vérifié |
 | Dernier HEAD distant sauvegardé | `60ab918` (diagnostic CR-1 + matrice 30 gabarits) |
-| Lot actif | **Lot 1 — Catalogue (corrections appliquées, en cours de validation CI)** |
-| Lots terminés | Lot 0 (reprise, diagnostic, sources C/D) |
-| Lots en cours | Lot 1 : CR-1.1 + CR-1.2 corrigés, 18/18 tests locaux, commit en préparation |
-| Lots non commencés | 2 Brief/rushs · 3 Caméra · 4 Identité/abos/montage · 5 Visuel · 6 Non-régression |
+| Lot actif | **Lot 2 — Brief/import rushs (corrections appliquées, commit en préparation)** |
+| Lots terminés | Lot 0 (reprise, diagnostic, sources C/D) · Lot 1 (catalogue, commit 420d697) |
+| Lots en cours | Lot 2 : CR-2 corrigé (picker gabarit T5, slots, fusion), 36 tests locaux verts |
+| Lots non commencés | 3 Caméra · 4 Identité/abos/montage · 5 Visuel · 6 Non-régression |
 | CI | locale : feature-catalog 18 tests/0 échec, ktlint+detekt verts ; distante D42.34 : à venir (1er run après push Lot 1) |
 | Éléments locaux non poussés | corrections Lot 1 (5 fichiers) + test D34Lot1 + checkpoints |
 
 ## Journal des opérations (ajouts récents d'abord)
 
+- **Lot 2 — import rushs parcours gabarit APPLIQUÉ** (CR-2, détail et preuves
+  dans `03_BRIEF_IMPORT_RUSHS.md`) :
+  - `GabaritBriefScreen` : section « Vidéos du client » (T5 témoignage
+    uniquement, 1 prise = 1 média, Retirer par slot) ;
+  - `BriefActivity` : picker `OpenMultipleDocuments` dédié mode gabarit,
+    `video/*` (limite honnête : le moteur compose des rushs vidéo),
+    URI persistantes, slots persistés au brouillon (clé réservée, zéro
+    migration Room) ;
+  - `MainActivity.launchExport` : fusion PAR SLOT (filmée > importée) —
+    fin de la concaténation aveugle ; parcours générique inchangé ;
+  - `core-model.RushsImport` : règle pure + 7 tests JVM ;
+  - matrice 02 enrichie (colonnes import_rushs / prise_slots_import) ;
+  - E2E témoignage `renduTemoignageSlotsImportes` ajouté au harnais
+    instrumenté (émulateur requis — à lancer sur le banc avant la porte).
 - **Lot 1 — corrections catalogue APPLIQUÉES** (CR-1.1 + CR-1.2, détail et
   preuves dans `01_AUDIT_CAUSES_RACINES.md`) :
   - `MainActivity.restaurerSession()` relit `"sector"` de `vv_session` ;
