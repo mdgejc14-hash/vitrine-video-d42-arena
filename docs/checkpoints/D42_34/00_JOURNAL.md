@@ -1,5 +1,5 @@
 
-## 17/11 soir — Lot C livré + Lot E vérifié + recaptures post-images
+## 15/11 — Lot C livré + Lot E vérifié + recaptures post-images
 
 - **Lot C LIVRÉ** : `10_AUDIT_FIDELITE_DESIGN.md` (bdee8f7) — 34 maquettes
   auditées : 18 CONFORME / 5 ÉCART / 4 NON PROUVÉ / 7 NON APPLICABLE.
@@ -22,7 +22,7 @@
   au prochain tour (batiment T2-T5, coiffure, immo_auto, restaurants, shops,
   vetements T1-T5 — prompts prêts dans GENERATED_ASSETS.md).
 
-## 17/11 soir (suite) — Lot F V1 : galerie unique créée
+## 15/11 (suite) — Lot F V1 : galerie unique créée
 
 - `visual-review/README.md` : porte d'entrée unique, 20 sections dans l'ordre
   du parcours réel, sommaire + ancres + retours, réf. fondateur vs APRÈS
@@ -35,7 +35,7 @@
   tour (limite de génération 10/tour atteinte deux fois).
 - Push 18f8f21. CI en cours : bdee8f7, e4f23e3, 18f8f21 (docs seuls).
 
-## 18/11 — ORDRE FINAL : chaîne de génération en place, LOT 1/3 livré
+## 15/11 (matin) — ORDRE FINAL : chaîne de génération en place, LOT 1/3 livré
 
 - **File persistante** ASSET_GENERATION_QUEUE.csv (29 entrées, lots 10+10+9,
   prompts enrichis des JSON réels) + scripts/build_asset_queue.py +

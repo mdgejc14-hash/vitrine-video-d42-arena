@@ -3,7 +3,7 @@
 Branche : `d42.34-founder-acceptance-fixes` · Base : 85bb823 (D42.33 CI
 verte) → 0c5b4ce (Lot 0) → 420d697 (Lot 1) → f586678 (Lot 2) → 80b0cf8
 (Lot 3) → c83e884 (Lot 4) → 01f1044 (correctif seed CI) → 139e4b3 (Lot 5)
-→ commit final (Lot 6). Budget : 0 FCFA. Durée : 15→17/11/2026.
+→ commit final (Lot 6). Budget : 0 FCFA. Durée : 13→15/11/2026.
 
 ## Ce qui a été corrigé (résumé fondateur)
 

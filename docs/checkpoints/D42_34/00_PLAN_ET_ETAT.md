@@ -21,7 +21,7 @@ défauts démontrés par le fondateur (ordre D42.34 + addendum « couteau suisse
 
 ## Journal des opérations (ajouts récents d'abord)
 
-- **17/11 (fin de journée) — ORDRE FONDATEUR PRIORITAIRE « finalisation
+- **15/11 — ORDRE FONDATEUR PRIORITAIRE « finalisation
   visuelle intégrale + galerie unique » reçu. Lot A (sécurisation) TERMINÉ :**
   - **Rollback #13 détéré** : lab23 avait régressé à 8d530b1 (ère D42.27)
     avec 270 fichiers non commités ; GitHub intact à `e16d112` (CI verte).
@@ -49,7 +49,7 @@ défauts démontrés par le fondateur (ordre D42.34 + addendum « couteau suisse
     défilante (visual-review/README.md + 12_MANIFEST_GALERIE.csv), validation
     finale (13_RAPPORT_CONFORMITE_VISUELLE.md).
 
-- **17/11 — PROTOCOLE DE RÉCUPÉRATION WORKSPACE (quota 128 Mo dépassé)** :
+- **15/11 — PROTOCOLE DE RÉCUPÉRATION WORKSPACE (quota 128 Mo dépassé)** :
   - **GitHub d'abord** : HEAD distant `2dfd907` = local, `git status` 0
     modification, `git fsck` OK — RIEN à réconcilier, mission déjà livrée ;
   - **Mémoire mesurée** : RAM 1982 Mo (1736 disponibles, aucun process

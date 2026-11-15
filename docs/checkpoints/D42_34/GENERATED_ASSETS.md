@@ -19,7 +19,7 @@ projet. Ce registre trace la provenance de chaque ressource intégrée.
 | sector_vetements_mode.webp | assets_gen/sector_vetements_mode.png | Portants de vêtements wax | Originale générée IA |
 | apercu_batiment_travaux_t1.webp | assets_gen/apercu_batiment_T1.png | Arrivage matériaux (T1 BTP) | Originale générée IA |
 
-## Aperçus catalogue — lot 1 (18/11, ordre final §2)
+## Aperçus catalogue — lot 1 (15/11, ordre final §2)
 
 | apercu_batiment_travaux_t2.webp | assets_gen/apercu_batiment_travaux_T2.png | Avant et après — Bâtiment & Travaux (Le chantier au début ; Une première étape ; Une deuxième éta…) | Originale générée IA · sha256 7bb9496f7172b3ae… |
 | apercu_batiment_travaux_t3.webp | assets_gen/apercu_batiment_travaux_T3.png | Montrer un produit — Bâtiment & Travaux (Le lieu du travail ; Les outils et matériaux ; Le résultat d…) | Originale générée IA · sha256 85c9906d312221c3… |
@@ -32,7 +32,7 @@ projet. Ce registre trace la provenance de chaque ressource intégrée.
 | apercu_coiffure_beaute_t5.webp | assets_gen/apercu_coiffure_beaute_T5.png | Un client raconte — Coiffure & Beauté (Le client qui parle ; Le résultat du soin…) | Originale générée IA · sha256 37efc77e60b69f7d… |
 | apercu_immo_auto_t1.webp | assets_gen/apercu_immo_auto_T1.png | Nouvel arrivage — Immo & Auto (L’extérieur du bien ou de la voiture ; L’intérieur ; Une inf…) | Originale générée IA · sha256 68aba72c3d9fe60f… |
 
-## Recaptures effectuées (17/11 soir, Robolectric NATIVE, toolchain locale)
+## Recaptures effectuées (15/11, Robolectric NATIVE, toolchain locale)
 
 - D34-11 (slide 1 marchande) REMPLACÉE — diff PIL 68,1 % vs ancienne (image originale rendue)
 - D34-13 (slide 2 restauration) + D34-14 (slide 3 mode) AJOUTÉES

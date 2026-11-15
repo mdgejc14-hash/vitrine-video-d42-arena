@@ -1,6 +1,6 @@
 # D42.34 — Audit de fidélité design vs 34 maquettes fondateur (Lot C)
 
-**Date :** 17/11/2026 (ordre fondateur « finalisation visuelle intégrale », §2)
+**Date :** 15/11/2026 (ordre fondateur « finalisation visuelle intégrale », §2)
 **Base auditée :** commit 57e720f (D42.34 + Lot A/B + Lot D 10/39), CI 43710292516 SUCCESS.
 **Périmètre :** les 34 maquettes fondateur (`docs/checkpoints/D42_33/SOURCES/maquettes/`, 1179×2556) comparées à l'application réelle. Les 16 maquettes de la planche historique en sont un sous-ensemble.
 
