@@ -13,8 +13,9 @@ on:
   push:
     # D42.33 : validation continue sur la branche de refonte visuelle (debug
     # + tests unitaires uniquement — AUCUNE release, RC15 reste immuable).
+    # D42.34 : idem sur la branche des corrections fondateur avant approbation.
     # À retirer avant la fusion finale.
-    branches: [main, d42.33-visual-redesign]
+    branches: [main, d42.33-visual-redesign, d42.34-founder-acceptance-fixes]
   pull_request:
 
 # D42.28 (P0) : clé Firebase RÉELLE injectée dans TOUS les builds de ce
