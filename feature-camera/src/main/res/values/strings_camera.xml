@@ -13,6 +13,7 @@
     <string name="camera_scene_front">Filmez votre produit de face, mouvement lent</string>
     <string name="camera_scene_detail">Plan rapproché : détails utiles, textures</string>
     <string name="camera_scene_use">Montrez le produit en situation, usage réel</string>
+    <string name="camera_take_required">Prise %1$d/%2$d obligatoire : filme-la avant de continuer.</string>
     <string name="camera_take_failed">Prise ratée (fichier incomplet). Réessaie cette prise — rien n’a été perdu.</string>
     <string name="camera_permission_needed">Accès caméra nécessaire</string>
     <string name="camera_permission_body">Sans la caméra, aucune prise ne peut être enregistrée. Autorise l’accès pour continuer.</string>

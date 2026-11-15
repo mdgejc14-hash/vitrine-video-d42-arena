@@ -151,14 +151,27 @@ class CameraGuideActivity : VitrineActivity() {
         }
     }
 
-    /** D42.27 (§7) : reprise de tournage — slots restaurés du brouillon (uniquement
-     *  les fichiers ENCORE EXISTANTS : un chemin disparu ne bloque jamais). */
+    /** D42.27 (§7) : reprise de tournage — slots restaurés du brouillon.
+     *  D42.34-A (6) : positions vides CONSERVÉES — AUCUN compactage. Avant,
+     *  les chemins blancs ou disparus étaient filtrés : tous les rushs
+     *  suivants glissaient d'un cran et le montage assemblait les mauvaises
+     *  scènes. Un slot invalide (vide, fichier disparu ou vide) reste à SON
+     *  index et sera signalé comme prise manquante à refaire. */
     private fun restaurerBrouillon() {
         intent.getStringArrayExtra("restore_prise_files")?.forEach { chemin ->
-            if (chemin.isNotBlank() && File(chemin).exists()) priseFiles.add(chemin)
+            priseFiles.add(if (priseValide(chemin)) chemin else "")
         }
         val restoreIdx = intent.getIntExtra("restore_prise_idx", -1)
         if (restoreIdx in 0..99) priseIdx = restoreIdx
+    }
+
+    /** D42.34-A (1) : une prise n'est valide que si son fichier existe, est
+     *  un fichier RÉGULIER et possède une taille strictement supérieure à
+     *  zéro. Aucune autre condition ne valide un rush. */
+    private fun priseValide(chemin: String?): Boolean {
+        if (chemin.isNullOrBlank()) return false
+        val fichier = File(chemin)
+        return fichier.isFile && fichier.length() > 0L
     }
 
     /** Charge prises + résumé du gabarit ; D42.30 : Refaire/Suivant n'existent
@@ -566,26 +579,37 @@ class CameraGuideActivity : VitrineActivity() {
      * D41 (F53) : la prise n'est validee qu'au FINALIZE reussi du recorder —
      * avant, stopRecording ajoutait le fichier immediatement (potentiellement
      * incomplet/corrompu) et l'echec d'enregistrement etait totalement muet.
+     * D42.34-A (2) : la validation exige en PLUS un fichier NON VIDE —
+     * hasError() == false ET fichier régulier de taille > 0. Sinon le
+     * fichier incomplet est SUPPRIMÉ et la prise reste à refaire.
      */
     private fun onVideoEvent(event: androidx.camera.video.VideoRecordEvent, file: File) {
         if (event !is androidx.camera.video.VideoRecordEvent.Finalize) return
         Log.i(TAG_E2E, "Finalize : hasError=${event.hasError()} taille=${file.length()} octets -> ${file.name}")
-        runOnUiThread {
-            if (!event.hasError()) {
-                onPriseFinalisee(file)
-            } else {
-                runCatching { file.delete() }
-                priseEnCoursDeFinalisation = false
-                // Message d'echec EN DERNIER (updateStatus() ecraserait le texte
-                // du guide) : la prise echouee est supprimee, l'utilisateur reste
-                // sur la meme prise et peut la refaire (aucun fichier corrompu
-                // n'atteint le montage).
-                updateStatus()
-                findViewById<TextView>(R.id.camera_guide_text).setText(R.string.camera_take_failed)
-                // D42.16 (A3) : le setText direct invalide le cache de libellés.
-                dernierTexteGuide = 0
-            }
+        runOnUiThread { validerPriseFinalisee(event.hasError(), file) }
+    }
+
+    /** D42.34-A (2) — verdict du Finalize (public pour test unitaire ciblé). */
+    fun validerPriseFinalisee(hasError: Boolean, file: File) {
+        if (!hasError && priseValide(file.absolutePath)) {
+            onPriseFinalisee(file)
+            return
         }
+        runCatching { file.delete() }
+        priseEnCoursDeFinalisation = false
+        // Message d'echec EN DERNIER (updateStatus() ecraserait le texte
+        // du guide) : la prise echouee est supprimee, l'utilisateur reste
+        // sur la meme prise et peut la refaire (aucun fichier vide/corrompu
+        // n'atteint le montage).
+        updateStatus()
+        findViewById<TextView>(R.id.camera_guide_text).setText(R.string.camera_take_failed)
+        // D42.16 (A3) : le setText direct invalide le cache de libellés.
+        dernierTexteGuide = 0
+        Log.w(
+            TAG_E2E,
+            "prise REJETÉE (hasError=$hasError, taille=${file.length()} o) : " +
+                "fichier incomplet supprimé, prise à refaire"
+        )
     }
 
     private fun onPriseFinalisee(file: File) {
@@ -639,22 +663,41 @@ class CameraGuideActivity : VitrineActivity() {
         updateStatus()
     }
 
+    /** D42.34-A (4) : RESULT_OK exige que TOUS les slots requis par
+     *  prises.size soient valides (fichier régulier non vide). Si une prise
+     *  manque, retour à SON index + message, montage NON lancé (A.5).
+     *  Aucun nombre de prises codé en dur : la référence est prises.size
+     *  (matrice 30 gabarits / 81 prises, 2 à 4 par modèle). */
     private fun finishWithPrises() {
         while (priseFiles.size < prises.size) priseFiles.add("")
-        val files = priseFiles.toTypedArray()
-        val premierReel = priseFiles.firstOrNull { it.isNotBlank() }
-        if (premierReel == null) {
-            setResult(RESULT_CANCELED)
-            finish()
+        val manquante = (0 until prises.size).firstOrNull { !priseValide(priseFiles.getOrNull(it)) }
+        if (manquante != null) {
+            signalerPriseManquante(manquante)
             return
         }
+        val files = priseFiles.toTypedArray()
         setResult(
             RESULT_OK,
             Intent()
-                .putExtra("input", premierReel)
+                .putExtra("input", priseFiles.first())
                 .putExtra("client_rushes", files),
         )
         finish()
+    }
+
+    /** D42.34-A (5) : prise manquante/invalide → revenir à SON index,
+     *  message compréhensible, montage NON lancé (l'activité reste ouverte). */
+    private fun signalerPriseManquante(index: Int) {
+        priseIdx = index.coerceIn(0, (prises.size - 1).coerceAtLeast(0))
+        updateStatus()
+        dernierTexteGuide = 0
+        findViewById<TextView>(R.id.camera_guide_text).text =
+            getString(R.string.camera_take_required, index + 1, prises.size)
+        Log.i(
+            TAG_E2E,
+            "prise ${index + 1}/${prises.size} manquante ou invalide — " +
+                "retour à son index, montage NON lancé"
+        )
     }
 
     /** « Refaire » (D19 : aucun bouton mort) : vide le slot de la prise courante. */
@@ -666,17 +709,20 @@ class CameraGuideActivity : VitrineActivity() {
         }
     }
 
-    /** « Suivant » sans enregistrer = passer cette prise (slot vide tolere).
-     *  D41 (F49) : derniere prise passee SANS aucune prise reelle = retour honnete
-     *  au navigateur (RESULT_CANCELED), plus d'ecran muet sans issue. */
+    /** « Suivant » : navigation uniquement — D42.34-A (3) : ne JAMAIS
+     *  permettre de contourner une prise obligatoire sans rush valide.
+     *  Un slot vide/invalide bloque la progression à SON index avec un
+     *  message compréhensible. Sortie sans prise : bouton retour système
+     *  (RESULT_CANCELED par défaut). */
     private fun skipPrise() {
+        if (!priseValide(priseFiles.getOrNull(priseIdx))) {
+            signalerPriseManquante(priseIdx)
+            return
+        }
         if (priseIdx < prises.size - 1) {
             priseIdx += 1
-        } else if (priseFiles.any { it.isNotBlank() }) {
-            finishWithPrises()
         } else {
-            setResult(RESULT_CANCELED)
-            finish()
+            finishWithPrises()
         }
     }
 
