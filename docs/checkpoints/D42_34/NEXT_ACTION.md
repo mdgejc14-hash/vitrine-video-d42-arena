@@ -1,54 +1,56 @@
-# NEXT_ACTION — D42.34 finalisation visuelle intégrale (ordre fondateur 17/11)
+# NEXT_ACTION — D42.34 ordre final (génération en chaîne, échéance 18/11)
 
-Base protégée : D42.34 fonctionnel 2dfd907 (CI SUCCESS, 360 tests).
-Chaîne visuelle : 60a9d51 (A) → 91ad5a6 (B) → 57e720f (D 10/39) → bdee8f7 (C) →
-e4f23e3 (recaptures carrousels/secteurs) → 18f8f21 (F galerie V1) → prompts (à committer).
+Base : 2dfd907 (fonctionnel, immuable) → … → c03159b (HEAD).
+Chaîne de ce tour : e645e46 (file+scripts) → 2c69d77 (LOT 1) → 82c2402
+(VERIFIED) → 8930838 (blocage lot 2 consigné) → c03159b (preuves rendu + test).
 
-## ÉTAT DES LOTS
+## REPRISE IMMÉDIATE (prochain tour) — LOT 2/3
 
-- **A** TERMINÉ — rollback #13 isolé, re-clone partiel propre.
-- **B** TERMINÉ — 11_INVENTAIRE_COMPLET_ECRANS.csv (73 écrans/états).
-- **C** TERMINÉ — 10_AUDIT_FIDELITE_DESIGN.md (34 maquettes : 18 CONFORME /
-  5 ÉCART / 4 NON PROUVÉ / 7 NON APPLICABLE, méthode PIL+code assumée).
-- **D** EN COURS 10/39 — carrousels(3)+secteurs(6)+apercu batiment T1 intégrés ;
-  mécanisme ApercuGabarit compilé et vérifié (build local + CI 43710292516 SUCCESS).
-  **29 aperçus restants : prompts prêts en fin de GENERATED_ASSETS.md.**
-- **E** VÉRIFIÉ SANS CORRECTION CODE — VR-051/059/063/064 déjà corrigés en
-  CR-4 (phases KEY_PHASE, TexteBonjour, CTA « Choisir … » FR/EN). Reste des
-  RECAPTURES uniquement (→ F).
-- **F** V1 FAITE — visual-review/README.md (97 entrées, 20 sections, zéro lien
-  mort) + 12_MANIFEST_GALERIE.csv + script régénérable scripts/galerie_lotf.py.
-  Recaptures D34-11/13/14/15 (post-images) incluses.
-- **G** PAS COMMENCÉ — 13_RAPPORT_CONFORMITE_VISUELLE.md après le reste.
+**Limite plateforme : 10 images générées par tour (stricte, vérifiée).**
+Le lot 1 a consommé le quota de ce tour ; le lot 2 a été refusé
+(« Image generation limit of 10 reached for this turn ») et remis PENDING.
 
-## PROCHAINES ÉTAPES (ordre)
+```
+cd /home/user/lab23
+python3 scripts/process_catalog_asset_queue.py next 10   # réserve lot 2
+# → générer les 10 images via l'outil (prompts affichés par next)
+#    fichiers : /home/user/assets_gen/apercu_<secteur>_T<n>.png
+python3 scripts/process_catalog_asset_queue.py integrate <ids...>
+python3 scripts/process_catalog_asset_queue.py emit-map && ... verify
+git add -A && git commit && git push   (+ git checkout gradle.properties avant)
+# vérifier fichiers distants (API contents 200) puis mark-verified <ids...>
+```
 
-1. **Vérifier CI** de bdee8f7 (43711253813), e4f23e3 (43711677451),
-   18f8f21 (43711914577) — attendu SUCCESS (docs/captures seuls, zéro code).
-2. **Lot D suite (AU PROCHAIN TOUR, limite 10 images/tour)** : générer lot 1
-   (batiment T2–T5, coiffure T1–T5, immo_auto T1 — prompts prêts), convertir
-   PIL 640×360 webp q86, intégrer drawable-nodpi + ApercuGabarit.map, update
-   GENERATED_ASSETS + inventaire VR-016→019, commit+push. Puis lot 2, lot 3
-   les tours suivants.
-3. **Recaptures Lot F** après Lot D complet : relancer
-   :feature-catalog:testDebugUnitTest (tests en secteur Mode → penser à un
-   test secteur Bâtiment pour montrer les aperçus), remplacer D34-01/02/03,
-   ajouter paywall CTA FR/EN, dashboard « Bonjour, {prénom} », montage phases,
-   consentement R4 (dialogue), dialogue reprise ; régénérer la galerie
-   (`python3 scripts/galerie_lotf.py` — extraire d'abord /tmp/apres33 et
-   /tmp/maquettes si sandbox réinitialisé : git archive origin/...).
-4. **Lot G** : 13_RAPPORT_CONFORMITE_VISUELLE.md + validation finale
-   (tests ciblés, CI verte, workspace < 100 MB).
+Lot 2 : immo_auto T2-T5, restaurants_maquis T1-T5, shops_small_business T1.
+Lot 3 (ensuite) : shops T2-T5, vetements_mode T1-T5 (9 images).
 
-## RAPPELS PERMANENTS
+## Après les 30/30 (même tour que le lot 3 si quota partagé sinon suivant)
 
-- Toolchain locale : cmdline-tools **15859902** (13114758 échoue : pas de
-  platforms;android-37) ; la plateforme s'appelle désormais **android-37.0**.
-  JDK17 /opt/toolchain/jdk-17, swap 2G à recréer si reset (`sudo mkswap`).
-- gradle.properties local (1024m/640m) JAMAIS committé — `git checkout` avant
-  tout commit ; valeur repo = 2048m/900m.
-- Tests visuels : build/visual-check/*.png → copie manuelle visual-review/.
-- Jamais de push main ; jamais d'incomplet sur la branche sans CI vérifiée ;
-  checkpoints commit+push+VÉRIFICATION après chaque avancée.
-- generate_image : 10/tour — traiter+committer immédiatement chaque lot.
-- Aucune fausse capture, aucun FAIL→PASS, approbation finale = fondateur seul.
+1. `verify` final : 30 fichiers, 0 doublon, map complète.
+2. Recaptures (§6) : remplacer D34-01/02/03 (catalogue définitif : étendre
+   D34Lot6 aux 6 secteurs), carrousels D34-11/13/14 + secteurs D34-15 déjà
+   faits, montage phases, dashboard Bonjour {prénom}, paywall FR/EN CTA,
+   consentement R4, dialogue reprise, export prêt. Tests Robolectric,
+   copie build/visual-check → visual-review/.
+3. Inventaire (§7) : vérifier exhaustivité vs code (73 = minimum).
+4. Galerie (§8) : régénérer scripts/galerie_lotf.py (extraire avant
+   /tmp/apres33 + /tmp/maquettes : raw.githubusercontent + PAT, le clone est
+   blob:none). Ajouter section « 30 gabarits et leurs aperçus ».
+5. Lot G (§13) : 13_RAPPORT_CONFORMITE_VISUELLE.md.
+
+## Pièges connus (ce tour)
+
+- **Remote git perdu à chaque reset sandbox** (.git/config non persisté) :
+  `git remote add origin https://x-access-token:$(cat ~/.d42_secrets/gh_pat_fondateur.txt)@github.com/mdgejc14-hash/vitrine-video-d42-arena.git`
+  — sinon push échoue en silence (« and the repository exists »).
+- Identité git à refaire après reset : user.name d42-agent / email noreply.
+- Toolchain : JDK /opt/toolchain/jdk-17.0.21+9, cmdline-tools 15859902,
+  platforms;android-37.0, build-tools 37.0.0 — swap 2G à recréer si reset
+  (sudo fallocate …/mkswap/swapon).
+- gradle.properties local 1024m/640m JAMAIS committé.
+- git archive sur blobs D33 échoue (clone filtré) : utiliser raw.githubusercontent + PAT.
+- build/visual-check/*.png : copier les captures vouluables avant rm -rf build.
+
+## Statut file
+
+10/29 VERIFIED (lot 1) + batiment T1 préexistant = **11/30 aperçus intégrés**.
