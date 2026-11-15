@@ -11,7 +11,7 @@
 | A. Verrouillage caméra | **TERMINÉ** | 0cd7ac3 | à poller | 6 correctifs + 5 tests verts, module 22/22 |
 | B. Labo Android (e2e) | **TERMINÉ (code) — runs EN COURS** | c0e4125 | lab 43762868411 + CI 43762868387 | branche ajoutée + preuves renforcées |
 | C. APK update signée | **BLOQUÉ (secrets absents)** | 290781a | workflow créé | VV_KEYSTORE_B64 / VV_STORE_PASSWORD manquants |
-| D. Audit Kaggle | **TERMINÉ (code) — exécution lancée** | (commit D) | à poller | notebook + workflow créés |
+| D. Audit Kaggle | **EN EXÉCUTION** | 213b713→8bcfd1e | kaggle-audit run 5 + rapport auto | referral 13 PASS ; notebook tournant |
 | E. Checkpoint | ACTIF | — | — | ce fichier |
 
 ## A — Verrouillage caméra (TERMINÉ)
@@ -72,9 +72,21 @@ Conformément à l'ordre : **statut BLOQUÉ**, aucune APK produite, aucune clé 
 - `.github/workflows/kaggle-audit.yml` (workflow_dispatch) : pré-vol secrets (valeurs jamais affichées) → push notebook → attente (≤ ~8 h) → sorties récupérées → **artefact 30 jours** → commit de `REPORT_D42_34.md` + mise à jour de ce checkpoint (bloc ci-dessous), branche uniquement.
 
 <!--D:AUDIT-->
-Dernier audit Kaggle : en attente du premier déclenchement du workflow `kaggle-audit`.
+Dernier audit Kaggle : workflow `kaggle-audit` run 5 (commit 8bcfd1e, 15/11) — notebook
+`vitrine-video-d42-34-validation` poussé (auth par token, CLI 2.2.5) et EN EXÉCUTION sur
+Kaggle ; à la fin, `REPORT_KAGGLE_D42_34.md` + checkpoint commités automatiquement sur la
+branche, sorties en artefact 30 jours. Qualification parrainage comptes A/B : run 4 du
+15/11, 13 PASS / 0 FAIL (détail dans REPORT_D42_34.md §D.1).
 <!--/D:AUDIT-->
+
+## E — Rapport final (RÉDIGÉ, poussé)
+
+`REPORT_D42_34.md` à la racine : statuts A/B/C/D/E, distinction logique vérifiée par
+code vs à confirmer sur téléphone réel, 6 NON PROUVÉ exacts (VR-001, 009, 037, 048, 053,
+065), VR-056 NON APPLICABLE, restrictions respectées, arrêt en attente d'acceptation.
 
 ## Prochaine action exacte
 
-Déclencher `kaggle-audit` (workflow_dispatch) + `referral-qualification` (workflow_dispatch, comptes de test A/B), suivre les runs, consigner les résultats au checkpoint puis produire le rapport final (logique vérifiée par le code vs éléments restant à confirmer sur le téléphone).
+Attendre la fin du run kaggle-audit 5 (auto-commit de `REPORT_KAGGLE_D42_34.md` +
+checkpoint) et du dernier run lab, puis relire les verdicts Kaggle (COMPLET / CASSÉ /
+NON JUGEABLE PAR LECTURE SEULE). Arrêt après rapport final en attendant le fondateur.
