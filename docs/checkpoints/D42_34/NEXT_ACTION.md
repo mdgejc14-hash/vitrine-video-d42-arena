@@ -1,7 +1,9 @@
 # NEXT_ACTION — D42.34 ordre final (CLÔTURÉ — attente acceptation fondateur)
 
 Chaîne : 2dfd907 (base immuable, CI SUCCESS) → … → 93fa450 → d711223 →
-e59d82d → 9e83e7f → 08d567f → 884e5c9 → <commit de clôture du 15/11 soir>.
+e59d82d → 9e83e7f → 08d567f → 884e5c9 →
+6d83e20c6fce0a65c1a5a21880278e97157998ed (clôture des preuves, 15/11 soir)
+→ réconciliation documentaire (commit suivant, doc uniquement).
 Échéance projet : 18/11/2026.
 Date réelle de référence : 15/11/2026 (jamais de date future dans les documents).
 
@@ -18,23 +20,29 @@ Date réelle de référence : 15/11/2026 (jamais de date future dans les documen
   (D34-31/32 + 6 secteurs, D34-33, D34-34) ; VR-054 CONFORME (D34-22) ;
   VR-055 CONFORME (D34-35).
 - **(3) Preuves techniques** : VR-054/055 PROUVÉES par chemin utilisateur
-  réel (worker + LiveData) ; VR-053/VR-009/VR-048/VR-065 NON PROUVÉ avec
-  explication précise (notification = vrai ExportWorker en exécution ;
-  Google SSO externe ; MLKit caméra réelle ; CinetPay 501 service externe).
+  réel (worker + LiveData) ; les six NON PROUVÉ sont exactement VR-001,
+  VR-009, VR-037, VR-048, VR-053, VR-065, chacun avec explication précise
+  (notification = vrai ExportWorker en exécution ; Google SSO externe ;
+  MLKit caméra réelle ; CinetPay 501 service externe ; splash et flux
+  viseur = téléphone fondateur). VR-056 (feuille de partage Android) est
+  **NON APPLICABLE** — UI système, hors contrôle de l'app.
 - **(4) Galerie unique** via `scripts/galerie_lotf.py` (script = source) :
   138 entrées, 78 états tous représentés (capture ou absence explicite),
   zéro lien mort (assertions d'existence), dates réelles.
 - **(5) Tests + CI** : runs locaux du soir VERTS (D34-33/34/35) ; CI GitHub
-  runs 279→286 SUCCESS (jusqu'à 884e5c9 inclus) + commit de clôture.
+  **runs 279→287 tous SUCCESS** — le run 287 (id 43744950324) couvre le
+  commit de clôture 6d83e20 :
+  https://github.com/mdgejc14-hash/vitrine-video-d42-arena/actions/runs/43744950324
 
 ## PROCHAINE ACTION — UNE SEULE
 
 **ARRÊT COMPLET. Attendre l'acceptation explicite du fondateur.** Aucun
 changement non demandé après le rapport de clôture. À l'acceptation :
 suivre les instructions du fondateur (les états téléphone fondateur —
-splash, viseur, partage, consentement R4, connexion hors-ligne,
+splash, viseur, consentement R4, connexion hors-ligne,
 notification export — et le checkout CinetPay restent à produire sur
-matériel/service réel, jamais simulés).
+matériel/service réel, jamais simulés ; la feuille de partage Android,
+VR-056, est NON APPLICABLE — UI système).
 
 ## PIÈGES (tous rencontrés — ne pas retenter les impasses)
 

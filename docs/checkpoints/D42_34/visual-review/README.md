@@ -28,8 +28,11 @@ tests Robolectric `@GraphicsMode(NATIVE)`, émulateur D42.31, ou écrans systèm
 >   d'export (exécution réelle du worker), checkout 501 (service externe) —
 >   marqués NON PROUVÉ, jamais simulés.
 > - Bilan inventaire 78 états : **68 CONFORME · 6 NON PROUVÉ · 4 NON
->   APPLICABLE** (11_INVENTAIRE_COMPLET_ECRANS.csv).
-> - Les états système (splash, flux viseur, feuille de partage) exigent le
+>   APPLICABLE** (11_INVENTAIRE_COMPLET_ECRANS.csv) — les 6 NON PROUVÉ :
+>   VR-001, VR-009, VR-037, VR-048, VR-053, VR-065. La feuille de partage
+>   Android (VR-056) est **NON APPLICABLE** (UI système, hors contrôle de
+>   l'app — référence émulateur D42.31 en section 14).
+> - Les états système (splash, flux viseur) exigent le
 >   **téléphone fondateur** — marqués NON PROUVÉ, jamais simulés.
 
 **Légende :** CONFORME = capturé et mesuré · ÉCART = capture obsolète ou

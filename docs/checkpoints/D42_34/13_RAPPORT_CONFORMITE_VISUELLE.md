@@ -87,8 +87,13 @@ aucune capture pré-mécanisme présentée comme finale.
 
 ## 6. États NON PROUVÉS (honnêteté intégrale — jamais simulés)
 
-- VR-001 splash système, VR-037 flux viseur CameraX, VR-056 feuille partage
-  système : **téléphone fondateur requis**.
+Les six états NON PROUVÉ sont exactement : **VR-001, VR-009, VR-037, VR-048,
+VR-053, VR-065**.
+
+- VR-001 splash système, VR-037 flux viseur CameraX : **téléphone fondateur
+  requis**. (VR-056, feuille de partage Android : **NON APPLICABLE** — UI
+  système hors contrôle de l'app, conforme à l'inventaire ; référence
+  émulateur D42.31 en section 14 de la galerie.)
 - ~~VR-051 montage phases~~ **CONFORME (Lot 8, D34-20/21)** : 3e méthode
   aboutie — worker de test sur le nom unique réel `vv-export`, phase via
   `setProgress` authentique tenue stable, tap réel sur « Exporter » (porte
@@ -157,10 +162,10 @@ script est la source de la galerie).
   `catalogue_scroll_bas_dernieres_tuiles` **VERT** (D34-33),
   `D34Lot12CatalogEnVisualCheckTest` **VERT** (D34-34),
   `export_echec_affiche_relance` **VERT** (D34-35).
-- CI GitHub : **verte en continu** — runs 279→286 tous SUCCESS
+- CI GitHub : **verte en continu** — **runs 279→287 tous SUCCESS**
   (8df6b0a, aed849d, 93fa450, d711223, e59d82d, 9e83e7f, 08d567f,
-  884e5c9) ; le commit de clôture est poussé sur la même branche et son
-  run est consigné au rapport final.
+  884e5c9, puis 6d83e20 commit de clôture). Run 287 (id 43744950324) :
+  https://github.com/mdgejc14-hash/vitrine-video-d42-arena/actions/runs/43744950324
 - `work-testing` ré-ajouté en **testImplementation uniquement** (Lot 8) —
   la méthode du worker tenant le nom unique l'exige ; aucune dépendance
   en scope main.
@@ -178,9 +183,10 @@ script est la source de la galerie).
    (galerie 138 entrées/122 fichiers via `scripts/galerie_lotf.py`,
    inventaire 68/6/4 réconcilié).
 6. **Attente acceptation fondateur** — aucun changement non demandé. Les
-   états téléphone fondateur (splash, flux viseur, feuille partage,
-   consentement R4, connexion hors-ligne, notification export) et le
-   checkout CinetPay restent NON PROUVÉ par construction, jamais simulés.
+   états téléphone fondateur (splash, flux viseur, consentement R4,
+   connexion hors-ligne, notification export) et le checkout CinetPay
+   restent NON PROUVÉ par construction, jamais simulés ; la feuille de
+   partage Android (VR-056) est NON APPLICABLE (UI système).
 
 ## 10. Liens (branche d42.34-founder-acceptance-fixes)
 
