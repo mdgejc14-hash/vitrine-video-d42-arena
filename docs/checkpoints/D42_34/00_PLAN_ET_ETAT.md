@@ -21,6 +21,34 @@ défauts démontrés par le fondateur (ordre D42.34 + addendum « couteau suisse
 
 ## Journal des opérations (ajouts récents d'abord)
 
+- **17/11 (fin de journée) — ORDRE FONDATEUR PRIORITAIRE « finalisation
+  visuelle intégrale + galerie unique » reçu. Lot A (sécurisation) TERMINÉ :**
+  - **Rollback #13 détéré** : lab23 avait régressé à 8d530b1 (ère D42.27)
+    avec 270 fichiers non commités ; GitHub intact à `e16d112` (CI verte).
+    Récupération : stash de préservation → export patch (700 Ko dans
+    `sauvegardes_local/`, hors dépôt) → resynchronisation e16d112 vérifiée
+    (0 diff, 12 captures D42_34 présentes). L'ancien contenu = versions
+    antérieures de fichiers tous finalisés sur GitHub (vérifié par
+    échantillon : D34Lot1CatalogVisualCheckTest, VignetteCatalogue,
+    maquettes, galeries D42_31/33).
+  - **Workspace : 3,3 Go → 45 Mo** (limite 128, cible fondateur <100 ✓) :
+    re-clone partiel `--filter=blob:none --depth=1` + sparse-checkout
+    excluant LOCALMENT (et uniquement localement) les galeries closes
+    D42_31/32/33 — **elles restent sur GitHub** et sont référencées par
+    chemin relatif dans la future galerie. .git : 81 → 9 Mo.
+  - **Méthode d'audit annoncée honnêtement** : la vision d'images n'est PAS
+    disponible dans cet environnement (testé) — l'audit de fidélité sera
+    PROGRAMMATIQUE (mesures PIL dimensions/couleurs/répartition + contrôles
+    structurels du code) avec statuts `NON PROUVÉ` assumés quand le jugement
+    visuel humain seul peut trancher. Aucune conformité déclarée sans
+    observation réelle.
+  - **Nouvelle mission ( Lots B→G)** : inventaire exhaustif des écrans
+    (11_INVENTAIRE_COMPLET_ECRANS.csv), audit fidélité 16 références
+    (10_AUDIT_FIDELITE_DESIGN.md), ressources originales générées pour les
+    images à droits incertains, corrections design ciblées, galerie unique
+    défilante (visual-review/README.md + 12_MANIFEST_GALERIE.csv), validation
+    finale (13_RAPPORT_CONFORMITE_VISUELLE.md).
+
 - **17/11 — PROTOCOLE DE RÉCUPÉRATION WORKSPACE (quota 128 Mo dépassé)** :
   - **GitHub d'abord** : HEAD distant `2dfd907` = local, `git status` 0
     modification, `git fsck` OK — RIEN à réconcilier, mission déjà livrée ;
