@@ -34,8 +34,12 @@ défauts démontrés par le fondateur (ordre D42.34 + addendum « couteau suisse
   (retour récupérable) ; `onRecord` bloqué sans prises ; « Scène 1/0 »
   impossible (compteur seulement si scènes réelles) ; nom de package :
   recherche négative consignée (aucun affichage dans le code caméra).
-- **CI** : android-ci déclenchée sur la branche D42.34 (8bb3dcc,
-  run 43701266188 — pattern identique D42.33, à retirer avant fusion).
+- **CI** : android-ci sur la branche D42.34. 8bb3dcc (Lots 1+2) =
+  43701266188 **SUCCESS**. 80b0cf8 (Lot 3) = 43701760443 FAILURE → cause
+  racine le diagnostic a posteriori (ci-dessus) : seed Room Robolectric
+  0 ligne, masqué par des boutons XML visibles par défaut. Correctif
+  racine `seedIfEmpty` (deux formes de listing) + test de non-régression
+  `D34SeedRoomRegressionTest` — 17/17 feature-camera.
 
 - **Lot 2 — import rushs parcours gabarit APPLIQUÉ** (CR-2, détail et preuves
   dans `03_BRIEF_IMPORT_RUSHS.md`) :

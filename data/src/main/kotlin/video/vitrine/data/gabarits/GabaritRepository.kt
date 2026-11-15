@@ -54,12 +54,25 @@ class GabaritRepository(
         val now = System.currentTimeMillis()
         val rows = mutableListOf<GabaritCache>()
         val secteurs = context.assets.list(ASSETS_ROOT).orEmpty()
-        secteurs.forEach { secteur ->
-            context.assets.list("$ASSETS_ROOT/$secteur").orEmpty()
+        secteurs.forEach { entree ->
+            // D42.34 (CR-3, cause racine CI) : sur un appareil réel,
+            // list("gabarits") renvoie les DOSSIERS de secteur ; en
+            // Robolectric, il renvoie les fichiers AVEC leur préfixe de
+            // dossier (« secteur/T1.json ») — l'ancien code ne trouvait
+            // alors AUCUN fichier (list d'un chemin de fichier = vide) et
+            // le seed insérait 0 ligne : rawJson null, guide caméra muet.
+            // Les deux formes sont désormais couvertes (mêmes lignes Room).
+            val fichiers = if (entree.endsWith(".json")) {
+                listOf(entree)
+            } else {
+                context.assets.list("$ASSETS_ROOT/$entree").orEmpty()
+                    .map { fichier -> "$entree/$fichier" }
+            }
+            fichiers
                 .filter { it.endsWith(".json") }
-                .forEach { file ->
+                .forEach { chemin ->
                     runCatching {
-                        val raw = context.assets.open("$ASSETS_ROOT/$secteur/$file")
+                        val raw = context.assets.open("$ASSETS_ROOT/$chemin")
                             .use { it.readBytes() }
                             .decodeToString()
                         GabaritJson.parse(raw).toCache(raw, now)

@@ -85,6 +85,26 @@ exact pour localisation.
 - Captures `D34-07/08/09/10_*.png` (build/visual-check).
 - Module complet : feature-camera 16/16 (0 échec) ; ktlint + detekt verts.
 
+## Post-scriptum CI (run 43701760443 sur 80b0cf8) — cause racine trouvée et corrigée
+
+Le run CI du Lot 3 a échoué sur `Lot2CameraActivityVisualCheckTest >
+ecran_complet_commandes` (« prises du gabarit non chargées »). Diagnostic :
+- l'ancien test passait pour une RAISON FAUSSE : les boutons
+  Refaire/Suivant sont VISIBLES par défaut au XML, et le seed Room
+  n'insérait AUCUNE ligne en Robolectric (`assets.list("gabarits")` y
+  renvoie des chemins relatifs « secteur/T1.json », pas des dossiers —
+  l'ancien `seedIfEmpty` listait alors le contenu d'un FICHIER = vide).
+  La capture P05-09 photographiait l'état défaillant (overlay générique)
+  tout en restant verte ;
+- le Lot 3 (boutons GONE explicites sans prises) a rendu l'échec réel
+  DÉTECTABLE — le test a rempli son rôle.
+Correctif racine : `GabaritRepository.seedIfEmpty()` couvre les DEUX formes
+de listing (dossiers nus sur appareil réel — comportement inchangé — et
+chemins relatifs en Robolectric). Preuves : `D34SeedRoomRegressionTest`
+(rawJson non nul, 30 gabarits seedés) + `Lot2CameraActivityVisualCheckTest`
+17/17 module (les captures P05-09/P05-10 montrent désormais le VRAI HUD
+prise avec les consignes réelles du T1).
+
 ## Non-touchés
 
 Moteur de capture (InsCameraBinder, verrou 3A, ConsentGate R4), compte à
