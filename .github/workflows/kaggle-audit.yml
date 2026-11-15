@@ -13,6 +13,15 @@ name: kaggle-audit
 # Produit : REPORT_D42_34.md (commité sur la branche) + sorties en artefact.
 on:
   workflow_dispatch:
+  # Fallback : la branche par défaut (main) ne doit pas être poussée ; un
+  # workflow_dispatch n'est actable qu'une fois le workflow fusionné sur
+  # main. Déclenchement par push ciblé (chemins du notebook uniquement,
+  # pour ne jamais reboucler sur le commit de rapport du workflow).
+  push:
+    branches: [d42.34-founder-acceptance-fixes]
+    paths:
+      - 'tools/kaggle/**'
+      - '.github/workflows/kaggle-audit.yml'
 
 permissions:
   contents: write
