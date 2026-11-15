@@ -47,7 +47,7 @@ projet. Ce registre trace la provenance de chaque ressource intégrée.
 
 ## Aperçus catalogue — lot 3 (15/11, ordre final §2)
 
-| apercu_shops_small_business_t2.webp | assets_gen/apercu_shops_small_business_T2.jpg | Avant et après — Shops & Small Business | Originale générée IA · sha256 87ce373e771db547… |
+| apercu_shops_small_business_t2.webp | assets_gen/apercu_shops_small_business_T2.jpg | Avant et après — Shops & Small Business | Originale générée IA · sha256 9b6249e98b254902 (régénérée 15/11 sur signalement fondateur)… |
 | apercu_shops_small_business_t3.webp | assets_gen/apercu_shops_small_business_T3.jpg | Montrer un produit — Shops & Small Business | Originale générée IA · sha256 03c50ba420c07cde… |
 | apercu_shops_small_business_t4.webp | assets_gen/apercu_shops_small_business_T4.jpg | Promotion — Shops & Small Business | Originale générée IA · sha256 ee230a9f981df858… |
 | apercu_shops_small_business_t5.webp | assets_gen/apercu_shops_small_business_T5.jpg | Un client raconte — Shops & Small Business | Originale générée IA · sha256 45f1c289e0ab2be3… |
