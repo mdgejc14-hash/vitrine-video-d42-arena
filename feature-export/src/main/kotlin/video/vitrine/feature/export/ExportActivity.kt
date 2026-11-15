@@ -532,7 +532,14 @@ class ExportActivity : VitrineActivity() {
                         gateInFlight = false
                         findViewById<Button>(R.id.export_start).isEnabled = true
                     }
-                    else -> Unit
+                    else -> {
+                        // D42.34 (CR-4) : phase métier RÉELLE publiée par le
+                        // worker — barre indéterminée conservée (aucun % ni
+                        // ETA inventé, l'encodage n'est pas mesurable ici).
+                        info.progress.getString(ExportWorker.KEY_PHASE)?.let { phase ->
+                            findViewById<TextView>(R.id.export_status).text = phase
+                        }
+                    }
                 }
             }
     }

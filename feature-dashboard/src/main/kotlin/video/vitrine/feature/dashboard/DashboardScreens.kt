@@ -794,8 +794,11 @@ private fun BandeauCreditsPaywall(banner: Int?, locked: Boolean) {
  * system (CarteFormule), grille fondateur 23/10/2026 STRICTE (500 / 3 000 /
  * 7 500 FCFA — jamais « illimité »). État « quota épuisé » = écran dédié,
  * jamais une alerte : solde 0 en Num, 3 formules, CTA sur la recommandée,
- * « Recharger plus tard ». CinetPay REPORTÉ : boutons inactifs au libellé
- * honnête (paywall_soon) — aucune transaction fictive, aucun contrat modifié.
+ * « Recharger plus tard ».
+ * D42.34 (CR-4, ordre fondateur) : CTA ACTIFS « Choisir … » — le checkout
+ * RÉEL existant (startCheckout → POST /billing/checkout serveur) est
+ * branché ; 501 billing_not_configured = message discret honnête. Aucune
+ * transaction fictive, aucune URL inventée, aucun contrat modifié.
  */
 @Composable
 fun PaywallScreen(ui: PaywallUi, onChoose: (String) -> Unit, onLater: () -> Unit = {}) {
@@ -819,7 +822,15 @@ fun PaywallScreen(ui: PaywallUi, onChoose: (String) -> Unit, onLater: () -> Unit
                 prix = "· " + card.priceValue +
                     (card.periodRes?.let { " / " + stringResource(it) } ?: ""),
                 avantages = card.featureRes.map { stringResource(it) },
-                libelleBouton = stringResource(R.string.paywall_soon),
+                // D42.34 (CR-4) : CTA ACTIF par formule (« Choisir … ») vers le
+                // checkout réel — plus de neutralisation paywall_soon.
+                libelleBouton = when (card.plan) {
+                    video.vitrine.core.model.billing.Plan.PASS_24H ->
+                        stringResource(R.string.paywall_choose_pass24h)
+                    video.vitrine.core.model.billing.Plan.PRO ->
+                        stringResource(R.string.paywall_choose_pro)
+                    else -> stringResource(R.string.paywall_choose_boutique)
+                },
                 surChoix = { onChoose(card.plan.code) },
                 recommandee = card.plan == Plan.PRO,
                 libelleBadge = if (card.plan == Plan.PRO) {
@@ -827,7 +838,7 @@ fun PaywallScreen(ui: PaywallUi, onChoose: (String) -> Unit, onLater: () -> Unit
                 } else {
                     null
                 },
-                boutonActif = false,
+                boutonActif = true,
                 testTag = "paywall_" + card.plan.code,
                 teinteBadge = TeinteBadge.OrangePlein,
                 taillePrix = 24.sp,

@@ -27,4 +27,8 @@
     <string name="export_notif_text">Ta publicité se prépare — tu peux éteindre l\'écran.</string>
     <!-- D42.27 (§8/5.7) : contrôle préventif stockage -->
     <string name="export_storage_low">Stockage insuffisant pour l\'export. Libère de l\'espace puis réessaie.</string>
+    <string name="export_phase_assemblage">Assemblage des plans et des textes</string>
+    <string name="export_phase_musique">Musique et mixage audio</string>
+    <string name="export_phase_rendu">Rendu de la vidéo</string>
+    <string name="export_phase_verif">Vérification de la qualité</string>
 </resources>

@@ -12,14 +12,21 @@ défauts démontrés par le fondateur (ordre D42.34 + addendum « couteau suisse
 | Branche active | `d42.34-founder-acceptance-fixes` (créée depuis 85bb823, aucun reset) |
 | main | `bb759f8` — intouché, vérifié |
 | Dernier HEAD distant sauvegardé | `60ab918` (diagnostic CR-1 + matrice 30 gabarits) |
-| Lot actif | **Lot 3 — Caméra (corrections appliquées, commit en préparation)** |
-| Lots terminés | Lot 0 · Lot 1 (420d697) · Lot 2 (f586678 + CI branchée 8bb3dcc) |
-| Lots en cours | Lot 3 : CR-3 corrigé (fin double parcours, états explicites), 16/16 tests module |
-| Lots non commencés | 4 Identité/abos/montage · 5 Visuel · 6 Non-régression |
+| Lot actif | **Lot 4 — Identité/abos/montage (corrections appliquées, commit en préparation)** |
+| Lots terminés | Lot 0 · Lot 1 (420d697) · Lot 2 (f586678) · Lot 3 (80b0cf8) |
+| Lots en cours | Lot 4 : CR-4 corrigé (identité réelle, CTA actifs, phases worker), 44 tests verts |
+| Lots non commencés | 5 Visuel · 6 Non-régression |
 | CI | locale : feature-catalog 18 tests/0 échec, ktlint+detekt verts ; distante D42.34 : à venir (1er run après push Lot 1) |
 | Éléments locaux non poussés | corrections Lot 1 (5 fichiers) + test D34Lot1 + checkpoints |
 
 ## Journal des opérations (ajouts récents d'abord)
+
+- **Lot 4 — identité/abos/montage APPLIQUÉ** (CR-4, détail dans
+  `05_IDENTITE_MARCHAND.md`) : nom Google réel persisté (vv_session/
+  merchant_name) + repli nom_commerce brief ; CTA paywall actifs
+  « Choisir … » (checkout réel inchangé, 501 honnête) ; phases métier
+  réelles du worker (assemblage/musique/rendu/vérif) affichées, barre
+  indéterminée conservée ; refactors detekt (aucun contrôle désactivé).
 
 - **Lot 3 — caméra guidée APPLIQUÉ** (CR-3, détail dans
   `04_CAMERA_GUIDEE.md`) : `buildSceneGuides()` ne construit plus le

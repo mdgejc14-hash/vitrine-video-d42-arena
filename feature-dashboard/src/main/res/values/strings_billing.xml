@@ -23,4 +23,7 @@
     <string name="billing_no_browser">Aucun navigateur disponible pour ouvrir la page de paiement sécurisée.</string>
     <string name="paywall_soon">Paiement en ligne bientôt disponible</string>
     <string name="plan_recommended">Recommandé</string>
+    <string name="paywall_choose_pass24h">Choisir Pass 24 h</string>
+    <string name="paywall_choose_pro">Choisir Pro</string>
+    <string name="paywall_choose_boutique">Choisir Boutique</string>
 </resources>

@@ -135,18 +135,41 @@ class ExportWorker(
     // la figue du rapport (règle : ne pas déstabiliser du code validé).
     // Refactor d'extraction à planifier au prochain cycle de dev.
     @Suppress("CyclomaticComplexMethod")
+    /** D42.34 (CR-4) : publie la phase métier RÉELLE atteinte (affichage honnête). */
+    private suspend fun annoncerPhase(res: Int) {
+        runCatching {
+            setProgress(androidx.work.workDataOf(KEY_PHASE to context.getString(res)))
+        }
+    }
+
+    /**
+     * D42.34 (extrait pour detekt) : verdict après échec de vérification.
+     * CLOUD_MODAL = repli 2 (rendu cloud de secours Modal, upload proxy
+     * 480p SEULEMENT) ; EXHAUSTED = échec définitif ; null = nouvelle
+     * tentative locale.
+     */
+    private fun verdictRepli(attempt: Int): Result? =
+        when (VerifierPolicy.fallbackFor(attempt)) {
+            VerifierPolicy.Fallback.CLOUD_MODAL ->
+                Result.failure(androidx.work.workDataOf(KEY_CLOUD_FALLBACK to true))
+            VerifierPolicy.Fallback.EXHAUSTED -> Result.failure()
+            else -> null
+        }
+
+    /** D42.27 (§8/5.7), extrait pour detekt : espace disque réellement disponible. */
+    private fun espaceStockageInsuffisant(): Boolean = runCatching {
+        val dispo = android.os.StatFs(context.filesDir.absolutePath).availableBytes
+        !video.vitrine.core.guard.StorageGate.espaceSuffisant(
+            dispo, video.vitrine.core.guard.StorageGate.SEUIL_EXPORT_OCTETS
+        )
+    }.getOrDefault(false)
+
     private suspend fun doWorkInner(): Result {
         if (!nativeGateOk()) return Result.failure()
         // D42.27 (§8/5.7) : filet de sécurité stockage — l'espace a pu changer
         // depuis le contrôle de l'activité ; échec propre (la compensation
         // existante rembourse la réservation, aucun crédit perdu).
-        runCatching {
-            val dispo = android.os.StatFs(context.filesDir.absolutePath).availableBytes
-            if (!video.vitrine.core.guard.StorageGate.espaceSuffisant(
-                    dispo, video.vitrine.core.guard.StorageGate.SEUIL_EXPORT_OCTETS
-                )
-            ) return Result.failure()
-        }
+        if (espaceStockageInsuffisant()) return Result.failure()
         val input = inputData.getString(KEY_INPUT) ?: return Result.failure()
         val rotation = inputData.getFloat(KEY_ROTATION, 0f)
         val rank = inputData.getInt(KEY_CLASS_RANK, 3)
@@ -157,6 +180,7 @@ class ExportWorker(
         val hotSeason = inputData.getBoolean(KEY_HOT_SEASON, false)
         var attempt = inputData.getInt(KEY_ATTEMPT, 0)
         val sheet = parseSheet()
+        annoncerPhase(R.string.export_phase_assemblage)
         // D41 (F62) : geometrie primaire connue AVANT la boucle — la typographie
         // dimensionne les overlays en pixels REELS de sortie (taille 7,8 % de la
         // largeur, césure CJK, ancrage bas). Le repli tentative 1 en 720p rend
@@ -180,6 +204,7 @@ class ExportWorker(
         // composition transmises au mixeur (fade-out musique avant la fin).
         // D42.21 : gain solo (0 dB) quand la musique porte seule la vidéo.
         val mixerFactory = audioMixerFactory(expectedMs, musicSolo = baseSilence != null)
+        annoncerPhase(R.string.export_phase_musique)
 
         try {
         while (attempt < MAX_ATTEMPTS) {
@@ -197,6 +222,7 @@ class ExportWorker(
                     "${video.vitrine.ins.effects.VerifierPolicy.fallbackFor(attempt)} " +
                     "géométrie=${tentative.geometry.width}x${tentative.geometry.height} sortie=${output.absolutePath}"
             )
+            annoncerPhase(R.string.export_phase_rendu)
             val exported = runAttempt(
                 tentative, input, rotation, output, mixerFactory
             )
@@ -212,6 +238,7 @@ class ExportWorker(
                 attempt++
                 continue
             }
+            annoncerPhase(R.string.export_phase_verif)
             val measurement = ExportVerifier.measure(context, output, expectedMs)
             // D42.8.1 : l'audio est ATTENDU quand une BGM ou des SFX ont ete
             // planifies pour ce rendu (mixerFactory non nul). Sinon la video est
@@ -240,14 +267,10 @@ class ExportWorker(
                 KineticTypography.libererCache()
                 return Result.success(androidx.work.workDataOf(KEY_OUTPUT to output.absolutePath))
             }
-            when (VerifierPolicy.fallbackFor(attempt)) {
-                VerifierPolicy.Fallback.CLOUD_MODAL -> {
-                    // repli 2 : rendu cloud de secours Modal, upload proxy 480p SEULEMENT
-                    return Result.failure(androidx.work.workDataOf(KEY_CLOUD_FALLBACK to true))
-                }
-                VerifierPolicy.Fallback.EXHAUSTED -> return Result.failure()
-                else -> attempt++
-            }
+            // D42.34 (extrait pour detekt) : verdict du repli après échec
+            // de vérification — null = nouvelle tentative locale.
+            verdictRepli(attempt)?.let { return it }
+            attempt++
         }
         return Result.failure()
         } finally {
@@ -735,6 +758,9 @@ class ExportWorker(
         const val KEY_OUTPUT_H = "output_h"
         const val KEY_OUTPUT = "output"
         const val KEY_PROGRESS = "progress"
+        // D42.34 (CR-4) : phase métier RÉELLE courante (libellé localisé) —
+        // jamais de pourcentage ni d'ETA inventés.
+        const val KEY_PHASE = "phase"
         const val KEY_CLOUD_FALLBACK = "cloud_fallback"
         const val KEY_BEAT_SHEET = "beat_sheet_json"
         const val KEY_DUCK_DB = "duck_depth_db"

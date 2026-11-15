@@ -204,6 +204,11 @@ class MainActivity : VitrineActivity() {
                 briefDuration = data?.getIntExtra("duration_s", 30) ?: 30
                 briefRushs = data?.getStringArrayExtra("client_rushes")
                 collectBriefValues(data)
+                // D42.34 (CR-4) : repli identité — si aucun nom de profil
+                // Google n'est connu, le nom de COMMERCE réellement renseigné
+                // au brief devient le nom d'affichage (jamais déduit d'un
+                // email, jamais inventé).
+                repliNomCommerce()
                 // D42.27 (§7/05c) : le brief VALIDÉ persiste (brouillon étape
                 // CAMERA) AVANT l'ouverture du guide — la persistance est
                 // garantie achevée quand le tournage démarre (run 42626010820 :
@@ -321,6 +326,20 @@ class MainActivity : VitrineActivity() {
                 .putExtra("firebase_token", authToken),
             REQ_CATALOG
         )
+    }
+
+    /**
+     * D42.34 (CR-4, extrait pour detekt) : repli identité — si aucun nom de
+     * profil Google n'est connu, le nom de COMMERCE réellement renseigné au
+     * brief devient le nom d'affichage (jamais déduit d'un email).
+     */
+    private fun repliNomCommerce() {
+        briefValues["nom_commerce"]?.takeIf { it.isNotBlank() }?.let { nom ->
+            val prefs = getSharedPreferences("vv_session", MODE_PRIVATE)
+            if (prefs.getString("merchant_name", "").isNullOrBlank()) {
+                prefs.edit().putString("merchant_name", nom).apply()
+            }
+        }
     }
 
     /** Recueil des reponses brief (extras brief_*) pour apercu E7 et export. */

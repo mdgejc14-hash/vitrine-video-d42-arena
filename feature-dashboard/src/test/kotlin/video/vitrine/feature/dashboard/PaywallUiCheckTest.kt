@@ -79,7 +79,7 @@ class PaywallUiCheckTest {
      * CinetPay reporté, aucune fausse transaction.
      */
     @Test
-    fun `grille fondateur - limites exactes, pas d'illimite, bouton inactif`() {
+    fun `grille fondateur - limites exactes, pas d'illimite, CTA actifs par formule`() {
         compose.setContent {
             VitrineTheme {
                 PaywallScreen(
@@ -94,8 +94,14 @@ class PaywallUiCheckTest {
         compose.onNodeWithText(ctx.getString(R.string.feat_pass24h_3), substring = true).assertExists()
         // hiérarchie commerciale honnête
         compose.onNodeWithText(ctx.getString(R.string.plan_recommended)).assertExists()
-        // bouton inactif au libellé honnête (x3 cartes)
-        compose.onAllNodesWithText(ctx.getString(R.string.paywall_soon)).assertCountEquals(3)
+        // D42.34 (CR-4, ordre fondateur) : CTA ACTIFS par formule (« Choisir … »)
+        // vers le checkout réel — plus de neutralisation paywall_soon.
+        compose.onNodeWithText(ctx.getString(R.string.paywall_choose_pass24h)).assertExists()
+        compose.onNodeWithText(ctx.getString(R.string.paywall_choose_pro)).assertExists()
+        compose.onNodeWithText(ctx.getString(R.string.paywall_choose_boutique)).assertExists()
+        compose.onAllNodesWithText(ctx.getString(R.string.paywall_soon)).assertCountEquals(0)
+        // les 3 CTA sont cliquables (boutonActif = true)
+        compose.onAllNodesWithText("Choisir", substring = true).assertCountEquals(3)
         // D42.33 (famille 10) : écran DÉDIÉ (jamais une alerte) — solde 0 en
         // Num + « Recharger plus tard » présents dans l'état verrouillé.
         compose.onNodeWithText(ctx.getString(R.string.dash_exports_count, 0)).assertExists()

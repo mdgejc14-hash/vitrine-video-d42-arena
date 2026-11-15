@@ -1,19 +1,25 @@
 package video.vitrine.feature.onboarding.auth
 
 import android.content.Context
-import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.CredentialManager
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import video.vitrine.feature.onboarding.BuildConfig
 
 /**
- * Google SSO 1-tap (Credential Manager), aucun numero de telephone (contrat V7-FINAL 3.4/9.1).
- * Rend un ID token JWT ; le serveur Phase A le verifie via son JWKS existant (authenticate()).
+ * Client SSO Google (Credential Manager).
+ *
+ * D42.34 (CR-4, ordre fondateur identité) : le profil Google RÉEL
+ * (displayName du credential) est maintenant remonté avec le jeton —
+ * jamais de nom inventé, jamais déduit de l'email.
  */
 class GoogleSsoClient(private val context: Context) {
 
-    suspend fun fetchGoogleIdToken(): String {
+    /** Identité Google réelle : jeton + nom d'affichage (null si absent). */
+    data class IdentiteGoogle(val idToken: String, val displayName: String?)
+
+    suspend fun fetchGoogleIdentite(): IdentiteGoogle {
         val option = GetGoogleIdOption.Builder()
             .setServerClientId(BuildConfig.GOOGLE_SERVER_CLIENT_ID)
             .setFilterByAuthorizedAccounts(false)
@@ -22,6 +28,13 @@ class GoogleSsoClient(private val context: Context) {
             .addCredentialOption(option)
             .build()
         val response = CredentialManager.create(context).getCredential(context, request)
-        return GoogleIdTokenCredential.createFrom(response.credential.data).idToken
+        val credential = GoogleIdTokenCredential.createFrom(response.credential.data)
+        return IdentiteGoogle(
+            idToken = credential.idToken,
+            displayName = credential.displayName?.takeIf { it.isNotBlank() },
+        )
     }
+
+    /** Compatibilité historique : jeton seul. */
+    suspend fun fetchGoogleIdToken(): String = fetchGoogleIdentite().idToken
 }

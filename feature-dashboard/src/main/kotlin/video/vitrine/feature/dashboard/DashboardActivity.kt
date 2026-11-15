@@ -230,7 +230,13 @@ class DashboardActivity : VitrineActivity() {
             { view = "paywall"; render() },
             { view = "referral"; render() },
             onSettings = { view = "settings"; render() },
-            merchantName = intent.getStringExtra("merchant_name") ?: "",
+            // D42.34 (CR-4) : nom RÉEL du profil Google persisté à l'auth
+            // (vv_session/merchant_name), repli nom de commerce renseigné au
+            // brief ; sinon « Bonjour » seul — jamais inventé/déduit d'un email.
+            merchantName = intent.getStringExtra("merchant_name")
+                ?: getSharedPreferences("vv_session", MODE_PRIVATE)
+                    .getString("merchant_name", "")
+                ?: "",
             sectorLabel = sectorOverride ?: intent.getStringExtra("sector_label") ?: "",
             referralCode = gaugeUi?.code ?: intent.getStringExtra("code") ?: "",
             referralGauge = gaugeUi,

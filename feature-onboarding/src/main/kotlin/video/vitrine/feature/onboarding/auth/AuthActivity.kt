@@ -76,21 +76,38 @@ class AuthActivity : VitrineActivity() {
 
     private suspend fun executerConnexion(refCode: String?) {
         val resultat = runCatching {
-            val idToken = GoogleSsoClient(this).fetchGoogleIdToken()
-            FirebaseAuthGateway(this).signInWithGoogleIdToken(idToken)
+            // D42.34 (CR-4) : le nom RÉEL du profil Google accompagne le
+            // jeton (jamais déduit de l'email, jamais inventé).
+            val identite = GoogleSsoClient(this).fetchGoogleIdentite()
+            val (uid, firebaseToken) = FirebaseAuthGateway(this)
+                .signInWithGoogleIdToken(identite.idToken)
+            Triple(uid, firebaseToken, identite.displayName)
         }
         resultat.fold(
-            onSuccess = { (uid, firebaseToken) -> reussir(uid, firebaseToken, refCode) },
+            onSuccess = { (uid, firebaseToken, nomReel) ->
+                reussir(uid, firebaseToken, refCode, nomReel)
+            },
             onFailure = { erreur -> echouer(erreur) }
         )
     }
 
-    private suspend fun reussir(uid: String, firebaseToken: String, refCode: String?) {
+    private suspend fun reussir(
+        uid: String,
+        firebaseToken: String,
+        refCode: String?,
+        nomReel: String?,
+    ) {
         // Audit D40 (A9) : le jeton court (1 h) est garde en prefs pour la
         // synchronisation best-effort des droits (Dashboard) ; jamais de
         // secret long dans le stockage local.
+        // D42.34 (CR-4) : nom d'affichage RÉEL persisté pour le dashboard
+        // (« Bonjour, {nom} ») ; absent = « Bonjour » seul — jamais de
+        // substitut inventé.
         getSharedPreferences("vv_session", MODE_PRIVATE)
-            .edit().putString("token", firebaseToken).apply()
+            .edit()
+            .putString("token", firebaseToken)
+            .putString("merchant_name", nomReel ?: "")
+            .apply()
         // Audit D41 (F42, P0) : bootstrap IMMEDIAT du profil serveur — sans la
         // ligne users, welcome-grant/quota/referral/entitlements/audio repondent
         // tous 404 profile_not_initialized. Idempotent.

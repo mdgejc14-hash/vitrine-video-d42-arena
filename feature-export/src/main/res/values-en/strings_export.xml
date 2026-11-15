@@ -26,4 +26,8 @@
     <string name="export_notif_text">Your ad is being prepared — you can turn off the screen.</string>
     <!-- D42.27 (§8/5.7) : contrôle préventif stockage -->
     <string name="export_storage_low">Not enough storage to export. Free up space and try again.</string>
+    <string name="export_phase_assemblage">Assembling shots and text</string>
+    <string name="export_phase_musique">Music and audio mixing</string>
+    <string name="export_phase_rendu">Rendering the video</string>
+    <string name="export_phase_verif">Checking quality</string>
 </resources>
