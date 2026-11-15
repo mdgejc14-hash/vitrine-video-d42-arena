@@ -36,6 +36,9 @@ android {
 
     testOptions {
         animationsDisabled = true
+        // D42.34 (Lot 11) : manifest/ressources fusionnés pour les tests
+        // unitaires Robolectric (résolution de MainActivity, strings réels).
+        unitTests.isIncludeAndroidResources = true
     }
 
     signingConfigs {
@@ -124,4 +127,10 @@ dependencies {
     androidTestImplementation(libs.androidx.core.ktx)
     androidTestImplementation(libs.androidx.activity)
     androidTestImplementation(libs.androidx.lifecycle.runtime)
+
+    // D42.34 (Lot 11) — tests unitaires Robolectric du module app (preuve de
+    // rendu du dialogue de reprise VR-062). Uniquement en scope test.
+    testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
 }
