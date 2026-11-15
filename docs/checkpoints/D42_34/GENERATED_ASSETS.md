@@ -19,6 +19,16 @@ projet. Ce registre trace la provenance de chaque ressource intégrée.
 | sector_vetements_mode.webp | assets_gen/sector_vetements_mode.png | Portants de vêtements wax | Originale générée IA |
 | apercu_batiment_travaux_t1.webp | assets_gen/apercu_batiment_T1.png | Arrivage matériaux (T1 BTP) | Originale générée IA |
 
+## Recaptures effectuées (17/11 soir, Robolectric NATIVE, toolchain locale)
+
+- D34-11 (slide 1 marchande) REMPLACÉE — diff PIL 68,1 % vs ancienne (image originale rendue)
+- D34-13 (slide 2 restauration) + D34-14 (slide 3 mode) AJOUTÉES
+- D34-15 (grille 6 secteurs) AJOUTÉE — chromatisme 10,8 % → 14,4 % (images rendues)
+- Catalogue D34-01/02/03 : diff 0,1 % (tests en secteur Mode — aperçu BTP non impliqué) ;
+  recapture définitive APRÈS complétude des 29 aperçus restants (Lot D)
+- Tests : :feature-onboarding:testDebugUnitTest et :feature-catalog:testDebugUnitTest
+  BUILD SUCCESSFUL en local (aucun échec, aucun FAIL→PASS)
+
 ## Reste à générer (29) — aperçus catalogue 16:9
 
 batiment T2→T5 (4), coiffure T1→T5 (5), immo_auto T1→T5 (5), restaurants
