@@ -138,7 +138,15 @@ class ExportWorker(
     /** D42.34 (CR-4) : publie la phase métier RÉELLE atteinte (affichage honnête). */
     private suspend fun annoncerPhase(res: Int) {
         runCatching {
-            setProgress(androidx.work.workDataOf(KEY_PHASE to context.getString(res)))
+            // Lab 274 : le Worker hérite de la locale SYSTÈME (émulateur EN)
+            // alors que l'app est localisée FR via VitrineLocale — le statut
+            // publié s'affichait en anglais sur un parcours FR. On résout la
+            // chaîne dans la locale choisie par l'utilisateur.
+            setProgress(
+                androidx.work.workDataOf(
+                    KEY_PHASE to video.vitrine.core.designsystem.VitrineLocale.wrap(context).getString(res),
+                ),
+            )
         }
     }
 
@@ -799,11 +807,14 @@ private const val TAG_EXPORT = "D42-EXPORT"
  * posée au manifeste). En-dessous de API 29, forme sans type.
  */
 internal fun createExportForegroundInfo(context: android.content.Context): androidx.work.ForegroundInfo {
+    // Lab 274 : même cause qu'annoncerPhase — notification localisée selon le
+    // choix de l'utilisateur, pas la locale système du processus.
+    val loc = video.vitrine.core.designsystem.VitrineLocale.wrap(context)
     ensureExportChannel(context)
-    val notification = androidx.core.app.NotificationCompat.Builder(context, EXPORT_CHANNEL_ID)
+    val notification = androidx.core.app.NotificationCompat.Builder(loc, EXPORT_CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_stat_export)
-        .setContentTitle(context.getString(R.string.export_notif_title))
-        .setContentText(context.getString(R.string.export_notif_text))
+        .setContentTitle(loc.getString(R.string.export_notif_title))
+        .setContentText(loc.getString(R.string.export_notif_text))
         .setOngoing(true)
         // Le « % » d'encodage n'est pas encore branché (Transformer n'offre pas
         // de progression exploitable en 1.11.1 sans 2e composant modifié) :
@@ -830,7 +841,7 @@ internal fun ensureExportChannel(context: android.content.Context) {
     manager.createNotificationChannel(
         android.app.NotificationChannel(
             EXPORT_CHANNEL_ID,
-            context.getString(R.string.export_notif_channel_name),
+            video.vitrine.core.designsystem.VitrineLocale.wrap(context).getString(R.string.export_notif_channel_name),
             EXPORT_CHANNEL_IMPORTANCE,
         )
     )

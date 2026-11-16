@@ -3,6 +3,14 @@
 """
 D42.34 — Worker Kaggle : KAGGLE_USERNAME/vitrine-video-d42-34-validation.
 
+v3.4 (16/11) : quatre correctifs, causes PROUVÉES sur l'arbre e651295 —
+(1) cause « -X » kernel v3.3 run 10 : le bloc mémoire Gradle est UN SEUL
+argument quoté et PRÉCÈDE les tâches (v3.3 : le shell l'éclatait en
+arguments séparés → « Unknown command-line option '-X' », 0 tâche exécutée ;
+correctif appliqué au wrapper gradle() ET à assembleRelease -Xmx8g) ;
+(2) détecteur audio : champ réel « piste_id » (faux 600 non uniques) ;
+(3) scan manifests : condition sans slash final (0 manifest scanné) ;
+(4) grep StorageGate : module réel core-guard (pas core).
 v3.3 (16/11, 12:35 UTC) : correctif sdkmanager — les « ; » des noms de
 paquets sont des méta-caractères shell (kernel v3.2 mort à t+100 s :
 « android-37.0: not found », rc=127) ; chaque paquet est désormais quoté.
@@ -109,10 +117,14 @@ def run(cmd, cwd=None, log=None, timeout=14400, env=None, check=False, echo_tail
 
 def gradle(taches, log, timeout=14400, check=False):
     """Wrapper Gradle : mémoire adaptée aux ~30 Go du profil CPU Kaggle,
-    SANS toucher au gradle.properties du dépôt (paramètre en ligne de commande)."""
+    SANS toucher au gradle.properties du dépôt (argument en ligne de commande).
+    D42.34 v3.4 (cause « -X » prouvée, kernel v3.3 run 10) : le bloc mémoire
+    est UN SEUL argument quoté et PRÉCÈDE les tâches — en v3.3 le shell
+    l'éclatait en arguments séparés et Gradle rejetait « -XX:MaxMetaspaceSize »
+    (« Unknown command-line option '-X' ») : aucune tâche ne s'exécutait."""
     return run(
-        "./gradlew " + taches + " --no-daemon --max-workers=4 "
-        "-Dorg.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8",
+        "./gradlew --no-daemon --max-workers=4 "
+        "\"-Dorg.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8\" " + taches,
         cwd=REPO, env=ENV_BUILD, log=log, timeout=timeout, check=check)
 
 
@@ -351,7 +363,10 @@ print(f"=== PHASE 6 : manifests audio (t+{elapsed()}s) ===")
 for chemin in ["scripts/audio/bgm_lib_manifest_v2.json", "scripts/audio/bgm_r2_manifest.json"]:
     d = json.load(open(os.path.join(REPO, chemin), encoding="utf-8"))
     n = len(d)
-    ids = [x.get("id") or x.get("piste") or x.get("nom") for x in d]
+    # D42.34 v3.4 (faux positif prouvé, run 10) : le champ d'identifiant des
+    # manifests audio v2/r2 est « piste_id » — « id »/« piste »/« nom » ne
+    # correspondaient à RIEN et les 600 entrées étaient déclarées non uniques.
+    ids = [x.get("piste_id") for x in d]
     uniques = len(set(map(str, ids)))
     if n == 600 and uniques == 600:
         verdict(f"Manifeste audio {chemin} (lecture)", "COMPLET",
@@ -419,7 +434,11 @@ for racine, _, fichiers in os.walk(REPO):
     if "/build/" in racine or "/.git/" in racine:
         continue
     for fx in fichiers:
-        if fx == "AndroidManifest.xml" and "/src/main/" in racine:
+        # D42.34 v3.4 (faux positif prouvé, run 10) : os.walk rend le dossier
+        # SANS slash final (« feature-onboarding/src/main ») — la condition
+        # « "/src/main/" in racine » ne matchait JAMAIS : 0 manifest scanné et
+        # toutes les routes faussement « non déclarées ». Sans slash final.
+        if fx == "AndroidManifest.xml" and "/src/main" in racine:
             try:
                 contenu = open(os.path.join(racine, fx), encoding="utf-8").read()
                 activites_declarees.update(
@@ -484,7 +503,10 @@ if lignes_w:
 else:
     verdict("Crédits/quotas côté Worker (lecture seule)", "NON JUGEABLE PAR LECTURE SEULE",
             "aucune référence quota/crédit trouvée par grep dans src/index.js")
-p_a = run(f"grep -rn -E 'SEUIL_PRISE_OCTETS|StorageGate' {REPO}/core/src/main --include=*.kt | head -8 || true")
+# D42.34 v3.4 (faux positif prouvé, run 10) : StorageGate vit dans le module
+# core-guard (core-guard/src/main/kotlin/.../StorageGate.kt), pas core — le
+# grep historique ne trouvait RIEN et le quota applicatif était NON JUGEABLE.
+p_a = run(f"grep -rn -E 'SEUIL_PRISE_OCTETS|StorageGate' {REPO}/core-guard/src/main --include=*.kt | head -8 || true")
 lignes_a = [l.strip()[:150] for l in p_a.stdout.splitlines() if l.strip()]
 if lignes_a:
     verdict("Crédits/quotas côté application (lecture + tests PHASE 1)", "COMPLET",
@@ -529,9 +551,9 @@ else:
     # Le clone public ne contient AUCUN signing.properties (vv-signing/ est gitignoré) :
     # l'APK sort signée de la clé DEBUG DE RECETTE → PRE-SIGN, non installable comme mise à jour.
     p_build = run(
-        "./gradlew :app:assembleRelease -PvvApkSha256=" + EMPREINTE_OFFICIELLE +
-        " --no-daemon --max-workers=4 "
-        "-Dorg.gradle.jvmargs=-Xmx8g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8",
+        "./gradlew --no-daemon --max-workers=4 "
+        "\"-Dorg.gradle.jvmargs=-Xmx8g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8\" "
+        ":app:assembleRelease -PvvApkSha256=" + EMPREINTE_OFFICIELLE,
         cwd=REPO, env=ENV_BUILD_BUILD, log="assembleRelease.log", timeout=21600, echo_tail=6)
     sorties_apk = []
     for racine, _, fichiers in os.walk(os.path.join(REPO, "app", "build", "outputs", "apk", "release")):

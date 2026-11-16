@@ -105,6 +105,43 @@ dump() {
   adb exec-out cat /sdcard/d.xml > "$OUT/$1.xml" 2>/dev/null
   if [ -s "$OUT/$1.xml" ]; then echo "E2E DUMP $1 ($(wc -c < "$OUT/$1.xml") octets)"; else echo "E2E DUMP_VIDE $1"; fi
 }
+# D42.34 (lab 274) : le statut d'export se lit par RESOURCE-ID (export_status),
+# jamais par une phrase française figée — le Worker publie des phases métier
+# (« Rendu de la vidéo »…) résolues dans la locale choisie par l'utilisateur ;
+# le lab 274 a échoué sur « Export local en cours » alors que l'écran affichait
+# « Rendering the video » sur un parcours FR (défaut Worker, corrigé côté app).
+statut_export() {
+  $UI probe 2>/dev/null | grep 'id="video.vitrine.app:id/export_status"' \
+    | head -1 | sed 's/.*text="\([^"]*\)".*/\1/'
+}
+# Vrai si le texte est un état de TRAITEMENNT RÉEL (phases FR/EN publiées par
+# le Worker ou bannière « en cours »). « Préparation de la vidéo » est l'état
+# de REPOS du layout : il ne prouve PAS que le traitement a commencé (règle
+# D42.34 : jamais PASS export sur un bouton pressé sans traitement démarré).
+statut_export_actif() {
+  case "$1" in
+    *"Export local en cours"*|*"Local export running"*|\
+    *"Assemblage"*|*"Assembling"*|\
+    *"Musique et mixage"*|*"Music and audio"*|\
+    *"Rendu de la"*|*"Rendering the"*|\
+    *"Vérification de la"*|*"Checking quality"*) return 0;;
+    *) return 1;;
+  esac
+}
+# Vrai si le texte est un état TERMINÉ (FR/EN) — l'export abouti.
+statut_export_termine() {
+  case "$1" in
+    *"Vidéo prête"*|*"Video ready"*) return 0;;
+    *) return 1;;
+  esac
+}
+# Vrai si le texte est un REFUS de porte crédits (FR/EN).
+statut_export_refuse() {
+  case "$1" in
+    *"crédits export"*|*"export credits"*) return 0;;
+    *) return 1;;
+  esac
+}
 tap_if() { # texte, id, timeout
   if [ -n "${2:-}" ]; then $UI tap --id "$2" --timeout "${3:-8}" >/dev/null 2>&1 && return 0; fi
   if [ -n "${1:-}" ]; then $UI tap --text "$1" --timeout "${3:-8}" >/dev/null 2>&1 && return 0; fi
@@ -875,19 +912,30 @@ if $UI wait --text "Lancer l'export local" --exact --timeout 5 >/dev/null 2>&1; 
   if revele "Lancer l'export local"; then etat_btn2="révélé"; else etat_btn2="partiellement visible"; fi
   $UI tap --text "Lancer l'export local" --exact --timeout 8 >/dev/null 2>&1
   sleep 2
-  # D42.34 (lab 271) : le statut « Export local en cours… » est au-dessus du
-  # bouton dans le ScrollView E8 — pendant l'export le contenu est LONG et le
-  # statut reste sous le pli après la révélation du bouton (une seule remontée
-  # de 40 % ne suffit pas, constaté lab 271 : FAIL alors que l'export tournait
-  # — notification + MP4). Remontée robuste en 3 drags rapides (≈ 3 × 70 % de
-  # la hauteur) AVANT d'attendre le statut.
+  # D42.34 (lab 271) : le statut est au-dessus du bouton dans le ScrollView
+  # E8 — pendant l'export le contenu est LONG et le statut reste sous le pli
+  # après la révélation du bouton (constaté lab 271). Remontée robuste en 3
+  # drags rapides AVANT de lire le statut.
   for _ in 1 2 3; do swipe_v 15 85 200 >/dev/null 2>&1; sleep 0.4; done
-  if $UI wait --text "Export local en cours" --timeout 30 >/dev/null 2>&1; then
-    record PASS P1_export_lance "export lancé (statut « Export local en cours… » constaté)"
-  elif $UI wait --text "Plus de crédits export disponibles" --timeout 5 >/dev/null 2>&1; then
-    record FAIL P1_export_lance "porte crédits : export refusé en session locale (export_gate_no_credit)"
+  # D42.34 (lab 274) : preuve de démarrage par ÉTAT (resource-id export_status,
+  # phases FR/EN), pas par une phrase figée — le lab 274 a échoué alors que
+  # l'écran affichait « Rendering the video » et que l'export a abouti (MP4 +
+  # « Vidéo prête ! »). Sondage jusqu'à 30 s : PASS dès qu'une phase métier
+  # réelle est visible ; FAIL honnête si la porte crédits refuse.
+  s_export=""
+  i_export=0
+  while [ $i_export -lt 15 ]; do
+    s_export="$(statut_export)"
+    if statut_export_actif "$s_export"; then break; fi
+    if statut_export_refuse "$s_export"; then break; fi
+    sleep 2; i_export=$((i_export+1))
+  done
+  if statut_export_actif "$s_export"; then
+    record PASS P1_export_lance "export lancé (export_status = « $s_export », phase de traitement réelle)"
+  elif statut_export_refuse "$s_export"; then
+    record FAIL P1_export_lance "porte crédits : export refusé (export_status = « $s_export »)"
   else
-    record FAIL P1_export_lance "bouton $etat_btn2, tap émis, aucun statut de démarrage constaté"
+    record FAIL P1_export_lance "bouton $etat_btn2, tap émis, aucun état de traitement constaté (export_status = « $s_export »)"
     shot 29x_export_lance_fail; dump 29x_export_lance_fail
   fi
 else
@@ -912,12 +960,20 @@ sleep 3
 # D42.34 (lab 271) : remontée robuste (3 drags) — le statut d'export reste
 # sous le pli tant que le contenu E8 est long (cf. correctif P1_export_lance).
 for _ in 1 2 3; do swipe_v 15 85 200 >/dev/null 2>&1; sleep 0.4; done
-if $UI wait --text "Export local en cours" --timeout 60 >/dev/null 2>&1 \
-   || $UI wait --text "Vidéo prête !" --timeout 20 >/dev/null 2>&1; then
-  record PASS P1_ecran_etaint "export poursuivi après 45 s d'écran éteint (réveil OK)"
+# D42.34 (lab 274) : même correctif que P1_export_lance — l'état d'export se
+# juge par resource-id/état (phase active FR/EN ou « Vidéo prête »), pas par
+# la seule phrase française « Export local en cours ».
+s_etaint="$(statut_export)"
+if statut_export_actif "$s_etaint" || statut_export_termine "$s_etaint"; then
+  record PASS P1_ecran_etaint "export poursuivi après 45 s d'écran éteint (réveil OK, export_status = « $s_etaint »)"
 else
-  record FAIL P1_ecran_etaint "état d'export invisible après réveil de l'écran"
-  shot 29y_ecran_etaint_fail; dump 29y_ecran_etaint_fail
+  sleep 5; s_etaint="$(statut_export)"
+  if statut_export_actif "$s_etaint" || statut_export_termine "$s_etaint"; then
+    record PASS P1_ecran_etaint "export poursuivi après 45 s d'écran éteint (réveil OK, export_status = « $s_etaint »)"
+  else
+    record FAIL P1_ecran_etaint "état d'export invisible après réveil de l'écran (export_status = « $s_etaint »)"
+    shot 29y_ecran_etaint_fail; dump 29y_ecran_etaint_fail
+  fi
 fi
 
 # D42.17 rc8 : chronologie mesurée — l encodage swiftshader prend 8 à 12 min
@@ -932,7 +988,10 @@ fi
 # PROPRE (aucune collision UiAutomation) — et il a ABOUTI : export-0.mp4
 # 5 084 798 octets, h264 1920x1080, 35,04 s, P1_mp4_extrait PASS. La fenêtre
 # passe à 95 min (5700 s) ; timeout job p1 135 min.
-if $UI wait --text "Vidéo prête ! Partage-la avec tes clients." --exact --timeout 5700 >/dev/null 2>&1; then
+# D42.34 (lab 274) : fin d'export acceptée en FR ou EN (l'exactitude de la
+# phrase n'est pas la preuve — l'état « prête » l'est ; P1 parcourt en FR).
+if $UI wait --text "Vidéo prête ! Partage-la avec tes clients." --exact --timeout 5700 >/dev/null 2>&1 \
+   || $UI wait --text "Video ready! Share it with your customers." --exact --timeout 60 >/dev/null 2>&1; then
   record PASS P1_export_termine "« Vidéo prête ! » affiché"
   shot 29_export_termine; dump 29_export_termine
 else

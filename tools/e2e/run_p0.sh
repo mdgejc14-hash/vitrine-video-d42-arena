@@ -477,6 +477,36 @@ fi
 } > "$OUT/summary.txt"
 cat "$OUT/summary.txt"
 echo "=========== FIN $TAG/$VARIANTE : PASS=$pass FAIL=$fail BLOCKED=$blocked ==========="
+# D42.34 (lab 274) : le framework API 30 de l'émulateur peut crasher LUI-MÊME
+# (SIGSEGV system_server dans registerUiTestAutomationService quand ui.py
+# ré-enregistre son pont d'accessibilité — prouvé lab 274, font130 12:39:35 :
+# S15/S17 BLOCKED alors que la variante base est 22/22 et que l'app n'a AUCUN
+# crash). Ce crash ENVIRONNEMENT tue toutes les apps (dump 12 = launcher) et
+# rend le harnais aveugle. Rien n'est masqué : la tentative 1 est archivée
+# (results.tentative1.tsv + crash_tampon.tentative1.txt) et la variante est
+# rejouée UNE SEULE fois après retour du système.
+if { [ "$fail" -gt 0 ] || [ "$blocked" -gt 0 ]; } && [ -z "${P0_RETRY_FAIT:-}" ]; then
+  if tr -d '\r' < "$OUT/crash_tampon.txt" 2>/dev/null | grep -q ">>> system_server <<<" \
+     && tr -d '\r' < "$OUT/crash_tampon.txt" 2>/dev/null \
+        | grep -Eq "registerUiTestAutomationService|UiAutomationManager"; then
+    echo "E2E ENVIRONNEMENT : crash system_server (pont d'accessibilité) pendant la variante — reprise unique"
+    cp -f "$RESULTS" "$OUT/results.tentative1.tsv" 2>/dev/null || true
+    cp -f "$OUT/crash_tampon.txt" "$OUT/crash_tampon.tentative1.txt" 2>/dev/null || true
+    # La mort de system_server redémarre tout le framework : on attend un
+    # boot_completed STABLE (3 sondages consécutifs) avant de rejouer.
+    ok_boot=0
+    for _ in 1 2 3 4 5 6 7 8 9 10 11 12; do
+      b=$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+      if [ "$b" = "1" ]; then ok_boot=$((ok_boot+1)); else ok_boot=0; fi
+      [ "$ok_boot" -ge 3 ] && break
+      sleep 10
+    done
+    adb wait-for-device >/dev/null 2>&1 || true
+    sleep 5
+    export P0_RETRY_FAIT=1
+    exec bash "$0" "$TAG" "$VARIANTE" "$LANGUE"
+  fi
+fi
 # D42.34 (lab run 268) : un FAIL/BLOCKED rend le banc ROUGE (cohérence avec
 # run_p1.sh/run_camerap.sh) — exit 0 laissait « SUCCESS » masquer des FAIL.
 if [ "$fail" -gt 0 ]; then exit 1; fi
