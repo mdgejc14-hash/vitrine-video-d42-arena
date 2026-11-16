@@ -1,22 +1,17 @@
 name: kaggle-audit
 
-# D42.34-D (ordre fondateur) — audit automatisé sur notebook Kaggle.
-# Utilise UNIQUEMENT les secrets KAGGLE_USERNAME et KAGGLE_KEY (présence
-# vérifiée sans jamais afficher les valeurs). Le notebook
-# <username>/vitrine-video-d42-34-validation clone le miroir PUBLIC au SHA
-# exact du commit audité, installe JDK 17 + Android SDK, exécute les tests
-# JVM/Robolectric, ktlintCheck, detekt, checkModuleGraph, valide la matrice
-# 30 gabarits / 81 prises, audite les deux manifests audio (600 compositions
-# déclarées), ressources/boutons/routes/références, crédits/quotas app +
-# Worker, parrainage avec/sans code (JVM) — verdicts exclusifs COMPLET /
-# CASSÉ / NON JUGEABLE PAR LECTURE SEULE, citations fichiers et lignes.
-# Produit : REPORT_KAGGLE_D42_34.md (commité sur la branche) + sorties en artefact.
+# D42.34 (ordre fondateur du 16/11/2026) — GitHub Actions = CONTRÔLEUR.
+# Kaggle = exécution des calculs lourds (audit + compilation PRE-SIGN).
+# Le notebook <username>/vitrine-video-d42-34-validation clone le miroir
+# public au SHA exact du HEAD, exécute tests/ktlint/detekt/checkModuleGraph/
+# audits puis :app:assembleRelease versionCode 3 (porte d'intégrité) → APK
+# PRE-SIGN (clé debug de recette, NON installable). La re-signature officielle
+# (keystore historique, empreinte 758077eb…33e192) est réalisée UNIQUEMENT
+# dans l'environnement de confiance D42.17 — jamais ici.
+# Pilotage : envoi unique + vérification réelle + reprise sans re-push +
+# erreur exacte si échec + fichiers attendus vérifiés avant succès.
 on:
   workflow_dispatch:
-  # Fallback : la branche par défaut (main) ne doit pas être poussée ; un
-  # workflow_dispatch n'est actable qu'une fois le workflow fusionné sur
-  # main. Déclenchement par push ciblé (chemins du notebook uniquement,
-  # pour ne jamais reboucler sur le commit de rapport du workflow).
   push:
     branches: [d42.34-founder-acceptance-fixes]
     paths:
@@ -31,9 +26,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  kaggle:
+  pilot:
     runs-on: ubuntu-latest
-    timeout-minutes: 330
+    timeout-minutes: 350
+    outputs:
+      etat: ${{ steps.pilot.outputs.etat }}
     steps:
       - uses: actions/checkout@v4
 
@@ -62,9 +59,6 @@ jobs:
           mkdir -p ~/.kaggle
           chmod 700 ~/.kaggle
           sonde() { kaggle kernels list --user "$KAGGLE_USERNAME" >/dev/null 2>&1; }
-          # Mécanisme 1 : token de la nouvelle génération (CLI 2.x,
-          # ~/.kaggle/access_token) — si le secret KAGGLE_KEY contient un
-          # tel token, c'est le seul qui fonctionne.
           pip install --quiet "kaggle==2.2.5" six
           printf '%s' "$KAGGLE_KEY" > ~/.kaggle/access_token
           chmod 600 ~/.kaggle/access_token
@@ -74,7 +68,6 @@ jobs:
             echo "PASS : authentification Kaggle par token (CLI 2.2.5, access_token)."
             exit 0
           fi
-          # Mécanisme 2 : kaggle.json classique username + key (CLI 1.7.4.5).
           pip install --quiet "kaggle==1.7.4.5"
           rm -f ~/.kaggle/access_token
           printf '{"username":"%s","key":"%s"}\n' "$KAGGLE_USERNAME" "$KAGGLE_KEY" > ~/.kaggle/kaggle.json
@@ -84,101 +77,37 @@ jobs:
             echo "PASS : authentification Kaggle par kaggle.json (CLI 1.7.4.5)."
             exit 0
           fi
-          echo "::error title=BLOQUÉ::Identifiants Kaggle refusés par l'API (401) dans les DEUX mécanismes (token nouveau + kaggle.json classique). Régénérer le token sur https://www.kaggle.com/settings (API) puis mettre à jour les secrets KAGGLE_USERNAME / KAGGLE_KEY."
-          echo "STATUT : BLOQUÉ — identifiants Kaggle invalides."
+          echo "::error title=BLOQUÉ::Identifiants Kaggle refusés par l'API (401) dans les DEUX mécanismes. Régénérer le token sur https://www.kaggle.com/settings (API) puis mettre à jour les secrets."
           exit 1
 
-      - name: Préparation du notebook au SHA exact
+      - name: Préparation du notebook au SHA exact (title préservé)
         env:
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
         run: |
           set -euo pipefail
           SHA=$(git rev-parse HEAD)
           echo "SHA audité : $SHA"
-          mkdir -p pushdir
+          echo "SHA_NOTEBOOK=$SHA" >> "$GITHUB_ENV"
+          mkdir -p pushdir kmeta
           sed "s/__SHA_EXACT__/$SHA/" tools/kaggle/vitrine_video_d42_34_validation.py > pushdir/script.py
-          cat > pushdir/kernel-metadata.json <<EOF
-          {
-            "id": "$KAGGLE_USERNAME/vitrine-video-d42-34-validation",
-            "language": "python",
-            "kernel_type": "script",
-            "is_private": true,
-            "enable_gpu": false,
-            "enable_internet": true,
-            "code_file": "script.py",
-            "dataset_sources": [],
-            "kernel_sources": [],
-            "competition_sources": []
-          }
-          EOF
-          python3 -c "import json; json.load(open('pushdir/kernel-metadata.json')); print('metadata JSON OK')"
+          # Title : si le kernel existe déjà, préserver SON title réel
+          # (kaggle kernels pull -m) ; sinon title OBLIGATOIRE pour un nouveau
+          # kernel (l'erreur « New kernels must have a title specified » est
+          # définitivement corrigée).
+          TITLE="Vitrine Video D42 34 Validation"
+          if kaggle kernels pull "$KAGGLE_USERNAME/vitrine-video-d42-34-validation" -m -p kmeta >/dev/null 2>&1 \
+             && [ -f kmeta/kernel-metadata.json ]; then
+            T=$(python3 -c "import json;print(json.load(open('kmeta/kernel-metadata.json')).get('title') or '')")
+            if [ -n "$T" ]; then TITLE="$T"; fi
+          fi
+          python3 tools/kaggle/preparer_metadata.py "$KAGGLE_USERNAME" "$TITLE"
+          bash -n tools/kaggle/pilotage.sh && echo "pilotage.sh syntaxe OK"
 
-      - name: Envoi du notebook (sauf si déjà en cours — reprise)
+      - name: Pilotage du kernel (envoi unique, suivi, reprise)
+        id: pilot
         env:
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-        run: |
-          set -euo pipefail
-          SLUG="$KAGGLE_USERNAME/vitrine-video-d42-34-validation"
-          ETAT=$(kaggle kernels status "$SLUG" 2>&1 | tail -1) || true
-          echo "état actuel du kernel : $ETAT"
-          case "$ETAT" in
-            *running*|*RUNNING*|*queued*|*QUEUED*|*acknowledged*|*ACKNOWLEDGED*)
-              echo "REPRISE : un notebook est déjà en cours d'exécution — pas de re-push,"
-              echo "reprise de l'attente de la version existante (les sorties de la"
-              echo "dernière version seront récupérées)."
-              echo "déjà en cours" > notebook_version.txt
-              exit 0
-              ;;
-          esac
-          kaggle kernels push -p pushdir | tee push_result.txt
-          grep -oE "version [0-9]+" push_result.txt | head -1 > notebook_version.txt || echo "version ?" > notebook_version.txt
-          cat notebook_version.txt
-
-      - name: Attente de la fin d'exécution du notebook
-        env:
-          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-        run: |
-          set -u
-          SLUG="$KAGGLE_USERNAME/vitrine-video-d42-34-validation"
-          echo "Suivi de $SLUG"
-          # Laisser le temps à la nouvelle version du kernel d'être prise en
-          # compte (éviter de lire un « complete » résiduel de la version
-          # précédente du même kernel).
-          sleep 180
-          # 4 h 45 max : les jobs hébergés GitHub sont tués à 6 h ; en cas de
-          # délai, sortie PROPRE (exit 0) — relancer le workflow pour reprendre
-          # l'attente (le notebook, lui, continue sur Kaggle).
-          limite=$(( $(date +%s) + 17100 ))
-          etat_precedent=""
-          while [ "$(date +%s)" -lt "$limite" ]; do
-            etat=$(kaggle kernels status "$SLUG" 2>&1 | tail -1) || true
-            if [ "$etat" != "$etat_precedent" ]; then
-              echo "$(date -u +%H:%M:%S) $etat"
-              etat_precedent="$etat"
-            fi
-            case "$etat" in
-              *COMPLETE*|*complete*) echo "NOTEBOOK TERMINÉ (complete)"; exit 0 ;;
-              *ERROR*|*error*|*CANCEL*|*cancel*) echo "NOTEBOOK EN ERREUR/ANNULÉ : $etat"; exit 2 ;;
-            esac
-            sleep 60
-          done
-          echo "NOTEBOOK ENCORE EN COURS après 4 h 45 d'attente — fin propre du run."
-          echo "RELANCER le workflow kaggle-audit (push sur tools/kaggle/** ou"
-          echo "workflow_dispatch) pour reprendre l'attente : le notebook continue"
-          echo "de tourner sur Kaggle et ses sorties seront alors récupérées."
-          exit 0
-
-      - name: Récupération des sorties du notebook
-        if: always()
-        env:
-          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-        run: |
-          set -uo pipefail
-          SLUG="$KAGGLE_USERNAME/vitrine-video-d42-34-validation"
-          mkdir -p kaggle-output
-          kaggle kernels output "$SLUG" -p kaggle-output/ 2>&1 | tail -5 || true
-          ls -la kaggle-output/ || true
-          [ -f kaggle-output/REPORT_KAGGLE_D42_34.md ] && echo "REPORT_KAGGLE présent" || echo "REPORT_KAGGLE ABSENT (notebook en échec ?)"
+        run: bash tools/kaggle/pilotage.sh 16200 pushdir
 
       - name: Artefact des sorties Kaggle (30 jours)
         if: always()
@@ -187,42 +116,125 @@ jobs:
           name: kaggle-audit-output
           path: |
             kaggle-output/**
-            notebook_version.txt
             push_result.txt
+            kmeta/kernel-metadata.json
           retention-days: 30
           if-no-files-found: warn
 
       - name: Commit du rapport + checkpoint (branche uniquement)
         if: always() && hashFiles('kaggle-output/REPORT_KAGGLE_D42_34.md') != ''
+        env:
+          ETAT_PILOTAGE: ${{ steps.pilot.outputs.etat }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase origin d42.34-founder-acceptance-fixes
           cp kaggle-output/REPORT_KAGGLE_D42_34.md REPORT_KAGGLE_D42_34.md
+          cp kaggle-output/apk_presign_sha256.txt apk_presign_sha256.txt 2>/dev/null || true
+          cp kaggle-output/build_rapport.txt build_rapport.txt 2>/dev/null || true
+          cp kaggle-output/tests_par_module.txt tests_par_module.txt 2>/dev/null || true
           SHA=$(git rev-parse HEAD)
-          NOTEBOOK=$(cat notebook_version.txt 2>/dev/null || echo "version ?")
+          NOTEBOOK=$(grep -oE "version [0-9]+" push_result.txt 2>/dev/null | head -1 || echo "reprise (sans re-push)")
           RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          export SHA NOTEBOOK RUN_URL
-          python3 - <<'PYV'
-          import os, re
-          sha = os.environ["SHA"]; notebook = os.environ["NOTEBOOK"]; url = os.environ["RUN_URL"]
-          lignes = [
-              "<!--D:AUDIT-->",
-              "Dernier audit Kaggle : commit `" + sha + "`, notebook `vitrine-video-d42-34-validation` (" + notebook + "),",
-              "sorties et rapport : " + url + " — `REPORT_KAGGLE_D42_34.md` à la racine du dépôt, verdicts COMPLET / CASSÉ /",
-              "NON JUGEABLE PAR LECTURE SEULE avec citations fichiers et lignes.",
-              "<!--/D:AUDIT-->",
-          ]
-          bloc = chr(10).join(lignes)
-          p = "CHECKPOINT_D42_34_VALIDATION.md"
-          s = open(p, encoding="utf-8").read()
-          if "<!--D:AUDIT-->" in s:
-              s = re.sub(r"<!--D:AUDIT-->.*?<!--/D:AUDIT-->", bloc, s, flags=re.S)
-          else:
-              s += chr(10) + bloc + chr(10)
-          open(p, "w", encoding="utf-8").write(s)
-          PYV
-          git add REPORT_KAGGLE_D42_34.md CHECKPOINT_D42_34_VALIDATION.md
-          git commit -m "D42.34-D : audit Kaggle — REPORT_KAGGLE_D42_34.md + checkpoint"
+          python3 tools/kaggle/commit_rapport.py "$SHA" "${ETAT_PILOTAGE:-INCONNU}" "$RUN_URL" "$NOTEBOOK"
+          git add REPORT_KAGGLE_D42_34.md apk_presign_sha256.txt build_rapport.txt tests_par_module.txt CHECKPOINT_D42_34_VALIDATION.md 2>/dev/null || true
+          git commit -m "D42.34-D : audit+build Kaggle — rapport + checkpoint (état : ${ETAT_PILOTAGE:-INCONNU})"
+          git push origin HEAD:d42.34-founder-acceptance-fixes
+
+  resume:
+    needs: pilot
+    if: always() && needs.pilot.outputs.etat == 'EN_COURS'
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Détection du mécanisme d'authentification Kaggle
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.kaggle
+          chmod 700 ~/.kaggle
+          sonde() { kaggle kernels list --user "$KAGGLE_USERNAME" >/dev/null 2>&1; }
+          pip install --quiet "kaggle==2.2.5" six
+          printf '%s' "$KAGGLE_KEY" > ~/.kaggle/access_token
+          chmod 600 ~/.kaggle/access_token
+          rm -f ~/.kaggle/kaggle.json
+          if sonde; then
+            echo "token" > ~/.kaggle/MODE
+            echo "PASS : authentification Kaggle par token (CLI 2.2.5)."
+            exit 0
+          fi
+          pip install --quiet "kaggle==1.7.4.5"
+          rm -f ~/.kaggle/access_token
+          printf '{"username":"%s","key":"%s"}\n' "$KAGGLE_USERNAME" "$KAGGLE_KEY" > ~/.kaggle/kaggle.json
+          chmod 600 ~/.kaggle/kaggle.json
+          if sonde; then
+            echo "classique" > ~/.kaggle/MODE
+            echo "PASS : authentification Kaggle par kaggle.json (CLI 1.7.4.5)."
+            exit 0
+          fi
+          echo "::error title=BLOQUÉ::Identifiants Kaggle refusés — voir job pilot."
+          exit 1
+
+      - name: Préparation du notebook (reprise — title préservé)
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+        run: |
+          set -euo pipefail
+          SHA=$(git rev-parse HEAD)
+          echo "SHA_NOTEBOOK=$SHA" >> "$GITHUB_ENV"
+          mkdir -p pushdir kmeta
+          sed "s/__SHA_EXACT__/$SHA/" tools/kaggle/vitrine_video_d42_34_validation.py > pushdir/script.py
+          TITLE="Vitrine Video D42 34 Validation"
+          if kaggle kernels pull "$KAGGLE_USERNAME/vitrine-video-d42-34-validation" -m -p kmeta >/dev/null 2>&1 \
+             && [ -f kmeta/kernel-metadata.json ]; then
+            T=$(python3 -c "import json;print(json.load(open('kmeta/kernel-metadata.json')).get('title') or '')")
+            if [ -n "$T" ]; then TITLE="$T"; fi
+          fi
+          python3 tools/kaggle/preparer_metadata.py "$KAGGLE_USERNAME" "$TITLE"
+
+      - name: Reprise du suivi (sans re-push si en cours)
+        id: pilot
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+        run: bash tools/kaggle/pilotage.sh 16200 pushdir
+
+      - name: Artefact des sorties Kaggle (30 jours, suite)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-audit-output-resume
+          path: |
+            kaggle-output/**
+            push_result.txt
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Commit du rapport + checkpoint (branche uniquement)
+        if: always() && hashFiles('kaggle-output/REPORT_KAGGLE_D42_34.md') != ''
+        env:
+          ETAT_PILOTAGE: ${{ steps.pilot.outputs.etat }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin d42.34-founder-acceptance-fixes
+          cp kaggle-output/REPORT_KAGGLE_D42_34.md REPORT_KAGGLE_D42_34.md
+          cp kaggle-output/apk_presign_sha256.txt apk_presign_sha256.txt 2>/dev/null || true
+          cp kaggle-output/build_rapport.txt build_rapport.txt 2>/dev/null || true
+          cp kaggle-output/tests_par_module.txt tests_par_module.txt 2>/dev/null || true
+          SHA=$(git rev-parse HEAD)
+          NOTEBOOK=$(grep -oE "version [0-9]+" push_result.txt 2>/dev/null | head -1 || echo "reprise (sans re-push)")
+          RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          python3 tools/kaggle/commit_rapport.py "$SHA" "${ETAT_PILOTAGE:-INCONNU}" "$RUN_URL" "$NOTEBOOK"
+          git add REPORT_KAGGLE_D42_34.md apk_presign_sha256.txt build_rapport.txt tests_par_module.txt CHECKPOINT_D42_34_VALIDATION.md 2>/dev/null || true
+          git commit -m "D42.34-D : audit+build Kaggle (reprise) — rapport + checkpoint (état : ${ETAT_PILOTAGE:-INCONNU})"
           git push origin HEAD:d42.34-founder-acceptance-fixes
