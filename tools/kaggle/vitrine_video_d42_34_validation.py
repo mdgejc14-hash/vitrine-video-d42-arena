@@ -3,6 +3,11 @@
 """
 D42.34 — Worker Kaggle : KAGGLE_USERNAME/vitrine-video-d42-34-validation.
 
+v3.1 (16/11, lab 270) : SHA cible inclut les correctifs post-lab-270 —
+affichage réel des comptes de rushs (brief vs caméra) sur l'aperçu E8 et
+harnais P1 (écran bienvenue §9.4, tampon logcat 16M, remontée ScrollView).
+Aucun changement de logique du notebook par rapport à v3.
+
 Rôle (ordre fondateur du 16/11/2026) : Kaggle = environnement d'exécution des
 calculs lourds. Ce notebook clone le dépôt PUBLIC mdgejc14-hash/vitrine-video-d42-arena
 au SHA EXACT du HEAD de la branche au moment du lancement (vérifié après clone),

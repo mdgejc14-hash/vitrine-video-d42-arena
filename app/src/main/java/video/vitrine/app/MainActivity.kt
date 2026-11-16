@@ -279,6 +279,13 @@ class MainActivity : VitrineActivity() {
                 .putExtra("script", briefScript)
                 .putExtra("duration_s", briefDuration)
                 .putExtra("client_rushes", rushes?.toTypedArray())
+                // D42.34 (lab 270) : comptes AVANT fusion par slots — la
+                // fusion (CR-2) aplatit rushs du brief et prises caméra dans
+                // un seul « client_rushes » ; sans ces extras l'aperçu E8
+                // affichait « N rushs client · 0 rushs caméra » alors que N
+                // était le total fusionné (bug d'AFFICHAGE constaté lab 270).
+                .putExtra("brief_rush_count", briefRushs?.count { it.isNotBlank() } ?: 0)
+                .putExtra("camera_rush_count", camRushes?.count { it.isNotBlank() } ?: 0)
                 .putExtra("firebase_token", authToken)
                 .putExtra("gabarit_id", gabaritId)
                 .also { intent ->

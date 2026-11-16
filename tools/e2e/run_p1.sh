@@ -155,6 +155,13 @@ adb shell pm grant "$PKG" android.permission.CAMERA >/dev/null 2>&1 \
   && record PASS P1_permission_camera "accordée par pm grant" \
   || record BLOCKED P1_permission_camera "pm grant refusé"
 adb shell pm grant "$PKG" android.permission.RECORD_AUDIO >/dev/null 2>&1
+# D42.34 (lab 270) : le tampon logcat par défaut est trop petit — le spam
+# CameraX fait tourner l'anneau et évince les marqueurs VV_E2E du début de
+# session (PREVIEW STREAMING, setSurfaceProvider, 1re prise : première ligne
+# conservée 10:13:15 au lab 270, marqueurs de 10:11-10:12 perdus). Tampon
+# agrandi + vidage AVANT le lancement de l'app.
+adb logcat -G 16M >/dev/null 2>&1 || true
+adb logcat -c >/dev/null 2>&1 || true
 
 adb shell am start -W -n "$PKG/.MainActivity" > "$OUT/start.log" 2>&1
 sleep 4
@@ -784,6 +791,11 @@ else
   fi
 fi
 # Chronologie observable laissée par l'app (tag VV_E2E, défaut D5).
+# D42.34 (lab 270) : capture INTERMÉDIAIRE juste après la phase caméra —
+# même avec un tampon agrandi, la suite du parcours (aperçu, export, attentes
+# longues) peut évincer les marqueurs du début. Le snapshot 26b protège
+# PREVIEW STREAMING / setSurfaceProvider / les premières prises.
+adb logcat -d -s VV_E2E > "$OUT/26b_vv_e2e_markers_camera.log" 2>&1 || true
 adb logcat -d -s VV_E2E > "$OUT/27_vv_e2e_markers.log" 2>&1 || true
 # --- D42.34-B : preuves caméra renforcées (CAMÉRA VIRTUELLE de l'émulateur) ---
 # La caméra est la CAMÉRA VIRTUELLE (-camera-back emulated) : la chaîne
@@ -791,22 +803,25 @@ adb logcat -d -s VV_E2E > "$OUT/27_vv_e2e_markers.log" 2>&1 || true
 # contrôles prouvent le COMPORTEMENT de l'app sur cette chaîne — jamais la
 # qualité d'un capteur physique (validation fondateur sur téléphone réel).
 # 1) PreviewView réellement STREAMING (frames réelles de la caméra virtuelle)
-if grep -q "PREVIEW STREAMING" "$OUT/27_vv_e2e_markers.log" 2>/dev/null; then
-  record PASS P1_preview_streaming "PreviewView réellement STREAMING (marqueur VV_E2E) — caméra virtuelle"
+#    Lab 270 : le marqueur avait bien été émis (~10:11) mais la rotation du
+#    tampon l'avait évincé — on cherche dans le snapshot caméra 26b ET le
+#    tampon final 27.
+if grep -q "PREVIEW STREAMING" "$OUT/26b_vv_e2e_markers_camera.log" "$OUT/27_vv_e2e_markers.log" 2>/dev/null; then
+  record PASS P1_preview_streaming "PreviewView réellement STREAMING (marqueur VV_E2E, snapshot 26b + tampon 27) — caméra virtuelle"
 else
-  record FAIL P1_preview_streaming "aucun marqueur PREVIEW STREAMING (27_vv_e2e_markers.log)"
+  record FAIL P1_preview_streaming "aucun marqueur PREVIEW STREAMING (26b/27_vv_e2e_markers.log)"
 fi
 # 2) compte à rebours 3-2-1 AVANT le démarrage du recorder (aucune prise ne
 #    démarre sans décompte complet — D42.30)
-if awk '/compte à rebours : 1/{cd=NR} /startRecording : start\(/{if(!cd){bad=1}} END{exit bad?1:0}' \
-     "$OUT/27_vv_e2e_markers.log" 2>/dev/null; then
+if awk '/compte à rebours : 1/{cd=NR} /startRecording : start\(/ {if(!cd){bad=1}} END{exit bad?1:0}' \
+     "$OUT/26b_vv_e2e_markers_camera.log" "$OUT/27_vv_e2e_markers.log" 2>/dev/null; then
   record PASS P1_countdown_avant_recorder "compte à rebours 3-2-1 terminé AVANT chaque startRecording (ordre des marqueurs)"
 else
-  record FAIL P1_countdown_avant_recorder "un startRecording précède le premier décompte complet (27_vv_e2e_markers.log)"
+  record FAIL P1_countdown_avant_recorder "un startRecording précède le premier décompte complet (26b/27_vv_e2e_markers.log)"
 fi
 # 3) Finalize SANS erreur pour toutes les prises (fichiers non vides)
-if grep -q "Finalize : hasError=false" "$OUT/27_vv_e2e_markers.log" 2>/dev/null \
-   && ! grep -q "Finalize : hasError=true" "$OUT/27_vv_e2e_markers.log" 2>/dev/null; then
+if grep -q "Finalize : hasError=false" "$OUT/26b_vv_e2e_markers_camera.log" "$OUT/27_vv_e2e_markers.log" 2>/dev/null \
+   && ! grep -q "Finalize : hasError=true" "$OUT/26b_vv_e2e_markers_camera.log" "$OUT/27_vv_e2e_markers.log" 2>/dev/null; then
   record PASS P1_finalize_sans_erreur "Finalize hasError=false pour toutes les prises, aucun hasError=true"
 else
   record FAIL P1_finalize_sans_erreur "Finalize en erreur ou marqueurs absents (27_vv_e2e_markers.log)"
@@ -860,6 +875,12 @@ if $UI wait --text "Lancer l'export local" --exact --timeout 5 >/dev/null 2>&1; 
   if revele "Lancer l'export local"; then etat_btn2="révélé"; else etat_btn2="partiellement visible"; fi
   $UI tap --text "Lancer l'export local" --exact --timeout 8 >/dev/null 2>&1
   sleep 2
+  # D42.34 (lab 270) : le statut « Export local en cours… » est en HAUT du
+  # ScrollView E8, le bouton lancé est en BAS — sans remontée le statut reste
+  # hors écran (le dump uiautomator ne voit que les nœuds visibles) et le
+  # contrôle échouait à tort alors que l'export tournait (notification FGS
+  # présente, MP4 produit).
+  swipe_v 30 70 400 >/dev/null 2>&1; sleep 1
   if $UI wait --text "Export local en cours" --timeout 25 >/dev/null 2>&1; then
     record PASS P1_export_lance "export lancé (statut « Export local en cours… » constaté)"
   elif $UI wait --text "Plus de crédits export disponibles" --timeout 5 >/dev/null 2>&1; then
@@ -886,6 +907,9 @@ sleep 45
 adb shell input keyevent 26 >/dev/null 2>&1
 adb shell wm dismiss-keyguard >/dev/null 2>&1
 sleep 3
+# D42.34 (lab 270) : remontée du ScrollView E8 — le statut d'export est en
+# haut de l'écran (cf. correctif P1_export_lance).
+swipe_v 30 70 400 >/dev/null 2>&1; sleep 1
 if $UI wait --text "Export local en cours" --timeout 90 >/dev/null 2>&1 \
    || $UI wait --text "Vidéo prête !" --timeout 5 >/dev/null 2>&1; then
   record PASS P1_ecran_etaint "export poursuivi après 45 s d'écran éteint (réveil OK)"

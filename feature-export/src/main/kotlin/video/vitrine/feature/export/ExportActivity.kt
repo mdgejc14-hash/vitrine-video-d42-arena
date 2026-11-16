@@ -110,13 +110,23 @@ class ExportActivity : VitrineActivity() {
         val script = intent.getStringExtra("script").orEmpty()
         val durationS = intent.getIntExtra("duration_s", 30)
         val clientRushes = intent.getStringArrayExtra("client_rushes")?.size ?: 0
+        // D42.34 (lab 270) : « client_rushes » transporte la liste FUSIONNÉE
+        // (rushs du brief + prises caméra, CR-2) — l'aperçu affichait donc
+        // « N rushs client · 0 rushs caméra » avec cameraRushCount codé en
+        // dur à 0 alors que N incluait les prises caméra. MainActivity
+        // transmet désormais les comptes AVANT fusion ; extras absents
+        // (appelants legacy, tests) = repli sur l'ancien affichage.
+        val briefRushCount = intent.getIntExtra("brief_rush_count", -1)
+        val cameraRushCountExtra = intent.getIntExtra("camera_rush_count", -1)
+        val displayClientRushes = if (briefRushCount >= 0) briefRushCount else clientRushes
+        val displayCameraRushes = if (cameraRushCountExtra >= 0) cameraRushCountExtra else 0
         findViewById<ComposeView>(R.id.export_preview_panel).setContent {
             VitrineTheme {
                 ExportPreviewPanel(
                     script = script,
                     durationS = durationS,
-                    clientRushCount = clientRushes,
-                    cameraRushCount = 0,
+                    clientRushCount = displayClientRushes,
+                    cameraRushCount = displayCameraRushes,
                 )
             }
         }
