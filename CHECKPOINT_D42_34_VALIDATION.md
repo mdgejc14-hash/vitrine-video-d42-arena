@@ -136,3 +136,21 @@ code vs à confirmer sur téléphone réel, 6 NON PROUVÉ exacts (VR-001, 009, 0
 
 **Prochaine action exacte** : attendre la fin du run 6 (récup v2 ou EN_COURS) → le run 7 démarre : sonde kernel → si v2 terminée sans APK PRE-SIGN → re-push v3 (build) → suivi jusqu'à APK PRE-SIGN → `fetch_presign.sh` → `resign_finale.sh` → rapports finaux (REPORT_D42_34.md + REPORT_KAGGLE_D42_34.md) → arrêt en attente du fondateur.
 
+**MISSION MAÎTRESSE — JALON : LAB 274 ANALYSÉ, CLASSÉ, CORRIGÉ — 2026-11-16 ~14:05 UTC**
+
+- **Date UTC** : 2026-11-16 14:05 · **SHA poussé** : `f2543b6` (correctifs) puis `053d4c8` (triggers workflows, aucun code applicatif).
+- **Runs déclenchés** : kaggle-audit **43879291832** (f2543b6, kernel **v3.4**) EN COURS ; android-e2e-lab **43879518367** (053d4c8) EN ATTENTE (relance volontaire : le push de filtres a annulé la run 43879292380 âgée de 2 min, code identique) ; android-ci 43879518401 EN COURS.
+- **Statut kernel** : v3.4 poussé par run 43879291832 (logique de reprise du workflow : sonde RUNNING, pas de re-push).
+- **Version notebook** : v3.4 (4 correctifs causes prouvées : mémoire Gradle UN argument quoté AVANT les tâches — cause « -X » ; détecteur audio `piste_id` ; scan manifests sans slash final ; StorageGate dans core-guard). `py_compile` OK ; détecteurs re-testés localement sur l'arbre : audio 600/600 uniques ×2, 14 manifests scannés, 9/9 routes déclarées, StorageGate trouvé.
+- **Artefact de référence** : aucun nouveau (runs en cours) ; lab 274 artefacts analysés dans /tmp (non persistant), conclusions ci-dessous.
+
+**LAB 274 (e651295, run 43867279684) — CHAQUE FAIL CLASSÉ SUR PREUVES (artefacts en main) :**
+1. `android-e2e-p1` = **39 PASS / 2 FAIL / 0 BLOCKED** (41 assertions). FAIL `P1_export_lance` + `P1_ecran_etaint` = **DÉFAUT APPLICATIF (i18n)** + **DÉFAUT HARNAIS** : dumps 29x/29y prouvent `export_status` = « Rendering the video » sur un parcours FR (boutons FR) — `ExportWorker.annoncerPhase` (l.141) résolvait `context.getString(res)` en locale SYSTÈME. L'export a ABOUTI : export-0.mp4 **5 120 092 octets**, « Vidéo prête ! » (dump 29), partage ouvert (dump 30), notification vv_export, aucune FATAL app. L'assertion harnais attendait la seule phrase FR « Export local en cours ».
+2. `android-e2e-offline-export` = mêmes 2 FAIL (wrapper run_p1.sh l.120) — mêmes causes, couvert par les mêmes correctifs.
+3. `android-e2e` (P0 pixel5) : **base 22/22 PASS** ; font130 **20 PASS / 2 BLOCKED** (S15/S17) = **ENVIRONNEMENT** : SIGSEGV **system_server** (pid 506) dans `registerUiTestAutomationServiceLocked` à 12:39:35 (crash_tampon.txt font130, stack complète) — le pont d'accessibilité de l'OS a lâché à la ré-enregistrement sous police 130 %, tuant toutes les apps (dump 12 = launcher). Aucun crash applicatif (S18 PASS les deux variantes).
+
+**Correctifs poussés (f2543b6)** : (app) `VitrineLocale.wrap(context).getString(...)` dans ExportWorker — annoncerPhase + notification FGS + canal (3 sites, feature-export dépend déjà de core-designsystem) ; (harnais P1) assertions export par **ÉTAT via resource-id export_status** (phases FR/EN + terminé + refus crédits), sondage 30 s, fin d'export acceptée FR ou EN ; (harnais P0) **reprise unique** de variante si crash system_server accessibilité détecté (tentative 1 archivée results.tentative1.tsv, attente boot_completed stable, gardien P0_RETRY_FAIT) ; (notebook v3.4) les 4 correctifs ci-dessus.
+
+**Défauts corrigés / restants** : corrigés — i18n Worker export (prouvé), faux positifs audit ×3 (prouvés), cause « -X » Gradle (prouvée), fragilité harnais P0/P1 (prouvée). Restants — aucun connu non traité ; EN ATTENTE DE PREUVE D'EXÉCUTION : tests JVM, ktlint/detekt/checkModuleGraph, assembleRelease PRE-SIGN (kernel v3.4 en cours), re-validation lab complète.
+
+**Prochaine action exacte** : suivre 43879291832 jusqu'à APK PRE-SIGN (ou diagnostic honnête si échec) → suivre lab 43879518367 (15 jobs, exigence : P1 sans FAIL, P0 sans BLOCKED) → récupérer l'artefact PRE-SIGN → re-signature Arena (keystore historique, empreinte 758077eb…33e192) → vérifications apksigner/aapt/SHA-256 + mise à jour RC15 sans désinstallation → rapports finaux + checkpoint → arrêt en attente du test physique fondateur.
