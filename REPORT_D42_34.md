@@ -192,3 +192,118 @@ Rapport final remis. **Arrêt en attente d'acceptation du fondateur.** Restes
 opérationnels automatiques : fin du run kaggle-audit 5 (auto-commit du rapport Kaggle
 et du checkpoint), fin du dernier run lab et des CI en cours ; déblocage de C à la
 seule main du fondateur (ajout des 2 secrets).
+
+---
+
+# MISSION MAÎTRESSE D42.34 — VALIDATION FINALE (2026-11-16, 17:25 UTC)
+
+**SHA final** : `0317184` (code applicatif = f2543b6 ; 0317184 = notebook v3.5 + triggers
+workflows). Chaîne : e651295 → f2543b6 (correctifs lab 274) → 053d4c8 (filtres déclencheurs)
+→ b92e489/fb04c0f (checkpoints) → 0317184 (kernel v3.5) → 72a5aba (rapport Kaggle auto).
+
+## A — Code et compilation (exécuté)
+
+- **Correctif applicatif unique, cause prouvée sur artefacts** : `ExportWorker` résolvait
+  ses chaînes (phases d'export, notification FGS, canal) en locale SYSTÈME — dumps 29x/29y
+  du lab 274 : `export_status` = « Rendering the video » sur un parcours FR. Corrigé par
+  `VitrineLocale.wrap(context).getString(...)` (3 sites, `feature-export` dépend déjà de
+  `core-designsystem`). **Prouvé après correction sur émulateur** (lab final) :
+  `export_status = « Rendu de la vidéo »`.
+- **android-ci 43904729363 : SUCCESS** (compilation + tests unitaires).
+- **Kernel Kaggle v3.5 (kaggle-audit 43904729509, SUCCESS)** : `:app:assembleRelease`
+  **BUILD SUCCESSFUL en 11 min 55 s, 602 tâches** — R8 + shrinkResources, JDK 17 Temurin,
+  SDK android-37, mémoire Gradle passée en UN argument quoté en ligne de commande
+  (`gradle.properties` du dépôt JAMAIS modifié).
+- APK PRE-SIGN : **47 886 801 octets**, SHA-256
+  `5da0e5ca0b97d7220272f2ab37b2aea6a6478014b55c79fbb773373cd387f31a` (vérifié octet pour
+  octet après téléchargement de l'artefact). mapping R8 (84 Mo) archivé dans l'artefact
+  `kaggle-audit-output` (30 jours).
+
+## B — Tests : comptes EXACTS (exécutés)
+
+**JVM/Robolectric (kernel v3.5, SHA 0317184) : 383 exécutés / 0 échoués / 0 ignorés** —
+app:1 · core-guard:27 · core-model:11 · data:82 · feature-brief:26 · feature-camera:22 ·
+feature-catalog:26 · feature-dashboard:41 · feature-export:11 · feature-onboarding:31 ·
+ins-capture:4 · ins-effects:99 · ins-thermal:2. ktlintCheck rc=0 · detekt rc=0 ·
+checkModuleGraph rc=0.
+
+**Lab Android final (android-e2e-lab 43904729372, SHA 0317184) : 15/15 jobs SUCCESS** :
+- `android-e2e-p1` : **41 PASS / 0 FAIL / 0 BLOCKED** — parcours complet auth→langue→
+  carrousel→activité→parrainage→catalogue→brief→caméra virtuelle (3 prises, décompte,
+  Finalize, rushs ffprobe-décodables)→montage→aperçu→export (statut de phase réel, FGS
+  vv_export, écran éteint 45 s, « Vidéo prête ! », export-0.mp4 **5 403 826 octets**
+  extrait, feuille de partage) — aucun crash.
+- `android-e2e` (P0) : pixel5-base **22/22**, pixel5-font130 **23/23**, pixel5-rot90
+  **23/23** (0 FAIL, 0 BLOCKED partout, S18 aucun crash partout).
+- `android-e2e-offline-export` : **47/47** · `android-e2e-camerap` : **62/62** ·
+  gabarits-audit 817/817 · 10 autres jobs SUCCESS (auth, deeplink, drafts, langues EN,
+  offline, petit-ecran, backend-http, security-local, camera-diagnostic, harness-selftest).
+- **Parrainage serveur : 13 PASS / 0 FAIL** (workflow referral-qualification — code
+  inchangé, non relancé).
+
+**Historique honnête** : lab 274 (e651295) = 12/15 — chaque FAIL classé sur preuves :
+P1_export_lance/P1_ecran_etaint = DÉFAUT APPLICATIF i18n Worker + DÉFAUT HARNAIS
+(assertion phrase FR figée) ; P0 font130 S15/S17 = ENVIRONNEMENT (SIGSEGV system_server
+dans registerUiTestAutomationService — app non fautive, base 22/22). Kernel v3.3/v3.4 :
+causes « -X » (arguments mémoire éclatés) puis détecteur APK (os.walk écrasant sa liste
+dans baselineProfiles) — toutes deux prouvées, corrigées, re-testées.
+
+## C — Les 15 parcours du lab (tous exécutés, verdicts exclusifs)
+
+P1 parcours nominal complet (**COMPLET**, 41/41) · P0 pixel5 base/font130/rot90
+(**COMPLET** ×3) · petit-ecran small/font130 (**COMPLET**) · camerap (**COMPLET**, 62/62) ·
+offline (**COMPLET**) · offline-export BGM en cache (**COMPLET**, 47/47) · auth local
+(**COMPLET**) · deeplink (**COMPLET**) · drafts (**COMPLET**) · langues EN (**COMPLET**).
+Jobs support : backend-http, security-local, gabarits-audit, camera-diagnostic,
+harness-selftest (**COMPLET** ×5). Aucun CASSÉ, aucun NON JUGEABLE PAR LECTURE SEULE dans
+les parcours d'exécution ; « États de navigation » reste NON JUGEABLE PAR LECTURE SEULE
+(audit kernel, honnête — l'exécution UI est couverte par les bancs émulateur).
+
+## D — Sécurité et signature (vérifiées par outils, valeurs exactes)
+
+- **APK officiellement signée** : `vitrine-video-0.9.0-rc15-SIGNEE-OFFICIEL.apk`,
+  47 962 258 octets, SHA-256
+  `599cc0b1828caad35ce24701719175ae91c570ea1fb23a9d8a0be4e7633694be`.
+- `apksigner verify` : **PASS (schéma V3.0)**. DN : `CN=Vitrine Video, OU=Mobile,
+  O=EPD HOLDING, L=Cotonou, ST=Littoral, C=BJ`. Empreinte certificat SHA-256 :
+  `758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192` — **EXACTE**
+  (règle de rejet si différence : respectée, contrôlée par script).
+- `aapt dump badging` : package `video.vitrine.app` · **versionCode 3** ·
+  **versionName 0.9.0-rc15** · minSdk 24 · targetSdk 36.
+- **Mise à jour RC15 sans désinstallation** : certificat de la RC15 installée
+  (`~/apk_update/rc15.apk`) et de la nouvelle APK **IDENTIQUES** (même empreinte
+  758077eb…) + versionCode 3 > 2 + même package → Android l'acceptera comme mise à jour.
+  Logique vérifiée par comparaison des certificats ; l'installation elle-même reste un
+  geste physique (voir E).
+- **Chaîne de confiance** : PRE-SIGN construite sur Kaggle SANS keystore (clone public,
+  clé debug de recette, `vv-signing/` gitignoré) ; re-signature uniquement dans la
+  sandbox Arena (keystore historique D42.17, jamais sorti, jamais vers Kaggle ni le dépôt).
+- Clé Firebase **RÉELLE** extraite des dex de la RC15 publique, injectée sans affichage
+  (dex : 1 occurrence réelle, 0 factice — contrôlé par le kernel). Porte d'intégrité
+  `-PvvApkSha256=758077eb…` active. Aucun secret en commit/journal/notebook/rapport.
+
+## E — Réserves physiques (formule fondateur)
+
+Logique vérifiée par le code et tests automatisés exécutés ; validation physique restante
+à confirmer sur téléphone.
+
+À confirmer sur le téléphone du fondateur : capteur caméra physique (toutes les preuves
+émulateur sont étiquetées « caméra virtuelle »), parcours complet réel (splash, viseur,
+consentement, SSO Google, feuille de partage), installation de l'APK signée **par-dessus
+la RC15 sans désinstallation** (certificats identiques prouvés ci-dessus), comportement
+réseau réel (CinetPay reste 501, budget 0 FCFA).
+
+## Livrables
+
+- **APK signée** (téléchargeable depuis la sandbox Arena) :
+  `~/apk_update/vitrine-video-0.9.0-rc15-SIGNEE-OFFICIEL.apk` + `build_rapport_kernel_v35.txt`.
+- Rapports : `REPORT_D42_34.md` (ce fichier), `REPORT_KAGGLE_D42_34.md` (poussé par le
+  workflow, commit 72a5aba), `CHECKPOINT_D42_34_VALIDATION.md` (jalons datés).
+- Artefacts GitHub (30 jours) : kaggle-audit-output 607 Mo (run 43904729509), e2e-p1,
+  e2e-pixel5, e2e-camerap, e2e-offline-export… (run 43904729372).
+
+## Arrêt
+
+Mission maîtresse D42.34 conduite à son terme technique : version validée (lab 15/15,
+383 tests JVM, kernel SUCCESS), officiellement signée (empreinte exacte), prête pour le
+test final du fondateur. **Arrêt en attente du test physique fondateur.**
