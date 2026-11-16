@@ -10,7 +10,7 @@
 |---|---|---|---|---|
 | A. Verrouillage caméra | **TERMINÉ** | 0cd7ac3 | à poller | 6 correctifs + 5 tests verts, module 22/22 |
 | B. Labo Android (e2e) | **TERMINÉ (code) — runs EN COURS** | c0e4125 | lab 43762868411 + CI 43762868387 | branche ajoutée + preuves renforcées |
-| C. APK update signée | **BLOQUÉ (secrets absents)** | 290781a | workflow créé | VV_KEYSTORE_B64 / VV_STORE_PASSWORD manquants |
+| C. APK update signée | **SIGNATURE RÉCUPÉRÉE + VÉRIFIÉE — production locale EN COURS** | 290781a + complément | build local tournant | keystore officiel retrouvé, empreinte EXACTE |
 | D. Audit Kaggle | **EN EXÉCUTION** | 213b713→8bcfd1e | kaggle-audit run 5 + rapport auto | referral 13 PASS ; notebook tournant |
 | E. Checkpoint | ACTIF | — | — | ce fichier |
 
@@ -49,7 +49,24 @@ Aucun nombre de prises codé en dur (référence = `prises.size`, matrice 30 gab
 - `tools/e2e/run_camerap.sh` : mêmes contrôles de marqueurs en fin de phase B (CPB_preview_streaming / CPB_countdown_avant_recorder / CPB_finalize_sans_erreur), étiquettes « caméra virtuelle », commentaire B4 mis en cohérence avec le verrouillage A.3.
 - Mention « caméra virtuelle » explicite dans les summaries — les résultats d'émulateur ne sont jamais présentés comme une validation du capteur physique (validation fondateur sur téléphone réel).
 
-## C — APK de mise à jour signée (BLOQUÉ — secrets de signature absents)
+## C — APK de mise à jour signée (complément du fondateur : signature officielle D42.17 RÉCUPÉRÉE et VÉRIFIÉE)
+
+**Recherche ordonnée exécutée (complément mission C) :**
+1. `~/keystores/vitrine.keystore` : **EXISTE** (environnement de confiance restauré) — PKCS12, alias `vitrine`, PrivateKeyEntry unique, validité → 2056, DN `CN=Vitrine Video, OU=Mobile, O=EPD HOLDING, L=Cotonou, ST=Littoral, C=BJ`. Accompagné de `signing.properties` (4 clés, valeurs jamais affichées), `.store_pw` et `VV_KEYSTORE_B64.txt` (décodage = keystore octet pour octet, SHA-256 `8aef33ca…`).
+2. `~/.cache/vv-toolchain/` : absent (non persisté entre sessions).
+3. `vv-signing/` des anciens environnements : absent — recréé pour le build local (gitignoré, ligne 172 du .gitignore).
+4. Docs D42.17 recoupées : `00_ETAT.md` §1 documente ce keystore et cette empreinte ; `01_OPTIONS_SIGNATURE.md` : option C retenue — **la clé ne quitte JAMAIS la sandbox, seul l'artefact signé est transmis**.
+5. Dépôt privé `mdgejc14-hash/vitrine-video` : existe (HTTP 200), **17 secrets dont `VV_KEYSTORE_B64` et `VV_STORE_PASSWORD` TOUJOURS PRÉSENTS** (noms seuls listés, valeurs jamais lisibles ni affichées).
+
+**Contrôles de sécurité (empreinte EXACTE exigée `758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192`) :**
+- `keytool` (JDK 11) sur le keystore : certificat SHA-256 = **758077eb…33e192 EXACT** (comparaison canonique).
+- `apksigner` (build-tools 37) sur l'APK RC15 livrée (release publique `d42.30-rc15`, 44 470 123 o, SHA-256 APK `fd28ffc7…b78936`) : signataire V3.0 = **même DN, même SHA-256 758077eb…33e192** → le keystore local est EXACTEMENT la clé qui a signé l'APK installée (contrôle triangulaire keytool/apksigner/empreinte documentée).
+- Badging RC15 : `video.vitrine.app`, versionCode 2, versionName 0.9.0-rc15, minSdk 24, targetSdk 36 → la mise à jour versionCode 3 (même applicationId, versionName inchangé) est la mise à jour Android exacte.
+- Clé Firebase réelle (identifiant public embarqué, unique dans les dex de la RC15, factice absente) : extraite vers `~/keystores/firebase_api_key.local` (chmod 600, **jamais affichée, jamais committée**, injectée au build via `ORG_GRADLE_PROJECT_vvFirebaseApiKey`).
+
+**Production (voie D42.17 conforme, frontière inchangée)** : build LOCAL `:app:assembleRelease` sur checkout exact de `e04756b` (arbre strictement propre vérifié), porte d'intégrité `-PvvApkSha256=758077eb…`, R8 full + shrinkResources, signature par `vv-signing/signing.properties` (keystore copié dans la sandbox de build, **hors git**), `--no-daemon --max-workers=1 -Xmx1024m`, swap 2G. **Aucun secret ajouté au dépôt public** (le workflow `release-update-apk` CI reste inerte sans secrets — conformément au complément, la frontière D42.17 n'est pas modifiée). Statut : **EN COURS** (dépendances + natif vvguard + R8 : durée longue).
+
+## C-historique — constat initial (15/11, avant récupération)
 
 **Détermination (API GitHub, valeurs jamais affichées)** : le dépôt expose 16 secrets ; `FIREBASE_WEB_API_KEY` ✓, `KAGGLE_KEY` ✓, `KAGGLE_USERNAME` ✓, comptes de test Firebase A/B ✓ — mais **`VV_KEYSTORE_B64` et `VV_STORE_PASSWORD` sont ABSENTS**.
 
@@ -87,6 +104,4 @@ code vs à confirmer sur téléphone réel, 6 NON PROUVÉ exacts (VR-001, 009, 0
 
 ## Prochaine action exacte
 
-Attendre la fin du run kaggle-audit 5 (auto-commit de `REPORT_KAGGLE_D42_34.md` +
-checkpoint) et du dernier run lab, puis relire les verdicts Kaggle (COMPLET / CASSÉ /
-NON JUGEABLE PAR LECTURE SEULE). Arrêt après rapport final en attendant le fondateur.
+(1) Attendre la fin du build local APK (processus « Build APK mise à jour ») → vérifications finales : `apksigner verify --print-certs` (empreinte EXACTE attendue), `aapt dump badging` (video.vitrine.app / versionCode 3 / 0.9.0-rc15), contrôle dex (clé réelle présente, factice absente), SHA-256 APK consigné → livraison de l'APK signée dans `~/apk_update/` (jamais le keystore). (2) Attendre le run kaggle-audit 5 (auto-commit de `REPORT_KAGGLE_D42_34.md`) et le dernier run lab. Arrêt après mise à jour du rapport en attendant le fondateur.

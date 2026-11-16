@@ -58,7 +58,39 @@ Runs GitHub Actions (constatés le 15/11, UTC) :
   **dernier run en date** (sur le SHA le plus récent poussé) porte la couverture
   complète et va jusqu'au verdict.
 
-## C — APK de mise à jour signée (BLOQUÉ — secrets de signature absents)
+## C — APK de mise à jour signée (complément fondateur : signature officielle D42.17 récupérée et vérifiée)
+
+**Recherche ordonnée (résultats)** : (1) `~/keystores/vitrine.keystore` **retrouvé**
+dans l'environnement de confiance, avec `signing.properties` (mot de passe autorisé,
+jamais affiché), `.store_pw` et `VV_KEYSTORE_B64.txt` (décodage identique octet pour
+octet) ; (2) `~/.cache/vv-toolchain/` absent ; (3) `vv-signing/` historique absent ;
+(4) docs D42_17 recoupées — option C retenue : la clé ne quitte jamais la sandbox ;
+(5) dépôt privé `mdgejc14-hash/vitrine-video` : **`VV_KEYSTORE_B64` et
+`VV_STORE_PASSWORD` toujours présents** (17 secrets, noms seuls).
+
+**Contrôle de sécurité triangulaire (empreinte EXACTE
+`758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192`)** :
+- `keytool` sur le keystore : PKCS12, alias `vitrine`, PrivateKeyEntry, validité 2056,
+  DN `CN=Vitrine Video, OU=Mobile, O=EPD HOLDING, L=Cotonou, ST=Littoral, C=BJ` —
+  SHA-256 du certificat **EXACT**.
+- `apksigner verify --print-certs` sur l'APK RC15 livrée (release publique
+  `d42.30-rc15`, SHA-256 APK `fd28ffc7…b78936`, 44 470 123 o) : signataire V3.0
+  **même DN, même SHA-256** → le keystore local est exactement la clé de l'APK
+  installée chez le fondateur.
+- RC15 : `video.vitrine.app` / versionCode 2 / 0.9.0-rc15 / minSdk 24 / targetSdk 36
+  → la versionCode 3 produite est la mise à jour Android exacte.
+
+**Production en cours (voie conforme D42.17)** : build local sur checkout exact
+`e04756b` (arbre strictement propre), `assembleRelease` R8 + porte d'intégrité
+`-PvvApkSha256=758077eb…`, signature via `vv-signing/` gitignoré, clé Firebase réelle
+(identifiant public extrait de la RC15) injectée par env sans être affichée ni
+committée. **Frontière préservée : aucun secret ajouté au dépôt public, keystore et
+mots de passe jamais écrits dans le dépôt, les logs, les rapports ou les artefacts ;
+seule l'APK signée sera livrée.** Aucune clé privée extraite d'aucune APK. Le workflow
+CI `release-update-apk` reste disponible mais inerte (sans secrets), la signature
+historique restant locale.
+
+## C-historique — constat initial (BLOQUÉ, 15/11 avant récupération)
 
 **Constat (API GitHub, 15/11, valeurs jamais affichées)** : le dépôt expose 16 secrets ;
 `FIREBASE_WEB_API_KEY`, `KAGGLE_USERNAME`/`KAGGLE_KEY`, comptes `FIREBASE_TEST_A/B_*`,
