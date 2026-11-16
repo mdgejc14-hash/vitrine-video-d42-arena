@@ -875,18 +875,20 @@ if $UI wait --text "Lancer l'export local" --exact --timeout 5 >/dev/null 2>&1; 
   if revele "Lancer l'export local"; then etat_btn2="révélé"; else etat_btn2="partiellement visible"; fi
   $UI tap --text "Lancer l'export local" --exact --timeout 8 >/dev/null 2>&1
   sleep 2
-  # D42.34 (lab 270) : le statut « Export local en cours… » est en HAUT du
-  # ScrollView E8, le bouton lancé est en BAS — sans remontée le statut reste
-  # hors écran (le dump uiautomator ne voit que les nœuds visibles) et le
-  # contrôle échouait à tort alors que l'export tournait (notification FGS
-  # présente, MP4 produit).
-  swipe_v 30 70 400 >/dev/null 2>&1; sleep 1
-  if $UI wait --text "Export local en cours" --timeout 25 >/dev/null 2>&1; then
+  # D42.34 (lab 271) : le statut « Export local en cours… » est au-dessus du
+  # bouton dans le ScrollView E8 — pendant l'export le contenu est LONG et le
+  # statut reste sous le pli après la révélation du bouton (une seule remontée
+  # de 40 % ne suffit pas, constaté lab 271 : FAIL alors que l'export tournait
+  # — notification + MP4). Remontée robuste en 3 drags rapides (≈ 3 × 70 % de
+  # la hauteur) AVANT d'attendre le statut.
+  for _ in 1 2 3; do swipe_v 15 85 200 >/dev/null 2>&1; sleep 0.4; done
+  if $UI wait --text "Export local en cours" --timeout 30 >/dev/null 2>&1; then
     record PASS P1_export_lance "export lancé (statut « Export local en cours… » constaté)"
   elif $UI wait --text "Plus de crédits export disponibles" --timeout 5 >/dev/null 2>&1; then
     record FAIL P1_export_lance "porte crédits : export refusé en session locale (export_gate_no_credit)"
   else
     record FAIL P1_export_lance "bouton $etat_btn2, tap émis, aucun statut de démarrage constaté"
+    shot 29x_export_lance_fail; dump 29x_export_lance_fail
   fi
 else
   record BLOCKED P1_export_lance "bouton d'export introuvable (E8 absente ?)"
@@ -907,14 +909,15 @@ sleep 45
 adb shell input keyevent 26 >/dev/null 2>&1
 adb shell wm dismiss-keyguard >/dev/null 2>&1
 sleep 3
-# D42.34 (lab 270) : remontée du ScrollView E8 — le statut d'export est en
-# haut de l'écran (cf. correctif P1_export_lance).
-swipe_v 30 70 400 >/dev/null 2>&1; sleep 1
-if $UI wait --text "Export local en cours" --timeout 90 >/dev/null 2>&1 \
-   || $UI wait --text "Vidéo prête !" --timeout 5 >/dev/null 2>&1; then
+# D42.34 (lab 271) : remontée robuste (3 drags) — le statut d'export reste
+# sous le pli tant que le contenu E8 est long (cf. correctif P1_export_lance).
+for _ in 1 2 3; do swipe_v 15 85 200 >/dev/null 2>&1; sleep 0.4; done
+if $UI wait --text "Export local en cours" --timeout 60 >/dev/null 2>&1 \
+   || $UI wait --text "Vidéo prête !" --timeout 20 >/dev/null 2>&1; then
   record PASS P1_ecran_etaint "export poursuivi après 45 s d'écran éteint (réveil OK)"
 else
   record FAIL P1_ecran_etaint "état d'export invisible après réveil de l'écran"
+  shot 29y_ecran_etaint_fail; dump 29y_ecran_etaint_fail
 fi
 
 # D42.17 rc8 : chronologie mesurée — l encodage swiftshader prend 8 à 12 min

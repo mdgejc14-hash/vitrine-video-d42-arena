@@ -3,6 +3,12 @@
 """
 D42.34 — Worker Kaggle : KAGGLE_USERNAME/vitrine-video-d42-34-validation.
 
+v3.2 (16/11, 12:0x UTC) : correctif 403 — les assets de release GitHub (JDK
+Adoptium via redirection, APK RC15) refusent l'User-Agent « Python-urllib »
+par défaut (HTTP 403, kernel v3.1 mort à t+6 s — reproduit et prouvé depuis
+la sandbox : sans UA = 403, avec UA = 200). telecharger() avec UA explicite
++ retry ×3 remplace tout urlretrieve ; détection d'une JVM 17 déjà présente
+(/opt, /usr/lib/jvm — javac obligatoire) avant téléchargement.
 v3.1 (16/11, lab 270) : SHA cible inclut les correctifs post-lab-270 —
 affichage réel des comptes de rushs (brief vs caméra) sur l'aperçu E8 et
 harnais P1 (écran bienvenue §9.4, tampon logcat 16M, remontée ScrollView).
@@ -106,6 +112,37 @@ def gradle(taches, log, timeout=14400, check=False):
         cwd=REPO, env=ENV_BUILD, log=log, timeout=timeout, check=check)
 
 
+def telecharger(url, dest, essais=3):
+    """Téléchargement robuste avec User-Agent explicite + retry.
+
+    Constat run Kaggle 16/11 11:41 UTC : les assets de release GitHub (via
+    l'API Adoptium qui redirige vers github.com/.../releases/download/, ou
+    les APK de releases) répondent « HTTP 403 Forbidden » à l'User-Agent
+    « Python-urllib/x.y » par défaut. Un UA identifiable est OBLIGATOIRE ;
+    dl.google.com l'accepte aussi, on l'utilise partout. Retry ×3 (5 s puis
+    15 s) contre les 403/5xx transitoires."""
+    import time as _time
+    ua = "Mozilla/5.0 (X11; Linux x86_64) vitrine-video-d42-kaggle-worker/3.2"
+    derniere = None
+    for i in range(1, essais + 1):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": ua})
+            with urllib.request.urlopen(req, timeout=120) as r, open(dest, "wb") as f:
+                while True:
+                    bloc = r.read(1 << 20)
+                    if not bloc:
+                        break
+                    f.write(bloc)
+            return dest
+        except Exception as e:  # noqa: BLE001 — retry toutes erreurs réseau
+            derniere = e
+            print(f"[telecharger] essai {i}/{essais} échoué pour {url} : {e}")
+            if i < essais:
+                _time.sleep(5 * i)
+    raise RuntimeError(f"téléchargement impossible après {essais} essais : {url} ({derniere})")
+
+
+
 def compter_tests_xml():
     """Comptage EXACT depuis les XML JUnit générés par testDebugUnitTest."""
     total = echecs = sautes = 0
@@ -174,15 +211,24 @@ if sha_reel != SHA_ATTENDU:
 pf.append(f"PASS clone exact : {SHA_ATTENDU} (aucune branche implicite)")
 verdict("SHA source", "COMPLET", f"clone du miroir public vérifié au SHA exact {SHA_ATTENDU}")
 
-# JDK 17 (Temurin)
+# JDK 17 (Temurin) : d'abord une JVM déjà présente sur l'image Kaggle
+# (/opt, /usr/lib/jvm), sinon téléchargement Adoptium AVEC User-Agent
+# (les redirections vers les assets GitHub renvoient 403 à Python-urllib).
 candidats = ([os.path.join("/opt", d) for d in sorted(os.listdir("/opt")) if d.startswith("jdk-17")]
              if os.path.isdir("/opt") else [])
+if not candidats and os.path.isdir("/usr/lib/jvm"):
+    candidats = [os.path.join("/usr/lib/jvm", d) for d in sorted(os.listdir("/usr/lib/jvm"))
+                 if "jdk-17" in d or ("17" in d and ("temurin" in d or "openjdk" in d))]
 jdk_dir = candidats[0] if candidats else None
+# Une JRE sans javac ne suffit pas (Gradle compile) → JDK complet obligatoire.
+if jdk_dir and not os.access(os.path.join(jdk_dir, "bin", "javac"), os.X_OK):
+    print(f"[jdk] {jdk_dir} détecté sans javac (JRE ?) → téléchargement du JDK complet")
+    jdk_dir = None
 if jdk_dir is None:
     url_jdk = ("https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jdk/"
                "hotspot/normal/eclipse")
     tar = os.path.join("/tmp", "jdk17.tar.gz")
-    urllib.request.urlretrieve(url_jdk, tar)
+    telecharger(url_jdk, tar)
     run(f"tar -xzf {tar} -C /tmp", log="jdk_unpack.log", check=True)
     jdk_dir = os.path.join("/tmp", sorted(
         d for d in os.listdir("/tmp") if d.startswith("jdk-17"))[0])
@@ -193,7 +239,7 @@ sdk = "/tmp/android-sdk"
 os.makedirs(os.path.join(sdk, "cmdline-tools", "latest"), exist_ok=True)
 url_clt = "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip"
 zip_clt = "/tmp/clt.zip"
-urllib.request.urlretrieve(url_clt, zip_clt)
+telecharger(url_clt, zip_clt)
 run(f"unzip -q -o {zip_clt} -d /tmp/clt_x", log="clt_unpack.log", check=True)
 for f in os.listdir("/tmp/clt_x/cmdline-tools"):
     shutil.move(os.path.join("/tmp/clt_x", "cmdline-tools", f),
@@ -445,7 +491,7 @@ print(f"=== PHASE 9 : assembleRelease PRE-SIGN (t+{elapsed()}s) ===")
 cle_fb = None
 try:
     rc15 = "/tmp/rc15_reference.apk"
-    urllib.request.urlretrieve(RC15_URL, rc15)
+    telecharger(RC15_URL, rc15)
     sha_rc15 = subprocess.run(["sha256sum", rc15], capture_output=True, text=True).stdout.split()[0]
     os.makedirs("/tmp/rc15dex", exist_ok=True)
     subprocess.run(["unzip", "-o", "-q", rc15, "classes*.dex", "-d", "/tmp/rc15dex"], check=True)
