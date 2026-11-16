@@ -12,6 +12,15 @@ on:
   workflow_dispatch:
   push:
     branches: [d42.13-lab, main, d42.34-founder-acceptance-fixes]
+    # D42.34 (mission maîtresse, 16/11) : les commits DOCUMENTAIRES ne
+    # relancent plus les labs — le rapport Kaggle poussé automatiquement à la
+    # fin de kaggle-audit annulait le lab en cours (concurrency
+    # cancel-in-progress) sans aucun changement de code applicatif. L'ignore ne
+    # porte QUE sur la racine (glob sans **) : les actifs réels sous content/
+    # (ex. MANIFEST_SHA256.txt) ou scripts/audio/ restent déclencheurs.
+    paths-ignore:
+      - '*.md'
+      - '*.txt'
 
 # D42.28 (P0) : clé Firebase RÉELLE injectée dans les APK debug du lab
 # (identifiant client PUBLIC — embarqué dans toute APK distribuée ; la

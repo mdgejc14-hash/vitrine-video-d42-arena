@@ -15,7 +15,12 @@ on:
     # + tests unitaires uniquement — AUCUNE release, RC15 reste immuable).
     # D42.34 : idem sur la branche des corrections fondateur avant approbation.
     # À retirer avant la fusion finale.
+    # D42.34 (mission maîtresse) : documents racine (rapports/checkpoints)
+    # non déclencheurs — même règle que android-e2e-lab.
     branches: [main, d42.33-visual-redesign, d42.34-founder-acceptance-fixes]
+    paths-ignore:
+      - '*.md'
+      - '*.txt'
   pull_request:
 
 # D42.28 (P0) : clé Firebase RÉELLE injectée dans TOUS les builds de ce
