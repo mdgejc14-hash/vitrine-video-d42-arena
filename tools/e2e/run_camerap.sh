@@ -488,6 +488,9 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
 # PHASE A — permissions refusées (5.6)
 # ============================================================================
 echo "=========== PHASE A : permissions refusées ==========="
+# D42.34 (lab 271) : vidage du tampon crash en début de phase — un crash
+# de la phase précédente ne doit pas être compté deux fois.
+adb logcat -b crash -c >/dev/null 2>&1 || true
 adb uninstall "$PKG" >/dev/null 2>&1
 if adb install -r -t "$APK" > "$OUT/install_a.log" 2>&1; then
   record PASS CPA_installation "APK installée (SANS permission pré-accordée)"
@@ -627,6 +630,9 @@ sleep 2
 # PHASE B — Refaire (5.2) + re-filmage + conservation des prises (5.3)
 # ============================================================================
 echo "=========== PHASE B : Refaire / reprise / conservation ==========="
+# D42.34 (lab 271) : vidage du tampon crash en début de phase — un crash
+# de la phase précédente ne doit pas être compté deux fois.
+adb logcat -b crash -c >/dev/null 2>&1 || true
 adb shell pm clear "$PKG" >/dev/null 2>&1
 adb shell pm grant "$PKG" android.permission.CAMERA >/dev/null 2>&1 \
   && record PASS CPB_permission_camera "accordée par pm grant" \
@@ -771,6 +777,9 @@ fi
 # PHASE C — D42.27 : bascule caméra avant/arrière (5.4)
 # ============================================================================
 echo "=========== PHASE C : bascule caméra avant/arrière ==========="
+# D42.34 (lab 271) : vidage du tampon crash en début de phase — un crash
+# de la phase précédente ne doit pas être compté deux fois.
+adb logcat -b crash -c >/dev/null 2>&1 || true
 adb uninstall "$PKG" >/dev/null 2>&1
 if adb install -r -t "$APK" > "$OUT/install_c.log" 2>&1; then
   record PASS CPC_installation "APK installée (phase C)"

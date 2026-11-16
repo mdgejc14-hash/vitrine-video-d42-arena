@@ -104,6 +104,15 @@ if [ "$VARIANTE" = "small" ]; then
 fi
 
 # --- S01 installation ----------------------------------------------------------
+# D42.34 (lab 271) : vidage des tampons crash/main APRÈS les changements
+# d'environnement (font_scale/densité) et AVANT l'install — le changement
+# d'échelle relance l'activité au sommet (CatalogActivity) et déclenche un
+# NPE FRAMEWORK connu (Resources.addLoaders, ActivityThread.handleRelaunch
+# Activity, API 30, AUCUNE frame applicative) : ce crash de TRANSITION
+# appartenait à la variante précédente et faisait faussement échouer S18 de
+# la variante suivante. Un crash survenant PENDANT la variante reste compté.
+adb logcat -b crash -c >/dev/null 2>&1 || true
+adb logcat -c >/dev/null 2>&1 || true
 adb uninstall "$PKG" >/dev/null 2>&1
 if adb install -r -t "$APK" > "$OUT/install.log" 2>&1; then
   record PASS S01_installation "$(grep -c . "$OUT/install.log") lignes adb install"
