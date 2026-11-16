@@ -1,0 +1,13 @@
+RAPPORT DE COMPILATION (PRE-SIGN)
+SHA source : 03171846d103b5e6b6c81a8d2883ed2b8e89ee92
+rc gradle : 0
+APK : vitrine-video-d42-34-PRE-SIGN.apk
+taille : 47886801 octets
+SHA-256 : 5da0e5ca0b97d7220272f2ab37b2aea6a6478014b55c79fbb773373cd387f31a
+package video.vitrine.app : True
+versionCode 3 : True
+versionName 0.9.0-rc15 : True
+dex : occurrences clé réelle = 1, clé factice = 0
+certificat : clé DEBUG DE RECETTE (PRE-SIGN) — empreinte officielle volontairement ABSENTE (la re-signature finale est réservée à l'environnement de confiance D42.17)
+porte d'intégrité : -PvvApkSha256=758077eb1388376d8ac797db88eec976b27f7a553dc09d6d85529fbd0b33e192
+clé Firebase : extraite de la RC15 publique, injectée sans affichage

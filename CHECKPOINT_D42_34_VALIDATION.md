@@ -89,11 +89,11 @@ Conformément à l'ordre : **statut BLOQUÉ**, aucune APK produite, aucune clé 
 - `.github/workflows/kaggle-audit.yml` (workflow_dispatch) : pré-vol secrets (valeurs jamais affichées) → push notebook → attente (≤ ~8 h) → sorties récupérées → **artefact 30 jours** → commit de `REPORT_D42_34.md` + mise à jour de ce checkpoint (bloc ci-dessous), branche uniquement.
 
 <!--D:AUDIT-->
-Dernier audit Kaggle : workflow `kaggle-audit` run 5 (commit 8bcfd1e, 15/11) — notebook
-`vitrine-video-d42-34-validation` poussé (auth par token, CLI 2.2.5) et EN EXÉCUTION sur
-Kaggle ; à la fin, `REPORT_KAGGLE_D42_34.md` + checkpoint commités automatiquement sur la
-branche, sorties en artefact 30 jours. Qualification parrainage comptes A/B : run 4 du
-15/11, 13 PASS / 0 FAIL (détail dans REPORT_D42_34.md §D.1).
+Dernier audit Kaggle : commit `03171846d103b5e6b6c81a8d2883ed2b8e89ee92`, notebook `vitrine-video-d42-34-validation` (version 7),
+état du pilotage : **DONE** — APK PRE-SIGN récupérée et vérifiée — re-signature officielle Arena en attente.
+sorties et rapport : https://github.com/mdgejc14-hash/vitrine-video-d42-arena/actions/runs/43904729509 — `REPORT_KAGGLE_D42_34.md` à la racine du dépôt,
+verdicts COMPLET / CASSÉ / NON JUGEABLE PAR LECTURE SEULE avec citations fichiers et lignes.
+Mis à jour : 2026-11-16 17:13 UTC.
 <!--/D:AUDIT-->
 
 ## E — Rapport final (RÉDIGÉ, poussé)

@@ -1,0 +1,14 @@
+module	nb_tests	nb_echecs
+app	1	0
+core-guard	27	0
+core-model	11	0
+data	82	0
+feature-brief	26	0
+feature-camera	22	0
+feature-catalog	26	0
+feature-dashboard	41	0
+feature-export	11	0
+feature-onboarding	31	0
+ins-capture	4	0
+ins-effects	99	0
+ins-thermal	2	0
