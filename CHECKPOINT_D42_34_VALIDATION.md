@@ -154,3 +154,16 @@ code vs à confirmer sur téléphone réel, 6 NON PROUVÉ exacts (VR-001, 009, 0
 **Défauts corrigés / restants** : corrigés — i18n Worker export (prouvé), faux positifs audit ×3 (prouvés), cause « -X » Gradle (prouvée), fragilité harnais P0/P1 (prouvée). Restants — aucun connu non traité ; EN ATTENTE DE PREUVE D'EXÉCUTION : tests JVM, ktlint/detekt/checkModuleGraph, assembleRelease PRE-SIGN (kernel v3.4 en cours), re-validation lab complète.
 
 **Prochaine action exacte** : suivre 43879291832 jusqu'à APK PRE-SIGN (ou diagnostic honnête si échec) → suivre lab 43879518367 (15 jobs, exigence : P1 sans FAIL, P0 sans BLOCKED) → récupérer l'artefact PRE-SIGN → re-signature Arena (keystore historique, empreinte 758077eb…33e192) → vérifications apksigner/aapt/SHA-256 + mise à jour RC15 sans désinstallation → rapports finaux + checkpoint → arrêt en attente du test physique fondateur.
+
+**MISSION MAÎTRESSE — JALON : LAB 15/15 SUCCESS (SHA 053d4c8, run 43879518367) — 2026-11-16 ~15:40 UTC**
+
+- **Date UTC** : 2026-11-16 15:40 · **SHA** : `053d4c8` (code applicatif = f2543b6) · **Run** : android-e2e-lab **43879518367 = SUCCESS 15/15** ; android-ci **43879518401 = SUCCESS** (compile + tests unitaires — le correctif Kotlin compile et rien ne régresse).
+- **Comptes EXACTS (results.tsv des artefacts, vérifiés ligne à ligne)** :
+  - `android-e2e-p1` : **41 PASS / 0 FAIL / 0 BLOCKED** — dont `P1_export_lance` PASS « export_status = « Rendu de la vidéo », phase de traitement réelle » et `P1_ecran_etaint` PASS « réveil OK, export_status = « Rendu de la vidéo » » → **le correctif i18n (VitrineLocale côté Worker) est PROUVÉ sur émulateur** (le statut s'affiche désormais en FR sur parcours FR) ET l'assertion par état fonctionne. MP4 exporté + partage + FGS + aucun crash (S18).
+  - `android-e2e` (P0) : pixel5-base **22/22**, pixel5-font130 **23/23**, pixel5-rot90 **23/23** — aucun FAIL, aucun BLOCKED ; la reprise system_server n'a pas été nécessaire (pas de re-trigger de la race) ; S18 PASS partout.
+  - `android-e2e-offline-export` : **47 PASS / 0 FAIL / 0 BLOCKED** (wrapper run_p1.sh — preuve que les correctifs couvrent le hors-ligne).
+  - `android-e2e-camerap` : **62 PASS / 0 FAIL / 0 BLOCKED** + gabarits-audit 817/817.
+  - Les 10 autres jobs : SUCCESS (auth, deeplink, drafts, langues EN, offline, backend-http, security-local, camera-diagnostic, harness-selftest, gabarits-audit).
+- **Statut kernel** : v3.4 (run kaggle-audit 43879291832, pilotage EN COURS depuis ~13:51 UTC, délai 4h30). **Artefact** : lab 43879518367 (e2e-p1 8,4 Mo, e2e-pixel5 37 Mo, expirent ~16/12).
+- **Défauts corrigés** : i18n Worker export (prouvé avant/après sur dumps), assertions export par état, reprise ENVIRONNEMENT P0. **Restants** : aucun connu côté lab.
+- **Prochaine action exacte** : attendre la fin du pilotage kernel v3.4 → si APK PRE-SIGN : `~/fetch_presign.sh 43879291832` → outillage build-tools (zipalign/apksigner) → `~/resign_finale.sh` → vérifications (applicationId video.vitrine.app, versionCode 3, versionName 0.9.0-rc15, empreinte 758077eb…33e192, SHA-256) → rapports finaux + checkpoint → arrêt en attente du test physique fondateur. Si échec kernel : diagnostic honnête sur logs avant toute nouvelle tentative (max 2 tentatives identiques).
