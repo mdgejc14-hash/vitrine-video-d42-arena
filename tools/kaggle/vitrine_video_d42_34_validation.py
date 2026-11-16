@@ -3,6 +3,10 @@
 """
 D42.34 — Worker Kaggle : KAGGLE_USERNAME/vitrine-video-d42-34-validation.
 
+v3.3 (16/11, 12:35 UTC) : correctif sdkmanager — les « ; » des noms de
+paquets sont des méta-caractères shell (kernel v3.2 mort à t+100 s :
+« android-37.0: not found », rc=127) ; chaque paquet est désormais quoté.
+Audit de toutes les commandes run() : seule cette ligne était fautive.
 v3.2 (16/11, 12:0x UTC) : correctif 403 — les assets de release GitHub (JDK
 Adoptium via redirection, APK RC15) refusent l'User-Agent « Python-urllib »
 par défaut (HTTP 403, kernel v3.1 mort à t+6 s — reproduit et prouvé depuis
@@ -252,7 +256,12 @@ ENV_BUILD = {
     "PATH": f"{jdk_dir}/bin:{sdk}/cmdline-tools/latest/bin:/usr/bin:/bin",
 }
 run(f"yes | {sdkmanager} --licenses", env=ENV_BUILD, log="sdk_licenses.log", timeout=900)
-run(f"{sdkmanager} --install platforms;android-37.0 build-tools;37.0.0 ndk;28.2.13676358",
+# PIÈGE (kernel v3.2, 16/11 12:02 UTC) : les « ; » des noms de paquets sont
+# des MÉTA-CARACTÈRES shell — sans guillemets, /bin/sh découpait la liste en
+# commandes séparées (« android-37.0: not found », rc=127). Chaque paquet
+# DOIT être quoté.
+run(f'{sdkmanager} --install "platforms;android-37.0" "build-tools;37.0.0" '
+    f'"ndk;28.2.13676358"',
     env=ENV_BUILD, log="sdk_install.log", timeout=3600, check=True)
 pf.append("PASS Android SDK : platforms;android-37.0 + build-tools;37.0.0 + ndk;28.2.13676358 "
           "(NDK requis : vvguard/src/main/cpp/CMakeLists.txt)")
