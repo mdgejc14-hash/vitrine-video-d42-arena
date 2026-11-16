@@ -10,7 +10,7 @@
 |---|---|---|---|---|
 | A. Verrouillage caméra | **TERMINÉ** | 0cd7ac3 | à poller | 6 correctifs + 5 tests verts, module 22/22 |
 | B. Labo Android (e2e) | **TERMINÉ (code) — runs EN COURS** | c0e4125 | lab 43762868411 + CI 43762868387 | branche ajoutée + preuves renforcées |
-| C. APK update signée | **SIGNATURE RÉCUPÉRÉE + VÉRIFIÉE — production locale EN COURS** | 290781a + complément | build local tournant | keystore officiel retrouvé, empreinte EXACTE |
+| C. APK update signée | **MIGRÉ VERS KAGGLE** (build local R8 impossible : 2 Go RAM) — keystore préservé, re-signature finale réservée à Arena | 068b884 | kernel Kaggle v3 à lancer | APK PRE-SIGN → re-signature Arena |
 | D. Audit Kaggle | **EN EXÉCUTION** | 213b713→8bcfd1e | kaggle-audit run 5 + rapport auto | referral 13 PASS ; notebook tournant |
 | E. Checkpoint | ACTIF | — | — | ce fichier |
 
@@ -105,3 +105,18 @@ code vs à confirmer sur téléphone réel, 6 NON PROUVÉ exacts (VR-001, 009, 0
 ## Prochaine action exacte
 
 (1) Attendre la fin du build local APK (processus « Build APK mise à jour ») → vérifications finales : `apksigner verify --print-certs` (empreinte EXACTE attendue), `aapt dump badging` (video.vitrine.app / versionCode 3 / 0.9.0-rc15), contrôle dex (clé réelle présente, factice absente), SHA-256 APK consigné → livraison de l'APK signée dans `~/apk_update/` (jamais le keystore). (2) Attendre le run kaggle-audit 5 (auto-commit de `REPORT_KAGGLE_D42_34.md`) et le dernier run lab. Arrêt après mise à jour du rapport en attendant le fondateur.
+
+## MIGRATION KAGGLE (ordre fondateur du 16/11, 2026-11-16 07:45 UTC)
+
+**A. Build local ARRÊTÉ (échec définitif, journal préservé)** :
+- Tentative 2 : daemon Gradle **disparu pendant `:app:minifyReleaseWithR8`** (« daemon disappeared unexpectedly » — OOM noyau, 1 982 Mo RAM + swap 2G insuffisants pour R8 full multi-modules). Aucune APK produite. Journal complet : `~/apk_update/build_log.txt` (799 lignes ; dernière tâche : `:app:minifyReleaseWithR8`). Tentative 1 : OOM Metaspace à `:data:kspReleaseKotlin` (corrigée 512m→900m puis re-tentative 2).
+- Verdict : la compilation R8 locale est INFaisable dans la sandbox Arena (2 vCPU/2 Go) — conforme à l'option B D42.17 « écartée pour OOM ». Migration des calculs lourds vers Kaggle (CPU, ~30 Go) décidée par le fondateur.
+- **Keystore PRÉSERVÉ** : `~/keystores/vitrine.keystore` intact, empreinte SHA-256 **EXACTE** `758077eb…33e192` (keytool JDK 11), alias `vitrex→vitrine`, + `signing.properties`, `.store_pw`, `VV_KEYSTORE_B64.txt`, `firebase_api_key.local` (chmod 600, valeurs jamais affichées). `~/lab23/vv-signing/` en place (gitignoré). **Jamais dans le dépôt, jamais vers Kaggle.**
+- Frontière D42.17 inchangée : Kaggle produit une APK **PRE-SIGN** (clé debug de recette, clairement étiquetée, jamais présentée installable) ; **Arena seul** réalise la re-signature officielle finale avec le keystore historique.
+
+**B. Traitements distants en cours (intouchés)** : kaggle-audit run 6 (id 43819575333, in_progress — reprise d'attente du kernel v2 du SHA 8bcfd1e, sans re-push) ; android-e2e-lab run 265 (id 43819575327, in_progress sur 068b884) ; CI 298/299 SUCCESS. Répartition : Arena = architecte/superviseur ; GitHub = source de vérité + orchestration ; Kaggle = exécution lourde ; téléphone fondateur = validation physique.
+
+**C. Worker Kaggle v3 (à pousser)** : notebook `KAGGLE_USERNAME/vitrine-video-d42-34-validation` — clone public au SHA exact vérifié, JDK 17 + SDK (platforms;android-37.0, build-tools;37.0.0, NDK 28.2.13676358), mémoire Gradle `-Xmx6g` via ligne de commande (gradle.properties du dépôt INTACT), ordre : SHA → testDebugUnitTest (compte réel) → ktlintCheck → detekt → checkModuleGraph → 30 gabarits/81 prises → 2 manifests audio 600 → ressources/boutons/routes/références → quotas/crédits → `:app:assembleRelease` versionCode 3 + porte d'intégrité `-PvvApkSha256=758077eb…` → APK **PRE-SIGN** + SHA-256 + mapping + logs. Clé Firebase : extraite à l'exécution de la RC15 PUBLIQUE (release d42.30-rc15), jamais affichée, jamais une fausse clé — si indisponible : partie build BLOQUÉE consignée.
+
+**Prochaine action exacte** : pousser notebook v3 + workflow pilotage corrigé (title obligatoire, vérification réelle de version après push, reprise sans re-push, artefacts 30 j complets) → run 7 (mis en file derrière le run 6) → kernel v3 → APK PRE-SIGN → re-signature officielle Arena → rapports.
+
