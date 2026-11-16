@@ -113,11 +113,23 @@ jobs:
           EOF
           python3 -c "import json; json.load(open('pushdir/kernel-metadata.json')); print('metadata JSON OK')"
 
-      - name: Envoi du notebook (kaggle kernels push)
+      - name: Envoi du notebook (sauf si déjà en cours — reprise)
         env:
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
         run: |
           set -euo pipefail
+          SLUG="$KAGGLE_USERNAME/vitrine-video-d42-34-validation"
+          ETAT=$(kaggle kernels status "$SLUG" 2>&1 | tail -1) || true
+          echo "état actuel du kernel : $ETAT"
+          case "$ETAT" in
+            *running*|*RUNNING*|*queued*|*QUEUED*|*acknowledged*|*ACKNOWLEDGED*)
+              echo "REPRISE : un notebook est déjà en cours d'exécution — pas de re-push,"
+              echo "reprise de l'attente de la version existante (les sorties de la"
+              echo "dernière version seront récupérées)."
+              echo "déjà en cours" > notebook_version.txt
+              exit 0
+              ;;
+          esac
           kaggle kernels push -p pushdir | tee push_result.txt
           grep -oE "version [0-9]+" push_result.txt | head -1 > notebook_version.txt || echo "version ?" > notebook_version.txt
           cat notebook_version.txt
@@ -133,7 +145,10 @@ jobs:
           # compte (éviter de lire un « complete » résiduel de la version
           # précédente du même kernel).
           sleep 180
-          limite=$(( $(date +%s) + 30000 ))   # ~8 h 20 max (dans la fenêtre du job)
+          # 4 h 45 max : les jobs hébergés GitHub sont tués à 6 h ; en cas de
+          # délai, sortie PROPRE (exit 0) — relancer le workflow pour reprendre
+          # l'attente (le notebook, lui, continue sur Kaggle).
+          limite=$(( $(date +%s) + 17100 ))
           etat_precedent=""
           while [ "$(date +%s)" -lt "$limite" ]; do
             etat=$(kaggle kernels status "$SLUG" 2>&1 | tail -1) || true
@@ -147,8 +162,11 @@ jobs:
             esac
             sleep 60
           done
-          echo "::error::Timeout d'attente du notebook Kaggle."
-          exit 1
+          echo "NOTEBOOK ENCORE EN COURS après 4 h 45 d'attente — fin propre du run."
+          echo "RELANCER le workflow kaggle-audit (push sur tools/kaggle/** ou"
+          echo "workflow_dispatch) pour reprendre l'attente : le notebook continue"
+          echo "de tourner sur Kaggle et ses sorties seront alors récupérées."
+          exit 0
 
       - name: Récupération des sorties du notebook
         if: always()
