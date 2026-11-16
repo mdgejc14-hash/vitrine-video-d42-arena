@@ -98,7 +98,7 @@ etape() {
 
 echo "=========== CAMÉRA RÉSILIENTE $TAG (APK=$APK) ==========="
 adb devices | sed 's/^/E2E /'
-$UI size | sed 's/^/E2E /' || { record FAIL CP0_preflight "ui.py inutilisable"; exit 0; }
+$UI size | sed 's/^/E2E /' || { record FAIL CP0_preflight "ui.py inutilisable"; exit 1; }
 
 # ----------------------------------------------------------------------------
 # Parcours amont (langue -> connexion -> carrousel -> activité -> parrainage
@@ -238,7 +238,11 @@ parcours_amont() { # $1 = préfixe des enregistrements (CPA ou CPB)
   fi
   local catalogue_atteint=0 _
   for _ in 1 2 3; do
-    $UI tap --text "Continuer" --exact --timeout 15 >/dev/null 2>&1 || true
+    # D42.33 §9.4 (lab run 268) : écran « Compte créé » entre parrainage et
+    # catalogue — CTA « Créer ma première vidéo » (motif run_p0.sh S16),
+    # repli « Continuer » pour les écrans antérieurs.
+    $UI tap --text "Créer ma première vidéo" --timeout 12 >/dev/null 2>&1 \
+      || $UI tap --text "Continuer" --exact --timeout 15 >/dev/null 2>&1 || true
     if $UI wait --text "modèle de vidéo" --timeout 20 >/dev/null 2>&1; then catalogue_atteint=1; break; fi
     sleep 3
   done
@@ -488,7 +492,7 @@ adb uninstall "$PKG" >/dev/null 2>&1
 if adb install -r -t "$APK" > "$OUT/install_a.log" 2>&1; then
   record PASS CPA_installation "APK installée (SANS permission pré-accordée)"
 else
-  record FAIL CPA_installation "$(tail -2 "$OUT/install_a.log" | tr '\n' ' ')"; exit 0
+  record FAIL CPA_installation "$(tail -2 "$OUT/install_a.log" | tr '\n' ' ')"; exit 1
 fi
 adb shell am start -W -n "$PKG/.MainActivity" > "$OUT/start_a.log" 2>&1
 sleep 4
@@ -771,7 +775,7 @@ adb uninstall "$PKG" >/dev/null 2>&1
 if adb install -r -t "$APK" > "$OUT/install_c.log" 2>&1; then
   record PASS CPC_installation "APK installée (phase C)"
 else
-  record FAIL CPC_installation "$(tail -2 "$OUT/install_c.log" | tr '\n' ' ')"; exit 0
+  record FAIL CPC_installation "$(tail -2 "$OUT/install_c.log" | tr '\n' ' ')"; exit 1
 fi
 adb shell pm grant "$PKG" android.permission.CAMERA >/dev/null 2>&1 || true
 adb shell pm grant "$PKG" android.permission.RECORD_AUDIO >/dev/null 2>&1 || true
@@ -857,7 +861,10 @@ echo "tag=$TAG"
 echo "camera=virtuelle (émulateur, -camera-back emulated) — jamais un capteur physique"
 echo "PASS=$pass FAIL=$fail BLOCKED=$blocked"
 echo "=========== FIN $TAG : PASS=$pass FAIL=$fail BLOCKED=$blocked ==========="
-# Le code de sortie du SCRIPT ne fait pas échouer le job : le verdict est lu
-# dans les lignes E2E_RESULT (règle D42.14 — un échec de parcours est un
-# RÉSULTAT, pas une erreur technique du harnais).
+# D42.34 (lab run 268) : un FAIL rend désormais le banc ROUGE (exit 0
+# inconditionnel = job SUCCESS avec CPA/CPB_catalogue FAIL, écran §9.4 non
+# franchi). Le verdict détaillé reste dans results.tsv/summary.txt (données
+# publiées via if: always()) ; exit 1 = FAIL, exit 2 = BLOCKED, 0 = rien.
+if [ "$fail" -gt 0 ]; then exit 1; fi
+if [ "$blocked" -gt 0 ]; then exit 2; fi
 exit 0

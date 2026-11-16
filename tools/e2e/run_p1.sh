@@ -137,7 +137,7 @@ etape() { # nom, texte exact attendu, timeout
 
 echo "=========== P1 $TAG (APK=$APK) ==========="
 adb devices | sed 's/^/E2E /'
-$UI size | sed 's/^/E2E /' || { record FAIL P1_preflight "ui.py inutilisable"; exit 0; }
+$UI size | sed 's/^/E2E /' || { record FAIL P1_preflight "ui.py inutilisable"; exit 1; }
 
 # --- installation + permissions pré-accordées (le dialogue système n'est PAS
 #     ce que l'on teste ici ; il est testé séparément par S_permission) --------
@@ -149,7 +149,7 @@ if adb install -r -t "$APK" > "$OUT/install.log" 2>&1; then
   record PASS P1_paquet "pkg=$NAME $VERSION"
 else
   record FAIL P1_installation "$(tail -2 "$OUT/install.log" | tr '\n' ' ')"
-  exit 0
+  exit 1
 fi
 adb shell pm grant "$PKG" android.permission.CAMERA >/dev/null 2>&1 \
   && record PASS P1_permission_camera "accordée par pm grant" \
@@ -229,9 +229,14 @@ else
 fi
 # Écran de bienvenue intermédiaire : un seul appui ne suffit pas toujours
 # (run 42212817413 : catalogue non atteint). On réessaie jusqu'à voir le catalogue.
+# D42.33 §9.4 (lab run 268) : l'écran « Compte créé / Félicitations » (solde de
+# bienvenue, 3 exports offerts) s'intercale désormais entre le parrainage et le
+# catalogue — son CTA est « Créer ma première vidéo » (motif éprouvé run_p0.sh
+# S16). Repli « Continuer » pour les écrans intermédiaires antérieurs.
 catalogue_atteint=0
 for _ in 1 2 3; do
-  $UI tap --text "Continuer" --exact --timeout 15 >/dev/null 2>&1 || true
+  $UI tap --text "Créer ma première vidéo" --timeout 12 >/dev/null 2>&1 \
+    || $UI tap --text "Continuer" --exact --timeout 15 >/dev/null 2>&1 || true
   if $UI wait --text "modèle de vidéo" --timeout 20 >/dev/null 2>&1; then catalogue_atteint=1; break; fi
   sleep 3
 done
@@ -957,4 +962,12 @@ adb shell dumpsys meminfo "$PKG" 2>/dev/null | head -12 > "$OUT/meminfo.txt"
   echo "PASS=$pass FAIL=$fail BLOCKED=$blocked"; } > "$OUT/summary.txt"
 cat "$OUT/summary.txt"
 echo "=========== FIN P1 $TAG : PASS=$pass FAIL=$fail BLOCKED=$blocked ==========="
+# D42.34 (lab run 268) : un FAIL rend désormais le banc ROUGE — l'exit 0
+# inconditionnel laissait le job SUCCESS avec 12 FAIL (écran §9.4 non franchi),
+# faussant la supervision. Les artefacts restent publiés (if: always()) et la
+# règle « CI verte ≠ approbation artistique » demeure : vert = aucun FAIL
+# détecté par le banc, rien de plus. exit 1 = FAIL, exit 2 = BLOCKED
+# (scénario non atteint ≠ validé), 0 = rien à signaler.
+if [ "$fail" -gt 0 ]; then exit 1; fi
+if [ "$blocked" -gt 0 ]; then exit 2; fi
 exit 0

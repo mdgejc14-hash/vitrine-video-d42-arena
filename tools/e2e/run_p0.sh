@@ -468,5 +468,8 @@ fi
 } > "$OUT/summary.txt"
 cat "$OUT/summary.txt"
 echo "=========== FIN $TAG/$VARIANTE : PASS=$pass FAIL=$fail BLOCKED=$blocked ==========="
-# Le job ne doit pas échouer sur un défaut applicatif : l'échec est une donnée.
+# D42.34 (lab run 268) : un FAIL/BLOCKED rend le banc ROUGE (cohérence avec
+# run_p1.sh/run_camerap.sh) — exit 0 laissait « SUCCESS » masquer des FAIL.
+if [ "$fail" -gt 0 ]; then exit 1; fi
+if [ "$blocked" -gt 0 ]; then exit 2; fi
 exit 0

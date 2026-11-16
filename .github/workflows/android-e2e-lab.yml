@@ -78,6 +78,11 @@ jobs:
             bash tools/e2e/run_p0.sh pixel5 base
             bash tools/e2e/run_p0.sh pixel5 font130
             bash tools/e2e/run_p0.sh pixel5 rot90
+            # D42.34 (lab 268) : le statut du job reflète les résultats réels —
+            # une ligne autonome (le bloc s'exécute ligne par ligne, aucune
+            # variable ne survit d'une ligne à l'autre). exit 1 si un FAIL,
+            # 2 si un BLOCKED, 0 sinon.
+            awk 'BEGIN{FS="\t"} $1=="FAIL"{f++} $1=="BLOCKED"{b++} END{exit (f>0)?1:((b>0)?2:0)}' artifacts/pixel5-base/results.tsv artifacts/pixel5-font130/results.tsv artifacts/pixel5-rot90/results.tsv
 
       - name: Capture des artefacts Pixel 5
         if: always()
@@ -109,6 +114,8 @@ jobs:
             adb devices
             bash tools/e2e/run_p0.sh petit_ecran small
             bash tools/e2e/run_p0.sh petit_ecran font130
+            # D42.34 (lab 268) : statut du job = résultats réels (voir Pixel 5).
+            awk 'BEGIN{FS="\t"} $1=="FAIL"{f++} $1=="BLOCKED"{b++} END{exit (f>0)?1:((b>0)?2:0)}' artifacts/petit_ecran-small/results.tsv artifacts/petit_ecran-font130/results.tsv
 
       - name: Capture des artefacts petit écran
         if: always()
@@ -184,7 +191,10 @@ jobs:
             # quand le harnais avait tout mesuré — signal brouillé (runs 42219775013,
             # 42228009767).
             if [ -s artifacts/p1-debug/export.mp4 ]; then ffprobe -v error -show_entries format=duration,size,format_name -show_entries stream=codec_type,codec_name,width,height -of default=noprint_wrappers=1 artifacts/p1-debug/export.mp4 | tee artifacts/p1-debug/ffprobe.txt || true; else echo "aucun MP4 produit : l'échec est applicatif, pas technique" | tee artifacts/p1-debug/ffprobe.txt; fi
-            true
+            # D42.34 (lab 268) : statut du job = résultats réels du banc P1
+            # (exit 1 si FAIL, 2 si BLOCKED) — remplace le « true » final qui
+            # laissait le job SUCCESS avec 12 FAIL.
+            awk 'BEGIN{FS="\t"} $1=="FAIL"{f++} $1=="BLOCKED"{b++} END{exit (f>0)?1:((b>0)?2:0)}' artifacts/p1-debug/results.tsv
       - name: Artefacts P1
         if: always()
         uses: actions/upload-artifact@v4
@@ -228,7 +238,9 @@ jobs:
           script: |
             adb devices
             bash tools/e2e/run_camerap.sh camerap-debug app/build/outputs/apk/debug/app-debug.apk
-            true
+            # D42.34 (lab 268) : statut du job = résultats réels du banc caméra
+            # (exit 1 si FAIL, 2 si BLOCKED) — remplace le « true » final.
+            awk 'BEGIN{FS="\t"} $1=="FAIL"{f++} $1=="BLOCKED"{b++} END{exit (f>0)?1:((b>0)?2:0)}' artifacts/camerap-debug/results.tsv
       - name: Artefacts camerap
         if: always()
         uses: actions/upload-artifact@v4
