@@ -138,8 +138,14 @@ jobs:
           NOTEBOOK=$(grep -oE "version [0-9]+" push_result.txt 2>/dev/null | head -1 || echo "reprise (sans re-push)")
           RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           python3 tools/kaggle/commit_rapport.py "$SHA" "${ETAT_PILOTAGE:-INCONNU}" "$RUN_URL" "$NOTEBOOK"
-          git add REPORT_KAGGLE_D42_34.md apk_presign_sha256.txt build_rapport.txt tests_par_module.txt CHECKPOINT_D42_34_VALIDATION.md 2>/dev/null || true
-          git commit -m "D42.34-D : audit+build Kaggle — rapport + checkpoint (état : ${ETAT_PILOTAGE:-INCONNU})"
+          # D42.34 (run 11) : git add est ATOMIQUE — un pathspec absent (ex.
+          # build_rapport.txt non produit) faisait échouer TOUT le add et le
+          # commit rendait « no changes added » (exit 1). Ajout fichier par
+          # fichier, seulement s'il existe.
+          for f in REPORT_KAGGLE_D42_34.md apk_presign_sha256.txt build_rapport.txt tests_par_module.txt CHECKPOINT_D42_34_VALIDATION.md; do
+            [ -f "$f" ] && git add "$f"
+          done
+          git commit -m "D42.34-D : audit+build Kaggle — rapport + checkpoint (état : ${ETAT_PILOTAGE:-INCONNU})" || true
           git push origin HEAD:d42.34-founder-acceptance-fixes
 
   resume:

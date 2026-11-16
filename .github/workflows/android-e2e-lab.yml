@@ -18,9 +18,12 @@ on:
     # cancel-in-progress) sans aucun changement de code applicatif. L'ignore ne
     # porte QUE sur la racine (glob sans **) : les actifs réels sous content/
     # (ex. MANIFEST_SHA256.txt) ou scripts/audio/ restent déclencheurs.
+    # tools/kaggle/** (run 11) : le notebook Kaggle n'est PAS testé par les
+    # labs — seul kaggle-audit (qui a son propre trigger paths) le consomme.
     paths-ignore:
       - '*.md'
       - '*.txt'
+      - 'tools/kaggle/**'
 
 # D42.28 (P0) : clé Firebase RÉELLE injectée dans les APK debug du lab
 # (identifiant client PUBLIC — embarqué dans toute APK distribuée ; la

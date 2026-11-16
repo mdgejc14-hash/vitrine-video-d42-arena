@@ -16,11 +16,13 @@ on:
     # D42.34 : idem sur la branche des corrections fondateur avant approbation.
     # À retirer avant la fusion finale.
     # D42.34 (mission maîtresse) : documents racine (rapports/checkpoints)
-    # non déclencheurs — même règle que android-e2e-lab.
+    # non déclencheurs — même règle que android-e2e-lab. tools/kaggle/** :
+    # le notebook Kaggle n'est pas compilé/testé par android-ci.
     branches: [main, d42.33-visual-redesign, d42.34-founder-acceptance-fixes]
     paths-ignore:
       - '*.md'
       - '*.txt'
+      - 'tools/kaggle/**'
   pull_request:
 
 # D42.28 (P0) : clé Firebase RÉELLE injectée dans TOUS les builds de ce

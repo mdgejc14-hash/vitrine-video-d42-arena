@@ -3,6 +3,11 @@
 """
 D42.34 — Worker Kaggle : KAGGLE_USERNAME/vitrine-video-d42-34-validation.
 
+v3.5 (16/11, run 11) : détecteur d'APK — os.walk écrasait la liste des
+sorties à chaque sous-dossier (baselineProfiles/*.dm) : APK présente=False
+alors que le build avait réussi (47,9 Mo + mapping R8, 602 tâches). On
+étend la liste. Correctif workflow associé : git add fichier par fichier
+(un pathspec absent faisait échouer TOUT le add atomiquement).
 v3.4 (16/11) : quatre correctifs, causes PROUVÉES sur l'arbre e651295 —
 (1) cause « -X » kernel v3.3 run 10 : le bloc mémoire Gradle est UN SEUL
 argument quoté et PRÉCÈDE les tâches (v3.3 : le shell l'éclatait en
@@ -556,8 +561,14 @@ else:
         ":app:assembleRelease -PvvApkSha256=" + EMPREINTE_OFFICIELLE,
         cwd=REPO, env=ENV_BUILD_BUILD, log="assembleRelease.log", timeout=21600, echo_tail=6)
     sorties_apk = []
+    # D42.34 v3.5 (cause prouvée, kernel v3.4 run 11) : os.walk visite AUSSI les
+    # sous-dossiers — AGP produit apk/release/baselineProfiles/{0,1}/app-release.dm,
+    # et l'affectation « sorties_apk = […] » ÉCRASAIT la liste à chaque niveau :
+    # après le dernier sous-dossier (sans .apk) la liste était VIDE alors que
+    # app-release.apk existait (BUILD SUCCESSFUL, 47,9 Mo) → « APK présente=False ».
+    # On ÉTEND la liste au lieu de l'écraser.
     for racine, _, fichiers in os.walk(os.path.join(REPO, "app", "build", "outputs", "apk", "release")):
-        sorties_apk = [os.path.join(racine, f) for f in fichiers if f.endswith(".apk")]
+        sorties_apk.extend(os.path.join(racine, f) for f in fichiers if f.endswith(".apk"))
     if p_build.returncode == 0 and sorties_apk:
         src_apk = sorties_apk[0]
         APK_PRE_SIGN = os.path.join(REPERTOIRE_TRAVAIL, "vitrine-video-d42-34-PRE-SIGN.apk")
